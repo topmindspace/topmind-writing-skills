@@ -1,3 +1,16 @@
+## [0.8.20] - 2026-10-04
+
+> 根包 0.8.19 → **0.8.20**（patch）；技能：新增 **topmind-poster 0.1.0**。
+
+> - 新增 **topmind-poster**：HTML+CSS → 高清长图 / 海报 / 信息图 PNG（无头 Chrome 2× 截图 + 按背景色扫底自动裁白），
+>   含「一段一图」分段图批量出图工作流（生成器 + 渲染器）
+> - 新增 `scripts/render_poster.py`：一条命令跑完截图 → 扫底 → 裁切，支持批量、自动加大窗口重试、`--chrome` / `CHROME_PATH` 指定浏览器
+> - 新增 `references/layout-recipes.md`：画布尺寸 / 字号层级 / 浅底深底配色 / 栅格 / 进度条 / 常用版式模板
+> - 沉淀 7 个实测坑：macOS 沙箱下必须 `--no-sandbox`、柱状图填充整条消失（`<span>` 需 `display:block`）、
+>   裁切基准色不能取左上角（顶部装饰层会污染）、PNG 重采样反而变大、`str.format()` 拼 CSS 报 KeyError 等
+> - 定位说明：本技能只管**出图那一环**；封面走 `topmind-cover`，PPTX 走 `top-ppt-html`
+> - README 技能表补齐 **topmind-viral-posts**（英文版此前缺）、校正各技能版本号与安装器版本
+
 ## [0.8.19] - 2026-10-03
 
 > 根包 0.8.18 → **0.8.19**（patch）；技能：topmind-viral-posts 0.3.0 → **0.3.1**（patch，纯运营 7 型并入）。

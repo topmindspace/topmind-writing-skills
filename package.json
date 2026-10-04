@@ -1,6 +1,6 @@
 {
   "name": "@topmindspace/topmind-writing-skills",
-  "version": "0.8.19",
+  "version": "0.8.20",
   "description": "TopMindSpace 写作技能合集 — 通过 npm / npx 安装技能（公众号长文、X 长文/短文、封面图）。",
   "license": "MIT",
   "author": "TopMindspace",
@@ -33,6 +33,7 @@
     "CHANGELOG.md",
     "topmind-briefs",
     "topmind-cover",
+    "topmind-poster",
     "topmind-viral-posts",
     "topmind-wechat-post",
     "topmind-x-article"

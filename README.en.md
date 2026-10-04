@@ -9,7 +9,7 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/topmindspace/topmind-writing-skills/ci.yml?style=flat-square&label=CI)](https://github.com/topmindspace/topmind-writing-skills/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 
-**TopMindSpace writing-skills collection** — WeChat articles, X long-form posts, short-form briefs, cover art: four skills, one repo.
+**TopMindSpace writing-skills collection** — WeChat articles, X long-form posts, short-form briefs, viral short posts, cover art, long-image rendering: six skills, one repo.
 
 <p align="center">
   <img src="docs/assets/writing-cover.png" alt="topmind-writing-skills · writing skills collection" width="960" />
@@ -55,6 +55,16 @@ npx @topmindspace/topmind-writing-skills install topmind-cover
 
 > Let ideas fly — make good thinking visible.
 
+### topmind-poster · HTML → high-res long image
+
+The **rendering step** for rankings, infographics, monthly-report long images and posters: HTML+CSS layout → headless Chrome 2× screenshot → auto-trimmed bottom whitespace. Includes the "one image per section" workflow (generator + renderer) that splits a long article into N individually shareable images. `render_poster.py` runs all three steps in one command; layout recipes (canvas / type scale / light & dark palettes / grid / progress bars) are in [`references/layout-recipes.md`](./topmind-poster/references/layout-recipes.md).
+
+```bash
+npx @topmindspace/topmind-writing-skills install topmind-poster
+```
+
+> Why not an image generation model: rankings carry dense text and numbers that must be character-exact, and generation mangles glyphs and invents figures. Covers are the exception (no dense text) and go through `topmind-cover`.
+
 > **Rename note**: this repo was renamed from `tms-skills` to `topmind-writing-skills`;
 > the npm package is `@topmindspace/topmind-writing-skills` and the old package is no longer updated.
 > Also do not install the old package's `^2` (2.0.0–2.1.1 deprecated).
@@ -63,12 +73,14 @@ npx @topmindspace/topmind-writing-skills install topmind-cover
 
 | Skill | Version | What it does |
 |-------|---------|--------------|
-| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.2.6** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
-| [`topmind-x-article`](./topmind-x-article/) | **0.4.3** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
+| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.0** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
+| [`topmind-x-article`](./topmind-x-article/) | **0.4.7** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
 | [`topmind-cover`](./topmind-cover/) | **0.4.1** | Cover art for X / WeChat (X master 1500×600 / 5:2): striking, theme-focused; 22-style cover style library + 26 example images (incl. 3 alt samples) + 1 style overview |
-| [`topmind-briefs`](./topmind-briefs/) | **0.2.3** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper one-liners / product alerts / mechanism explainers; one-click-copy HTML for both |
+| [`topmind-briefs`](./topmind-briefs/) | **0.2.6** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper one-liners / product alerts / mechanism explainers; one-click-copy HTML for both |
+| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.1** | X viral short posts: 14 template types (incl. trending-news type); prefer original images (official/third-party), generate only when none exists |
+| [`topmind-poster`](./topmind-poster/) | **0.1.0** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
 
-Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.3** (whole-repo same-tag releases).
+Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.20** (whole-repo same-tag releases).
 
 ## Install
 
@@ -96,6 +108,8 @@ Default probe order: `./.agents` → `./.claude` → `./.cursor` → `./.codex` 
 ```
 topmind-writing-skills/
 ├─ topmind-briefs/                    # skill (SKILL.md + assets + references + scripts)
+├─ topmind-viral-posts/               # skill (X viral short posts, one image each)
+├─ topmind-poster/                    # skill (HTML → high-res long image / section images)
 ├─ topmind-cover/                     # skill
 ├─ topmind-wechat-post/               # skill
 ├─ topmind-x-article/                 # skill

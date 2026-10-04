@@ -1,0 +1,13 @@
+{
+  "author": "TopMindSpace",
+  "description": "HTML+CSS 排版并输出高清长图 / 海报 / 信息图 PNG，含「一段一图」分段图批量出图工作流（生成器 + 渲染器）。",
+  "license": "MIT",
+  "name": "topmind-poster",
+  "private": true,
+  "repository": {
+    "directory": "topmind-poster",
+    "type": "git",
+    "url": "git+https://github.com/topmindspace/topmind-writing-skills.git"
+  },
+  "version": "0.1.0"
+}
