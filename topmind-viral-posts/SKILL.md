@@ -135,6 +135,25 @@ metadata:
 | **奇幻** | 自嘲 / 提问 | 异星风光、奇特地貌、超现实；反差萌，引发好奇 |
 | **标语** | 干货 / 提问（二选一） | MD3 商务风：一句话金句 + 浅色底 + 深色字；字少而大 |
 
+**美女生图提示词公式**（2026-10-06 实测优化，用户偏好：漂亮、清纯、身材好、去 AI 味）：
+
+```
+Photorealistic portrait, 35mm film photography aesthetic, shot on 85mm lens f/1.8, subtle film grain:
+a stunningly beautiful young Chinese woman in her early 20s,
+pure innocent look, big clear bright eyes, soft natural makeup,
+flawless porcelain skin, sweet gentle smile, long silky black hair,
+slender graceful figure,
+[场景 + 服装 + 举牌/动作], soft golden-hour / window light,
+clean uncluttered background, vertical 9:16
+```
+
+要点（都是踩坑换来的）：
+- **只用正面描述**：写"flawless porcelain skin"，不写"no AI face / natural skin texture"——否定词会被理解成"往脸上加点瑕疵"，雀斑痣就是这么来的
+- **美貌必须给具体锚点**："beautiful"太抽象，要拆成"大眼睛/清澈眼神/淡妆/柔顺长发/干净气质"，清纯才落得下来
+- **真实感靠相机语言**："35mm film + 85mm f/1.8 + film grain"比任何"不要AI感"都管用，给模型一个物理介质参照
+- **环境做减法**：干净背景 + 柔和自然光；"candid snapshot/抓拍感"会把质感拉回路人随手拍，只在用户明确要生活流时用
+- **身材要显式写**：不写就只拍大头照；"slender graceful figure" + 得体服装（白裙/亚麻衬衫/针织衫），吸睛不低俗
+
 **配图流程**：
 1. 写完段子 → 先找原图（官方 > 第三方），有就直接用并注明来源
 2. 无原图 → 按上表选图库，走 topmind-cover 出图（风格：清新优雅/MD3商务）
