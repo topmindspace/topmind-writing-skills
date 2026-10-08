@@ -1,3 +1,39 @@
+## [0.8.22] - 2026-10-08
+
+> 根包 0.8.21 → **0.8.22**（patch）；技能各升 patch：topmind-wechat-post 0.3.0 → **0.3.1**、topmind-briefs 0.2.7 → **0.2.8**、
+> topmind-x-article 0.4.7 → **0.4.8**、topmind-cover 0.4.1 → **0.4.2**、topmind-viral-posts 0.3.1 → **0.3.2**、topmind-poster 0.1.0 → **0.1.1**。
+
+> - 特性支持：**公众号技能收为唯一真源**。topmind-skills 里的 `topmind-wechat` 并入 `topmind-wechat-post`（topmind-skills 4.15.2 起删除旧技能）：
+>   - 新增 `scripts/audit-provenance.py`：改稿保真双向逐段溯源（本稿→源稿 / 源稿→本稿），有源稿时定稿必跑
+>   - `scripts/scan_ai_flavor.py` 改为转发器：优先调用 qu-aiwei-zh 的 canonical 实现（含作者姿态分），
+>     查找顺序 `$QU_AIWEI_SCAN` → 同级已装技能 → `$QU_AIWEI_SKILLS_DIRS` → 常见宿主技能目录，不写死个人路径；
+>     找不到时回落内置 `scan_ai_flavor_builtin.py` 并在 stderr 提示缺姿态维度，`--require-canonical` 可强制要求
+>   - `md2wechat.py` 两版逐段比对：本仓 1801 行版本已包含旧版全部能力，并多出括号 URL、嵌套围栏、行内图片管线、
+>     原子写、坏输入干净报错等处理，保留本仓版本；旧版独有的左衬条样式、自我介绍签名行、minimal-ink 默认主题
+>     是 2026-10-01/02 按用户要求去掉的，不恢复
+>   - references 合入：`workflow.md` 补溯源审计步骤与 `word_count` 口径说明，`writing-quality.md` 补作者姿态分与清单文档误判说明
+> - 优化：**去掉写死的路径、类别编号与年份**。新增 `scripts/wechat_paths.py`，`new-article / sync-status / sync-mapping / push-to-topstream`
+>   共用：`--base` → `TOPMIND_WECHAT_BASE` → `--workspace` / `TOPMIND_WORKSPACE` 下按名称发现「长文」类别（兼容「创作」「专题」）
+>   + `{当年}-公众号`；`TOPMIND_WECHAT_CATEGORY` / `TOPMIND_WECHAT_TOPIC` 可覆盖；解析不到就报错，不再回落 `~/TopWorkSpace/...`。
+>   topstream 只认 `--topstream` / `TOPSTREAM_ROOT`；新建交付包的 frontmatter `category` / `topic` 取实际目录名
+> - 优化：**共享文件单一真源**。新建 `shared/`（`audit_*.py`、`package_skill.py`、`md2wechat.py`、`md2x-html.py`、
+>   `writing-principles.md`），`shared/manifest.json` 声明分发目标；`scripts/sync_shared.js` 同步副本，`--check` 在 CI、Release 与 `prepack` 里
+>   校验逐字节一致。技能目录仍保留副本，单独安装照常可用
+> - 特性支持：**frontmatter 符合 Agent Skills 规范**。6 个 SKILL.md 顶层只留 `name / description / license / metadata`，
+>   `version / action_category / triggers / author / homepage / updated` 移入 `metadata`（字符串值），`triggers_cn` 并入
+>   `metadata.triggers` 与 description 的 Use when；`agentskills validate` 6/6 通过，CI 新增校验步骤（skills-ref 0.1.1）。
+>   `run_skill_gates.js`、安装器与 `audit_skill.py` 同时认 `metadata.version` / `metadata.triggers` 与旧的顶层写法
+> - 优化：路由名称对齐。poster 的 `top-ppt-html` 改为 `topmind-presentation`；briefs 去掉未发布的 `topmind-x-posts`，
+>   个人向/引流短帖改指 `topmind-viral-posts`；x-article 的短推文改指 viral-posts / briefs，发帖由 `topmind-x` 负责且须用户确认；
+>   各技能 description 补齐互相的 Do NOT 边界（信息密度型 → briefs，引流互动型 → viral-posts）
+> - 优化：**npm 包瘦身**。`package.json` `files` 排除 cover 单风格样张（`assets/examples/*.png`，保留 `overview.png`）与
+>   `references/cover-study/*.png`；`npm pack --dry-run`：59.0 MB → 2.1 MB（解包 59.6 MB → 2.7 MB，179 → 121 个文件）。
+>   完整样张仍在 git 仓库与 Release zip 中
+> - 优化：wechat-post SKILL.md 里带日期的项目案例移到 `references/case-notes.md`，正文只留通用规则
+> - 特性支持：新增 `evals/evals.json` 评测骨架（24 条，每个技能 3 条正例 + 1 条负例）与 `scripts/check_evals.js` 结构校验，尚未在真实宿主里执行
+> - 其他：14 份 `docs/audit-2026-09-29*.md` 归档到 `docs/archive/audits/`；briefs 与 viral-posts 的负向测试不再依赖同级技能目录；
+>   技能 package-lock.json 版本号与 package.json 对齐；README（中英）与 docs 的版本表、frontmatter 说明同步
+
 ## [0.8.21] - 2026-10-08
 
 > 根包 0.8.20 → **0.8.21**（patch）；技能：topmind-briefs 0.2.6 → **0.2.7**（patch，交付脚本随包自带 + 篇幅口径统一）。

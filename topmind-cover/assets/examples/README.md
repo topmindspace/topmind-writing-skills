@@ -1,6 +1,6 @@
 # 封面风格示例图
 
-42 张示例（随 npm 包发布，npx 安装即得）：19 种风格 × 2 种尺寸 = 38 张 + 3 张 alt 样张
+42 张示例（随 git 仓库与 GitHub Release zip 分发；npm 包为瘦身只带 `overview.png`）：19 种风格 × 2 种尺寸 = 38 张 + 3 张 alt 样张
 + 1 张 alt 微信尺寸版（`white-clean-alt-wechat.png`），
 另附 `overview.png`（19 风格总览缩略图 + 风格名标注，选风格时先看它）。
 

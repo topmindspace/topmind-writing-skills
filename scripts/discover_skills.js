@@ -10,7 +10,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const INFRA_DIRS = new Set([
-  'bin', 'docs', 'scripts', 'node_modules', 'dist', 'release-assets',
+  'bin', 'docs', 'scripts', 'shared', 'evals', 'node_modules', 'dist', 'release-assets',
 ]);
 
 function discoverSkills() {

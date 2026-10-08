@@ -161,6 +161,61 @@ def main() -> None:
               r.returncode == 0 and "````markdown" not in body
               and body.count("MARKDOWN</section>") == 1, r.stderr[:100])
 
+        # 15. scan 转发器：找不到 canonical 时回落内置实现并提示缺姿态分
+        import os as _os
+        env = {k: v for k, v in _os.environ.items()
+               if k not in ("QU_AIWEI_SCAN", "QU_AIWEI_SKILLS_DIRS")}
+        env["HOME"] = str(td)  # 隔离用户级技能目录
+        (td / "s.md").write_text("这是一段测试文字。\n", encoding="utf-8")
+        r = subprocess.run([PY, str(SCRIPTS / "scan_ai_flavor.py"), str(td / "s.md")],
+                           capture_output=True, text=True, timeout=60, env=env, cwd=str(td))
+        check("scan 转发器回落内置实现且提示缺姿态分",
+              r.returncode == 0 and "作者姿态分" in r.stderr and "Traceback" not in r.stderr,
+              r.stderr[:200])
+        r = subprocess.run([PY, str(SCRIPTS / "scan_ai_flavor.py"), "--require-canonical", str(td / "s.md")],
+                           capture_output=True, text=True, timeout=60, env=env, cwd=str(td))
+        check("scan --require-canonical 找不到 canonical 退出 3", r.returncode == 3, r.stderr[:200])
+
+        # 16. scan 转发器：QU_AIWEI_SCAN 指向 canonical 时原样转发参数与退出码
+        fake = td / "fake_scan.py"
+        fake.write_text("import sys\nprint('FAKE', *sys.argv[1:])\nsys.exit(7)\n", encoding="utf-8")
+        env2 = dict(env, QU_AIWEI_SCAN=str(fake))
+        r = subprocess.run([PY, str(SCRIPTS / "scan_ai_flavor.py"), "--json", "x.md"],
+                           capture_output=True, text=True, timeout=60, env=env2, cwd=str(td))
+        check("scan 转发器透传参数与退出码", r.returncode == 7 and "FAKE --json x.md" in r.stdout,
+              r.stdout[:200])
+
+        # 17. 路径解析：无 --base / 环境变量时干净报错，不猜个人路径
+        env3 = {k: v for k, v in env.items()
+                if k not in ("TOPMIND_WORKSPACE", "TOPMIND_WECHAT_BASE", "TOPMIND_WECHAT_PACKAGE_ROOT")}
+        r = subprocess.run([PY, str(SCRIPTS / "new-article.py"), "--slug", "测试", "--title", "T"],
+                           capture_output=True, text=True, timeout=60, env=env3, cwd=str(td))
+        check("new-article 无路径配置时干净报错",
+              r.returncode != 0 and "--base" in (r.stderr + r.stdout) and "Traceback" not in r.stderr,
+              r.stderr[:200])
+
+        # 18. 路径解析：按类别名称发现（不写死编号），专题用当年
+        import datetime as _dt
+        ws = td / "ws"
+        for d in ("00-收件箱", "20-长文", "88-输出"):
+            (ws / d).mkdir(parents=True)
+        env4 = dict(env3, TOPMIND_WORKSPACE=str(ws))
+        r = subprocess.run([PY, str(SCRIPTS / "new-article.py"), "--slug", "测试", "--title", "T",
+                            "--date", "2026-01-02"],
+                           capture_output=True, text=True, timeout=60, env=env4, cwd=str(td))
+        want = ws / "20-长文" / ("%d-公众号" % _dt.date.today().year) / "2026-01-02-测试" / "公众号稿.md"
+        check("new-article 按名称发现长文类别 + 当年专题", r.returncode == 0 and want.is_file(),
+              (r.stdout + r.stderr)[:200])
+        if want.is_file():
+            fmtxt = want.read_text(encoding="utf-8")
+            check("骨架 frontmatter 的 category/topic 取实际目录名",
+                  "category: 20-长文" in fmtxt and ("topic: %d-公众号" % _dt.date.today().year) in fmtxt)
+
+        # 19. audit-provenance 参数错误干净退出（退出码 2）
+        r = run("audit-provenance.py", ["--draft", str(td / "nope.md"), "--source", str(td / "nope2.md")])
+        check("audit-provenance 缺文件退出 2 且无 Traceback",
+              r.returncode == 2 and "Traceback" not in r.stderr, (r.stderr + r.stdout)[:200])
+
     if fails:
         print(f"\n[negative_tests] {len(fails)} 项失败")
         sys.exit(1)

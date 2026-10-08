@@ -10,7 +10,7 @@
 
 ## 路径解析
 
-`--base` → `TOPMIND_WECHAT_BASE` → `{TOPMIND_WORKSPACE}/40-创作|20-专题/{year}-公众号`；topstream 可选（`TOPSTREAM_ROOT`）。
+`--base` → `TOPMIND_WECHAT_BASE` → `{TOPMIND_WORKSPACE}` 下按名称发现的「长文 / 创作 / 专题」类别 + `{当年}-公众号`（`TOPMIND_WECHAT_CATEGORY` / `TOPMIND_WECHAT_TOPIC` 可覆盖）；都解析不到就报错，不猜路径。规则在 `scripts/wechat_paths.py`。topstream 可选（`--topstream` / `TOPSTREAM_ROOT`）。
 **禁止**把个人绝对路径写进脚本默认值；兜底惯例路径必须经环境变量可覆盖。
 
 ## 三条路径

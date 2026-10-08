@@ -4,7 +4,7 @@
 
 Rankings, infographics, monthly-report long images, posters — plus the "one image per section" workflow for splitting a long article into N shareable images. Text is 100% controllable, diffable, and iterable.
 
-- Version: **v0.1.0** (same tag as `@topmindspace/topmind-writing-skills@0.8.20`)
+- Version: **v0.1.1** (ships with `@topmindspace/topmind-writing-skills@0.8.22`)
 
 ## Install
 
@@ -49,7 +49,7 @@ Manual workflow, parameter semantics and 7 battle-tested pitfalls (sandbox flags
 ## Boundaries
 
 - **Not** article covers → `topmind-cover`
-- **Not** PPTX decks → `top-ppt-html`
+- **Not** multi-page decks / PPTX → `topmind-presentation`
 - **Not** pure data-chart SVG → `svg-infographic-kit`
 - **Not** article body layout → `topmind-wechat-post` / `topmind-x-article`
 

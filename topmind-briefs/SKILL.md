@@ -1,44 +1,28 @@
 ---
 name: topmind-briefs
-version: 0.2.7
-description: >-
-  干货短文发布：公众号 + X 双平台，一件事讲透。X 一帖或短 thread，
-  公众号约 300–800 字；1 张核心图（榜单/基准/截图/表格），不废话。
-  Use when 写短文、发快讯、数据榜单、
-  论文一句话解读、新品速递、brief、快讯。Do NOT use for X 长文
-  （→ topmind-x-article）、公众号长文（→ topmind-wechat-post）、
-  个人向短帖（→ topmind-x-posts，规划中未发布）。
-action_category: write
-triggers:
-  - 写短文
-  - 发快讯
-  - 干货短文
-  - 一句话解读
-  - 数据榜单
-  - 新品速递
-  - brief
-  - 快讯
-triggers_cn:
-  - 来篇短的
-  - 短平快
-  - 发个快讯
-author: TopMindSpace
+description: "干货短文发布：公众号 + X 双平台，一件事讲透。X 一帖或短 thread，公众号约 300–800 字；1 张核心图（榜单/基准/截图/表格），不废话，只交付不代发。Use when 写短文、发快讯、数据榜单、论文一句话解读、新品速递、来篇短的、短平快、brief、快讯；信息密度型（数据、榜单、发布）走本技能。Do NOT use for X 长文（→ topmind-x-article）、公众号长文（→ topmind-wechat-post）、引流互动型短帖与段子（→ topmind-viral-posts）、把稿子发出去（→ topmind-x，须用户确认）。"
 license: MIT
-homepage: https://github.com/topmindspace/topmind-writing-skills#readme
-updated: 2026-10-08
+metadata:
+  version: "0.2.8"
+  action_category: "write"
+  triggers: "写短文, 发快讯, 干货短文, 一句话解读, 数据榜单, 新品速递, brief, 快讯, 来篇短的, 短平快, 发个快讯"
+  author: "TopMindSpace"
+  homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
+  updated: "2026-10-08"
 ---
 
 # topmind-briefs · 干货短文（公众号 + X）
 
-一件事，一张图，讲完就停。跟 `topmind-x-posts`（规划中，未发布）的区别：
-那是个人向短帖（第一人称、暴论、真诚）；这是**干货向短文**（数据、榜单、
+一件事，一张图，讲完就停。跟 `topmind-viral-posts` 的区别：
+那是引流互动型短帖（段子、钩子、涨粉）；这是**信息密度型干货短文**（数据、榜单、
 论文、新品，第三方客观口吻）。
 
 ## 何时不用
 
 - X 长文（数千字深度稿）→ `topmind-x-article`
 - 公众号长文 → `topmind-wechat-post`
-- 个人向短帖（第一人称、观点、段子）→ `topmind-x-posts`（规划中，未发布）
+- 引流互动型短帖（第一人称、段子、钩子、涨粉）→ `topmind-viral-posts`
+- 把稿子发到 X → `topmind-x`（发帖连接器，须用户确认后才发）
 - 需要多张配图、复杂排版的稿件（本技能只配 1 张核心图）
 
 ## 语言铁律
@@ -71,8 +55,8 @@ updated: 2026-10-08
    - 公众号版：`python3 scripts/md2wechat.py --input 公众号短文.md --out-dir <交付目录> --slug <短名> --embed-images --no-toc`
      （输出 `<短名>-公众号版.html` + `图片上传清单.md`；图片 base64 内嵌，图注写在图下方；
      `--no-toc` 对应「短文不写前言导读」）。
-   - 两个脚本是 `topmind-x-article/scripts/md2x-html.py`、`topmind-wechat-post/scripts/md2wechat.py`
-     的逐字节副本，上游改动后同步复制过来；`scripts/negative_tests.py` 在仓库内校验两者一致。
+   - 两个脚本的唯一真源在仓库 `shared/scripts/`，本目录是逐字节副本（与 x-article、wechat-post
+     同一份）；只改真源再跑 `npm run sync:shared`，CI 用 `sync_shared.js --check` 校验一致。
    - 构建后必跑校验：嵌入图数量 = 文档图数量；嵌入图顺序 = 文档出现顺序
      （逐张解码与源文件比对）；[图N] 编号连续；
      X 版内嵌图序列（无封面）与公众号版逐字节一致。

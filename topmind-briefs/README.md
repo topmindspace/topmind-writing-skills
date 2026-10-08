@@ -5,7 +5,7 @@
 一件事，一张图，讲完就停。干货向短文：数据榜单、论文一句话解读、新品速递——
 X 一帖或短 thread，公众号约 300–800 字，双版一键复制 HTML。
 
-- 版本：**v0.2.7**（与 `@topmindspace/topmind-writing-skills@0.8.21` 同 tag）
+- 版本：**v0.2.8**（随 `@topmindspace/topmind-writing-skills@0.8.22` 发布）
 
 ## 安装
 
@@ -26,8 +26,8 @@ python3 scripts/md2wechat.py --input 公众号短文.md --out-dir 交付 --slug 
 ```
 
 两个脚本随本技能自带（纯 Python 标准库），单独安装 briefs 即可出 HTML。
-它们是 `topmind-x-article` / `topmind-wechat-post` 同名脚本的逐字节副本，
-仓库内由 `scripts/negative_tests.py` 校验一致。工作流细节见 [SKILL.md](./SKILL.md)。
+唯一真源在仓库 `shared/scripts/`，与 `topmind-x-article` / `topmind-wechat-post` 是同一份逐字节副本，
+仓库 CI 用 `node scripts/sync_shared.js --check` 校验一致。工作流细节见 [SKILL.md](./SKILL.md)。
 
 ## 内容类型
 
@@ -37,4 +37,4 @@ python3 scripts/md2wechat.py --input 公众号短文.md --out-dir 交付 --slug 
 ## 何时不用
 
 X 长文 → `topmind-x-article`；公众号长文 → `topmind-wechat-post`；
-个人向短帖 → `topmind-x-posts`（规划中，未发布）。
+引流互动型短帖 → `topmind-viral-posts`；发帖 → `topmind-x`（须用户确认）。

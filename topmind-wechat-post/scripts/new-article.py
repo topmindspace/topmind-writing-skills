@@ -9,9 +9,10 @@
 
 Usage:
     python3 new-article.py --slug gpt-6-review --title "GPT-6 深度评测" \
-        [--base <专题目录>] [--date 2026-09-04] [--images src1 src2 ...]
+        [--base <专题目录>] [--workspace <工作区>] [--date YYYY-MM-DD] [--images src1 src2 ...]
 
-默认 base = <topmind-workspace>/40-创作/2026-公众号
+默认 base 见 wechat_paths.py：--base → TOPMIND_WECHAT_BASE → 工作区里按名称发现的
+「长文/创作/专题」类别 + `{当年}-公众号`。解析不到就报错，不猜路径。
 """
 
 import argparse
@@ -21,40 +22,12 @@ import re
 import shutil
 import sys
 
-def _default_base():
-    """交付包根：CLI --base → env TOPMIND_WECHAT_BASE → env TOPMIND_WORKSPACE 发现 → 惯例路径。"""
-    env = os.environ.get("TOPMIND_WECHAT_BASE") or os.environ.get("TOPMIND_WECHAT_PACKAGE_ROOT")
-    if env:
-        return os.path.abspath(os.path.expanduser(env))
-    ws = os.environ.get("TOPMIND_WORKSPACE")
-    if ws:
-        for rel in (
-            ("40-创作", "2026-公众号"),
-            ("20-专题", "2026-公众号"),
-            ("88-交付", "2026-公众号"),
-        ):
-            p = os.path.join(ws, *rel)
-            if os.path.isdir(p):
-                return p
-        return os.path.join(ws, "40-创作", "2026-公众号")
-    # 惯例：父工作区（可被 CLI 覆盖）
-    return os.path.join(
-        os.path.expanduser("~"), "TopWorkSpace", "topmind-workspace",
-        "40-创作", "2026-公众号")
-
-
-def _default_topstream():
-    env = os.environ.get("TOPSTREAM_ROOT") or os.environ.get("TOPMIND_TOPSTREAM")
-    if env:
-        return os.path.abspath(os.path.expanduser(env))
-    return os.path.join(os.path.expanduser("~"), "TopWorkSpace", "topstream")
-
-DEFAULT_BASE = _default_base()
+from wechat_paths import require_base, resolve_topstream  # 同目录模块：路径解析不写死个人路径/编号/年份
 
 SKELETON = """---
 title: "{title}"
-category: 40-创作
-topic: 2026-公众号
+category: {category}
+topic: {topic}
 source_type: {source_type}
 captured_at: {now}
 status: 草稿
@@ -117,7 +90,8 @@ def main():
     ap.add_argument("--slug", required=True,
                     help="包名关键词（中文短名，可含英文/数字/连字符），如 个人免费基建全景、GrokBot多Agent调度")
     ap.add_argument("--title", required=True, help="文章标题")
-    ap.add_argument("--base", default=DEFAULT_BASE)
+    ap.add_argument("--base", default=None, help="交付包根（专题目录）；缺省按 wechat_paths.py 规则解析")
+    ap.add_argument("--workspace", default=None, help="topmind 工作区根（缺省读 TOPMIND_WORKSPACE）")
     ap.add_argument("--date", default=datetime.date.today().isoformat())
     ap.add_argument("--direction", default="reverse", choices=("forward", "reverse"),
                     help="forward=源自 topstream 底稿；reverse=本工作区选题，定稿后回推 topstream")
@@ -126,6 +100,7 @@ def main():
     ap.add_argument("--images", nargs="*", default=[],
                     help="要拷入 images/ 的源图片路径")
     args = ap.parse_args()
+    args.base = require_base(args.base, args.workspace)
 
     if not SLUG_RE.match(args.slug):
         print("✗ 目录名只允许中文、英文字母、数字、连字符：%s" % args.slug)
@@ -151,6 +126,9 @@ def main():
             direction=args.direction,
             source_file=src_file,
             target_file=tgt_file,
+            # category / topic 取交付包根的实际目录名（不写死编号与年份）
+            category=os.path.basename(os.path.dirname(os.path.abspath(args.base))),
+            topic=os.path.basename(os.path.abspath(args.base)),
             now=datetime.datetime.now().astimezone().isoformat(timespec="seconds")))
 
     copied = 0

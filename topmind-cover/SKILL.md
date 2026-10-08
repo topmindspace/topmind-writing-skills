@@ -1,29 +1,14 @@
 ---
 name: topmind-cover
-version: 0.4.1
-description: "文章封面配图生成：X 长文与公众号共用。震撼、醒目、主题突出；平台尺寸规范、22 种风格模板、4 种构图骨架、文案排版密码、命名落盘、成图检查全流程覆盖。Use when 文章封面、封面图、头图、题图、cover。Do NOT use for 正文插图、PPT/报告封面。"
-action_category: write
-triggers:
-  - 封面
-  - 封面图
-  - 头图
-  - 题图
-  - 首图
-  - 配图
-  - 缩略图
-  - banner
-  - cover
-  - thumbnail
-triggers_cn:
-  - 公众号封面
-  - 公众号题图
-  - X 封面
-  - X 首图
-  - 文章封面
-author: TopMindspace
+description: "文章封面配图生成：X 长文与公众号共用。震撼、醒目、主题突出；平台尺寸规范、22 种风格模板、4 种构图骨架、文案排版密码、命名落盘、成图检查全流程覆盖。Use when 文章封面、封面图、头图、题图、公众号封面、X 首图、cover、thumbnail。Do NOT use for 正文插图、长图与信息图（→ topmind-poster）、PPT/报告封面与多页演示（→ topmind-presentation）。"
 license: MIT
-homepage: https://github.com/topmindspace/topmind-writing-skills#readme
-updated: 2026-09-29
+metadata:
+  version: "0.4.2"
+  action_category: "write"
+  triggers: "封面, 封面图, 头图, 题图, 首图, 配图, 缩略图, banner, cover, thumbnail, 公众号封面, 公众号题图, X 封面, X 首图, 文章封面"
+  author: "TopMindSpace"
+  homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
+  updated: "2026-10-08"
 ---
 
 # topmind-cover · 封面配图生成
@@ -40,7 +25,7 @@ updated: 2026-09-29
 
 ## 风格索引（浅色优先：1~8 浅色，9~11 深色/高饱和）
 
-风格总览图见 `assets/examples/overview.png`（离线可看）。
+风格总览图见 `assets/examples/overview.png`（离线可看，npm 包也带）。
 
 | 风格 | 首选题材 |
 |------|----------|
@@ -64,7 +49,7 @@ updated: 2026-09-29
 | 品牌发布 `brand-launch` | 产品发布、版本更新、官方白皮书 |
 | IP 趣味 `ip-fun` | 实战案例、数据战报、复盘、连载 |
 
-适用场景细则、配色故事、prompt 配方见 `references/cover-styles.md`；单风格大图 `assets/examples/<style>.png`。
+适用场景细则、配色故事、prompt 配方见 `references/cover-styles.md`；单风格大图 `assets/examples/<style>.png`（git clone / Release zip 安装才有；npm 包为瘦身不含单风格样张，本地没有时看 overview.png 加 `cover-styles.md` 文字配方即可，或打开 GitHub 仓库同路径）。
 构图骨架（4 种）与文案排版密码见 `references/cover-styles.md` 末尾章节。
 
 > 示例图为原创演示：只学设计原则，不临摹第三方版式（详见 `references/cover-styles.md` 顶部"原创铁律"）。
@@ -100,7 +85,7 @@ updated: 2026-09-29
    按题材推荐风格（极客硬核 → `dark-saas` / `hard-core-type`；新手向 → `chao-wan-3d` / `anime-desk`；
    宏大体系 → `diorama-book`；严肃研究 → `academic-print`；
    清新震撼 → `white-clean`（纯白底 + 超大标题 + 撞色关键词 + 场景插图））→ 注入 10% 安全区约束。
-   **选风格（三步，必做）**：① 按题材从 `references/cover-styles.md` 选 1 种（22 选 1，浅色优先）→ ② 看 `assets/examples/<style>.png` 确认视觉语言 → ③ 看该风格章节的标题写法规范，心里有标题雏形。
+   **选风格（三步，必做）**：① 按题材从 `references/cover-styles.md` 选 1 种（22 选 1，浅色优先）→ ② 看 `assets/examples/<style>.png` 确认视觉语言（本地没有该图时看 `overview.png` 对应格子）→ ③ 看该风格章节的标题写法规范，心里有标题雏形。
    **选骨架**：从 `cover-styles.md` 的 4 种构图骨架选 1 种（L1 左文右图 / L2 公式流 / L3 场景嵌字 / L4 报刊网格）。
 1. **标题提炼**（先定文案，不画图）：用所选风格在 `cover-styles.md` 对应章节的标题写法规范提炼标题（一般 ≤10 字）；不满意就重写，满意再进下一步。
    - 坏："关于 Manus 2.0 的一些思考与体验"（长、没钩子）→ 好："Manus 2.0 实测"（短、有断言）

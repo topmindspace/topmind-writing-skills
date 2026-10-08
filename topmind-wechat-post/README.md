@@ -4,7 +4,7 @@
 
 公众号文章全生命周期：交付包、审校改写、质量三关、状态同步、微信内联排版与发布清单。
 
-- 版本：**v0.2.5**（与 `@topmindspace/topmind-writing-skills@0.8.2` 同 tag）
+- 版本：**v0.3.1**（随 `@topmindspace/topmind-writing-skills@0.8.22` 发布）
 
 ## 安装
 
@@ -15,7 +15,7 @@ npx @topmindspace/topmind-writing-skills install topmind-wechat-post
 ## 用法
 
 ```bash
-export TOPMIND_WORKSPACE=/path/to/workspace   # 推荐；或用 --base 指定交付包根
+export TOPMIND_WORKSPACE=/path/to/workspace   # 推荐：按名称发现「长文」类别 + {当年}-公众号；或用 --base 指定交付包根
 
 # 新建交付包
 python3 scripts/new-article.py --slug demo --title "标题" --direction reverse
@@ -23,7 +23,7 @@ python3 scripts/new-article.py --slug demo --title "标题" --direction reverse
 # 排版体检 + 自动修复
 python3 scripts/lint-wechat.py --input <包>/公众号稿.md --fix
 
-# 去 AI 味扫描（目标 ≥85）
+# 去 AI 味扫描（目标 ≥85；装了 qu-aiwei-zh 时同时看作者姿态分）
 python3 scripts/scan_ai_flavor.py <包>/公众号稿.md
 
 # Markdown → 全内联 HTML（必加 --embed-images，否则粘贴丢图）
@@ -31,6 +31,9 @@ python3 scripts/md2wechat.py --input <包>/公众号稿.md --out-dir <包> --slu
 
 # 状态同步
 python3 scripts/sync-status.py --set 定稿 <包> --apply
+
+# 有源稿时：改稿保真双向溯源
+python3 scripts/audit-provenance.py --draft <包>/公众号稿.md --source <包>/源稿-*.md
 ```
 
 脚本纯 Python 标准库，零依赖。
@@ -101,7 +104,7 @@ python3 scripts/md2wechat.py --input demo.md --out-dir demo --slug demo --embed-
 环境提供）。缺失时对应能力降级/不可用，不影响本仓库脚本的全部功能：
 
 - `humanizer-zh`：中文去 AI 味的保真边界；缺失时「只去 AI 味不排版」路径不可用。
-- `qu-aiwei-zh`：中文去 AI 味扫描定位；`scripts/scan_ai_flavor.py` 与其同源，缺失时可用仓库内脚本替代。
+- `qu-aiwei-zh`：中文去 AI 味扫描定位（含作者姿态层）；`scripts/scan_ai_flavor.py` 是转发器，找得到就调它，找不到回落内置实现（只有词面分，会提示）。
 
 ## 开发
 

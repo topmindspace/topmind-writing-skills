@@ -4,7 +4,7 @@
 
 Turn a Markdown draft into a "copy → paste → publish" X long-form (Article) package.
 
-- Version: **v0.4.3** (same tag as `@topmindspace/topmind-writing-skills@0.8.3`)
+- Version: **v0.4.8** (ships with `@topmindspace/topmind-writing-skills@0.8.22`)
 
 ## Install
 
@@ -98,7 +98,7 @@ X long-form posts are currently published by hand-pasting into the X Article edi
 
 The following skills are **not in this repo** (usually provided by the user's local workbuddy environment). Missing ones disable the corresponding routed capability; the core flow (draft → text, cover, publish checklist) is unaffected:
 
-- `topmind-x`: 280-char short posts (its xurl only covers short posts, not long-form).
+- `topmind-x` (topmind-skills pack): short-post connector, posts only after the user confirms; its xurl covers short posts, not long-form. Short-post drafting goes to `topmind-viral-posts` / `topmind-briefs`.
 - `topmind-capture`: the "archive only, don't publish" routing path.
 
 ## Development

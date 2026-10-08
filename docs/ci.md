@@ -4,7 +4,7 @@
 
 | 工作流 | 触发 | 做什么 |
 |--------|------|--------|
-| **CI** (`.github/workflows/ci.yml`) | `push`/`pull_request`（main） | 隐私扫描 · 安装器冒烟 · 技能门禁 |
+| **CI** (`.github/workflows/ci.yml`) | `push`/`pull_request`（main） | 隐私扫描 · files 同步 · 共享真源一致性 · 评测骨架 · 安装器冒烟 · 官方校验器 · 技能门禁 |
 | **Release** (`.github/workflows/release.yml`) | `push` tag `v*` | 同上技能门禁 → 打包 zip → GitHub Release → npm publish → 修剪旧 Release（留 2） |
 
 并发：CI 同 ref `cancel-in-progress`；Release 不取消（避免发一半被掐）。
@@ -33,6 +33,12 @@ bash scripts/ci_skill_gates.sh
 # 仓库级
 npm run check && npm run audit && npm run privacy
 ```
+
+## 共享真源与规范校验
+
+- `node scripts/sync_shared.js --check`：`shared/manifest.json` 声明的共享脚本与 `writing-principles.md`，各技能副本必须与 `shared/` 真源逐字节一致（`prepack` 也会跑）。
+- `node scripts/check_evals.js`：`evals/evals.json` 每个技能 ≥3 条、含负例。
+- `agentskills validate <skill>`（`pip install skills-ref==0.1.1`）：frontmatter 顶层只允许规范字段，自定义字段在 `metadata` 下。
 
 ## npm publish（显式失败，防假绿）
 

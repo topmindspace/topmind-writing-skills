@@ -6,7 +6,7 @@ One topic, one chart, then stop. Data-driven short posts: rankings, paper TL;DRs
 product launches — one X post or short thread, ~300–800 Chinese characters on WeChat,
 one-click-copy HTML for both.
 
-- Version: **v0.2.7** (same tag as `@topmindspace/topmind-writing-skills@0.8.21`)
+- Version: **v0.2.8** (ships with `@topmindspace/topmind-writing-skills@0.8.22`)
 
 ## Install
 
@@ -42,4 +42,4 @@ for the full workflow.
 ## When NOT to use
 
 X long-form → `topmind-x-article`; WeChat long-form → `topmind-wechat-post`;
-personal short posts → `topmind-x-posts` (planned, not released).
+engagement-style short posts → `topmind-viral-posts`; posting → `topmind-x` (only after the user confirms).

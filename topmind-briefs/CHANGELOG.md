@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.8 (2026-10-08)
+
+- 优化：交付脚本与 `writing-principles.md` 的唯一真源改为仓库 `shared/`，`negative_tests.py` 改为与 `shared/` 比对
+- 优化：个人向短帖改指 `topmind-viral-posts`（原指向未发布的 `topmind-x-posts`），发帖由 `topmind-x` 负责且须用户确认
+- 特性支持：frontmatter 迁入 `metadata`，通过 `agentskills validate`；`triggers_cn` 并入 `metadata.triggers` 与 description
+
 ## 0.2.7 (2026-10-08)
 
 - 交付脚本随技能自带：`scripts/md2x-html.py`、`scripts/md2wechat.py`（x-article / wechat-post 同名脚本的逐字节副本），

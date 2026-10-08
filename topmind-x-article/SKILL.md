@@ -1,27 +1,14 @@
 ---
 name: topmind-x-article
-version: 0.4.7
-description: "X 长文（Article）一键发布：Markdown 原稿 → 可直接复制的 X长文.html（富文本一键复制+配图内嵌）/ X发布稿.txt + 封面图 + 发布清单。沉淀自实战。Use when X 长文、发 X 文章、X article、长文发 X。Do NOT use for 短推文（→ topmind-x）、公众号（→ topmind-wechat-post）。"
-action_category: write
-triggers:
-  - X 长文
-  - 发 X 文章
-  - X article
-  - 长文发 X
-  - X 发长文
-  - 转纯文本
-  - X 纯文本
-  - 发 article
-  - 一键复制
-triggers_cn:
-  - 写 X 长文
-  - X 长文发布
-  - 推特长文
-  - twitter 长文
-author: TopMindspace
+description: "X 长文（Article）一键发布包：Markdown 原稿 → 可直接复制的 X长文.html（富文本一键复制+配图内嵌）/ X发布稿.txt + 封面图 + 发布清单，由用户人工点发布。Use when X 长文、发 X 文章、X article、长文发 X、写 X 长文、推特长文、twitter 长文。Do NOT use for 短推文与短帖写稿（→ topmind-viral-posts 或 topmind-briefs）、把短帖发出去（→ topmind-x，须用户确认）、公众号（→ topmind-wechat-post）。"
 license: MIT
-homepage: https://github.com/topmindspace/topmind-writing-skills#readme
-updated: 2026-09-29
+metadata:
+  version: "0.4.8"
+  action_category: "write"
+  triggers: "X 长文, 发 X 文章, X article, 长文发 X, X 发长文, 转纯文本, X 纯文本, 发 article, 一键复制, 写 X 长文, X 长文发布, 推特长文, twitter 长文"
+  author: "TopMindSpace"
+  homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
+  updated: "2026-10-08"
 ---
 
 # topmind-x-article · X 长文一键发布
@@ -113,7 +100,8 @@ updated: 2026-09-29
 
 ## When NOT to use
 
-- 280 字短推文 → `topmind-x`
+- 短推文 / 短帖写稿 → `topmind-viral-posts`（引流互动型）或 `topmind-briefs`（信息密度型）
+- 把短帖发出去 → `topmind-x`（发帖连接器，须用户确认）
 - 公众号 → `topmind-wechat-post`
 - 只想存档不发布 → `topmind-capture`
 - 写稿（只有发布需求、无原稿时）→ 先走写作技能再回本技能
@@ -123,7 +111,7 @@ updated: 2026-09-29
 以下技能**不在本仓库**（一般随用户侧 workbuddy 环境提供）；缺失时对应路由能力不可用，
 本技能核心流程（原稿转文本、封面、发布清单）不受影响：
 
-- `topmind-x`：280 字短推文发布（xurl 只覆盖短推文，不发长文）。
+- `topmind-x`（topmind-skills 包）：短推文发帖连接器，须用户确认后才发；xurl 只覆盖短推文，不发长文。
 - `topmind-capture`：「只想存档不发布」时的收录路由。
 
 ## 实战沉淀（2026-10-02 插件化/RSI 项目）

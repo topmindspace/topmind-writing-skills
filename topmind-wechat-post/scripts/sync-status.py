@@ -20,35 +20,7 @@ import os
 import re
 import sys
 
-def _default_base():
-    """交付包根：CLI --base → env TOPMIND_WECHAT_BASE → env TOPMIND_WORKSPACE 发现 → 惯例路径。"""
-    env = os.environ.get("TOPMIND_WECHAT_BASE") or os.environ.get("TOPMIND_WECHAT_PACKAGE_ROOT")
-    if env:
-        return os.path.abspath(os.path.expanduser(env))
-    ws = os.environ.get("TOPMIND_WORKSPACE")
-    if ws:
-        for rel in (
-            ("40-创作", "2026-公众号"),
-            ("20-专题", "2026-公众号"),
-            ("88-交付", "2026-公众号"),
-        ):
-            p = os.path.join(ws, *rel)
-            if os.path.isdir(p):
-                return p
-        return os.path.join(ws, "40-创作", "2026-公众号")
-    # 惯例：父工作区（可被 CLI 覆盖）
-    return os.path.join(
-        os.path.expanduser("~"), "TopWorkSpace", "topmind-workspace",
-        "40-创作", "2026-公众号")
-
-
-def _default_topstream():
-    env = os.environ.get("TOPSTREAM_ROOT") or os.environ.get("TOPMIND_TOPSTREAM")
-    if env:
-        return os.path.abspath(os.path.expanduser(env))
-    return os.path.join(os.path.expanduser("~"), "TopWorkSpace", "topstream")
-
-DEFAULT_BASE = _default_base()
+from wechat_paths import require_base, resolve_topstream  # 同目录模块：路径解析不写死个人路径/编号/年份
 
 FINAL_STATUSES = ("定稿", "已发布")
 VALID_STATUSES = ("草稿",) + FINAL_STATUSES
@@ -110,12 +82,17 @@ def apply_rename(base, name, target, draft_path, fm, body, head, new_fm):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--base", default=DEFAULT_BASE)
+    ap.add_argument("--base", default=None, help="交付包根（专题目录）；缺省按 wechat_paths.py 规则解析")
+    ap.add_argument("--workspace", default=None, help="topmind 工作区根（缺省读 TOPMIND_WORKSPACE）")
     ap.add_argument("--apply", action="store_true", help="实际执行（默认只报告）")
     ap.add_argument("--set", metavar="STATUS", choices=VALID_STATUSES,
                     help="把指定包改成该状态（需配合包名）")
     ap.add_argument("pkg", nargs="?", help="包目录名（配合 --set 使用）")
     args = ap.parse_args()
+    # --set 给绝对包路径时，base 取其父目录，不必再解析默认根
+    if args.set and args.pkg and os.path.isabs(args.pkg) and not args.base:
+        args.base, args.pkg = os.path.split(os.path.normpath(args.pkg))
+    args.base = require_base(args.base, args.workspace)
 
     if not os.path.isdir(args.base):
         print("✗ 专题目录不存在：%s" % args.base)

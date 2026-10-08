@@ -17,35 +17,7 @@ import os
 import re
 import sys
 
-def _default_base():
-    """交付包根：CLI --base → env TOPMIND_WECHAT_BASE → env TOPMIND_WORKSPACE 发现 → 惯例路径。"""
-    env = os.environ.get("TOPMIND_WECHAT_BASE") or os.environ.get("TOPMIND_WECHAT_PACKAGE_ROOT")
-    if env:
-        return os.path.abspath(os.path.expanduser(env))
-    ws = os.environ.get("TOPMIND_WORKSPACE")
-    if ws:
-        for rel in (
-            ("40-创作", "2026-公众号"),
-            ("20-专题", "2026-公众号"),
-            ("88-交付", "2026-公众号"),
-        ):
-            p = os.path.join(ws, *rel)
-            if os.path.isdir(p):
-                return p
-        return os.path.join(ws, "40-创作", "2026-公众号")
-    # 惯例：父工作区（可被 CLI 覆盖）
-    return os.path.join(
-        os.path.expanduser("~"), "TopWorkSpace", "topmind-workspace",
-        "40-创作", "2026-公众号")
-
-
-def _default_topstream():
-    env = os.environ.get("TOPSTREAM_ROOT") or os.environ.get("TOPMIND_TOPSTREAM")
-    if env:
-        return os.path.abspath(os.path.expanduser(env))
-    return os.path.join(os.path.expanduser("~"), "TopWorkSpace", "topstream")
-
-DEFAULT_BASE = _default_base()
+from wechat_paths import require_base, resolve_topstream  # 同目录模块：路径解析不写死个人路径/编号/年份
 
 VALID_STATUSES = ("草稿", "定稿", "已发布")
 FINAL_STATUSES = ("定稿", "已发布")
@@ -201,18 +173,19 @@ def check(base, topstream, check_topic):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--base", default=DEFAULT_BASE)
+    ap.add_argument("--base", default=None, help="交付包根（专题目录）；缺省按 wechat_paths.py 规则解析")
+    ap.add_argument("--workspace", default=None, help="topmind 工作区根（缺省读 TOPMIND_WORKSPACE）")
     ap.add_argument("--topstream", default=None,
-        help="topstream 仓库路径（默认 TOPSTREAM_ROOT 或 ~/TopWorkSpace/topstream）")
-    ap.add_argument("--check-topic", default=os.path.join(
-        DEFAULT_BASE, "topic.md"),
-        help="topic.md 路径，校验总表是否与磁盘一致")
+        help="topstream 仓库路径（默认 TOPSTREAM_ROOT；都没有则跳过 notes 校验）")
+    ap.add_argument("--check-topic", default=None,
+        help="topic.md 路径，校验总表是否与磁盘一致（默认 <base>/topic.md）")
     ap.add_argument("--no-topstream", action="store_true", help="不校验 topstream")
     ap.add_argument("--no-topic", action="store_true", help="不校验 topic.md")
     args = ap.parse_args()
+    args.base = require_base(args.base, args.workspace)
 
-    topstream = None if args.no_topstream else (args.topstream or _default_topstream())
-    check_topic = None if args.no_topic else args.check_topic
+    topstream = None if args.no_topstream else resolve_topstream(args.topstream)
+    check_topic = None if args.no_topic else (args.check_topic or os.path.join(args.base, "topic.md"))
     return check(args.base, topstream, check_topic)
 
 

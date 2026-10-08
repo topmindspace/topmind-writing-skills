@@ -40,11 +40,12 @@ def run_quiet(args: list[str], cwd: Path) -> subprocess.CompletedProcess:
 def main() -> None:
     print("[negative_tests] topmind-viral-posts")
 
-    # 1. 跨技能脚本依赖存在
-    for rel in ("topmind-x-article/scripts/md2x-html.py",
-                "topmind-wechat-post/scripts/md2wechat.py"):
-        p = REPO / rel
-        check(f"跨技能依赖存在: {rel}", p.is_file())
+    # 1. 自包含：SKILL.md / references 不引用技能目录外的路径（单独安装也能用）
+    outside = []
+    for md in [ROOT / "SKILL.md", *sorted((ROOT / "references").glob("*.md"))]:
+        if md.is_file() and "](../" in md.read_text(encoding="utf-8"):
+            outside.append(md.relative_to(ROOT).as_posix())
+    check("不引用技能目录外的相对路径", not outside, "、".join(outside))
 
     # 2. frontmatter 损坏 → audit_skill 退出 1 且不崩溃
     with tempfile.TemporaryDirectory() as td:

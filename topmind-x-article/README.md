@@ -4,7 +4,7 @@
 
 把 Markdown 原稿变成"复制 → 粘贴 → 发"的 X 长文（Article）发布包。
 
-- 版本：**v0.4.3**（与 `@topmindspace/topmind-writing-skills@0.8.3` 同 tag）
+- 版本：**v0.4.8**（随 `@topmindspace/topmind-writing-skills@0.8.22` 发布）
 
 ## 安装
 
@@ -93,7 +93,7 @@ X 长文目前走人工粘贴发布（X Article 编辑器），API 不发长文�
 以下技能**不在本仓库**（一般随用户侧 workbuddy 环境提供）。缺失时对应路由能力
 不可用，不影响本技能核心流程（原稿转文本、封面、发布清单）：
 
-- `topmind-x`：280 字短推文发布（xurl 只覆盖短推文，不发长文）。
+- `topmind-x`（topmind-skills 包）：短推文发帖连接器，须用户确认后才发；xurl 只覆盖短推文，不发长文。短帖写稿走 `topmind-viral-posts` / `topmind-briefs`。
 - `topmind-capture`：「只想存档不发布」时的收录路由。
 
 ## 开发

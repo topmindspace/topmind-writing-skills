@@ -60,20 +60,31 @@ python3 scripts/sync-status.py --set 定稿 <包> --apply
 
 | 输出 | 口径 | 用途 |
 |------|------|------|
-| frontmatter `word_count` | 纯中文 `\[一-鿿\]` | 映射真源 |
+| frontmatter `word_count` | 正文**全文**的 `[\u4e00-\u9fff]` 计数：frontmatter 之后的一切都算，含图注、也含图片路径里的中文 | 映射真源 |
 | lint「字数」 | 视觉长度（中 1 + 英数 ×0.6，URL 不计） | 阅读时长 / 段长 |
 | md2wechat「正文字数」 | 渲染后字符 | 仅展示 |
+
+`word_count` **只由 `sync-status.py --apply` 回写，不手算**。它的口径与直觉不同：一篇 9 图稿，`images/NN-中文名.png` 这一串路径就贡献 40+ 字。自制口径（如剔掉图注与路径）会得出更小的值，写进 frontmatter 后会被 `sync-mapping.py` 判为漂移，而且同一个错值会同时落进 `topic.md` 总表与包内 README。
 
 ## 定稿验收命令串
 
 ```bash
-python3 scripts/scan_ai_flavor.py <包>/公众号稿.md    # ≥85
+python3 scripts/scan_ai_flavor.py <包>/公众号稿.md    # 总分 ≥85；装了 qu-aiwei-zh 时「作者姿态分」也 ≥85
 python3 scripts/lint-wechat.py --input <包>/公众号稿.md
 python3 scripts/sync-mapping.py --no-topstream
 python3 scripts/sync-status.py
 python3 scripts/md2wechat.py --input <包>/公众号稿.md --out-dir <包> \
   --slug <slug> --asset-root <素材根> --embed-images
+python3 scripts/audit-provenance.py --draft <包>/公众号稿.md --source <包>/源稿-*.md   # 有源稿时
 ```
+
+最后一行只在**有源稿**时跑（`reverse` / 站外拉取；`forward` 的底稿在 `notes/` 也一样适用）。退出码 **0 = 双向干净**、**1 = 有待判定项**、2 = 参数错。**1 不等于稿子有问题**：它只是把「本稿有、源稿找不到」和「源稿有、本稿落下」两类段摆出来，由人逐条判，归入已声明的修正/增补，或改回去。判定结论写进包内 `README.md`，这一关才算收口。
+
+三个注意点：
+
+- **阈值别乱调**：默认 `0.72`。调高会把正常改写（换词、调序）判成新增，调低会漏掉真扩写。
+- **源稿后加的块用 `--skip`**：源稿顶部若有本包后补的勘误/说明块（`> [!note] …`），本稿侧不存在，会恒定报一条反向待判定。用 `--skip '^>\s*\[!'` 排除，不要去改稿子。
+- **图注不算遗漏**：脚本反向侧额外建了「去掉 `▲ 图 N` 前缀」的候选池，图注编号不会被误判为漏段。
 
 ## 收尾
 
@@ -89,7 +100,7 @@ python3 scripts/md2wechat.py --input <包>/公众号稿.md --out-dir <包> \
    仓库图路径约定：`notes/<slug>.md` 引用 `../assets/images/<slug>/NN-name.png`。
    脚本只降级转换 + 写 notes + 搬图；**不自动改** README 索引 / `docs/公众号映射.md` / frontmatter（防索引漂移）。手工完成后再把 `target_file` 改实际路径。
 3. 提醒：外链只能进「阅读原文」；图已 base64 内嵌，占位符按清单补传
-4. 需要进交付层时：`save-output` 拷贝终稿到 `88-交付/`（`YYYY-MM-DD-描述.ext`）
+4. 需要进交付层时：`save-output` 拷贝终稿到工作区 role:delivery 类别（以 `topmind.yaml` 实际目录为准，如 `88-输出/`；文件名 `YYYY-MM-DD-描述.ext`）
 
 ## Desktop
 

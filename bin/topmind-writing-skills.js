@@ -20,7 +20,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 // Skills live at repo root (one directory per skill with SKILL.md).
-const INFRA_DIRS = new Set(['bin', 'docs', 'scripts', 'node_modules', 'dist', 'release-assets']);
+const INFRA_DIRS = new Set(['bin', 'docs', 'scripts', 'shared', 'evals', 'node_modules', 'dist', 'release-assets']);
 const SKILL_ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function die(msg, code = 1) {
@@ -94,8 +94,9 @@ function readSkillVersion(skillPath) {
     const text = fs.readFileSync(p, 'utf8');
     const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
     if (!m) return '';
-    const v = m[1].match(/^version:\s*(.+?)\s*$/m);
-    return v ? v[1] : '';
+    // 新格式在 metadata.version（Agent Skills 规范），旧格式在顶层 version，两种都认
+    const v = m[1].match(/^metadata:\s*\n(?:[ \t]+.*\n)*?[ \t]+version:\s*(.+?)\s*$/m) || m[1].match(/^version:\s*(.+?)\s*$/m);
+    return v ? v[1].replace(/^["']|["']$/g, '') : '';
   } catch {
     return '';
   }

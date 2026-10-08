@@ -24,10 +24,7 @@ import re
 import shutil
 import sys
 
-DEFAULT_BASE = os.path.join(
-    os.path.expanduser("~"), "TopWorkSpace", "topmind-workspace",
-    "40-创作", "2026-公众号")
-DEFAULT_TOPSTREAM = os.path.join(os.path.expanduser("~"), "TopWorkSpace", "topstream")
+from wechat_paths import require_base, resolve_topstream  # 同目录模块：路径解析不写死个人路径/编号/年份
 
 CONTAINER_RE = re.compile(r"^:::\s*\w*\s*$")
 HIGHLIGHT_RE = re.compile(r"==([^=]+)==")
@@ -115,8 +112,9 @@ def make_readme_entry(title, target, tags):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("pkg", help="包目录名（相对 base）或绝对路径")
-    ap.add_argument("--base", default=DEFAULT_BASE)
-    ap.add_argument("--topstream", default=DEFAULT_TOPSTREAM)
+    ap.add_argument("--base", default=None, help="交付包根（pkg 为相对名时用）；缺省按 wechat_paths.py 规则解析")
+    ap.add_argument("--workspace", default=None, help="topmind 工作区根（缺省读 TOPMIND_WORKSPACE）")
+    ap.add_argument("--topstream", default=None, help="topstream 仓库路径（缺省读 TOPSTREAM_ROOT）")
     ap.add_argument("--target", help="回推目标 notes/xxx.md（缺省读 frontmatter target_file）")
     ap.add_argument("--apply", action="store_true", help="实际写盘（默认只预览）")
     ap.add_argument("--force", action="store_true", help="目标已存在时覆盖")
@@ -126,8 +124,12 @@ def main():
     ap.add_argument("--asset-names", default="",
                     help='文件名重命名映射，如 "00-封面.jpg=01-cover.jpg,01-分工.png=02-division-of-labor.png"')
     args = ap.parse_args()
+    args.topstream = resolve_topstream(args.topstream)
+    if not args.topstream:
+        print("✗ 需要 topstream 仓库路径：--topstream <path> 或 export TOPSTREAM_ROOT=<path>")
+        return 1
 
-    pkg_path = args.pkg if os.path.isabs(args.pkg) else os.path.join(args.base, args.pkg)
+    pkg_path = args.pkg if os.path.isabs(args.pkg) else os.path.join(require_base(args.base, args.workspace), args.pkg)
     draft = os.path.join(pkg_path, "公众号稿.md")
     if not os.path.exists(draft):
         print("✗ 找不到公众号稿：%s" % draft)

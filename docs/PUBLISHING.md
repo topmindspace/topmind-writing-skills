@@ -12,7 +12,8 @@
 - 包：<https://www.npmjs.com/package/@topmindspace/topmind-writing-skills>
 - 仓库：<https://github.com/topmindspace/topmind-writing-skills>
 
-当前线：安装器 **0.8.21** · 技能 topmind-cover **0.4.1** · topmind-wechat-post **0.3.0** · topmind-x-article **0.4.7** · topmind-briefs **0.2.7** · topmind-viral-posts **0.3.1** · topmind-poster **0.1.0**（整仓同 tag 发版；见 CHANGELOG）。
+当前线：安装器 **0.8.22** · 技能 topmind-cover **0.4.2** · topmind-wechat-post **0.3.1** · topmind-x-article **0.4.8** · topmind-briefs **0.2.8** · topmind-viral-posts **0.3.2** · topmind-poster **0.1.1**（整仓同 tag 发版；见 CHANGELOG）。
+公众号技能的唯一真源是本仓 `topmind-wechat-post`；topmind-skills 4.15.2 起删除了旧的 `topmind-wechat`。
 演示技能已独立为 `topmind-presentation`（仓库 `topmind-presentation`），不在本仓发布线内。
 
 
@@ -41,9 +42,10 @@ npm 上的旧包 `@topmindspace/tms-skills` **2.0.0–2.1.1 已弃用**（仓库
 | 包 | 事实源 | 规则 |
 |----|--------|------|
 | 安装器（= tag 号） | 根 `package.json` `version` | semver；随每次发版 bump，打 tag 即定值 |
-| 技能 | 各 `<skill-id>/package.json` 的 `version`，与 `SKILL.md` frontmatter `version` 同值 | 独立 semver；只随技能自身实质变更 bump |
+| 技能 | 各 `<skill-id>/package.json` 的 `version`，与 `SKILL.md` frontmatter 的 `metadata.version` 同值 | 独立 semver；只随技能自身实质变更 bump |
 
-- **默认只升 patch / minor**（修 bug、加能力、改文案）。
+- **默认只升 patch**（从最小位升）；minor 只在新增技能等明显扩展时用。
+- **建议**：版本号只在准备发版的那次提交里升，日常改动先写 CHANGELOG。0.8.17–0.8.20 曾升了号却没打 tag，npm 从 0.8.16 直接跳到 0.8.21；升了号就尽快发版，或在 CHANGELOG 注明未发布。
 - **major 仅用于破坏性变更**：技能 id、CLI 名、注入标记、安装路径、不兼容模型字段。
 - **禁止**无实质变更时跳大版本；禁止用版本号表达心情。
 - npm 版本发布后不可覆盖；有变更就要新号。
@@ -66,7 +68,9 @@ CI/Release 细节见 [`docs/ci.md`](./ci.md)。
 3. 门禁：
    ```bash
    npm run check && npm run audit && npm run privacy
+   npm run check:shared && npm run check:evals && npm run validate:spec   # 共享真源一致 / 评测骨架 / 官方校验器
    ```
+   改了 `shared/` 下的共享脚本或 `writing-principles.md` 时先 `npm run sync:shared`，不要直接改技能目录里的副本。
 4. 新技能：`npm run sync:files`（把发现的技能目录写入 `package.json` `files`）。
 5. 提交并打 tag：
    ```bash

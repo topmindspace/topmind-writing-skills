@@ -4,7 +4,7 @@
 
 榜单、信息图、月报长图、海报，以及「一段一图」的分段图批量出图。文本 100% 可控、可 diff、可迭代。
 
-- 版本：**v0.1.0**
+- 版本：**v0.1.1**（随 `@topmindspace/topmind-writing-skills@0.8.22` 发布）
 
 ## 安装
 
@@ -49,7 +49,7 @@ python3 scripts/render_poster.py build/*.html --out-dir images/ --width 1180
 ## 边界
 
 - **不做**文章封面 → `topmind-cover`
-- **不做**PPTX 演示 → `top-ppt-html`
+- **不做**多页演示 / PPTX → `topmind-presentation`
 - **不做**纯数据图表 SVG → `svg-infographic-kit`
 - **不做**文章正文排版 → `topmind-wechat-post` / `topmind-x-article`
 

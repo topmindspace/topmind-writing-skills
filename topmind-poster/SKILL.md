@@ -1,32 +1,14 @@
 ---
 name: topmind-poster
-version: 0.1.0
-description: "HTML+CSS 排版并输出高清长图 / 海报 / 信息图 PNG，也覆盖「一段一图」的分段图批量出图（一篇长文 = N 张图，生成器 + 渲染器工作流）。Use when 长图、海报、信息图、分级榜、榜单图、月报长图、竖版长图、分段图、一张图讲清楚、把 HTML 渲染成 PNG、重做这张图、出 2× 高清图、自动裁掉底部空白、把超长图拆成多张。Do NOT use for 单张文章封面（→ topmind-cover）、PPTX 演示（→ top-ppt-html）、纯数据图表 SVG。"
-action_category: write
-triggers:
-  - 长图
-  - 海报
-  - 信息图
-  - 分级榜
-  - 榜单图
-  - 月报长图
-  - 分段图
-  - HTML 转 PNG
-  - 高清出图
-  - poster
-  - long image
-triggers_cn:
-  - 做一张长图
-  - 重做这张图
-  - 更新这张图
-  - 把这张图优化一下
-  - 出一张高清图
-  - 把长图拆成几张
-  - 给文章配图
-author: TopMindSpace
+description: "HTML+CSS 排版并输出高清长图 / 海报 / 信息图 PNG，也覆盖「一段一图」的分段图批量出图（一篇长文 = N 张图，生成器 + 渲染器工作流）。Use when 长图、海报、信息图、分级榜、榜单图、月报长图、竖版长图、分段图、一张图讲清楚、给文章配图、把 HTML 渲染成 PNG、重做这张图、出 2× 高清图、自动裁掉底部空白、把超长图拆成多张。Do NOT use for 单张文章封面（→ topmind-cover）、多页演示或 PPTX（→ topmind-presentation）、纯数据图表 SVG。"
 license: MIT
-homepage: https://github.com/topmindspace/topmind-writing-skills#readme
-updated: 2026-10-04
+metadata:
+  version: "0.1.1"
+  action_category: "write"
+  triggers: "长图, 海报, 信息图, 分级榜, 榜单图, 月报长图, 分段图, HTML 转 PNG, 高清出图, poster, long image, 做一张长图, 重做这张图, 更新这张图, 把这张图优化一下, 出一张高清图, 把长图拆成几张, 给文章配图"
+  author: "TopMindSpace"
+  homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
+  updated: "2026-10-08"
 ---
 
 # topmind-poster · HTML → 高清长图 PNG
@@ -43,7 +25,7 @@ updated: 2026-10-04
 ## When NOT to use · 何时不用
 
 - **文章封面**（一张图定调、无密集文本）→ 走 `topmind-cover`，它有自己的生图配方与裁剪链
-- **PPTX 演示** → 走 `top-ppt-html`
+- **多页演示 / PPTX** → 走 `topmind-presentation`
 - **纯数据图表 SVG**（要能二次编辑矢量）→ 走 `svg-infographic-kit`
 - **文章正文排版**（公众号内联样式、X 长文一键复制）→ 走 `topmind-wechat-post` / `topmind-x-article`
 - **要求「画得好看」的插画 / 概念图**（没有精确文本）→ 走生图，别用 HTML 硬凑
@@ -62,7 +44,7 @@ updated: 2026-10-04
 |---|---|
 | 一张图讲清楚、信息密集、带精确数字 | **本技能** |
 | 文章封面（震撼、主题突出、无密集文本） | `topmind-cover` |
-| PPTX 演示 | `top-ppt-html` |
+| 多页演示 / PPTX | `topmind-presentation` |
 | 纯数据图表 SVG | `svg-infographic-kit` |
 | 文章正文排版（公众号 / X 长文） | `topmind-wechat-post` / `topmind-x-article` |
 

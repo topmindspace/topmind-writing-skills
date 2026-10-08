@@ -30,7 +30,7 @@ function hasScript(skillDir, name) {
   return fs.existsSync(path.join(skillDir, 'scripts', name));
 }
 
-// 审计 严重-1 / 中等-5 的门禁：SKILL.md frontmatter 顶级 version 必须 == package.json version，
+// 审计 严重-1 / 中等-5 的门禁：SKILL.md frontmatter 的 metadata.version（或旧的顶层 version）必须 == package.json version，
 // 缺失 version 字段也算失败。只做"一致性"比对，不做版本语义判断
 // （版本号取值分歧见审计报告第五节第 1 条，需用户裁决）。
 function checkVersionMatch(skillId) {
@@ -41,7 +41,8 @@ function checkVersionMatch(skillId) {
     const text = fs.readFileSync(path.join(dir, 'SKILL.md'), 'utf8');
     const fm = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
     if (fm) {
-      const m = fm[1].match(/^version:\s*(.+?)\s*$/m);
+      // metadata.version（Agent Skills 规范）优先，兼容旧的顶层 version
+      const m = fm[1].match(/^metadata:\s*\n(?:[ \t]+.*\n)*?[ \t]+version:\s*(.+?)\s*$/m) || fm[1].match(/^version:\s*(.+?)\s*$/m);
       if (m) fmVersion = m[1].replace(/^["']|["']$/g, '').trim();
     }
   } catch (e) {

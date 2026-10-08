@@ -30,7 +30,10 @@ jobs:
       - name: Privacy scan
         run: python3 scripts/ci_privacy_scan.py
 
-      # Same skill gates as CI (incl. lightweight regression fixture + smoke_pptx).
+      - name: Shared files single-source check
+        run: node scripts/sync_shared.js --check
+
+      # Same skill gates as CI (audits + negative tests).
       - name: Skill gates (all discovered skills)
         run: bash scripts/ci_skill_gates.sh
 

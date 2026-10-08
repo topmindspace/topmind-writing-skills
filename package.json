@@ -1,7 +1,7 @@
 {
   "name": "@topmindspace/topmind-writing-skills",
-  "version": "0.8.21",
-  "description": "TopMindSpace 写作技能合集 — 通过 npm / npx 安装技能（公众号长文、X 长文/短文、封面图）。",
+  "version": "0.8.22",
+  "description": "TopMindSpace 写作技能合集 — 通过 npm / npx 安装技能（公众号长文、X 长文、干货短文、X 引流短帖、封面图、长图海报）。只出稿与发布包，不代发。",
   "license": "MIT",
   "author": "TopMindspace",
   "repository": {
@@ -19,7 +19,9 @@
     "wechat",
     "x-twitter",
     "briefs",
-    "cover"
+    "viral-posts",
+    "cover",
+    "poster"
   ],
   "type": "commonjs",
   "bin": {
@@ -36,7 +38,10 @@
     "topmind-poster",
     "topmind-viral-posts",
     "topmind-wechat-post",
-    "topmind-x-article"
+    "topmind-x-article",
+    "!topmind-cover/assets/examples/*.png",
+    "topmind-cover/assets/examples/overview.png",
+    "!topmind-cover/references/cover-study/*.png"
   ],
   "engines": {
     "node": ">=18"
@@ -45,7 +50,11 @@
     "list": "node bin/topmind-writing-skills.js list",
     "discover": "node scripts/discover_skills.js",
     "sync:files": "node scripts/sync_npm_files.js",
-    "prepack": "node scripts/sync_npm_files.js",
+    "sync:shared": "node scripts/sync_shared.js",
+    "check:shared": "node scripts/sync_shared.js --check",
+    "check:evals": "node scripts/check_evals.js",
+    "validate:spec": "bash -c 'for s in $(node scripts/discover_skills.js); do ${AGENTSKILLS:-agentskills} validate \"$s\" || exit 1; done'",
+    "prepack": "node scripts/sync_npm_files.js --check && node scripts/sync_shared.js --check",
     "install:skills": "node -e \"const {discoverSkills}=require('./scripts/discover_skills'); const {spawnSync}=require('child_process'); for (const id of discoverSkills()) { const r=spawnSync(process.execPath,['bin/topmind-writing-skills.js','install',id],{stdio:'inherit'}); if(r.status) process.exit(r.status||1); }\"",
     "check": "node scripts/run_skill_gates.js check",
     "privacy": "python3 scripts/ci_privacy_scan.py",

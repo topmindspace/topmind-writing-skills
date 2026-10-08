@@ -41,16 +41,16 @@ def run_quiet(args: list[str], cwd: Path) -> subprocess.CompletedProcess:
 def main() -> None:
     print("[negative_tests] topmind-briefs")
 
-    # 1. 交付脚本随包自带（单独安装 briefs 也能出 HTML），仓库内与上游真源逐字节一致
-    for name, upstream in (("md2x-html.py", "topmind-x-article/scripts/md2x-html.py"),
-                           ("md2wechat.py", "topmind-wechat-post/scripts/md2wechat.py")):
+    # 1. 交付脚本随包自带（单独安装 briefs 也能出 HTML），仓库内与 shared/ 真源逐字节一致
+    for name, upstream in (("md2x-html.py", "shared/scripts/md2x-html.py"),
+                           ("md2wechat.py", "shared/scripts/md2wechat.py")):
         mine = ROOT / "scripts" / name
         check(f"交付脚本随包自带: scripts/{name}", mine.is_file())
         src = REPO / upstream
         if mine.is_file() and src.is_file():
             check(f"与上游真源逐字节一致: {upstream}",
                   mine.read_bytes() == src.read_bytes(),
-                  f"请执行 cp {upstream} topmind-briefs/scripts/{name}")
+                  "只改 shared/ 真源，再执行 npm run sync:shared")
 
     # 2. frontmatter 损坏 → audit_skill 退出 1 且不崩溃
     with tempfile.TemporaryDirectory() as td:
