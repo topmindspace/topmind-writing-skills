@@ -12,10 +12,10 @@ concurrency:
 jobs:
   privacy:
     name: Privacy & deprecation scan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Scan for private/local/deprecated identifiers
@@ -29,12 +29,12 @@ jobs:
 
   installer:
     name: npx installer smoke
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: '20'
+          node-version: '24'
       - name: CLI list
         run: node bin/topmind-writing-skills.js list
       - name: CLI install each discovered skill
@@ -62,15 +62,15 @@ jobs:
 
   skill-gates:
     name: Skill package gates
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
-          node-version: '20'
+          node-version: '24'
           cache: npm
           cache-dependency-path: topmind-briefs/package-lock.json
       - name: Agent Skills spec validator (skills-ref)

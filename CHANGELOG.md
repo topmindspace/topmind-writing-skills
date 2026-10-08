@@ -9,8 +9,12 @@
 > - 优化：新增 `scripts/check_npm_pack.js`（`npm run check:pack`），按 `npm pack --dry-run` 的实际文件清单检查，
 >   出现 `dist/`、`release-assets/`、`__pycache__/`、`*.pyc` 即失败。Release 在打包之后、建 Release 之前运行；
 >   CI `Skill package gates` 先按 Release 同口径真实打包再运行，问题在推送 main 时就能发现
-> - 本地验证：按 Release 步骤打包 6 个技能后 `npm pack --dry-run`：127 → 121 个文件，tarball 2,188,530 B → 2,090,653 B，
->   解包 2,842,215 B → 2,731,152 B，`dist/` 文件 6 → 0
+> - 优化：GitHub Actions 改用 Node 24 运行时的版本：`actions/checkout` v4 → v7、`actions/setup-node` v4 → v7、`actions/setup-python` v5 → v7、
+>   `softprops/action-gh-release` v2 → v3；ci / release / deprecate-npm-2x 的 `node-version` 20 → 24（本地 Node 24 跑全部门禁与打包步骤通过）
+> - 优化：`runs-on` 由 `ubuntu-latest` 固定为 `ubuntu-24.04`：GitHub 在 2026-10-19 至 11-19 期间把 `ubuntu-latest` 逐步切到 Ubuntu 26.04，先停在当前已验证的镜像，切 26.04 另行验证后再改
+> - 本地验证：打包 6 个技能后 `npm pack --dry-run`：127 → 121 个文件，tarball 2,188,530 B → 2,090,653 B，
+>   解包 2,842,215 B → 2,731,152 B，`dist/` 文件 6 → 0。完整走一遍 Release 步骤时为 123 个文件：技能门禁会在
+>   poster、viral-posts 下临时生成无依赖的 `package-lock.json`（各约 200 B），随包发布，不影响使用
 
 ## [0.8.23] - 2026-10-08
 
