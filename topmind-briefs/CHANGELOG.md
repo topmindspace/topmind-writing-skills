@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.7 (2026-10-08)
+
+- 交付脚本随技能自带：`scripts/md2x-html.py`、`scripts/md2wechat.py`（x-article / wechat-post 同名脚本的逐字节副本），
+  单独安装 briefs 即可出双版 HTML
+- `negative_tests.py` 校验交付脚本随包存在，仓库内再校验与上游逐字节一致
+- 交付命令对齐脚本实际参数：公众号版补 `--out-dir` / `--slug` / `--no-toc`；X 版统一 `--images-from`
+- 公众号篇幅统一为「约 300–800 字」（style-guide 原写「500 字内」）；X 版写明每条 280 字符、thread 最多 3 条
+
 ## 0.2.0 (2026-10-01)
 
 - `--images-from 公众号短文.md` 派生图片顺序，禁止手工拼 `--images`（根治配图错位）

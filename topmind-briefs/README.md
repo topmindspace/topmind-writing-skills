@@ -5,7 +5,7 @@
 一件事，一张图，讲完就停。干货向短文：数据榜单、论文一句话解读、新品速递——
 X 一帖或短 thread，公众号约 300–800 字，双版一键复制 HTML。
 
-- 版本：**v0.2.3**（与 `@topmindspace/topmind-writing-skills@0.8.3` 同 tag）
+- 版本：**v0.2.7**（与 `@topmindspace/topmind-writing-skills@0.8.21` 同 tag）
 
 ## 安装
 
@@ -15,16 +15,19 @@ npx @topmindspace/topmind-writing-skills install topmind-briefs
 
 ## 用法
 
+在本技能目录下运行：
+
 ```bash
 # X 版（图片顺序从公众号稿派生，禁止手工拼 --images）
-md2x-html.py X短文.md --out X短文.html --images-from 公众号短文.md
+python3 scripts/md2x-html.py X短文.md --out X短文.html --images-from 公众号短文.md
 
-# 公众号版（图片 base64 内嵌）
-md2wechat.py 公众号短文.md --out 公众号版.html --embed-images
+# 公众号版（图片 base64 内嵌，输出 <短名>-公众号版.html + 图片上传清单.md）
+python3 scripts/md2wechat.py --input 公众号短文.md --out-dir 交付 --slug 短名 --embed-images --no-toc
 ```
 
-脚本分别在 `topmind-x-article` 与 `topmind-wechat-post` 两个技能的脚本目录下
-（与本技能同级目录）。工作流细节见 [SKILL.md](./SKILL.md)。
+两个脚本随本技能自带（纯 Python 标准库），单独安装 briefs 即可出 HTML。
+它们是 `topmind-x-article` / `topmind-wechat-post` 同名脚本的逐字节副本，
+仓库内由 `scripts/negative_tests.py` 校验一致。工作流细节见 [SKILL.md](./SKILL.md)。
 
 ## 内容类型
 

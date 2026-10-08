@@ -1,3 +1,19 @@
+## [0.8.21] - 2026-10-08
+
+> 根包 0.8.20 → **0.8.21**（patch）；技能：topmind-briefs 0.2.6 → **0.2.7**（patch，交付脚本随包自带 + 篇幅口径统一）。
+
+> - 优化 topmind-briefs 交付链路：`md2x-html.py`、`md2wechat.py` 随技能自带（`topmind-briefs/scripts/`），
+>   单独安装 briefs 即可出 X 版与公众号版 HTML，不再依赖同级的 x-article / wechat-post 目录。
+>   两个文件是上游真源的逐字节副本（与 `audit_*.py`、`writing-principles.md` 的全仓同步方式一致）
+> - `negative_tests.py` 改为校验交付脚本随包存在，并在仓库内校验与上游逐字节一致，上游改动未同步时 CI 直接报出
+> - SKILL.md / README（中英）/ platform-specs 的交付命令对齐脚本实际参数：`python3 scripts/...` 调用、
+>   公众号版补 `--out-dir` / `--slug` / `--no-toc`，X 版统一用 `--images-from 公众号短文.md` 派生配图顺序
+> - 公众号篇幅口径统一为 SKILL.md description 的「约 300–800 字」：style-guide 原「500 字内」改为同一口径；
+>   README.en 的「words」改为「Chinese characters」；briefs `package.json` description 补全双平台口径
+> - 版本同步：briefs SKILL.md / package.json / package-lock.json / README（中英）、根 README 技能表与安装器版本、
+>   docs/PUBLISHING.md「当前线」按各技能现行版本更新
+> - 实测（2026-10-08）：单独安装 briefs 后，用一篇真实公众号稿跑通双版 HTML，内嵌图数量、顺序与源图逐字节一致
+
 ## [0.8.20] - 2026-10-04
 
 > 根包 0.8.19 → **0.8.20**（patch）；技能：新增 **topmind-poster 0.1.0**。

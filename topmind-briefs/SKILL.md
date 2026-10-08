@@ -1,6 +1,6 @@
 ---
 name: topmind-briefs
-version: 0.2.6
+version: 0.2.7
 description: >-
   干货短文发布：公众号 + X 双平台，一件事讲透。X 一帖或短 thread，
   公众号约 300–800 字；1 张核心图（榜单/基准/截图/表格），不废话。
@@ -25,7 +25,7 @@ triggers_cn:
 author: TopMindSpace
 license: MIT
 homepage: https://github.com/topmindspace/topmind-writing-skills#readme
-updated: 2026-10-01
+updated: 2026-10-08
 ---
 
 # topmind-briefs · 干货短文（公众号 + X）
@@ -61,13 +61,18 @@ updated: 2026-10-01
    内容一致，篇幅按平台调整（见 `references/platform-specs.md`）。
 4. **自检**：过一遍禁止清单；确认每个数字都有来源；确认图和文字说的是同一件事；
    推测/判断必须显式标注"（推测）"，与事实段落切割，不混写。
-5. **交付**：双版 HTML，一键复制（只交付，不发布）——
-   - X 版：`md2x-html.py X短文.md --out X短文.html --images-from 公众号短文.md`
+5. **交付**：双版 HTML，一键复制（只交付，不发布）。两个脚本随本技能自带
+   （`scripts/` 下，纯 Python 标准库），单独安装本技能即可运行，不依赖其它技能目录——
+   - X 版：`python3 scripts/md2x-html.py X短文.md --out X短文.html --images-from 公众号短文.md`
      （无封面；1–4 张图按 [图N] 顺序嵌入；thread 超长时拆条）。
      **禁止手工拼 `--images`**：文件名排序 ≠ 文档顺序，手工传参曾导致整段配图错位；
      脚本内置 `[图N]` 连续性 + 数量校验，不通过直接报错。
-   - 公众号版：`md2wechat.py --input 公众号短文.md --embed-images`
-     （图片 base64 内嵌，图注写在图下方）。
+     公众号稿里必须有对应的本地图片 `![图注](图片路径)`，只写链接或占位文字时数量校验会报错。
+   - 公众号版：`python3 scripts/md2wechat.py --input 公众号短文.md --out-dir <交付目录> --slug <短名> --embed-images --no-toc`
+     （输出 `<短名>-公众号版.html` + `图片上传清单.md`；图片 base64 内嵌，图注写在图下方；
+     `--no-toc` 对应「短文不写前言导读」）。
+   - 两个脚本是 `topmind-x-article/scripts/md2x-html.py`、`topmind-wechat-post/scripts/md2wechat.py`
+     的逐字节副本，上游改动后同步复制过来；`scripts/negative_tests.py` 在仓库内校验两者一致。
    - 构建后必跑校验：嵌入图数量 = 文档图数量；嵌入图顺序 = 文档出现顺序
      （逐张解码与源文件比对）；[图N] 编号连续；
      X 版内嵌图序列（无封面）与公众号版逐字节一致。

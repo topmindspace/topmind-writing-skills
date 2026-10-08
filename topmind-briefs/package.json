@@ -1,6 +1,6 @@
 {
   "author": "TopMindSpace",
-  "description": "干货短文发布：公众号 + X 双平台，一件事讲透。300–800 字，1 张核心图，不废话。",
+  "description": "干货短文发布：公众号 + X 双平台，一件事讲透。X 一帖或短 thread，公众号约 300–800 字，1 张核心图，不废话。",
   "license": "MIT",
   "name": "topmind-briefs",
   "private": true,
@@ -9,5 +9,5 @@
     "type": "git",
     "url": "git+https://github.com/topmindspace/topmind-writing-skills.git"
   },
-  "version": "0.2.6"
+  "version": "0.2.7"
 }

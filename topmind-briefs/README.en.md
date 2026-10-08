@@ -3,10 +3,10 @@
 **[中文](./README.md)** | English
 
 One topic, one chart, then stop. Data-driven short posts: rankings, paper TL;DRs,
-product launches — one X post or short thread, ~300–800 words on WeChat,
+product launches — one X post or short thread, ~300–800 Chinese characters on WeChat,
 one-click-copy HTML for both.
 
-- Version: **v0.2.3** (same tag as `@topmindspace/topmind-writing-skills@0.8.3`)
+- Version: **v0.2.7** (same tag as `@topmindspace/topmind-writing-skills@0.8.21`)
 
 ## Install
 
@@ -16,16 +16,20 @@ npx @topmindspace/topmind-writing-skills install topmind-briefs
 
 ## Usage
 
+Run from this skill's directory:
+
 ```bash
 # X version (image order derived from the WeChat draft; never hand-order --images)
-md2x-html.py brief-x.md --out brief-x.html --images-from brief-wechat.md
+python3 scripts/md2x-html.py brief-x.md --out brief-x.html --images-from brief-wechat.md
 
-# WeChat version (images inlined as base64)
-md2wechat.py brief-wechat.md --out brief-wechat.html --embed-images
+# WeChat version (images inlined as base64; writes <slug>-公众号版.html + 图片上传清单.md)
+python3 scripts/md2wechat.py --input brief-wechat.md --out-dir out --slug brief --embed-images --no-toc
 ```
 
-The scripts live in the script directories of the `topmind-x-article` and
-`topmind-wechat-post` skills (siblings of this skill). See [SKILL.md](./SKILL.md)
+Both scripts ship with this skill (Python standard library only), so a standalone
+install of briefs can render HTML. They are byte-identical copies of the same-named
+scripts in `topmind-x-article` / `topmind-wechat-post`; inside the repo,
+`scripts/negative_tests.py` checks they stay in sync. See [SKILL.md](./SKILL.md)
 for the full workflow.
 
 ## Content types

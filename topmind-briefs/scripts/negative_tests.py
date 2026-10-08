@@ -3,7 +3,8 @@
 """topmind-briefs 异常输入测试：技能工具链在坏输入下干净失败、不崩溃（任一失败 → 退出码 1）。
 
 覆盖：
-  1. 工作流引用的跨技能脚本存在（md2x-html.py / md2wechat.py 缺失即失败，不静默）
+  1. 交付脚本随包自带（scripts/md2x-html.py / scripts/md2wechat.py 缺失即失败，不静默）；
+     在仓库内运行时，再校验与上游真源（x-article / wechat-post）逐字节一致，防副本漂移
   2. audit_skill.py 在 frontmatter 损坏的 SKILL.md 上退出码 1（不抛未捕获异常）
   3. package_skill.py --check 在缺 README.md 的技能目录上退出码 1（不抛未捕获异常）
   4. scripts/*.py 全部可编译
@@ -40,11 +41,16 @@ def run_quiet(args: list[str], cwd: Path) -> subprocess.CompletedProcess:
 def main() -> None:
     print("[negative_tests] topmind-briefs")
 
-    # 1. 跨技能脚本依赖存在
-    for rel in ("topmind-x-article/scripts/md2x-html.py",
-                "topmind-wechat-post/scripts/md2wechat.py"):
-        p = REPO / rel
-        check(f"跨技能依赖存在: {rel}", p.is_file())
+    # 1. 交付脚本随包自带（单独安装 briefs 也能出 HTML），仓库内与上游真源逐字节一致
+    for name, upstream in (("md2x-html.py", "topmind-x-article/scripts/md2x-html.py"),
+                           ("md2wechat.py", "topmind-wechat-post/scripts/md2wechat.py")):
+        mine = ROOT / "scripts" / name
+        check(f"交付脚本随包自带: scripts/{name}", mine.is_file())
+        src = REPO / upstream
+        if mine.is_file() and src.is_file():
+            check(f"与上游真源逐字节一致: {upstream}",
+                  mine.read_bytes() == src.read_bytes(),
+                  f"请执行 cp {upstream} topmind-briefs/scripts/{name}")
 
     # 2. frontmatter 损坏 → audit_skill 退出 1 且不崩溃
     with tempfile.TemporaryDirectory() as td:
