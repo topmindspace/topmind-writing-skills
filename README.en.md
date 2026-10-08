@@ -80,7 +80,7 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 | [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.2** | X viral short posts: 14 template types (incl. trending-news type); prefer original images (official/third-party), generate only when none exists |
 | [`topmind-poster`](./topmind-poster/) | **0.1.1** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
 
-Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.22** (whole-repo same-tag releases).
+Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.23** (whole-repo same-tag releases).
 
 > SKILL.md frontmatter uses only Agent Skills spec keys at the top level (`name` / `description` / `license` / `metadata`); version, `action_category`, `triggers` and other custom keys live under `metadata` as strings, so `skills-ref validate` passes. Shared scripts and `writing-principles.md` have a single source in `shared/`; skill folders keep byte-identical copies (CI checks with `node scripts/sync_shared.js --check`). The npm package ships only `overview.png` from the cover examples; the per-style samples and `references/cover-study/` images stay on GitHub / in the Release zip.
 

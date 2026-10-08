@@ -15,6 +15,9 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
+    # 负向测试会运行 scripts/*.py；不写字节码缓存，避免 __pycache__ 混进打包与 npm 包
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

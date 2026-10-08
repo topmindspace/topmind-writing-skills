@@ -1,3 +1,14 @@
+## [0.8.23] - 2026-10-08
+
+> 根包 0.8.22 → **0.8.23**（patch）；各技能版本不变。0.8.22 已打 tag 但未生成 Release、未发布 npm，其全部内容随 0.8.23 一并发布（见下方 0.8.22 条目）。
+
+> - 优化：**Release 打包不受运行时缓存影响**。`package_skill.py`（shared 真源 + 6 份副本）新增 `IGNORE_RES`，
+>   `__pycache__/`、`*.pyc`、`*.pyo`、`.DS_Store` 在校验与打包时都直接跳过，不再判为「不应进包的文件」；
+>   `scripts/_*`、`.env` 等仍按原规则拦截
+> - 优化：`release.yml` 在 job 级设置 `PYTHONDONTWRITEBYTECODE=1`，负向测试运行脚本时不写字节码缓存，打包与 npm 包保持干净
+> - 优化：CI `Skill package gates` 在负向测试之后追加「Release packaging check」，按 Release 同口径逐技能跑 `package_skill.py --check`，
+>   打包问题在推送 main 时就能发现，不必等到打 tag
+
 ## [0.8.22] - 2026-10-08
 
 > 根包 0.8.21 → **0.8.22**（patch）；技能各升 patch：topmind-wechat-post 0.3.0 → **0.3.1**、topmind-briefs 0.2.7 → **0.2.8**、

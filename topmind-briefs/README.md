@@ -5,7 +5,7 @@
 一件事，一张图，讲完就停。干货向短文：数据榜单、论文一句话解读、新品速递——
 X 一帖或短 thread，公众号约 300–800 字，双版一键复制 HTML。
 
-- 版本：**v0.2.8**（随 `@topmindspace/topmind-writing-skills@0.8.22` 发布）
+- 版本：**v0.2.8**（随 `@topmindspace/topmind-writing-skills@0.8.23` 发布）
 
 ## 安装
 

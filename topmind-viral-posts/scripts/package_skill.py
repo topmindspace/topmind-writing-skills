@@ -16,7 +16,8 @@
     · README.md / package.json 存在；package.json name 与技能名一致
     · scripts/*.py 全部可编译；references/*.md 非空
     · SKILL.md 引用的 references/<file> 全部存在
-    · 无 scripts/_* / __pycache__ / .env 等不应进包的文件
+    · 无 scripts/_* / .env 等不应进包的文件
+    · 运行时缓存（__pycache__/、*.pyc、*.pyo、.DS_Store）不算违规：校验与打包都直接跳过
 """
 from __future__ import annotations
 
@@ -40,6 +41,12 @@ MANIFEST = ROOT / "dist" / f"{NAME}.manifest.json"
 DESC_LIMIT = 1024
 
 INCLUDE = ["SKILL.md", "README.md", "package.json", "assets/", "references/", "scripts/", "evals/", "agents/"]
+# 运行脚本时自动生成的缓存：既不进包，也不判为违规（CI 先跑负向测试会生成它们）
+IGNORE_RES = [
+    re.compile(r"(^|/)__pycache__(/|$)"),
+    re.compile(r"\.py[co]$"),
+    re.compile(r"(^|/)\.DS_Store$"),
+]
 EXCLUDE_RES = [
     re.compile(r"(^|/)scripts/_"),
     re.compile(r"(^|/)\.env($|\.)"),
@@ -111,6 +118,8 @@ def check() -> bool:
         if not p.is_file() or ".git" in p.parts:
             continue
         rel = p.relative_to(ROOT).as_posix()
+        if any(rx.search(rel) for rx in IGNORE_RES):
+            continue
         for rx in EXCLUDE_RES:
             if rx.search(rel):
                 fail(f"不应进包的文件: {rel}")
@@ -153,7 +162,7 @@ def package() -> None:
                 continue
             rel = p.relative_to(ROOT)
             rel_posix = rel.as_posix()
-            if any(rx.search(rel_posix) for rx in EXCLUDE_RES):
+            if any(rx.search(rel_posix) for rx in IGNORE_RES + EXCLUDE_RES):
                 continue
             if not any(
                 rel_posix == inc.rstrip("/") or rel_posix.startswith(inc)

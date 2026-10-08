@@ -82,3 +82,11 @@ jobs:
           done
       - name: Skill gates (audits + negative tests)
         run: bash scripts/ci_skill_gates.sh
+      # 与 Release 的打包步骤同口径：在负向测试生成缓存之后再校验，提前暴露打包问题
+      - name: Release packaging check (after gates)
+        run: |
+          set -euo pipefail
+          for skill in $(node scripts/discover_skills.js); do
+            echo "=== package check: ${skill} ==="
+            (cd "$skill" && python3 scripts/package_skill.py --check)
+          done
