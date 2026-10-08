@@ -1,3 +1,17 @@
+## [0.8.24] - 2026-10-08
+
+> 根包 0.8.23 → **0.8.24**（patch）；各技能版本不变。
+
+> - 优化：**npm 包不再带 Release 打包产物**。Release 流程在 `npm publish` 之前运行 `package_skill.py`，会在各技能下生成
+>   `dist/`（`<skill>.zip` 与 `<skill>.manifest.json`），0.8.23 的 npm 包因此多带了 briefs / poster / viral-posts 的 6 个文件（约 111 KB）。
+>   `scripts/sync_npm_files.js` 现在为每个发现到的技能生成 `!<skill>/dist/` 排除项，`package.json` `files` 同步更新；
+>   这些产物仍作为 GitHub Release 附件发布
+> - 优化：新增 `scripts/check_npm_pack.js`（`npm run check:pack`），按 `npm pack --dry-run` 的实际文件清单检查，
+>   出现 `dist/`、`release-assets/`、`__pycache__/`、`*.pyc` 即失败。Release 在打包之后、建 Release 之前运行；
+>   CI `Skill package gates` 先按 Release 同口径真实打包再运行，问题在推送 main 时就能发现
+> - 本地验证：按 Release 步骤打包 6 个技能后 `npm pack --dry-run`：127 → 121 个文件，tarball 2,188,530 B → 2,090,653 B，
+>   解包 2,842,215 B → 2,731,152 B，`dist/` 文件 6 → 0
+
 ## [0.8.23] - 2026-10-08
 
 > 根包 0.8.22 → **0.8.23**（patch）；各技能版本不变。0.8.22 已打 tag 但未生成 Release、未发布 npm，其全部内容随 0.8.23 一并发布（见下方 0.8.22 条目）。

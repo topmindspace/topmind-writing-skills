@@ -76,6 +76,10 @@ jobs:
           node bin/topmind-writing-skills.js list > release-assets/skills-list.txt
           ls -la release-assets/
 
+      # dist/ 已生成：确认 npm 包不带 Release 打包产物与缓存，再建 Release、发 npm
+      - name: npm package content check
+        run: node scripts/check_npm_pack.js
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:

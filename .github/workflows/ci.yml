@@ -90,3 +90,11 @@ jobs:
             echo "=== package check: ${skill} ==="
             (cd "$skill" && python3 scripts/package_skill.py --check)
           done
+      # 按 Release 同口径真实打包生成 dist/，再确认 npm 包不带这些产物
+      - name: npm package content check (after packaging)
+        run: |
+          set -euo pipefail
+          for skill in $(node scripts/discover_skills.js); do
+            (cd "$skill" && python3 scripts/package_skill.py)
+          done
+          node scripts/check_npm_pack.js

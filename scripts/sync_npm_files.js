@@ -22,9 +22,15 @@ const EXCLUDE_FILES = [
   '!topmind-cover/references/cover-study/*.png',
 ];
 
+// Release 流程在 npm publish 之前跑 package_skill.py，会在每个技能下生成 dist/（zip + manifest）。
+// 这些产物只作为 GitHub Release 附件分发，不进 npm 包；按发现到的技能逐个排除。
+function distExcludes(skills) {
+  return skills.map((s) => `!${s}/dist/`);
+}
+
 function desiredFiles(skills) {
   const excludes = EXCLUDE_FILES.filter((e) => skills.some((s) => e.replace(/^!/, '').startsWith(`${s}/`)));
-  return [...BASE_FILES, ...skills, ...excludes];
+  return [...BASE_FILES, ...skills, ...excludes, ...distExcludes(skills)];
 }
 
 function sync({ checkOnly }) {
