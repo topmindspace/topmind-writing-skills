@@ -60,3 +60,7 @@ credentials.json
 # Machine-local privacy denylist (usernames/hostnames). Never commit.
 scripts/.privacy-deny.local
 **/.privacy-deny.local
+
+# Release 附件与 npm pack 输出
+release-assets/
+*.tgz
