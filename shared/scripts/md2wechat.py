@@ -1693,7 +1693,8 @@ def main():
                     help="不自动插入前言导读（默认 H2 >=4 个，或 H2 >=3 且正文 >=2000 中文字时插入）")
     ap.add_argument("--signature", default="auto", choices=["auto", "on", "off"],
                     help="尾部签名区：auto=稿件末尾已有签名则不重复生成（默认）")
-    ap.add_argument("--author", default="", help="签名区署名；留空写 {{作者名}} 占位")
+    ap.add_argument("--author", default="",
+                    help="签名区署名；留空则不输出署名行（不再写 {{作者名}} 占位）")
     ap.add_argument("--author-bio", default="", help="签名区一句话简介")
     args = ap.parse_args()
 

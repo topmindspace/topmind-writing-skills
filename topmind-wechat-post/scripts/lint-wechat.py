@@ -106,6 +106,19 @@ def pangu_line(line):
     return line
 
 
+def pangu_scan(line):
+    """盘古之白检测：**必须先屏蔽与 pangu_line 相同的保护段**。
+
+    否则图片/链接目标里的中文会被误报：文件名出现 `Argon官方` 这类中英混排片段时，
+    会被当成缺空格命中 PANGU_B，而 --fix 保护的正是这一段、根本不会改它 ——
+    告警永远清不掉，用户会以为正文不合规。检测与修复必须用同一套屏蔽规则。
+    """
+    masked = line
+    for pattern, _ in PROTECT:
+        masked = pattern.sub("\x00", masked)
+    return bool(PANGU_A.search(masked) or PANGU_B.search(masked))
+
+
 def fix_cjk(path, dry_run=False):
     with open(path, encoding="utf-8") as fh:
         lines = fh.read().split("\n")
@@ -258,7 +271,7 @@ def lint(path, max_para, max_item, asset_root=None):
         strong_chars += sum(len(re.findall(r"[*\u4e00-\u9fffA-Za-z0-9]", s))
                             for s in bold + marked)
 
-        if PANGU_A.search(stripped) or PANGU_B.search(stripped):
+        if pangu_scan(stripped):
             cjk_missing += 1
 
         if not stripped:

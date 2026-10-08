@@ -1,3 +1,20 @@
+## [Unreleased]
+
+> 根包版本号不变；以下修复已并入，待下次发版时随包发布。
+
+> - 修 bug：`topmind-wechat-post/scripts/lint-wechat.py` 的**盘古之白误报**。检测侧直接对原文做 `PANGU_A/B.search()`，
+>   而修复侧 `pangu_line()` 会先屏蔽行内代码 / 链接目标 / 裸 URL —— 两套规则不一致，导致图片链接目标里的中英混排片段
+>   被算作缺空格，而 `--fix` 保护的正是这一段、根本不会改它，告警永远清不掉。新增 `pangu_scan()`，
+>   让检测与修复共用同一套屏蔽规则
+> - 修文案：`md2wechat.py` 的 `--author` 帮助文本仍写「留空写 {{作者名}} 占位」，
+>   而函数自 2026-10-01 起已不再渲染自我介绍行，提示与实际行为对不上，改为「留空则不输出署名行」。
+>   同步 `shared/` 与 `topmind-briefs/` 两份副本
+> - 补文档：`topmind-wechat-post/SKILL.md` 的溯源审计段补**适用范围**——`audit-provenance.py` 按段落比对，
+>   只在「源稿与派生稿同构」时有效；派生稿把表格改写成句子、数据清单改写成图时相似度会整体塌到阈值下，
+>   此时改用**数字级回源核对**
+> - 本地验证：`package_skill.py --check`、`negative_tests.py`、`run_skill_gates.js check` 全绿；
+>   图片链接目标不再误报「盘古之白」，真实缺空格（`这是API接口`）仍正常报出
+
 ## [0.8.27] - 2026-10-10
 
 > 根包 0.8.26 → **0.8.27**（patch）；技能版本：topmind-briefs 0.2.9 → 0.2.10、topmind-cover 0.4.3 → 0.4.4、
