@@ -27,8 +27,6 @@ jobs:
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
-          cache: npm
-          cache-dependency-path: topmind-briefs/package-lock.json
 
       - name: Privacy scan
         run: python3 scripts/ci_privacy_scan.py

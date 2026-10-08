@@ -4,7 +4,7 @@
 
 Rankings, infographics, monthly-report long images, posters — plus the "one image per section" workflow for splitting a long article into N shareable images. Text is 100% controllable, diffable, and iterable.
 
-- Version: **v0.1.1** (ships with `@topmindspace/topmind-writing-skills@0.8.24`)
+- Version: **v0.1.1** (ships with `@topmindspace/topmind-writing-skills@0.8.25`)
 
 ## Install
 

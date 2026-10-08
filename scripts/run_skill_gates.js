@@ -119,10 +119,16 @@ function main() {
         console.log(`skip ${id}: no package.json`);
         continue;
       }
+      // 没有运行时依赖就不调用 npm：`npm install` 会顺手写出一个空的 package-lock.json。
+      const meta = JSON.parse(fs.readFileSync(pkg, 'utf8'));
+      if (!Object.keys(meta.dependencies || {}).length) {
+        console.log(`skip ${id}: no runtime dependencies`);
+        continue;
+      }
       if (fs.existsSync(lock)) {
         run('npm', ['ci', '--omit=dev'], { cwd: skillDir });
       } else {
-        run('npm', ['install', '--omit=dev'], { cwd: skillDir });
+        run('npm', ['install', '--omit=dev', '--no-package-lock'], { cwd: skillDir });
       }
     } else {
       console.error(`Unknown mode: ${mode}`);

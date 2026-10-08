@@ -28,9 +28,14 @@ function distExcludes(skills) {
   return skills.map((s) => `!${s}/dist/`);
 }
 
+// 技能按目录复制安装，用户拿不到也用不上 npm 锁文件；技能目录里即使有 package-lock.json 也不进包。
+function lockExcludes(skills) {
+  return skills.map((s) => `!${s}/package-lock.json`);
+}
+
 function desiredFiles(skills) {
   const excludes = EXCLUDE_FILES.filter((e) => skills.some((s) => e.replace(/^!/, '').startsWith(`${s}/`)));
-  return [...BASE_FILES, ...skills, ...excludes, ...distExcludes(skills)];
+  return [...BASE_FILES, ...skills, ...excludes, ...distExcludes(skills), ...lockExcludes(skills)];
 }
 
 function sync({ checkOnly }) {

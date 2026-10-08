@@ -1,6 +1,6 @@
 {
   "name": "@topmindspace/topmind-writing-skills",
-  "version": "0.8.24",
+  "version": "0.8.25",
   "description": "TopMindSpace 写作技能合集 — 通过 npm / npx 安装技能（公众号长文、X 长文、干货短文、X 引流短帖、封面图、长图海报）。只出稿与发布包，不代发。",
   "license": "MIT",
   "author": "TopMindspace",
@@ -47,7 +47,13 @@
     "!topmind-poster/dist/",
     "!topmind-viral-posts/dist/",
     "!topmind-wechat-post/dist/",
-    "!topmind-x-article/dist/"
+    "!topmind-x-article/dist/",
+    "!topmind-briefs/package-lock.json",
+    "!topmind-cover/package-lock.json",
+    "!topmind-poster/package-lock.json",
+    "!topmind-viral-posts/package-lock.json",
+    "!topmind-wechat-post/package-lock.json",
+    "!topmind-x-article/package-lock.json"
   ],
   "engines": {
     "node": ">=18"

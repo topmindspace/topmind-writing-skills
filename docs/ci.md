@@ -19,7 +19,7 @@ bash scripts/ci_skill_gates.sh
 
 对每个发现的技能目录依次：
 
-1. `npm ci`（或 `npm install`）
+1. 有运行时依赖才装：有锁文件 `npm ci --omit=dev`，没有则 `npm install --omit=dev --no-package-lock`；目前各技能都没有依赖，这一步跳过，不生成锁文件
 2. `package_skill.py --check` + `audit_{styles,docs,skill,css}.py`
 3. `negative_tests.py`
 4. （若存在）`test_feedback_gates.py`

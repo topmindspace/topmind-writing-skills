@@ -4,7 +4,7 @@
 
 榜单、信息图、月报长图、海报，以及「一段一图」的分段图批量出图。文本 100% 可控、可 diff、可迭代。
 
-- 版本：**v0.1.1**（随 `@topmindspace/topmind-writing-skills@0.8.24` 发布）
+- 版本：**v0.1.1**（随 `@topmindspace/topmind-writing-skills@0.8.25` 发布）
 
 ## 安装
 

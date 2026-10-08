@@ -5,9 +5,11 @@
 # ── Dependencies ────────────────────────────────────────────────────────
 node_modules/
 **/node_modules/
-# Root installer has no lockfile requirement; skill lockfiles ARE committed
-# so CI can `npm ci --omit=dev`. Do not blanket-ignore **/package-lock.json.
-/package-lock.json
+# 根安装器和各技能目前都没有 npm 依赖，锁文件只会是空壳，不提交、不进 npm 包。
+# 以后某个技能加了运行时依赖：在下面加一行 !<技能>/package-lock.json 并提交它的锁文件，
+# 门禁会改用 npm ci --omit=dev（npm 包仍由 package.json "files" 排除锁文件）。
+package-lock.json
+**/package-lock.json
 
 # ── Build / regression artifacts ────────────────────────────────────────
 dist/

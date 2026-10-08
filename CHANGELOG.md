@@ -1,3 +1,17 @@
+## [0.8.25] - 2026-10-08
+
+> 根包 0.8.24 → **0.8.25**（patch）；各技能版本不变。
+
+> - 优化：**npm 包不再带 package-lock.json**。0.8.24 的 npm 包里有 6 个锁文件：briefs、cover、wechat-post、x-article 提交在仓库里的 4 个，
+>   以及技能门禁在 poster、viral-posts 下临时生成的 2 个。6 个技能都没有 npm 依赖，这些锁文件里没有锁定任何包，用户按目录安装也用不上
+> - 优化：技能门禁（`scripts/ci_skill_gates.sh`、`scripts/run_skill_gates.js install`）在技能没有运行时依赖时跳过 `npm install`，不再生成临时锁文件；
+>   以后有依赖时，有锁文件用 `npm ci --omit=dev`，没有则用 `npm install --omit=dev --no-package-lock`
+> - 优化：删除仓库里 4 个空锁文件，`.gitignore` 忽略 `package-lock.json`（以后某个技能加了依赖，按注释为它加例外后提交）；
+>   `scripts/sync_npm_files.js` 为每个技能生成 `!<skill>/package-lock.json` 排除项，`package.json` `files` 同步更新
+> - 优化：`scripts/check_npm_pack.js` 增加拦截 `package-lock.json`、`npm-shrinkwrap.json`、`node_modules/`
+> - 优化：CI 与 Release 的 `setup-node` 去掉 `cache: npm`（没有依赖可缓存，原先指向的 `topmind-briefs/package-lock.json` 已删除）
+> - 本地验证：全部门禁与打包步骤之后 `npm pack --dry-run`：123 → 117 个文件，锁文件 6 → 0；临时放入锁文件并去掉排除项时，`check_npm_pack.js` 报错退出
+
 ## [0.8.24] - 2026-10-08
 
 > 根包 0.8.23 → **0.8.24**（patch）；各技能版本不变。

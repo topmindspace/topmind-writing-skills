@@ -34,10 +34,16 @@ run_one() {
   echo "=== gates: ${skill} ==="
   pushd "$skill" >/dev/null
 
-  if [[ -f package-lock.json ]]; then
-    npm ci --omit=dev
+  # 没有运行时依赖就不调用 npm：`npm install` 会顺手写出一个空的 package-lock.json，
+  # 之前 poster、viral-posts 的临时锁文件就是这样混进 npm 包的。
+  if node -e 'const p=require("./package.json");process.exit(Object.keys(p.dependencies||{}).length?0:1)'; then
+    if [[ -f package-lock.json ]]; then
+      npm ci --omit=dev
+    else
+      npm install --omit=dev --no-package-lock
+    fi
   else
-    npm install --omit=dev
+    echo "skip npm install: ${skill} has no runtime dependencies"
   fi
 
   # 清理测试运行产生的 __pycache__ 和 dist，避免 package 检查误报
