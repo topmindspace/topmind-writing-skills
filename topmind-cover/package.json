@@ -1,6 +1,6 @@
 {
   "name": "topmind-cover",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "private": true,
   "description": "文章封面配图生成（X 长文 / 公众号共用）：震撼醒目主题突出，尺寸规范 + 11 种风格模板 + 裁剪落盘。",
   "license": "MIT",
