@@ -118,7 +118,7 @@ topmind-writing-skills/
 ├─ bin/topmind-writing-skills.js      # CLI: list / install / uninstall
 ├─ shared/                            # single source for shared scripts + writing principles (manifest.json lists targets)
 ├─ evals/                             # routing eval cases (not shipped to npm)
-├─ docs/                              # publishing guide · CI notes (history archived in docs/archive)
+├─ docs/                              # publishing guide · CI notes
 ├─ scripts/                           # repo gates / privacy scan
 ├─ package.json                       # @topmindspace/topmind-writing-skills
 └─ LICENSE · CHANGELOG.md · README.md · README.en.md

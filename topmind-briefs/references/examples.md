@@ -9,91 +9,91 @@
 结构模式：先抛一个反直觉判断 → 甩基准 → 给最扎眼的数字 → 图证明。
 
 ```
-Cheaper models are not always weaker models.
+A smaller model can still be the better buy.
 
-On DemoBench-Agent, Model A solves 71% of tasks at about $0.40 per task.
+On ToyBench-Tasks, Model A completes 64% of tasks at roughly $0.25 each.
 
-The good news: for a 200-task batch, the total bill is ~$80 —
-up to 10x cheaper per task than Model B.
+For a 300-task run, that is about $75 in total,
+several times cheaper per task than Model B.
 
-[图：上下两张柱状图——任务解决率 vs 单任务成本]
+[图：上下两张柱状图——任务完成率 vs 单任务成本]
 ```
 
 结构拆解：
 1. 判断句开头（一句话观点）
 2. 基准是什么（一句话）
-3. 最扎眼的数字（71%、~$80、10x）
-4. 图：解决率和成本两张图并置
+3. 最扎眼的数字（64%、~$75、几倍差价）
+4. 图：完成率和成本两张图并置
 
 ## 例 2：榜单速报型
 
 ```
-Big news: Model C just landed #1 in DemoArena Text with 1500 pts,
-and #5 in DemoArena Code with 1400 pts!
+Just in: Model C now sits at #2 on ToyArena Chat with 1380 pts,
+and #4 on ToyArena Code with 1310 pts.
 
-Blended $5/MToken — the most cost-efficient model on the Pareto frontier.
+Price: $3 per million tokens, the lowest among the top five.
 
-#1 in Coding, Hard Prompts, Instruction Following, Creative Writing.
-+15 pts above #2 Model D; up from #9 in the previous release.
+Strongest categories: math, long documents, multilingual prompts.
++12 pts over Model D; up three places since the last update.
 
 [图：两个榜单的排行榜截图各一张]
 ```
 
 结构拆解：
-1. "Big news:" + 排名 + 分数（开头即全部关键信息）
+1. "Just in:" + 排名 + 分数（开头即全部关键信息）
 2. 价格/性价比（一句话）
 3. 细分维度展开（列表）
-4. 纵向对比（比上次、比第二名）
+4. 纵向对比（比上次、比邻位）
 5. 图：排行榜实拍
 
 ## 例 3：论文解读型
 
 ```
-‼️Letting a model manage its own context can beat hand-designed pipelines!
+Short notes can replace long chat histories for agents.
 
-Introducing 🩵Demo Context Models🩵
-- Decide what to keep and what to drop
-- Treat context as an editable file
-- Learn the policy in the weights, no extra harness
+New idea: let the agent write its own memory notes while it works.
+• Keep what the next step needs
+• Drop what it does not
+• Notes live in a plain file, no extra service
 
-[图：论文信息图——架构示意 + 四组结果曲线]
+[图：论文信息图——流程示意 + 三组对比曲线]
 ```
 
 结构拆解：
-1. 加粗判断（有观点，但后面有实证）
-2. "Introducing X" + 3 条 bullet（每条 ≤10 词）
-3. 图：论文原图（架构 + 结果）
+1. 加粗判断（有观点，后面有实证）
+2. 方法名/思路一句话 + 3 条 bullet（每条 ≤10 词）
+3. 图：论文原图（流程 + 结果）
 
 ## 例 4：机制讲解型
 
 ```
-Reranking for RAG, clearly explained!
+How a cache saves your API bill, step by step.
 
-Hybrid search gives you a shortlist. It does not decide which passages
-actually contain the evidence. That missing judgment is where a reranker fits.
+Every request pays for the same long prompt prefix again.
+A prompt cache stores that prefix so repeat calls skip the cost.
 
-→ Retrieve wide
+→ Put the stable text first
 [一句话机制]
 
-→ Score every candidate together
+→ Send the changing part last
 [一句话机制]
 
-→ Let code apply the threshold
+→ Check the hit rate in the usage report
 [一句话机制]
 
-To summarise:
-- Retrieval finds the candidates.
-- The reranker decides what deserves context.
-- The LLM writes the grounded answer.
+In short:
+- Stable prefix: cached.
+- Variable tail: billed normally.
+- Savings show up as cache hits.
 
-[视频：RAG 流程架构动画]
+[视频：缓存命中流程动画]
 ```
 
 结构拆解：
-1. 标题句（"X, clearly explained!"）
-2. 痛点（一句话：现有方案缺什么）
+1. 标题句（"How X works, step by step."）
+2. 痛点（一句话：现有做法缺什么）
 3. 机制分步（→ 标记，每步一句话）
-4. "To summarise:" 三行收束
+4. "In short:" 三行收束
 5. 媒体：流程图/动画 + 文章链接
 
 ---
@@ -101,16 +101,16 @@ To summarise:
 ## 公众号版改写示例（例 1 → 公众号）
 
 ```markdown
-# 200 个任务只要 $80：DemoBench-Agent 基准实测
+# 300 个任务约 $75：ToyBench-Tasks 基准实测
 
-> 便宜的模型不一定弱——在 DemoBench-Agent 上，模型 A 以更低成本拿到了不错的解决率。
+> 小模型也可能更划算——在 ToyBench-Tasks 上，模型 A 以更低成本拿到了不错的完成率。
 
-- 基准：DemoBench-Agent，测智能体完成多步任务的能力
-- 解决率：模型 A 解决 71% 的任务
-- 成本：单任务约 $0.40，跑 200 个任务总计约 $80，
-  单任务成本比模型 B 便宜 up to 10 倍
+- 基准：ToyBench-Tasks，测智能体完成多步任务的能力
+- 完成率：模型 A 完成 64% 的任务
+- 成本：单任务约 $0.25，跑 300 个任务总计约 $75，
+  单任务成本比模型 B 低数倍
 
-![DemoBench-Agent：任务解决率 vs 单任务成本](图)
+![ToyBench-Tasks：任务完成率 vs 单任务成本](图)
 
 来源：某评测机构（示例）
 ```

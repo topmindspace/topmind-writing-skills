@@ -12,9 +12,9 @@
 ## 开头：四种起手
 
 - 数据榜单型："[反直觉判断一句话]。On [基准], [最扎眼数字]。"
-- 榜单速报型："Big news: [模型] just landed #1 in [榜单] with [分数]!"
-- 论文解读型："‼️[加粗判断]: [一句话]! Introducing [X]"
-- 机制讲解型："[X], clearly explained! [痛点一句话]"
+- 榜单速报型："Just in: [模型] now ranks #[名次] on [榜单] with [分数]."
+- 论文解读型："[加粗判断]。New idea: [X 的一句话思路]"
+- 机制讲解型："How [X] works, step by step. [痛点一句话]"
 
 ## 正文：列表 > 段落
 

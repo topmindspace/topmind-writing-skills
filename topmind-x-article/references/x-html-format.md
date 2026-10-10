@@ -28,10 +28,9 @@
 
 核实结论（2026-09-29，两处独立实测一致）：
 
-- X 原生代码块（Insert → Code 插入）**带 native copy button**，读者侧可一键复制
-  （jpw-x-articles 真机验证原文："Code content and native copy buttons persist"）。
-- 围栏代码**只能**走 Insert → Code 对话框，"never relies on clipboard HTML round-tripping"；
-  粘贴 HTML 会丢弃 `<pre>`（x-md-to-article 实测笔记，2026-09-07）。
+- X 原生代码块（Insert → Code 插入）**带原生复制按钮**，读者侧可一键复制（编辑器内真机验证，代码内容与复制按钮均保留）。
+- 围栏代码**只能**走 Insert → Code 对话框，不依赖剪贴板 HTML 往返；
+  粘贴 HTML 会丢弃 `<pre>`（实测笔记，2026-09-07）。
 
 因此提示词的"复制"分两段：
 
