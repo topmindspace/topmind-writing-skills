@@ -1,20 +1,20 @@
-# 示例 · 干货短文（按真实帖子校准）
+# 示例 · 干货短文（自编示例）
 
-> 说明：以下引用的是真实帖子的原文结构（含原文的 `- ` 列表写法，原样保留）。
+> 说明：以下均为自己编写的示例，模型名、基准名、数字皆为虚构，仅用来演示各类型的结构，不对应任何真实帖子或账号。
 > 自己写 X 版时，列表符号按 `style-guide.md` 用纯文本 `• ` / `▪ ` / emoji
->（X 不渲染 Markdown）。
+>（X 不渲染 Markdown）；下面示例里为了便于阅读使用了 `- `，实际发布时请替换。
 
-## 例 1：数据榜单型（@ArtificialAnlys 原文结构）
+## 例 1：数据榜单型
 
-原文模式：先抛一个反直觉判断 → 甩基准 → 给最扎眼的数字 → 图证明。
+结构模式：先抛一个反直觉判断 → 甩基准 → 给最扎眼的数字 → 图证明。
 
 ```
-Restricting offensive without blocking defensive is difficult...
+Cheaper models are not always weaker models.
 
-On CyberGym-E2E-AA, some frontier models are safety blocked on 85%+ of tasks.
+On DemoBench-Agent, Model A solves 71% of tasks at about $0.40 per task.
 
-The good news: with GPT-6 Luna or MiMo-V2.6-Pro, ~100 bug hunts in a 1M+ line
-codebase for ~$20 — up to 100x cheaper per task than Grok 4.7.
+The good news: for a 200-task batch, the total bill is ~$80 —
+up to 10x cheaper per task than Model B.
 
 [图：上下两张柱状图——任务解决率 vs 单任务成本]
 ```
@@ -22,21 +22,21 @@ codebase for ~$20 — up to 100x cheaper per task than Grok 4.7.
 结构拆解：
 1. 判断句开头（一句话观点）
 2. 基准是什么（一句话）
-3. 最扎眼的数字（85%+、~$20、100x）
+3. 最扎眼的数字（71%、~$80、10x）
 4. 图：解决率和成本两张图并置
 
-## 例 2：榜单速报型（@arena 原文结构）
+## 例 2：榜单速报型
 
 ```
-Big news: Gemini 4 Argon (High) just landed #1 in Text Arena with 1525 pts,
-and #8 in Code Arena: WebDev with 1679 pts!
+Big news: Model C just landed #1 in DemoArena Text with 1500 pts,
+and #5 in DemoArena Code with 1400 pts!
 
-Blended $8/MToken — the most cost efficient model on the Pareto frontier.
+Blended $5/MToken — the most cost-efficient model on the Pareto frontier.
 
-#1 in Coding, Hard Prompts, Instruction Following, Longer Query, Creative Writing.
-+20 pts above #2 Claude Opus 4.6 (High); leap from #11 (Gemini 3.8 Flash).
+#1 in Coding, Hard Prompts, Instruction Following, Creative Writing.
++15 pts above #2 Model D; up from #9 in the previous release.
 
-[图：Text Arena + Code Arena 排行榜截图各一张]
+[图：两个榜单的排行榜截图各一张]
 ```
 
 结构拆解：
@@ -46,37 +46,36 @@ Blended $8/MToken — the most cost efficient model on the Pareto frontier.
 4. 纵向对比（比上次、比第二名）
 5. 图：排行榜实拍
 
-## 例 3：论文解读型（@RulinShao 原文结构）
+## 例 3：论文解读型
 
 ```
-‼️The Bitter Lesson for context management: Giving LMs unrestricted control
-over their context beats human-designed SOTA!
+‼️Letting a model manage its own context can beat hand-designed pipelines!
 
-Introducing 🩵Context Language Models (CLMs)🩵
-- Natively manage their own context
-- Treat context as a file
-- Learn policies in CLM weights, no harness
+Introducing 🩵Demo Context Models🩵
+- Decide what to keep and what to drop
+- Treat context as an editable file
+- Learn the policy in the weights, no extra harness
 
 [图：论文信息图——架构示意 + 四组结果曲线]
 ```
 
 结构拆解：
-1. 加粗判断（"Bitter Lesson"式标题党，但后面有真东西）
+1. 加粗判断（有观点，但后面有实证）
 2. "Introducing X" + 3 条 bullet（每条 ≤10 词）
 3. 图：论文原图（架构 + 结果）
 
-## 例 4：机制讲解型（@akshay_pachaar 原文结构）
+## 例 4：机制讲解型
 
 ```
-Jev for RAG, clearly explained!
+Reranking for RAG, clearly explained!
 
 Hybrid search gives you a shortlist. It does not decide which passages
-contain evidence. That missing judgment is where Jev fits.
+actually contain the evidence. That missing judgment is where a reranker fits.
 
 → Retrieve wide
 [一句话机制]
 
-→ Judge every candidate together
+→ Score every candidate together
 [一句话机制]
 
 → Let code apply the threshold
@@ -84,7 +83,7 @@ contain evidence. That missing judgment is where Jev fits.
 
 To summarise:
 - Retrieval finds the candidates.
-- Jev decides what deserves context.
+- The reranker decides what deserves context.
 - The LLM writes the grounded answer.
 
 [视频：RAG 流程架构动画]
@@ -102,18 +101,18 @@ To summarise:
 ## 公众号版改写示例（例 1 → 公众号）
 
 ```markdown
-# 跑 100 次漏洞挖掘只要 $20：CyberGym-E2E-AA 基准实测
+# 200 个任务只要 $80：DemoBench-Agent 基准实测
 
-> 想防住攻击又不误伤防御，太难了——前沿模型在 85%+ 的任务上被安全拦截直接拒绝回答。
+> 便宜的模型不一定弱——在 DemoBench-Agent 上，模型 A 以更低成本拿到了不错的解决率。
 
-- 基准：CyberGym-E2E-AA，测从漏洞发现到补丁的全链路防御能力
-- 拦截率：部分前沿模型 85%+ 任务被安全机制拦掉
-- 成本：GPT-6 Luna / MiMo-V2.6-Pro 跑 ~100 次 bug hunt 约 $20，
-  单任务成本比 Grok 4.7 便宜 up to 100 倍
+- 基准：DemoBench-Agent，测智能体完成多步任务的能力
+- 解决率：模型 A 解决 71% 的任务
+- 成本：单任务约 $0.40，跑 200 个任务总计约 $80，
+  单任务成本比模型 B 便宜 up to 10 倍
 
-![CyberGym-E2E-AA：任务解决率 vs 单任务成本](图)
+![DemoBench-Agent：任务解决率 vs 单任务成本](图)
 
-来源：Artificial Analysis
+来源：某评测机构（示例）
 ```
 
 改写要点：X 版英文直发；公众号版加一句中文背景（"这是什么基准"），

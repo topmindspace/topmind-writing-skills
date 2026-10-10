@@ -41,7 +41,7 @@ npx @topmindspace/topmind-writing-skills install topmind-briefs
 
 ### topmind-viral-posts · X 引流段子/爆款短篇
 
-基于 X 中文区真实爆款帖提炼的 6 大类型模板（干货忠告/互关求粉/自嘲幽默/互动提问/打卡日常/新人报到），短句分行、口语化、带互动钩子，**每帖配 1 张图**（美女/宠物/风景/奇幻/标语，走 topmind-cover 出图）。
+基于对 X 中文区常见高互动写法的归纳，提供 6 大类型模板（干货忠告/互关求粉/自嘲幽默/互动提问/打卡日常/新人报到；示例均为自编），短句分行、口语化、带互动钩子，**每帖配 1 张图**（美女/宠物/风景/奇幻/标语，走 topmind-cover 出图）。
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-viral-posts

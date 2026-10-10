@@ -28,7 +28,7 @@
 - 四种内容类型：数据榜单型 / 论文解读型 / 新品速递型 / 对比实测型
 - references：style-guide（开头扔结论/列表>段落/禁止清单）、
   platform-specs（X ≤280字符 / 公众号 300–800字对照）、examples（4 类示例 + 反例）
-- 风格参考：@ArtificialAnlys、@arena、@akshay_pachaar、@RulinShao 等
+- 风格参考：数据榜单型、榜单速报型、论文解读型、机制讲解型等通用类型
 - 运营铁律：只起草不代发、数字必有来源、厂商数字标口径、不洗稿
 - 修订（2026-10-01）：字数口径统一为"X 一帖/短 thread，公众号约 300–800 字"；
   交付明确为双版一键复制 HTML（X 走 md2x-html，公众号走 md2wechat --embed-images）；

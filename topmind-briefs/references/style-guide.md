@@ -9,12 +9,12 @@
 **干**：每个字都承载信息。删掉所有"众所周知""值得一提的是"。
 **准**：数字有来源，判断有依据。不确定的写"据 X 报道"，不编。
 
-## 开头：四种起手（按真实帖子）
+## 开头：四种起手
 
-- 数据型（@ArtificialAnlys）："[反直觉判断一句话]。On [基准], [最扎眼数字]。"
-- 速报型（@arena）："Big news: [模型] just landed #1 in [榜单] with [分数]!"
-- 论文型（@RulinShao）："‼️[加粗判断]: [一句话]! Introducing [X]"
-- 讲解型（@akshay_pachaar）："[X], clearly explained! [痛点一句话]"
+- 数据榜单型："[反直觉判断一句话]。On [基准], [最扎眼数字]。"
+- 榜单速报型："Big news: [模型] just landed #1 in [榜单] with [分数]!"
+- 论文解读型："‼️[加粗判断]: [一句话]! Introducing [X]"
+- 机制讲解型："[X], clearly explained! [痛点一句话]"
 
 ## 正文：列表 > 段落
 
