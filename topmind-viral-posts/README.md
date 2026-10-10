@@ -2,7 +2,7 @@
 
 [English](./README.en.md) | 中文
 
-短、真、钩子——3 秒看完，忍不住点赞/评论/关注。基于 X 中文区真实爆款帖提炼的 6 大类型模板，每帖配 1 张图。
+短、真、钩子——3 秒看完，忍不住点赞/评论/关注。基于对 X 中文区常见高互动写法的归纳，提供多类型模板（示例均为自编），每帖配 1 张图。
 
 - 版本：**v0.3.2**（随 `@topmindspace/topmind-writing-skills@0.8.25` 发布）
 
@@ -29,4 +29,4 @@ npx @topmindspace/topmind-writing-skills install topmind-viral-posts
 
 ## 用法
 
-工作流细节见 [SKILL.md](./SKILL.md)，案例拆解见 [references/patterns.md](./references/patterns.md)。
+工作流细节见 [SKILL.md](./SKILL.md)，示例拆解见 [references/patterns.md](./references/patterns.md)。

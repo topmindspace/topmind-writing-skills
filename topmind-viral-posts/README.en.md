@@ -2,7 +2,7 @@
 
 **[中文](./README.md)** | English
 
-Short, real, hooked — read in 3 seconds, impossible not to like/comment/follow. 6 viral templates distilled from real high-engagement X posts in the Chinese community, each post paired with 1 image.
+Short, real, hooked — read in 3 seconds, impossible not to like/comment/follow. Templates summarised from common high-engagement writing patterns in the Chinese X community (all examples are original, written for this skill), each post paired with 1 image.
 
 - Version: **v0.3.2** (ships with `@topmindspace/topmind-writing-skills@0.8.25`)
 
