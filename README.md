@@ -130,7 +130,7 @@ topmind-writing-skills/
 ├─ bin/topmind-writing-skills.js # CLI：list / install / uninstall
 ├─ shared/                       # 共享脚本与写作原则的唯一真源（manifest.json 声明分发到哪些技能）
 ├─ evals/                        # 路由评测用例（不进 npm 包）
-├─ docs/                         # 发布规范 · CI 说明（历史审计归档在 docs/archive）
+├─ docs/                         # 发布规范 · CI 说明
 ├─ scripts/                      # 仓库级门禁 / 隐私扫描
 ├─ package.json                  # @topmindspace/topmind-writing-skills
 └─ LICENSE · CHANGELOG.md · README.md · README.en.md

@@ -23,9 +23,9 @@
 
 出现「查不到/有反证」时，先确认它搜对了地方：
 
-- Mem0 的 issue #4573 被误判为不存在——核查员搜的是 `anthropics/claude-code`，实际在 `mem0ai/mem0`
-- ChatGPT 项目记忆 2025-08 被误判——`project-only memory` 与 `Projects` 功能是两回事
-- Claude Cowork 记忆合并 2026-08-25 被误判——Cowork 产品 2026-01 发布，但记忆合并是 8 月
+- 某个 issue 被误判为不存在——核查员搜的是另一个仓库，实际在对应的上游仓库
+- 某功能的发布时间被误判——产品早已发布，核查员把后续的小版本更新当成了首发
+- 两个名称相近的功能被当成同一个——核查前先确认功能名称与产品范围一致
 
 **可硬核实的数字自己动手取**：GitHub star 用 `curl https://api.github.com/repos/{owner}/{repo}` 取 `stargazers_count`，比搜来的区间值准。
 
