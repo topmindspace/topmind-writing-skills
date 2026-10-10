@@ -30,7 +30,7 @@ Desktop / 移动伴面只实现**约束子集**；完整语义以本目录 Pytho
 | 文件 | 管什么 |
 |------|--------|
 | `workflow.md` | 流程/状态机/路径/站外拉取 |
-| `known-pits.md` | 实操坑 |
+| `known-pits.md` | 实操已知问题 |
 | `element-spec.md` | 元素 → HTML 渲染规格 |
 | `theme-map.md` | 主题键 ↔ 题材映射 |
 | `wechat-constraints.md` | 平台硬约束（转换产物） |

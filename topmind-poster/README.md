@@ -39,7 +39,7 @@ python3 scripts/render_poster.py poster.html -o poster.png
 python3 scripts/render_poster.py build/*.html --out-dir images/ --width 1180
 ```
 
-手写流程、参数含义、以及 7 个实测坑（沙箱参数、柱状图填充消失、背景取色点、PNG 重采样反而变大等）见 [SKILL.md](./SKILL.md)。版式配方见 [references/layout-recipes.md](./references/layout-recipes.md)。
+手写流程、参数含义、以及 7 个实测注意点（沙箱参数、柱状图填充消失、背景取色点、PNG 重采样反而变大等）见 [SKILL.md](./SKILL.md)。版式配方见 [references/layout-recipes.md](./references/layout-recipes.md)。
 
 ## 依赖
 

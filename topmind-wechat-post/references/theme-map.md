@@ -113,7 +113,7 @@ python3 scripts/md2wechat.py --list-themes
 1. 在 `assets/themes/` 写 `{id}.json`，字段按上表写全
 2. 跑 `python3 scripts/md2wechat.py --list-themes` 确认能被列出
 3. 用一篇真实稿跑一遍，确认 `合规自检` 为 0 ERROR：
-   `python3 scripts/md2wechat.py --input 稿.md --out-dir /tmp/t --slug t --theme {id}`
+   `python3 scripts/md2wechat.py --input 稿.md --out-dir ./out --slug t --theme {id}`
 4. 在本文件的主题表里登记一行
 5. 目视核对：**下划线色、高亮底、代码块关键字色是否都跟本主题主色同源**
    （不同源 = 又出现了色彩外溢）

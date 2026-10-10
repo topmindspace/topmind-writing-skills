@@ -62,7 +62,7 @@
 ## 五、发版准备 0.3.7
 
 - 根 package.json 0.3.6→**0.3.7**（patch）；4 技能 version 不动；版本引用同步；CHANGELOG 新增 0.3.7 条目，并把 0.3.6 标注为已发布。
-- **本地 commit，未 push、未打 tag**（按任务约束；发版需用户再给 PAT，走 HTTPS+Basic）。
+- **本地 commit，未 push、未打 tag**（按任务约束；发版由用户另行授权）。
 
 ## 六、遗留项
 

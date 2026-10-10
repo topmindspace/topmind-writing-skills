@@ -1,4 +1,4 @@
-# tms-skills monorepo · version control ignore rules
+# topmind-writing-skills · version control ignore rules
 
 # Principle: regenerateable artifacts, machine-local state, and secrets never enter the repo.
 

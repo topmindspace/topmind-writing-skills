@@ -118,7 +118,7 @@ setext/frontmatter/表格前导 `|`/嵌套 URL 第四轮已修完（本轮实测
 ## 七、遗留项
 
 1. **未 push、未打 tag**：发版步骤为 push main → CI 绿 → 打 `v0.3.3` tag → Release 自动发 npm。
-   注意当日 SSH 隧道被代理墙掐断，需走 HTTPS + PAT Basic 认证推送（见 MEMORY.md）。
+   推送在 SSH 不可用时改走 HTTPS + 一次性令牌（见 docs/PUBLISHING.md）。
 2. wechat-post 3 个需改行为候选（缺图进自检/border-radius 去噪/序号剥离标点）。
 3. x-article 3 个行为变化候选（无前导 `|` 表格/`~~~` 围栏/标题 140 字符检查）。
 4. 历史遗留仍未动：Windows/macOS CI 矩阵、安装器 2 个中等问题。
