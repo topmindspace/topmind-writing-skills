@@ -78,9 +78,9 @@ CI/Release 细节见 [`docs/ci.md`](./ci.md)。
    git push origin main --tags
    ```
 
-   > **推送（2026-09-29 起）**：SSH 隧道被代理墙掐断，改走 **HTTPS + PAT Basic 认证**：
-   > `git -c "http.extraHeader=Authorization: Basic <base64(x-access-token:PAT)>" push https://github.com/topmindspace/topmind-writing-skills.git main`
-   > 坑：GitHub git 接口不认 `Bearer` 只认 Basic；origin 是 SSH 地址时必须显式给 HTTPS URL；PAT 一次性，用完即弃不入库。
+   > **HTTPS 推送**（SSH 不可用时）：用一次性令牌做 Basic 认证：
+   > `git -c "http.extraHeader=Authorization: Basic <base64(x-access-token:TOKEN)>" push https://github.com/topmindspace/topmind-writing-skills.git main`
+   > 注意：GitHub git 接口只接受 Basic，不接受 `Bearer`；origin 是 SSH 地址时要显式给 HTTPS URL；令牌一次性使用，不入库。
 
    Release workflow（`.github/workflows/release.yml`）按序执行：
    - **tag ↔ `package.json` 交叉校验**：`vX.Y.Z` 必须等于根 `package.json` 的 `version`，不一致直接失败

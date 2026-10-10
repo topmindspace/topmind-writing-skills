@@ -47,7 +47,7 @@ strict 0 error / 0 warning。
 ### 1.3 模板与 references 抽查（Worker C）— 修 13 处死引用
 
 - 抽 3 套覆盖度最低的风格（品牌红/靛紫/光谱彩色）实跑渲染：**全部成功**，
-  token 与 styles.md 宣称值逐字一致，donut 色板正确（代码级验证；本机无浏览器未做像素目检）
+  token 与 styles.md 宣称值逐字一致，donut 色板正确（代码级验证；当时环境无浏览器，未做像素目检）
 - 修 13 处死引用（6 文件）：SKILL.md:142 错乱拼接的脚本路径；
   references/design-system.md、icons.md、tech-design.md、scripts/build_examples.py 中
   `docs/archive/…` → `../docs/archive/…`（仓库根真实存在）；modes.md 样例表改指归档
@@ -64,10 +64,8 @@ strict 0 error / 0 warning。
 
 ### 2.2 根文档
 
-- `docs/PUBLISHING.md` 补三处：① **HTTPS+PAT 推送方式**
-  （`git -c "http.extraHeader=Authorization: Basic <base64(x-access-token:PAT)>" push
-  https://github.com/topmindspace/tms-skills.git main`；GitHub git 接口不认 Bearer 只认 Basic；
-  origin 为 SSH 地址时须显式给 HTTPS URL；PAT 一次性用完即弃）；
+- `docs/PUBLISHING.md` 补三处：① **HTTPS + 一次性令牌推送方式**
+  （GitHub git 接口只接受 Basic，不接受 Bearer；origin 为 SSH 地址时须显式给 HTTPS URL；令牌一次性使用）；
   ② tag↔package.json 交叉校验（已核对 release.yml 第 37–50 行）；③ NPM_TOKEN/E409 加固
   （已核对 workflow 第 79–124 行）。另修过时文字"当前线 0.2.x"→"0.3.x（latest 指向 0.3.1）"
 - 三个新技能 README（中英）补版本号行（仓库规约：SKILL.md/package.json/README/CHANGELOG 同值）
@@ -84,7 +82,7 @@ strict 0 error / 0 warning。
 ### 2.4 隐私与安装器
 
 - `ci_privacy_scan.py`：**PASS**（199 文件）
-- `bin/tms-skills.js list` 四技能正常；四技能 install --to /tmp 全过；
+- `bin/tms-skills.js list` 四技能正常；四技能 install --to 临时目录 全过；
   `test_install_guards.js` 全部通过；`run_skill_gates.js versions` 通过；
   `sync_npm_files.js --check` in sync
 
@@ -111,7 +109,7 @@ strict 0 error / 0 warning。
 ## 五、遗留项（需 parent/用户定夺）
 
 1. **未 push、未打 tag**：发版步骤 push main → CI → 打 `v0.3.4` tag → Release 自动发 npm。
-   SSH 隧道仍被代理墙掐断，需走 HTTPS + PAT Basic 认证（上次 PAT 已用完即弃，需用户再给）。
+   SSH 不可用时改走 HTTPS + 一次性令牌。
 2. top-ppt-html 需产品决策的行为候选：render_from_model 不同步 style/theme；
    超长中文图表标签不截断；图片超限 WARN 不升级 FAIL；代码块页型缺失（schema 无 code 页型）；
    KPI/donut/image points 空间不足时 slice 舍去（有 MODEL_ROUNDTRIP 兜底）。

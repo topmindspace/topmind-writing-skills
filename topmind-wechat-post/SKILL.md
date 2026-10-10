@@ -94,7 +94,7 @@ python3 scripts/sync-status.py --set 定稿 <包> --apply
 python3 scripts/new-article.py --slug <中文短名> --title "<标题>" --direction reverse
 ```
 
-取源坑（RSC 载荷、图片 hash 映射、`md5` 去重、截图裁切）见 `references/workflow.md`「站外拉取取源注意」；差异与口径写进包内 `README.md`。
+取源注意（RSC 载荷、图片 hash 映射、`md5` 去重、截图裁切）见 `references/workflow.md`「站外拉取取源注意」；差异与口径写进包内 `README.md`。
 
 **回推纪律**：notes 保持纯 Markdown（`:::` 容器 / 徽章 / `==高亮==` 只进公众号稿）；回推**务必带 `--assets`**（否则 GitHub 上 `images/` 死链）。命令串见 `references/workflow.md`「收尾」。
 
@@ -198,7 +198,7 @@ python3 scripts/md2wechat.py \
    X 侧图片顺序必须用 `--images-from 公众号稿.md` 派生，禁止手工拼 `--images`
    （曾因文件名排序 ≠ 文档顺序，导致 X 版从第六节起整段配图错位）。
 
-坑清单：[`references/known-pits.md`](references/known-pits.md)。
+已知问题清单：[`references/known-pits.md`](references/known-pits.md)。
 
 ## 主题
 
@@ -222,7 +222,7 @@ topmind Desktop 的「公众号创作」插件是本技能的可视化工作流�
 
 ## 外部依赖
 
-以下技能**不在本仓库**（一般随用户侧 workbuddy 环境提供）；缺失时对应路由能力不可用，
+以下技能**不在本仓库**（由宿主智能体环境另行提供）；缺失时对应路由能力不可用，
 本仓库脚本（交付包、排版、发布清单等）功能不受影响：
 
 - `humanizer-zh`：中文去 AI 味的保真边界（「只去 AI 味不排版」路径用）。

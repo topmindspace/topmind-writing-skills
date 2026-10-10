@@ -96,7 +96,7 @@ X long-form posts are currently published by hand-pasting into the X Article edi
 
 ## External dependencies
 
-The following skills are **not in this repo** (usually provided by the user's local workbuddy environment). Missing ones disable the corresponding routed capability; the core flow (draft → text, cover, publish checklist) is unaffected:
+The following skills are **not in this repo** (provided separately by the host agent environment). Missing ones disable the corresponding routed capability; the core flow (draft → text, cover, publish checklist) is unaffected:
 
 - `topmind-x` (topmind-skills pack): short-post connector, posts only after the user confirms; its xurl covers short posts, not long-form. Short-post drafting goes to `topmind-viral-posts` / `topmind-briefs`.
 - `topmind-capture`: the "archive only, don't publish" routing path.

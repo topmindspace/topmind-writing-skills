@@ -50,7 +50,7 @@
 
 Worker 1 的 17 条清单落地情况：G1（ppt frontmatter 补 triggers/action_category）✓、G3a（删正文写死版本号）✓、G3b（年份硬编码→`<当年>`）✓、G3c（W3 已改"发布实战规范"）✓、P1（description 补 cover 路由）✓、P2（瘦身）✓、P3（L2 索引已在"整读=FAIL"行内联）✓、C1（description"配图"→"题图"）✓、C2（触发词补题图/首图/banner）✓、C3（删 GitHub 外链 `<img>`，改本地路径文字）✓、C4（原创声明移入 cover-styles.md 顶部，SKILL.md 只留一句）✓、W1（W3 已压缩，无重复块）✓、W2（description 补 cover/x-article 路由）✓、W3（触发词补微信编辑器/粘贴到公众号/状态同步）✓、W4（三关已是硬阈值条目，无需再动）✓、X1（When NOT to use 补写稿边界）✓、X2（触发词补转纯文本/X纯文本/发article）✓、G2（命名不一致记为已知债务，不改）。
 
-另：修复 docs/ci.md 与 PUBLISHING.md 的 npm publish 策略矛盾（按"显式失败防假绿"对齐）；PUBLISHING.md 保留 HTTPS+PAT 推送精确命令与 Bearer/Basic 坑位（精简版 3 行）。
+另：修复 docs/ci.md 与 PUBLISHING.md 的 npm publish 策略矛盾（按"显式失败防假绿"对齐）；PUBLISHING.md 保留 HTTPS 一次性令牌推送命令与 Bearer/Basic 说明（精简版 3 行）。
 
 ## 四、性能与可靠性（Worker 4：三技能 + 安装器）
 
@@ -67,7 +67,7 @@ Worker 1 的 17 条清单落地情况：G1（ppt frontmatter 补 triggers/action
 
 ## 六、遗留项
 
-1. **未 push、未打 tag**：发版步骤 push main → CI → 打 `v0.3.5` tag → Release 自动发 npm。SSH 隧道仍被代理墙掐断，需 HTTPS + PAT Basic 认证（PAT 需用户再给）。
+1. **未 push、未打 tag**：发版步骤 push main → CI → 打 `v0.3.5` tag → Release 自动发 npm。SSH 不可用时改走 HTTPS + 一次性令牌。
 2. top-ppt-html 行为候选（需产品决策）：render_from_model 不同步 style/theme、超长中文图表标签不截断、图片超限 WARN 不升级 FAIL、代码块页型缺失、chart_label_presence 死代码、A 通道同族风险。
 3. wechat-post/x-article 前几轮行为候选未动（缺图进合规自检、border-radius WARN 去噪、无前导 `|` 表格等）。
 4. 历史遗留：Windows/macOS CI 矩阵、安装器 2 个中等问题。

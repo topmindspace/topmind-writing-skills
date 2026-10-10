@@ -147,7 +147,7 @@ slender graceful figure,
 clean uncluttered background, vertical 9:16
 ```
 
-要点（都是踩坑换来的）：
+要点（都来自实际使用中遇到的问题）：
 - **只用正面描述**：写"flawless porcelain skin"，不写"no AI face / natural skin texture"——否定词会被理解成"往脸上加点瑕疵"，雀斑痣就是这么来的
 - **美貌必须给具体锚点**："beautiful"太抽象，要拆成"大眼睛/清澈眼神/淡妆/柔顺长发/干净气质"，清纯才落得下来
 - **真实感靠相机语言**："35mm film + 85mm f/1.8 + film grain"比任何"不要AI感"都管用，给模型一个物理介质参照

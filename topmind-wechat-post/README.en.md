@@ -98,7 +98,7 @@ Facts (first-hand sources) / logic (structural consistency) / copy (de-AI-flavor
 
 ## External dependencies
 
-The following skills live **outside this repo** (usually provided by the user's local workbuddy environment). Missing ones degrade or disable the corresponding capability; all scripts in this repo still work fully:
+The following skills live **outside this repo** (provided separately by the host agent environment). Missing ones degrade or disable the corresponding capability; all scripts in this repo still work fully:
 
 - `humanizer-zh`: fidelity boundaries for Chinese de-AI-flavor; without it the "de-AI-flavor only, no typesetting" path is unavailable.
 - `qu-aiwei-zh`: Chinese de-AI-flavor scan (canonical, includes the author-stance layer). `scripts/scan_ai_flavor.py` forwards to it when found and falls back to a bundled implementation (wording score only, with a warning) when not.
