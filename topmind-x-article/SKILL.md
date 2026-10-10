@@ -3,7 +3,7 @@ name: topmind-x-article
 description: "X 长文（Article）一键发布包：Markdown 原稿 → 可直接复制的 X长文.html（富文本一键复制+配图内嵌）/ X发布稿.txt + 封面图 + 发布清单，由用户人工点发布。Use when X 长文、发 X 文章、X article、长文发 X、写 X 长文、推特长文、twitter 长文。Do NOT use for 短推文与短帖写稿（→ topmind-viral-posts 或 topmind-briefs）、把短帖发出去（→ topmind-x，须用户确认）、公众号（→ topmind-wechat-post）。"
 license: MIT
 metadata:
-  version: "0.4.9"
+  version: "0.4.10"
   action_category: "write"
   triggers: "X 长文, 发 X 文章, X article, 长文发 X, X 发长文, 转纯文本, X 纯文本, 发 article, 一键复制, 写 X 长文, X 长文发布, 推特长文, twitter 长文"
   author: "TopMindSpace"

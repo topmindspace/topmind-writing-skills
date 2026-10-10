@@ -4,7 +4,7 @@
 
 Short, real, hooked — read in 3 seconds, impossible not to like/comment/follow. Templates summarised from common high-engagement writing patterns in the Chinese X community (all examples are original, written for this skill), each post paired with 1 image.
 
-- Version: **v0.3.3** (ships with `@topmindspace/topmind-writing-skills@0.8.26`)
+- Version: **v0.3.4** (ships with `@topmindspace/topmind-writing-skills@0.8.27`)
 
 ## Install
 

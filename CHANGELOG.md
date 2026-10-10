@@ -1,3 +1,15 @@
+## [0.8.27] - 2026-10-10
+
+> 根包 0.8.26 → **0.8.27**（patch）；技能版本：topmind-briefs 0.2.9 → 0.2.10、topmind-cover 0.4.3 → 0.4.4、
+> topmind-viral-posts 0.3.3 → 0.3.4、topmind-wechat-post 0.3.2 → 0.3.3、topmind-x-article 0.4.9 → 0.4.10；topmind-poster 0.1.2 不变。
+
+> - 优化：`topmind-viral-posts` 的模板示例逐条改写为不同角度的原创示例，只保留公式与拆解；配图公式、140 字压缩示例和互关运营各节同步改写
+> - 优化：`topmind-briefs` 的 4 个示例（数据榜单、榜单速报、论文解读、机制讲解）与公众号改写示例换成原创内容，三类开场句式模板改为通用写法
+> - 优化：`topmind-cover` 的风格示例标题改为通用表述；`topmind-wechat-post` 案例笔记与写作质量清单、通用写作原则中的示例改为中性表述；
+>   `topmind-x-article` 的 HTML 格式参考去掉对外部项目的引用
+> - 优化：移除 `docs/archive`（审计过程文档、旧样张和旧参考资料），README 与封面参考资料的引用同步
+> - 本地验证：隐私扫描、files 与 shared 同步检查、评测结构、安装器测试、版本一致性、全部技能门禁与 `agentskills validate` 通过
+
 ## [0.8.26] - 2026-10-10
 
 > 根包 0.8.25 → **0.8.26**（patch）；技能版本：topmind-briefs 0.2.8 → 0.2.9、topmind-cover 0.4.2 → 0.4.3、topmind-poster 0.1.1 → 0.1.2、

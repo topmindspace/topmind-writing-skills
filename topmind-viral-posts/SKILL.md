@@ -3,7 +3,7 @@ name: topmind-viral-posts
 description: "X 引流段子/爆款短篇：14 大类型模板（含热点资讯型），短句分行口语化带互动钩子；配图原图优先（官方/第三方，逐图确认可用并保留来源），无原图才生图（清新优雅/MD3商务风）。只起草不代发。Use when 引流段子、爆款短篇、涨粉帖、互关帖、X 短帖、热点段子、X 引流、traffic post、viral post；引流互动型（段子、钩子、涨粉）走本技能。Do NOT use for X 长文（→ topmind-x-article）、公众号长文（→ topmind-wechat-post）、信息密度型干货短文与快讯（→ topmind-briefs）、把帖子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.3.3"
+  version: "0.3.4"
   action_category: "write"
   triggers: "引流段子, 爆款短篇, 涨粉帖, 互关帖, X 短帖, traffic post, viral post, 写引流段子, 爆款短文, 涨粉内容, 互关内容, X 引流"
   author: "TopMindSpace"
