@@ -1,3 +1,15 @@
+## [0.8.26] - 2026-10-10
+
+> 根包 0.8.25 → **0.8.26**（patch）；技能版本：topmind-briefs 0.2.8 → 0.2.9、topmind-cover 0.4.2 → 0.4.3、topmind-poster 0.1.1 → 0.1.2、
+> topmind-viral-posts 0.3.2 → 0.3.3、topmind-wechat-post 0.3.1 → 0.3.2、topmind-x-article 0.4.8 → 0.4.9。
+
+> - 优化：示例与参考资料改为自编的通用内容。`topmind-viral-posts` 的模板示例、`topmind-briefs` 的示例与风格参考、
+>   `topmind-wechat-post` 的案例笔记统一重写，类型归纳不变
+> - 优化：`topmind-cover` 的封面风格研究资料精简，随包参考图只保留原创样张；`topmind-cover.zip` 与 npm 包同步更新
+> - 优化：各技能 SKILL.md / README 中的环境与来源描述改为中性表述；`docs/archive` 审计归档与 `docs/PUBLISHING.md` 的措辞同步整理
+> - 特性支持：`scripts/ci_privacy_scan.py` 增加自定义盘符路径检查项，扫描覆盖面更完整
+> - 优化：`docs/PUBLISHING.md` 的「当前线」版本号对齐到最新
+
 ## [0.8.25] - 2026-10-08
 
 > 根包 0.8.24 → **0.8.25**（patch）；各技能版本不变。

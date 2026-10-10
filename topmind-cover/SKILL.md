@@ -3,7 +3,7 @@ name: topmind-cover
 description: "文章封面配图生成：X 长文与公众号共用。震撼、醒目、主题突出；平台尺寸规范、22 种风格模板、4 种构图骨架、文案排版密码、命名落盘、成图检查全流程覆盖。Use when 文章封面、封面图、头图、题图、公众号封面、X 首图、cover、thumbnail。Do NOT use for 正文插图、长图与信息图（→ topmind-poster）、PPT/报告封面与多页演示（→ topmind-presentation）。"
 license: MIT
 metadata:
-  version: "0.4.2"
+  version: "0.4.3"
   action_category: "write"
   triggers: "封面, 封面图, 头图, 题图, 首图, 配图, 缩略图, banner, cover, thumbnail, 公众号封面, 公众号题图, X 封面, X 首图, 文章封面"
   author: "TopMindSpace"

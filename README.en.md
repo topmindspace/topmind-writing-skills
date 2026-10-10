@@ -73,14 +73,14 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 
 | Skill | Version | What it does |
 |-------|---------|--------------|
-| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.1** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
-| [`topmind-x-article`](./topmind-x-article/) | **0.4.8** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
-| [`topmind-cover`](./topmind-cover/) | **0.4.2** | Cover art for X / WeChat (X master 1500×600 / 5:2): striking, theme-focused; 22-style cover style library + 26 example images (incl. 3 alt samples) + 1 style overview |
-| [`topmind-briefs`](./topmind-briefs/) | **0.2.8** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper one-liners / product alerts / mechanism explainers; one-click-copy HTML for both |
-| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.2** | X viral short posts: 14 template types (incl. trending-news type); prefer original images (official/third-party), generate only when none exists |
-| [`topmind-poster`](./topmind-poster/) | **0.1.1** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
+| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.2** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
+| [`topmind-x-article`](./topmind-x-article/) | **0.4.9** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
+| [`topmind-cover`](./topmind-cover/) | **0.4.3** | Cover art for X / WeChat (X master 1500×600 / 5:2): striking, theme-focused; 22-style cover style library + 26 example images (incl. 3 alt samples) + 1 style overview |
+| [`topmind-briefs`](./topmind-briefs/) | **0.2.9** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper one-liners / product alerts / mechanism explainers; one-click-copy HTML for both |
+| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.3** | X viral short posts: 14 template types (incl. trending-news type); prefer original images (official/third-party), generate only when none exists |
+| [`topmind-poster`](./topmind-poster/) | **0.1.2** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
 
-Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.25** (whole-repo same-tag releases).
+Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.26** (whole-repo same-tag releases).
 
 > SKILL.md frontmatter uses only Agent Skills spec keys at the top level (`name` / `description` / `license` / `metadata`); version, `action_category`, `triggers` and other custom keys live under `metadata` as strings, so `skills-ref validate` passes. Shared scripts and `writing-principles.md` have a single source in `shared/`; skill folders keep byte-identical copies (CI checks with `node scripts/sync_shared.js --check`). The npm package ships only `overview.png` from the cover examples; the per-style samples and `references/cover-study/` images stay on GitHub / in the Release zip.
 

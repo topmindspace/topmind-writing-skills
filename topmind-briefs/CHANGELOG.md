@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.9 (2026-10-10)
+
+- 优化：示例与风格参考改为自编通用内容，风格说明按通用类型归纳
+
 ## 0.2.8 (2026-10-08)
 
 - 优化：交付脚本与 `writing-principles.md` 的唯一真源改为仓库 `shared/`，`negative_tests.py` 改为与 `shared/` 比对
