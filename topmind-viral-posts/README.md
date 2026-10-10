@@ -4,7 +4,7 @@
 
 短、真、钩子——3 秒看完，忍不住点赞/评论/关注。基于对 X 中文区常见高互动写法的归纳，提供多类型模板（示例均为自编），每帖配 1 张图。
 
-- 版本：**v0.3.2**（随 `@topmindspace/topmind-writing-skills@0.8.25` 发布）
+- 版本：**v0.3.3**（随 `@topmindspace/topmind-writing-skills@0.8.26` 发布）
 
 ## 安装
 

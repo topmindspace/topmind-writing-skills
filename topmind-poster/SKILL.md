@@ -3,7 +3,7 @@ name: topmind-poster
 description: "HTML+CSS 排版并输出高清长图 / 海报 / 信息图 PNG，也覆盖「一段一图」的分段图批量出图（一篇长文 = N 张图，生成器 + 渲染器工作流）。Use when 长图、海报、信息图、分级榜、榜单图、月报长图、竖版长图、分段图、一张图讲清楚、给文章配图、把 HTML 渲染成 PNG、重做这张图、出 2× 高清图、自动裁掉底部空白、把超长图拆成多张。Do NOT use for 单张文章封面（→ topmind-cover）、多页演示或 PPTX（→ topmind-presentation）、纯数据图表 SVG。"
 license: MIT
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
   action_category: "write"
   triggers: "长图, 海报, 信息图, 分级榜, 榜单图, 月报长图, 分段图, HTML 转 PNG, 高清出图, poster, long image, 做一张长图, 重做这张图, 更新这张图, 把这张图优化一下, 出一张高清图, 把长图拆成几张, 给文章配图"
   author: "TopMindSpace"

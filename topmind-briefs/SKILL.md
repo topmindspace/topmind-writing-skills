@@ -3,7 +3,7 @@ name: topmind-briefs
 description: "干货短文发布：公众号 + X 双平台，一件事讲透。X 一帖或短 thread，公众号约 300–800 字；1 张核心图（榜单/基准/截图/表格），不废话，只交付不代发。Use when 写短文、发快讯、数据榜单、论文一句话解读、新品速递、来篇短的、短平快、brief、快讯；信息密度型（数据、榜单、发布）走本技能。Do NOT use for X 长文（→ topmind-x-article）、公众号长文（→ topmind-wechat-post）、引流互动型短帖与段子（→ topmind-viral-posts）、把稿子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.2.8"
+  version: "0.2.9"
   action_category: "write"
   triggers: "写短文, 发快讯, 干货短文, 一句话解读, 数据榜单, 新品速递, brief, 快讯, 来篇短的, 短平快, 发个快讯"
   author: "TopMindSpace"

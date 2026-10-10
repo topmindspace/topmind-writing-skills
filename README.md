@@ -81,14 +81,14 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 
 | 技能 | 版本 | 做什么 |
 |------|------|--------|
-| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.1** | 公众号文章全生命周期：交付包、审校改写、质量三关、微信内联排版与发布清单 |
-| [`topmind-x-article`](./topmind-x-article/) | **0.4.8** | X 长文一键发布：Markdown 原稿 → 一键复制 HTML（含配图/提示词复制、图片点击放大）/ 纯文本兜底 + 封面图 + 发布清单 |
-| [`topmind-cover`](./topmind-cover/) | **0.4.2** | 文章封面配图（X / 公众号共用，X 主尺寸 1500×600 / 5:2）：震撼醒目主题突出；22 种封面风格库 + 26 张示例图（含 3 张 alt 样张） + 1 张风格总览图 |
-| [`topmind-briefs`](./topmind-briefs/) | **0.2.8** | 干货短文（公众号 + X 双平台）：一件事讲透，数据榜单/论文解读/新品速递；双版一键复制 HTML |
-| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.2** | X 引流段子/爆款短篇：14 大类型模板（含热点资讯型）；配图原图优先（官方/第三方），无原图才生图（清新优雅/MD3商务风） |
-| [`topmind-poster`](./topmind-poster/) | **0.1.1** | HTML+CSS → 高清长图 / 海报 / 信息图 PNG：无头 Chrome 2× 截图 + 自动裁白；「一段一图」分段图批量出图（生成器 + 渲染器） |
+| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.2** | 公众号文章全生命周期：交付包、审校改写、质量三关、微信内联排版与发布清单 |
+| [`topmind-x-article`](./topmind-x-article/) | **0.4.9** | X 长文一键发布：Markdown 原稿 → 一键复制 HTML（含配图/提示词复制、图片点击放大）/ 纯文本兜底 + 封面图 + 发布清单 |
+| [`topmind-cover`](./topmind-cover/) | **0.4.3** | 文章封面配图（X / 公众号共用，X 主尺寸 1500×600 / 5:2）：震撼醒目主题突出；22 种封面风格库 + 26 张示例图（含 3 张 alt 样张） + 1 张风格总览图 |
+| [`topmind-briefs`](./topmind-briefs/) | **0.2.9** | 干货短文（公众号 + X 双平台）：一件事讲透，数据榜单/论文解读/新品速递；双版一键复制 HTML |
+| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.3** | X 引流段子/爆款短篇：14 大类型模板（含热点资讯型）；配图原图优先（官方/第三方），无原图才生图（清新优雅/MD3商务风） |
+| [`topmind-poster`](./topmind-poster/) | **0.1.2** | HTML+CSS → 高清长图 / 海报 / 信息图 PNG：无头 Chrome 2× 截图 + 自动裁白；「一段一图」分段图批量出图（生成器 + 渲染器） |
 
-安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.25**（整仓同 tag 发版）。
+安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.26**（整仓同 tag 发版）。
 
 > SKILL.md frontmatter 顶层只用 Agent Skills 规范字段（`name` / `description` / `license` / `metadata`），版本、`action_category`、`triggers` 等自定义字段放在 `metadata` 下（字符串值），能通过官方校验器 `skills-ref validate`。
 >
