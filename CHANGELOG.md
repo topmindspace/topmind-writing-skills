@@ -1,3 +1,23 @@
+## [0.8.30] - 2026-10-11
+
+> 根包 0.8.29 → **0.8.30**（patch）；技能版本：topmind-briefs 0.2.12 → 0.2.13、topmind-viral-posts 0.3.4 → 0.3.5、topmind-x-article 0.4.10 → 0.4.11、
+> topmind-wechat-post 0.3.4 → 0.3.5、topmind-cover 0.4.5 → 0.4.6、topmind-poster 0.1.3 → 0.1.4。
+
+### 特性支持
+
+- **X 纯文本排版**：X 不渲染 Markdown 列表，X 稿一律改用 emoji 项目符号（🔹 并列、▫️ 二级缩进、1️⃣ 步骤、✅/❌ 对比，最多两层）。新增共享规则文档 `references/x-post-format.md`（符号集、缩进、数量、语气适配、公众号稿 → X 稿的派生规则：只允许排版差异），分发到 briefs、viral-posts、wechat-post、x-article。
+- **X 稿检查脚本** `scripts/lint_x_post.py`（共享真源，分发到 briefs、viral-posts、wechat-post、x-article）：检查 Markdown 列表 / 标题 / 加粗 / 引用 / 链接 / 表格，以及同层符号混用、缩进层级、话题标签数量与位置、加权字数；`--fix --out` 可自动改写，`--long` 用于长文兜底稿。公众号稿不在检查范围内，继续用 Markdown 列表。
+- `topmind-x-article`：`md2x.py` 生成 `X发布稿.txt` 时默认把 `- ` / `1.` 转成 emoji 项目符号（代码块内不动，`--list-style keep` 保留原符号）；`X长文.html` 走 X Article 编辑器富文本，原生列表保持不变。共享的 `md2x-html.py` 保留普通行的行首缩进，emoji 二级条目不会被吞缩进（briefs、x-article 同步）。
+- `topmind-viral-posts`：新增 `references/tags-and-topics.md`，给 14 个类型建立标签体系——内部分类标签（类型 / 用途 / 平台 / 语气）与话题标签（每条 1–3 个，末行单独成行，中英文、不堆砌、避免违规与敏感标签的规则）；`patterns.md` 的每个类型和示例都带标签行；产出模板新增「标签」输出项。
+- `topmind-briefs`：X 版末尾给 0–2 个话题标签建议（公众号稿不加），平台规格、风格指南和 4 个示例同步改成 emoji 列表。
+
+### 优化
+
+- 触发与分流：briefs、viral-posts、x-article、wechat-post、cover、poster 的 description 补充常用说法（公众号短文、X 短文、段子、涨粉帖、互关帖、热点段子、X 文章、头图、竖版长图、榜单图、海报等），Do NOT 分流互相点名，减少短文 / 段子 / 长文 / 公众号 / 封面 / 长图之间的路由歧义；cover 与 poster 不再各自抢「配图」一词。
+- `evals/evals.json` 从 24 条增至 50 条，补充新触发词与边界的正例和反例；`scripts/check_evals.js` 新增两项检查：用例 prompt 必须命中其 expected_skill 的触发词，description 的 Do NOT 只能指向存在的技能。
+- 文档一致性：根 README 中英文的 viral-posts 类型数（14 类型）、cover 裁剪尺寸（X 1500×600）、风格数（22 种）与实际对齐，英文 README 补上 viral-posts 小节；x-article README 的封面尺寸改为 1500×600；briefs 与 viral-posts 的文案改用更平实的表述。
+- `topmind-cover` 补充被 viral-posts 调用时的画幅说明；`topmind-wechat-post` 补充与 briefs 的篇幅边界以及 X 稿派生时的列表规则。
+
 ## [0.8.29] - 2026-10-11
 
 > 根包 0.8.28 → **0.8.29**（patch）；技能版本：topmind-briefs 0.2.11 → 0.2.12、topmind-cover 0.4.4 → 0.4.5、topmind-poster 0.1.2 → 0.1.3。

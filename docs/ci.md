@@ -37,7 +37,7 @@ npm run check && npm run audit && npm run privacy
 ## 共享真源与规范校验
 
 - `node scripts/sync_shared.js --check`：`shared/manifest.json` 声明的共享脚本与 `writing-principles.md`，各技能副本必须与 `shared/` 真源逐字节一致（`prepack` 也会跑）。
-- `node scripts/check_evals.js`：`evals/evals.json` 每个技能 ≥3 条、含负例。
+- `node scripts/check_evals.js`：`evals/evals.json` 每个技能 ≥3 条、含负例；用例 prompt 必须命中 expected_skill 的触发词；description 的 Do NOT 只能指向存在的技能。
 - `agentskills validate <skill>`（`pip install skills-ref==0.1.1`）：frontmatter 顶层只允许规范字段，自定义字段在 `metadata` 下。
 
 ## npm publish（显式失败，防假绿）

@@ -27,7 +27,7 @@ npx @topmindspace/topmind-writing-skills install topmind-wechat-post
 
 ### topmind-x-article · One-click X long-form publishing
 
-Markdown draft → paste-ready plain text (`md2x.py` adapts to the X Article editor: images → `[图N]`, tables → "item: value" lists) + cover art + publish checklist. Publishing is done by hand-pasting; fetch the text back for verification after posting.
+Markdown draft → one-click-copy HTML (rich text, images embedded) / plain-text fallback (`md2x.py`: images → `[图N]`, tables → "item: value" lists, lists → emoji bullets because plain-text X does not render Markdown lists) + cover art + publish checklist. Publishing is done by hand-pasting; fetch the text back for verification after posting.
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-x-article
@@ -35,15 +35,23 @@ npx @topmindspace/topmind-writing-skills install topmind-x-article
 
 ### topmind-briefs · Short-form briefs
 
-Short-form briefs for WeChat + X: one topic, one chart (data rankings / paper one-liners / product alerts / mechanism explainers). One X post or short thread, WeChat ~300–800 Chinese characters, 1 key visual. One-click-copy HTML for both, draft only — never auto-post.
+Short-form briefs for WeChat + X: one topic, one chart (data rankings / paper explainers / product alerts / mechanism explainers). One X post or short thread, WeChat ~300–800 Chinese characters, 1 key visual. The X version uses emoji bullets and suggests 0–2 hashtags; the WeChat version keeps Markdown lists. One-click-copy HTML for both, draft only — never auto-post.
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-briefs
 ```
 
+### topmind-viral-posts · X viral short posts
+
+14 post types summarised from common high-engagement writing patterns in the Chinese X community (all examples are original): short lines, conversational tone, an engagement hook, **one image per post** (portraits / pets / landscapes / fantasy / slogan graphics via `topmind-cover`). Every post carries **1–3 hashtags plus classification tags** (type / purpose / platform / tone). X drafts never use Markdown lists; bullets are emoji.
+
+```bash
+npx @topmindspace/topmind-writing-skills install topmind-viral-posts
+```
+
 ### topmind-cover · Cover art generation
 
-Shared cover art for X long-form and WeChat: striking, eye-catching, theme-focused. **Pick a style → check the example → compose the prompt from the recipe**, then one-click crop to both platform sizes with `crop-cover.py` (X 1200×675, WeChat 900×383). 11-style index and recipes: [`references/cover-styles.md`](./topmind-cover/references/cover-styles.md).
+Shared cover art for X long-form and WeChat: striking, eye-catching, theme-focused. **Pick a style → check the example → compose the prompt from the recipe**, then one-click crop to both platform sizes with `crop-cover.py` (X 1500×600, WeChat 900×383). 22-style index and recipes: [`references/cover-styles.md`](./topmind-cover/references/cover-styles.md).
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-cover
@@ -73,14 +81,14 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 
 | Skill | Version | What it does |
 |-------|---------|--------------|
-| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.4** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
-| [`topmind-x-article`](./topmind-x-article/) | **0.4.10** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
-| [`topmind-cover`](./topmind-cover/) | **0.4.5** | Cover art for X / WeChat (X master 1500×600 / 5:2): striking, theme-focused; 22-style cover style library + 55 example images (22 styles × 2 sizes + 11 variant samples) + 1 style overview |
-| [`topmind-briefs`](./topmind-briefs/) | **0.2.12** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper one-liners / product alerts / mechanism explainers; one-click-copy HTML for both |
-| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.4** | X viral short posts: 14 template types (incl. trending-news type); prefer original images (official/third-party), generate only when none exists |
-| [`topmind-poster`](./topmind-poster/) | **0.1.3** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
+| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.5** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
+| [`topmind-x-article`](./topmind-x-article/) | **0.4.11** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
+| [`topmind-cover`](./topmind-cover/) | **0.4.6** | Cover art for X / WeChat (X master 1500×600 / 5:2): striking, theme-focused; 22-style cover style library + 55 example images (22 styles × 2 sizes + 11 variant samples) + 1 style overview |
+| [`topmind-briefs`](./topmind-briefs/) | **0.2.13** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper explainers / product alerts / mechanism explainers; emoji-bullet X version with hashtag suggestions; one-click-copy HTML for both |
+| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.5** | X viral short posts: 14 template types (incl. trending-news type), hashtags + classification tags, emoji-bullet lists; prefer original images (official/third-party), generate only when none exists |
+| [`topmind-poster`](./topmind-poster/) | **0.1.4** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
 
-Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.29** (whole-repo same-tag releases).
+Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.30** (whole-repo same-tag releases).
 
 > SKILL.md frontmatter uses only Agent Skills spec keys at the top level (`name` / `description` / `license` / `metadata`); version, `action_category`, `triggers` and other custom keys live under `metadata` as strings, so `skills-ref validate` passes. Shared scripts and `writing-principles.md` have a single source in `shared/`; skill folders keep byte-identical copies (CI checks with `node scripts/sync_shared.js --check`). The npm package ships only `overview.png` from the cover examples; the per-style samples stay on GitHub / in the Release zip.
 

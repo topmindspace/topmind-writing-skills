@@ -1,0 +1,262 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""lint_x_post.py — X 纯文本帖检查：不含 Markdown 列表/标题/加粗，列表用 emoji 项目符号。
+
+X 的普通帖子不渲染 Markdown。本脚本检查 X 稿，并可把常见 Markdown 写法改成 X 写法。
+公众号稿不在检查范围内（公众号稿继续用 Markdown 列表）。规则见 references/x-post-format.md。
+
+用法：
+    python3 lint_x_post.py X稿.txt                 # 检查（一个文件里多条帖子用单独一行 --- 分隔）
+    python3 lint_x_post.py X稿.txt --fix --out X稿.fixed.txt   # 自动改写后输出到新文件
+    python3 lint_x_post.py X发布稿.txt --long      # 长文兜底稿：不查话题标签位置和字数
+    cat X稿.txt | python3 lint_x_post.py -         # 从标准输入读取
+
+退出码：有错误 → 1；加 --strict 时警告也算失败；其余 → 0。
+只用 Python 标准库。
+"""
+from __future__ import annotations
+
+import argparse
+import re
+import sys
+from pathlib import Path
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
+# --- 错误：X 不渲染的 Markdown 语法 -----------------------------------------
+UL_RE = re.compile(r"^(\s*)([-*+])\s+(?:\[[ xX]\]\s+)?(\S.*)$")
+OL_RE = re.compile(r"^(\s*)(\d{1,3})[.)]\s+(\S.*)$")
+HEADING_RE = re.compile(r"^\s{0,3}#{1,6}\s+\S")
+BOLD_RE = re.compile(r"\*\*[^*\n]+\*\*|(?<![\w_])__[^_\n]+__(?![\w_])")
+QUOTE_RE = re.compile(r"^\s*>\s?\S")
+LINK_RE = re.compile(r"\[([^\]\n]+)\]\(([^)\s]+)\)")
+TABLE_RE = re.compile(r"^\s*\|.*\|\s*$")
+CODE_RE = re.compile(r"`[^`\n]+`")
+SEP_RE = re.compile(r"^\s*(-{3,}|={3,}|\*{3,})\s*$")
+FENCE_RE = re.compile(r"^\s*(```|~~~)")
+
+# --- 项目符号识别（emoji / 纯文本符号 / 序号）----------------------------------
+KEYCAP = r"[0-9]\uFE0F?\u20E3"
+CIRCLED = r"[\u2460-\u2473]"
+SYMBOL = (
+    r"(?:[\u2022\u25AA\u25AB\u25E6\u2023\u2192\u25B6\u25B8]"
+    r"|[\U0001F300-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\u2190-\u21FF])\uFE0F?"
+)
+BULLET_RE = re.compile(r"^(\s*)(%s|%s|%s|\U0001F51F)\s*(\S.*)?$" % (KEYCAP, CIRCLED, SYMBOL))
+HASHTAG_RE = re.compile(r"(?<![\w&#])#(?!\d+(?![\w\u4e00-\u9fff]))[\w\u4e00-\u9fff]{1,40}")  # #2 这类名次不是话题标签
+HASHTAG_TAIL_RE = re.compile(r"(?:\s*#(?!\d+(?![\w\u4e00-\u9fff]))[\w\u4e00-\u9fff]{1,40})+\s*$")
+PLACEHOLDER_RE = re.compile(r"^\s*\[(?:图|视频|图片|配图)[^\]]*\]\s*$")  # 配图占位行不计字数
+URL_RE = re.compile(r"https?://\S+")
+
+KEYCAPS = ["0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
+CIRCLED_NUMS = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳"
+
+CONTRAST_PAIR = {"✅", "❌"}
+MAX_ITEMS = 7
+MAX_LEVELS = 2
+MAX_TAGS = 3
+WEIGHT_LIMIT = 280
+
+
+def _is_wide(ch: str) -> bool:
+    o = ord(ch)
+    return (
+        0x1100 <= o <= 0x115F or 0x2E80 <= o <= 0xA4CF or 0xAC00 <= o <= 0xD7A3
+        or 0xF900 <= o <= 0xFAFF or 0xFE30 <= o <= 0xFE6F or 0xFF00 <= o <= 0xFF60
+        or 0xFFE0 <= o <= 0xFFE6 or 0x1F300 <= o <= 0x1FAFF or 0x2600 <= o <= 0x27BF
+    )
+
+
+def x_weight(text: str) -> int:
+    """近似 X 的加权字数：中日韩与 emoji 记 2，其余记 1，链接固定记 23。"""
+    text = URL_RE.sub("", text) + "u" * 23 * len(URL_RE.findall(text))
+    return sum(0 if ch in "\uFE0F\u200D" else (2 if _is_wide(ch) else 1) for ch in text)
+
+
+def indent_width(prefix: str) -> int:
+    return len(prefix.replace("\t", "    ").replace("\u3000", "  "))
+
+
+def split_posts(text: str, long_mode: bool):
+    """返回 [(起始行号, [行...])]。长文模式整份当一篇。"""
+    lines = text.splitlines()
+    if long_mode:
+        return [(1, lines)]
+    posts, cur, start = [], [], 1
+    for i, ln in enumerate(lines, 1):
+        if SEP_RE.match(ln):
+            posts.append((start, cur))
+            cur, start = [], i + 1
+        else:
+            cur.append(ln)
+    posts.append((start, cur))
+    return [p for p in posts if any(x.strip() for x in p[1])]
+
+
+def keycap_for(n: int) -> str:
+    if 0 <= n <= 9:
+        return KEYCAPS[n]
+    if n == 10:
+        return "🔟"
+    if 11 <= n <= 20:
+        return CIRCLED_NUMS[n - 1]
+    return f"{n}）"
+
+
+def lint_post(start: int, lines: list[str], long_mode: bool):
+    """返回 (errors, warnings)，元素为 (行号, 代码, 说明)。"""
+    errs, warns = [], []
+    in_fence = False
+    bullets = []  # (行号, 缩进宽度, 符号)
+    for off, ln in enumerate(lines):
+        no = start + off
+        if FENCE_RE.match(ln):
+            in_fence = not in_fence
+            continue
+        if in_fence or (long_mode and indent_width(ln[: len(ln) - len(ln.lstrip())]) >= 4 and ln.strip()):
+            continue
+        if UL_RE.match(ln) and not SEP_RE.match(ln):
+            errs.append((no, "E1", "Markdown 无序列表（- * +）：X 不渲染，改用 🔹 等 emoji 项目符号"))
+        elif OL_RE.match(ln):
+            errs.append((no, "E2", "Markdown 有序列表（1.）：改用 1️⃣ 2️⃣ 3️⃣ 或 ① ② ③"))
+        if HEADING_RE.match(ln):
+            errs.append((no, "E3", "Markdown 标题（#）：X 不渲染，改成普通文字行"))
+        if BOLD_RE.search(ln):
+            errs.append((no, "E4", "Markdown 加粗（**）：X 不渲染，去掉星号"))
+        if QUOTE_RE.match(ln):
+            errs.append((no, "E5", "Markdown 引用（>）：去掉 >，引文用「」"))
+        if LINK_RE.search(ln):
+            errs.append((no, "E6", "Markdown 链接 [文字](url)：改成「文字 url」或直接贴 url"))
+        if TABLE_RE.match(ln):
+            errs.append((no, "E7", "Markdown 表格：拆成“项：值”的列表行"))
+        if CODE_RE.search(ln):
+            warns.append((no, "W1", "行内反引号：X 不渲染，会原样显示反引号"))
+        m = BULLET_RE.match(ln)
+        if m and m.group(3):
+            bullets.append((no, indent_width(m.group(1)), m.group(2).replace("\uFE0F", "")))
+
+    # 按连续的列表块分别检查（空行或正文行隔开的是不同的列表）
+    blocks, cur = [], []
+    for item in bullets:
+        if cur and item[0] - cur[-1][0] > 1:
+            blocks.append(cur)
+            cur = []
+        cur.append(item)
+    if cur:
+        blocks.append(cur)
+    for blk in blocks:
+        widths = sorted({w for _, w, _ in blk})
+        if len(widths) > MAX_LEVELS:
+            warns.append((blk[0][0], "W2", f"列表缩进超过 {MAX_LEVELS} 层（出现 {len(widths)} 种缩进）"))
+        for w in widths:
+            kinds = {s for _, ww, s in blk if ww == w}
+            numbered = all(k.endswith("\u20e3") or re.fullmatch(CIRCLED + "|\U0001F51F", k) for k in kinds)
+            if len(kinds) > 1 and not numbered and not kinds <= CONTRAST_PAIR:
+                warns.append((blk[0][0], "W3", "同一层级混用了多种项目符号：" + " ".join(sorted(kinds))))
+        top = [no for no, w, _ in blk if w == widths[0]]
+        if len(top) > MAX_ITEMS:
+            warns.append((top[0], "W4", f"一个列表有 {len(top)} 条，超过 {MAX_ITEMS} 条，建议精简或拆成两帖"))
+
+    if not long_mode:
+        body = [ln for ln in lines if ln.strip()]
+        if body:
+            last = body[-1]
+            tail = HASHTAG_TAIL_RE.sub("", last)
+            rest = "\n".join(body[:-1] + [tail])
+            mid = HASHTAG_RE.findall(rest)
+            if mid:
+                warns.append((start, "W5", "话题标签应放在最后一行，正文中间出现了：" + " ".join(mid[:3])))
+            tags = HASHTAG_RE.findall("\n".join(lines))
+            if len(tags) > MAX_TAGS:
+                warns.append((start, "W6", f"话题标签 {len(tags)} 个，建议不超过 {MAX_TAGS} 个"))
+        w = x_weight("\n".join(ln for ln in lines if not PLACEHOLDER_RE.match(ln)))
+        if w > WEIGHT_LIMIT:
+            warns.append((start, "W7", f"加权字数约 {w}，超过 {WEIGHT_LIMIT}（约 140 个汉字）；长帖请确认账号支持，或精简/拆帖"))
+    return errs, warns
+
+
+def fix_lines(lines: list[str], long_mode: bool) -> list[str]:
+    """把 Markdown 列表/标题/加粗/引用/链接改成 X 纯文本写法；表格与其他情况不自动处理。"""
+    out, in_fence = [], False
+    counters: dict[int, int] = {}
+    for ln in lines:
+        if FENCE_RE.match(ln):
+            in_fence = not in_fence
+            out.append(ln)
+            continue
+        if in_fence or (long_mode and indent_width(ln[: len(ln) - len(ln.lstrip())]) >= 4 and ln.strip()):
+            out.append(ln)
+            continue
+        if SEP_RE.match(ln):
+            out.append(ln)
+            continue
+        s = ln
+        m = UL_RE.match(s)
+        o = OL_RE.match(s) if not m else None
+        if m:
+            level = 0 if indent_width(m.group(1)) == 0 else 1
+            s = ("  " * level) + ("🔹 " if level == 0 else "▫️ ") + m.group(3)
+        elif o:
+            w = indent_width(o.group(1))
+            level = 0 if w == 0 else 1
+            counters[level] = counters.get(level, 0) + 1
+            s = ("  " * level) + keycap_for(int(o.group(2))) + " " + o.group(3)
+        else:
+            if not ln.strip():
+                counters.clear()
+            s = re.sub(r"^\s{0,3}#{1,6}\s+", "", s)
+            s = re.sub(r"^\s*>\s?", "", s)
+        s = re.sub(r"\*\*([^*\n]+)\*\*", r"\1", s)
+        s = re.sub(r"(?<![\w_])__([^_\n]+)__(?![\w_])", r"\1", s)
+        s = LINK_RE.sub(lambda mm: f"{mm.group(1)} {mm.group(2)}", s)
+        s = CODE_RE.sub(lambda mm: mm.group(0).strip("`"), s)
+        out.append(s)
+    return out
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="X 纯文本帖检查：无 Markdown 列表/标题/加粗，列表用 emoji 项目符号")
+    ap.add_argument("files", nargs="+", help="X 稿文件，- 表示标准输入")
+    ap.add_argument("--long", action="store_true", help="长文兜底稿模式（X发布稿.txt）：整份当一篇，不查话题标签位置和字数")
+    ap.add_argument("--fix", action="store_true", help="自动改写 Markdown 写法为 X 写法（需 --out；只处理单个文件）")
+    ap.add_argument("--out", help="--fix 的输出文件")
+    ap.add_argument("--strict", action="store_true", help="警告也算失败")
+    args = ap.parse_args()
+
+    if args.fix:
+        if len(args.files) != 1 or not args.out:
+            print("错误：--fix 需要恰好一个输入文件，并用 --out 指定输出文件", file=sys.stderr)
+            return 2
+        src = args.files[0]
+        text = sys.stdin.read() if src == "-" else Path(src).read_text(encoding="utf-8-sig")
+        fixed = "\n".join(fix_lines(text.splitlines(), args.long)) + "\n"
+        Path(args.out).write_text(fixed, encoding="utf-8")
+        print(f"已写出 {args.out}")
+        args.files = [args.out]
+
+    total_e = total_w = 0
+    for f in args.files:
+        try:
+            text = sys.stdin.read() if f == "-" else Path(f).read_text(encoding="utf-8-sig")
+        except (OSError, UnicodeDecodeError) as e:
+            print(f"错误：无法读取 {f}（{e}）", file=sys.stderr)
+            return 2
+        for idx, (start, lines) in enumerate(split_posts(text, args.long), 1):
+            errs, warns = lint_post(start, lines, args.long)
+            label = "" if args.long else f"#帖{idx} "
+            for no, code, msg in errs:
+                print(f"{f}:{no}: {label}[{code}] 错误：{msg}")
+            for no, code, msg in warns:
+                print(f"{f}:{no}: {label}[{code}] 警告：{msg}")
+            total_e += len(errs)
+            total_w += len(warns)
+    status = "通过" if not total_e and not (args.strict and total_w) else "未通过"
+    print(f"lint_x_post：{status}（错误 {total_e}，警告 {total_w}）")
+    return 1 if total_e or (args.strict and total_w) else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

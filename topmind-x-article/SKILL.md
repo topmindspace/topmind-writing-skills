@@ -1,14 +1,14 @@
 ---
 name: topmind-x-article
-description: "X 长文（Article）一键发布包：Markdown 原稿 → 可直接复制的 X长文.html（富文本一键复制+配图内嵌）/ X发布稿.txt + 封面图 + 发布清单，由用户人工点发布。Use when X 长文、发 X 文章、X article、长文发 X、写 X 长文、推特长文、twitter 长文。Do NOT use for 短推文与短帖写稿（→ topmind-viral-posts 或 topmind-briefs）、把短帖发出去（→ topmind-x，须用户确认）、公众号（→ topmind-wechat-post）。"
+description: "X 长文（Article）一键发布包：Markdown 原稿 → 可直接复制的 X长文.html（富文本一键复制+配图内嵌）/ X发布稿.txt（纯文本兜底，列表自动转 emoji 项目符号）+ 封面图 + 发布清单，由用户人工点发布。Use when X 长文、发 X 文章、写 X 文章、X article、长文发 X、写 X 长文、X 文章排版、推特长文、twitter 长文、Twitter Article。Do NOT use for 短推文、短帖、快讯与段子写稿（→ topmind-viral-posts 或 topmind-briefs）、把短帖发出去（→ topmind-x，须用户确认）、公众号文章（→ topmind-wechat-post）、只要封面或头图（→ topmind-cover）。"
 license: MIT
 metadata:
-  version: "0.4.10"
+  version: "0.4.11"
   action_category: "write"
-  triggers: "X 长文, 发 X 文章, X article, 长文发 X, X 发长文, 转纯文本, X 纯文本, 发 article, 一键复制, 写 X 长文, X 长文发布, 推特长文, twitter 长文"
+  triggers: "X 长文, 发 X 文章, 写 X 文章, X article, 长文发 X, X 发长文, X 文章排版, 转纯文本, X 纯文本, X发布稿, 发 article, 一键复制, 写 X 长文, X 长文发布, 推特长文, twitter 长文, Twitter Article"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-08"
+  updated: "2026-10-11"
 ---
 
 # topmind-x-article · X 长文一键发布
@@ -56,8 +56,13 @@ metadata:
      （X 有独立封面入口）。
 2. **转纯文本**（兜底）：`python3 scripts/md2x.py <原稿>.md --out <包>/X发布稿.txt`，
    规则见 `references/x-format.md`。HTML 复制异常时的备用入口。
+   **列表**：纯文本不渲染 Markdown 列表，`md2x.py` 默认把 `- ` / `1. ` 转成 emoji 项目符号
+   （🔹 一级、▫️ 二级缩进两格、1️⃣ 序号，最多两层；`--list-style keep` 可保留原符号），
+   规则见 `references/x-post-format.md`。转完可跑 `python3 scripts/lint_x_post.py <包>/X发布稿.txt --long` 自检。
    转完**通读一遍**：X 不渲染 markdown，标记剥离后断句、emphasis 全靠文字本身，
    读不顺就回原稿改。
+   注意区分两条链路：`X长文.html` 走 X Article 编辑器的富文本，**原生列表保留**（以 `references/x-html-format.md` 为准）；
+   只有 `X发布稿.txt` 这种纯文本兜底稿，以及短帖（→ `topmind-viral-posts` / `topmind-briefs`）才用 emoji 项目符号。
 3. **封面图**：调 `topmind-cover`，平台选 `x`，得 1500×600 主图。
 4. **发布清单**：按 `references/publish-checklist.md` 逐项过。
 5. **发布**：用户在 X Article 编辑器粘贴全文、上传封面与配图（按 `[图N]` 编号），
@@ -70,7 +75,7 @@ metadata:
 <包>/
 ├── 原稿.md            # 输入（或复用既有原稿）
 ├── X长文.html         # 首选复制入口：浏览器打开，一键复制全文
-├── X发布稿.txt        # 纯文本兜底入口
+├── X发布稿.txt        # 纯文本兜底入口（列表为 emoji 项目符号）
 ├── cover-1500x600.png # 封面（topmind-cover 产出，X 编辑器单独上传）
 └── 发布清单.md        # 本次发布 checklist（含时间、链接）
 ```
@@ -100,9 +105,10 @@ metadata:
 
 ## When NOT to use
 
-- 短推文 / 短帖写稿 → `topmind-viral-posts`（引流互动型）或 `topmind-briefs`（信息密度型）
+- 短推文 / 短帖 / 快讯 / 段子写稿 → `topmind-viral-posts`（引流互动型）或 `topmind-briefs`（信息密度型）
 - 把短帖发出去 → `topmind-x`（发帖连接器，须用户确认）
 - 公众号 → `topmind-wechat-post`
+- 只要封面、头图 → `topmind-cover`
 - 只想存档不发布 → `topmind-capture`
 - 写稿（只有发布需求、无原稿时）→ 先走写作技能再回本技能
 

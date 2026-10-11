@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.13 (2026-10-11)
+
+- 特性支持：X 版纯文本排版——不用 Markdown 列表、标题和加粗，分点改用 emoji 项目符号；新增共享规则文档 `references/x-post-format.md` 与检查脚本 `scripts/lint_x_post.py`
+- 特性支持：X 版末尾给 0–2 个话题标签建议（公众号稿不加），规则写入 `platform-specs.md`；`examples.md` 的 4 个 X 示例同步改成 emoji 列表并附话题标签建议
+- 优化：description 补充「公众号短文、X 短文、简讯、速报、论文解读」等说法，Do NOT 增加封面分流并点名 viral-posts 的段子、涨粉帖、互关帖；文案改用更平实的表述
+
 ## 0.2.12 (2026-10-11)
 
 - 优化：description 的 Do NOT 增加「单独出长图/海报/信息图 PNG → topmind-poster」分流，与 poster 的触发词边界互相点名

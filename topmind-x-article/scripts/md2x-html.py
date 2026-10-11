@@ -17,6 +17,7 @@
 - `- ` / `1. ` → ul/ol；`**x**` → strong；`` `x` `` → code（X 粘贴后变纯文本）；
   `---` → hr（X 粘贴可能丢弃，需手动 Insert → 分割线，见 references/x-html-format.md）
 - GFM 表格 → ul.xtable（X 粘贴会丢弃 <table>，转列表保内容）
+- 普通行的行首缩进（≥2 个空格或全角空格）保留为 &nbsp;，emoji 项目符号的二级条目不会被吞缩进
 - frontmatter（--- ... ---）跳过，只取 title
 
 设计目标（对标 md2wechat 的公众号体验）：
@@ -419,7 +420,11 @@ def md_to_html(md_text, images, cover):
             continue
 
         close_lists()
-        out.append("<p>%s</p>" % inline_md(s))
+        # 保留行首缩进（X 稿里用 emoji 项目符号表示二级条目时需要缩进）：
+        # 行首 ≥2 个空格 / 全角空格转成 &nbsp;，避免 HTML 把缩进吞掉
+        lead = len(line) - len(line.lstrip(" \u3000"))
+        pad = "&nbsp;" * lead if lead >= 2 else ""
+        out.append("<p>%s%s</p>" % (pad, inline_md(s)))
         i += 1
 
     close_lists()

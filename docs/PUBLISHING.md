@@ -12,7 +12,7 @@
 - 包：<https://www.npmjs.com/package/@topmindspace/topmind-writing-skills>
 - 仓库：<https://github.com/topmindspace/topmind-writing-skills>
 
-当前线：安装器 **0.8.29** · 技能 topmind-cover **0.4.5** · topmind-wechat-post **0.3.4** · topmind-x-article **0.4.10** · topmind-briefs **0.2.12** · topmind-viral-posts **0.3.4** · topmind-poster **0.1.3**（整仓同 tag 发版；见 CHANGELOG）。
+当前线：安装器 **0.8.30** · 技能 topmind-cover **0.4.6** · topmind-wechat-post **0.3.5** · topmind-x-article **0.4.11** · topmind-briefs **0.2.13** · topmind-viral-posts **0.3.5** · topmind-poster **0.1.4**（整仓同 tag 发版；见 CHANGELOG）。
 公众号技能的唯一真源是本仓 `topmind-wechat-post`；topmind-skills 4.15.2 起删除了旧的 `topmind-wechat`。
 演示技能已独立为 `topmind-presentation`（仓库 `topmind-presentation`），不在本仓发布线内。
 

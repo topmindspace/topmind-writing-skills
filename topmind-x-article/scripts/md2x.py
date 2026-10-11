@@ -5,7 +5,10 @@
 标题/正文保留，排版标记剥离，图片转为 [图N] 占位。
 
 用法：
-    python3 md2x.py <输入.md> --out <输出/X发布稿.txt>
+    python3 md2x.py <输入.md> --out <输出/X发布稿.txt> [--list-style emoji|keep]
+
+列表：X 纯文本不渲染 Markdown 列表，默认把 `- ` / `1. ` 改成 emoji 项目符号
+（🔹 / ▫️ / 1️⃣，最多两层缩进）；--list-style keep 保留原符号。
 
 规则见 references/x-format.md。
 """
@@ -188,7 +191,43 @@ def _strip_frontmatter(md):
     return md
 
 
-def convert(md: str):
+# --- 列表 → emoji 项目符号 ---------------------------------------------------
+_UL_RE = re.compile(r"^(\s*)[-*+]\s+(?:\[[ xX]\]\s+)?(\S.*)$")
+_OL_RE = re.compile(r"^(\s*)(\d{1,3})[.)]\s+(\S.*)$")
+_KEYCAPS = ["0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
+_CIRCLED = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳"
+
+
+def _number_symbol(n):
+    """序号符号：0–9 用 keycap，10 用 🔟，11–20 用带圈数字，更大的退回「N）」。"""
+    if 0 <= n <= 9:
+        return _KEYCAPS[n]
+    if n == 10:
+        return "🔟"
+    if 11 <= n <= 20:
+        return _CIRCLED[n - 1]
+    return f"{n}）"
+
+
+def _indent_level(prefix):
+    width = len(prefix.replace("\t", "    "))
+    return 0 if width == 0 else 1  # 最多两层：更深的嵌套压成二级
+
+
+def _emoji_list(line):
+    """Markdown 列表行 → (前缀, 正文)；不是列表行返回 None。"""
+    m = _UL_RE.match(line)
+    if m:
+        level = _indent_level(m.group(1))
+        return ("  " * level) + ("🔹 " if level == 0 else "▫️ "), m.group(2)
+    m = _OL_RE.match(line)
+    if m:
+        level = _indent_level(m.group(1))
+        return ("  " * level) + _number_symbol(int(m.group(2))) + " ", m.group(3)
+    return None
+
+
+def convert(md: str, list_style: str = "emoji"):
     images = []
     defs = {}
     out_lines = []
@@ -273,6 +312,12 @@ def convert(md: str):
             out_lines.append(f"{label}：{rest}" if rest else label)
             continue
 
+        if list_style == "emoji":
+            li = _emoji_list(line)
+            if li:
+                out_lines.append(li[0] + _inline(li[1], defs))
+                continue
+
         out_lines.append(_inline(line, defs))
 
     # 压缩 3+ 空行为 2 个；去首尾空行（只 strip 换行，保留首行缩进——文档可能以代码块开头）
@@ -292,6 +337,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("input", help="输入 Markdown")
     ap.add_argument("--out", required=True, help="输出 X发布稿.txt")
+    ap.add_argument("--list-style", choices=["emoji", "keep"], default="emoji",
+                    help="列表写法：emoji（默认，X 不渲染 Markdown 列表，改 🔹/▫️/1️⃣）或 keep（保留 - / 1.）")
     args = ap.parse_args()
 
     inp = Path(args.input)
@@ -305,7 +352,7 @@ def main() -> None:
         sys.exit(f"错误：输入文件不是有效的 UTF-8 编码 {inp}")
     except OSError as e:
         sys.exit(f"错误：无法读取输入文件 {inp}（{e}）")
-    text, images = convert(md)
+    text, images = convert(md, args.list_style)
 
     out = Path(args.out)
     try:
