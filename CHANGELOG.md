@@ -1,6 +1,7 @@
-## [Unreleased]
+## [0.8.28] - 2026-10-11
 
-> 根包版本号不变；以下修复已并入，待下次发版时随包发布。
+> 根包 0.8.27 → **0.8.28**（patch）；技能版本：topmind-wechat-post 0.3.3 → 0.3.4、topmind-briefs 0.2.10 → 0.2.11。
+> 本次为本地既有修复的补发——该修复此前只存在于本地工作副本，远端 `main` 无对应提交。
 
 > - 修 bug：`topmind-wechat-post/scripts/lint-wechat.py` 的**盘古之白误报**。检测侧直接对原文做 `PANGU_A/B.search()`，
 >   而修复侧 `pangu_line()` 会先屏蔽行内代码 / 链接目标 / 裸 URL —— 两套规则不一致，导致图片链接目标里的中英混排片段
@@ -12,7 +13,9 @@
 > - 补文档：`topmind-wechat-post/SKILL.md` 的溯源审计段补**适用范围**——`audit-provenance.py` 按段落比对，
 >   只在「源稿与派生稿同构」时有效；派生稿把表格改写成句子、数据清单改写成图时相似度会整体塌到阈值下，
 >   此时改用**数字级回源核对**
-> - 本地验证：`package_skill.py --check`、`negative_tests.py`、`run_skill_gates.js check` 全绿；
+> - 本地验证：`run_skill_gates.js check` / `audit` / `versions`、`check:shared`（37 份副本逐字节一致）、
+>   `check:evals`、`check:pack`（117 文件）、安装器守卫与 CLI 测试共 9 项全部 `exit 0`；
+>   `ci_skill_gates.sh` 全量门禁末行 `all skills green`；隐私扫描 144 文件 PASS。
 >   图片链接目标不再误报「盘古之白」，真实缺空格（`这是API接口`）仍正常报出
 
 ## [0.8.27] - 2026-10-10
