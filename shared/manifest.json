@@ -1,0 +1,13 @@
+{
+  "_doc": "共享文件唯一真源清单。左边是 shared/ 下的真源路径，右边是要拿到逐字节相同副本的技能（\"*\" = 全部已发现技能）。副本落在 <skill>/<同一相对路径>。改共享文件只改 shared/，再跑 npm run sync:shared；CI 用 --check 校验副本与真源逐字节一致。",
+  "files": {
+    "scripts/audit_css.py": ["*"],
+    "scripts/audit_docs.py": ["*"],
+    "scripts/audit_skill.py": ["*"],
+    "scripts/audit_styles.py": ["*"],
+    "scripts/package_skill.py": ["*"],
+    "scripts/md2wechat.py": ["topmind-briefs", "topmind-wechat-post"],
+    "scripts/md2x-html.py": ["topmind-briefs", "topmind-x-article"],
+    "references/writing-principles.md": ["topmind-briefs", "topmind-wechat-post", "topmind-x-article"]
+  }
+}

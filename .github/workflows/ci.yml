@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  privacy:
+    name: Privacy & deprecation scan
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Scan for private/local/deprecated identifiers
+        run: python3 scripts/ci_privacy_scan.py
+      - name: package.json files sync check
+        run: node scripts/sync_npm_files.js --check
+      - name: Shared files single-source check (byte-identical copies)
+        run: node scripts/sync_shared.js --check
+      - name: Evals skeleton structure check
+        run: node scripts/check_evals.js
+
+  installer:
+    name: npx installer smoke
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - name: CLI list
+        run: node bin/topmind-writing-skills.js list
+      - name: CLI install each discovered skill
+        run: |
+          set -euo pipefail
+          mapfile -t SKILLS < <(node scripts/discover_skills.js)
+          OUT="$RUNNER_TEMP/skills-out"
+          for skill in "${SKILLS[@]}"; do
+            node bin/topmind-writing-skills.js install "$skill" --to "$OUT"
+            test -f "$OUT/$skill/SKILL.md"
+          done
+          # Refuse overwrite without --force
+          if node bin/topmind-writing-skills.js install "${SKILLS[0]}" --to "$OUT"; then
+            echo "expected install onto existing dir to fail without --force" >&2
+            exit 1
+          fi
+          node bin/topmind-writing-skills.js install "${SKILLS[0]}" --to "$OUT" --force
+          test -f "$OUT/${SKILLS[0]}/SKILL.md"
+      - name: Installer negative tests (--force guards)
+        run: node scripts/test_install_guards.js
+      - name: Installer CLI tests (install/uninstall)
+        run: node scripts/test_installer_cli.js
+      - name: Skill version consistency (frontmatter vs package.json)
+        run: node scripts/run_skill_gates.js versions
+
+  skill-gates:
+    name: Skill package gates
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - name: Agent Skills spec validator (skills-ref)
+        run: |
+          set -euo pipefail
+          pip install skills-ref==0.1.1
+          for skill in $(node scripts/discover_skills.js); do
+            agentskills validate "$skill"
+          done
+      - name: Skill gates (audits + negative tests)
+        run: bash scripts/ci_skill_gates.sh
+      # 与 Release 的打包步骤同口径：在负向测试生成缓存之后再校验，提前暴露打包问题
+      - name: Release packaging check (after gates)
+        run: |
+          set -euo pipefail
+          for skill in $(node scripts/discover_skills.js); do
+            echo "=== package check: ${skill} ==="
+            (cd "$skill" && python3 scripts/package_skill.py --check)
+          done
+      # 按 Release 同口径真实打包生成 dist/，再确认 npm 包不带这些产物
+      - name: npm package content check (after packaging)
+        run: |
+          set -euo pipefail
+          for skill in $(node scripts/discover_skills.js); do
+            (cd "$skill" && python3 scripts/package_skill.py)
+          done
+          node scripts/check_npm_pack.js

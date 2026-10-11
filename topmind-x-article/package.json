@@ -1,0 +1,16 @@
+{
+  "name": "topmind-x-article",
+  "version": "0.4.10",
+  "private": true,
+  "description": "X 长文（Article）一键发布：Markdown 原稿转可直接粘贴的纯文本 + 封面图 + 发布清单。",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/topmindspace/topmind-writing-skills.git",
+    "directory": "topmind-x-article"
+  },
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  }
+}

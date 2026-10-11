@@ -1,0 +1,66 @@
+# topmind-writing-skills · version control ignore rules
+
+# Principle: regenerateable artifacts, machine-local state, and secrets never enter the repo.
+
+# ── Dependencies ────────────────────────────────────────────────────────
+node_modules/
+**/node_modules/
+# 根安装器和各技能目前都没有 npm 依赖，锁文件只会是空壳，不提交、不进 npm 包。
+# 以后某个技能加了运行时依赖：在下面加一行 !<技能>/package-lock.json 并提交它的锁文件，
+# 门禁会改用 npm ci --omit=dev（npm 包仍由 package.json "files" 排除锁文件）。
+package-lock.json
+**/package-lock.json
+
+# ── Build / regression artifacts ────────────────────────────────────────
+dist/
+**/dist/
+report-assets/
+**/report-assets/
+render-compare/
+**/render-compare/
+
+# ── Python cache / venv ─────────────────────────────────────────────────
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# ── IDE / agent local state (never publish) ─────────────────────────────
+.codebuddy/
+.h3caiwork/
+.playwright-mcp/
+.claude/
+.agents/
+.mimocode/
+.idea/
+.vscode/
+
+# ── Temp / logs / OS ────────────────────────────────────────────────────
+scripts/_*
+**/scripts/_*
+*.tmp
+*.log
+*.bak
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Internal planning notes (not for release) ───────────────────────────
+OPTIMIZATION-PLAN.md
+**/OPTIMIZATION-PLAN.md
+
+# ── Secrets ─────────────────────────────────────────────────────────────
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+
+# Machine-local privacy denylist (usernames/hostnames). Never commit.
+scripts/.privacy-deny.local
+**/.privacy-deny.local
+
+# Release 附件与 npm pack 输出
+release-assets/
+*.tgz

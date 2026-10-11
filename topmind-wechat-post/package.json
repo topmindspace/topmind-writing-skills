@@ -1,0 +1,16 @@
+{
+  "name": "topmind-wechat-post",
+  "version": "0.3.4",
+  "private": true,
+  "description": "公众号文章全生命周期：交付包、审校改写、质量三关、状态同步、微信内联排版与发布清单。",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/topmindspace/topmind-writing-skills.git",
+    "directory": "topmind-wechat-post"
+  },
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  }
+}
