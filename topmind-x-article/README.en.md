@@ -4,7 +4,7 @@
 
 Turn a Markdown draft into a "copy → paste → publish" X long-form (Article) package.
 
-- Version: **v0.4.10** (ships with `@topmindspace/topmind-writing-skills@0.8.29`)
+- Version: **v0.4.11** (ships with `@topmindspace/topmind-writing-skills@0.8.30`)
 
 ## Install
 
@@ -29,7 +29,7 @@ python3 scripts/md2x-html.py <draft>.md --out <package>/X长文.html \
 # 2. Plain-text fallback (when HTML copying misbehaves)
 python3 scripts/md2x.py <draft>.md --out <package>/X发布稿.txt
 
-# 3. Cover: generate a 1200×675 cover with topmind-cover
+# 3. Cover: generate a 1500×600 cover with topmind-cover
 
 # 4. Follow references/publish-checklist.md item by item
 ```
@@ -50,6 +50,9 @@ native copy button, while pasted `<pre>` is discarded by X).
 The plain-text fallback follows `references/x-format.md`: headings → plain text lines,
 horizontal rules → blank lines, emphasis markers removed, links → `text（url）`, images →
 `[图N]` (image list appended at the end), tables → "label：value" lists, blockquotes unquoted.
+Lists become emoji bullets by default (`- ` → 🔹, nested → two-space-indented ▫️, `1.` → 1️⃣, at most two levels), because
+plain-text X posts do not render Markdown lists; `--list-style keep` keeps the original markers (rules in `references/x-post-format.md`).
+`python3 scripts/lint_x_post.py X发布稿.txt --long` is a quick self-check. The X Article HTML path pastes rich text, so native lists stay.
 
 Read the result through once by hand after converting.
 

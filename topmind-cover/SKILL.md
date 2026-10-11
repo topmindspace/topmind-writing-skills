@@ -1,11 +1,11 @@
 ---
 name: topmind-cover
-description: "文章封面配图生成：X 长文与公众号共用。震撼、醒目、主题突出；平台尺寸规范、22 种风格模板、4 种构图骨架、文案排版密码、命名落盘、成图检查全流程覆盖。Use when 文章封面、封面图、头图、题图、公众号封面、X 首图、cover、thumbnail。Do NOT use for 正文插图、长图与信息图（→ topmind-poster）、PPT/报告封面与多页演示（→ topmind-presentation）。"
+description: "文章封面配图生成：X 长文与公众号共用，也供 topmind-viral-posts 的生图环节调用。震撼、醒目、主题突出；平台尺寸规范、22 种风格模板、4 种构图骨架、文案排版密码、命名落盘、成图检查全流程覆盖。Use when 文章封面、封面图、头图、题图、首图、X 长文头图、公众号封面、公众号头图、封面风格、banner、cover、thumbnail。Do NOT use for 正文插图、长图、海报与信息图（→ topmind-poster）、短文与段子写稿（→ topmind-briefs / topmind-viral-posts）、PPT/报告封面与多页演示（→ topmind-presentation）。"
 license: MIT
 metadata:
-  version: "0.4.5"
+  version: "0.4.6"
   action_category: "write"
-  triggers: "封面, 封面图, 头图, 题图, 首图, 配图, 缩略图, banner, cover, thumbnail, 公众号封面, 公众号题图, X 封面, X 首图, 文章封面"
+  triggers: "封面, 封面图, 头图, 题图, 首图, 封面配图, 缩略图, banner, cover, thumbnail, 公众号封面, 公众号题图, 公众号头图, X 封面, X 首图, X 长文头图, 文章封面, 封面风格"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
   updated: "2026-10-11"
@@ -131,8 +131,15 @@ metadata:
 
 "公众号包规约"（正文引用 `images/00-封面.png`、`图片上传清单.md` 登记两版）来自宿主智能体环境，仓库内无此文件；缺失时仍按固定命名落盘，不阻塞核心流程。
 
+## 被 topmind-viral-posts 调用时
+
+段子、涨粉帖的配图由 `topmind-viral-posts` 发起生图。此时只借用本技能的风格配方与 prompt 写法（清新优雅 / MD3 商务风），
+画幅按调用方要求（X 单图 1200×675 或 1:1），不套用封面的标题字高、10% 安全区和 900×383 裁剪，也不需要「标题 ≤10 字」。
+
 ## When NOT to use
 
+- 长图、海报、信息图、榜单图（图里有必须逐字正确的文字和数字）：走 `topmind-poster`
+- 短文、段子、快讯的写稿：走 `topmind-briefs` / `topmind-viral-posts`
 - 正文插图：主体是文字说明，按正文配图流程走
 - 报告/PPT 封面：走 `topmind-presentation`（仓库 `topmind-presentation`，已从本仓独立出去）
 - 只想找现成图：走 `image_search` 技能

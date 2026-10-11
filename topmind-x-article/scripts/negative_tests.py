@@ -81,6 +81,21 @@ def main() -> None:
         check("括号 URL 不截断",
               r.returncode == 0 and "猫_(动物)" in out)
 
+        # 9. 列表转 emoji 项目符号（X 纯文本不渲染 Markdown 列表），代码块内不动；--list-style keep 保留原符号
+        (td / "lst.md").write_text(
+            "# t\n\n- 一\n- 二\n  - 二点一\n    - 更深\n\n1. 步骤一\n2. 步骤二\n\n```\n- 代码里的\n```\n\n-5% 不是列表\n",
+            encoding="utf-8")
+        r = run([str(td / "lst.md"), "--out", str(td / "o9.txt")])
+        out = (td / "o9.txt").read_text(encoding="utf-8") if (td / "o9.txt").exists() else ""
+        check("列表转 emoji 项目符号（两层缩进、序号 keycap）",
+              r.returncode == 0 and "🔹 一" in out and "  ▫️ 二点一" in out and "  ▫️ 更深" in out
+              and "1️⃣ 步骤一" in out and "2️⃣ 步骤二" in out)
+        check("代码块内的 - 不被改写、-5% 不被当列表",
+              "    - 代码里的" in out and "-5% 不是列表" in out)
+        r = run([str(td / "lst.md"), "--out", str(td / "o10.txt"), "--list-style", "keep"])
+        out = (td / "o10.txt").read_text(encoding="utf-8") if (td / "o10.txt").exists() else ""
+        check("--list-style keep 保留原符号", r.returncode == 0 and "- 一" in out and "1. 步骤一" in out)
+
     if fails:
         print(f"\n[negative_tests] {len(fails)} 项失败")
         sys.exit(1)

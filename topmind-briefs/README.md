@@ -2,10 +2,10 @@
 
 [English](./README.en.md) | 中文
 
-一件事，一张图，讲完就停。干货向短文：数据榜单、论文一句话解读、新品速递——
+一件事，一张图，讲完就停。干货向短文：数据榜单、论文解读、新品速递——
 X 一帖或短 thread，公众号约 300–800 字，双版一键复制 HTML。
 
-- 版本：**v0.2.12**（随 `@topmindspace/topmind-writing-skills@0.8.29` 发布）
+- 版本：**v0.2.13**（随 `@topmindspace/topmind-writing-skills@0.8.30` 发布）
 
 ## 安装
 
@@ -29,6 +29,18 @@ python3 scripts/md2wechat.py --input 公众号短文.md --out-dir 交付 --slug 
 唯一真源在仓库 `shared/scripts/`，与 `topmind-x-article` / `topmind-wechat-post` 是同一份逐字节副本，
 仓库 CI 用 `node scripts/sync_shared.js --check` 校验一致。工作流细节见 [SKILL.md](./SKILL.md)。
 
+## X 版格式与话题标签
+
+X 不渲染 Markdown，X 版不用 `- ` 列表、`#` 标题和 `**加粗**`：分点用 emoji 项目符号（🔹 并列、▫️ 二级、1️⃣ 步骤、✅/❌ 对比），
+同帖风格一致、每条一行、最多两层。公众号稿继续用 Markdown 列表；X 稿由公众号稿派生，只允许排版差异，内容一致。
+X 版末尾附 0–2 个话题标签建议（单独成行放最后，公众号稿不加）。规则见 [references/x-post-format.md](./references/x-post-format.md)
+与 [references/platform-specs.md](./references/platform-specs.md)。
+
+```bash
+# 检查 X 版：无 Markdown 列表/标题/加粗，话题标签在末行；加 --fix --out 自动改写
+python3 scripts/lint_x_post.py X短文.md
+```
+
 ## 内容类型
 
 - 数据榜单型 / 榜单速报型 / 论文解读型 / 机制讲解型（见 SKILL.md，四种常用结构）
@@ -37,4 +49,5 @@ python3 scripts/md2wechat.py --input 公众号短文.md --out-dir 交付 --slug 
 ## 何时不用
 
 X 长文 → `topmind-x-article`；公众号长文 → `topmind-wechat-post`；
-引流互动型短帖 → `topmind-viral-posts`；发帖 → `topmind-x`（须用户确认）。
+引流互动型短帖与段子 → `topmind-viral-posts`；单独出长图/海报 → `topmind-poster`；
+封面/头图 → `topmind-cover`；发帖 → `topmind-x`（须用户确认）。

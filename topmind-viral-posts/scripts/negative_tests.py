@@ -71,6 +71,27 @@ def main() -> None:
         check("package_skill --check 在缺 README.md 时无未捕获 Traceback",
               "Traceback" not in (r.stderr or ""), (r.stderr or "")[-200:])
 
+    # 3b. X 稿检查脚本随包自带：Markdown 列表 → 失败；emoji 列表 → 通过；--fix 后通过；公众号稿不受影响
+    lint = ROOT / "scripts" / "lint_x_post.py"
+    check("X 稿检查脚本随包自带: scripts/lint_x_post.py", lint.is_file())
+    if lint.is_file():
+        with tempfile.TemporaryDirectory() as td:
+            t = Path(td)
+            bad = t / "bad.txt"
+            bad.write_text("三个变化：\n\n- 响应更快\n- 价格更低\n1. 先装\n## 标题\n**加粗**\n\n#话题\n", encoding="utf-8")
+            good = t / "good.txt"
+            good.write_text("三个变化：\n\n🔹 响应更快\n🔹 价格更低\n  ▫️ 细节\n\n1️⃣ 先装\n2️⃣ 再用\n\n#话题\n", encoding="utf-8")
+            r = run_quiet([str(lint), str(bad)], t)
+            check("lint_x_post 对 Markdown 列表/标题/加粗退出码=1", r.returncode == 1, f"rc={r.returncode}")
+            r = run_quiet([str(lint), str(good)], t)
+            check("lint_x_post 对 emoji 列表退出码=0", r.returncode == 0, r.stdout[-200:])
+            r = run_quiet([str(lint), str(bad), "--fix", "--out", str(t / "fixed.txt")], t)
+            fixed = (t / "fixed.txt").read_text(encoding="utf-8") if (t / "fixed.txt").exists() else ""
+            check("lint_x_post --fix 后无 Markdown 列表且检查通过",
+                  r.returncode == 0 and "🔹 响应更快" in fixed and "1️⃣ 先装" in fixed and "**" not in fixed, r.stdout[-200:])
+            r = run_quiet([str(lint), str(t / "nope.txt")], t)
+            check("lint_x_post 缺失文件干净报错", r.returncode == 2 and "Traceback" not in (r.stderr or ""))
+
     # 4. scripts/*.py 可编译（用内置 compile 只验语法，不写 .pyc，避免污染工作区）
     for py in sorted((ROOT / "scripts").glob("*.py")):
         try:
