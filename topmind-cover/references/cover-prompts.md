@@ -5,7 +5,7 @@
 > **和 `cover-styles.md` 的区别**：那份是技能内部配方（含 `{PLACEHOLDER}` 与优选组合，供 AI agent 调用）；
 > 这份是**完整、可直接粘贴**的提示词，变量用标出，选好、填好、粘贴、生成。
 >
-> 配套：`cover-styles.md`（19 风格技能配方）· `impact-language.md`（20 条冲击力设计语言）·
+> 配套：`cover-styles.md`（22 风格技能配方）· `impact-language.md`（20 条冲击力设计语言）·
 > `assets/examples/`（42 张原创样张）
 
 ---
@@ -476,5 +476,5 @@ film grain, or a light halo).
 
 ---
 
-*文档版本：2026-10-01 · 与 topmind-cover 0.3.2 的 22 种风格、42 张原创样张同步。
+*文档版本：2026-10-11 · 与 topmind-cover 的 22 种风格（本文含前 19 种的完整提示词）、55 张原创样张同步。
 新增风格或示例时，请同步更新第 1~2 章。*

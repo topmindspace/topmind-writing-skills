@@ -1,3 +1,13 @@
+## [0.8.29] - 2026-10-11
+
+> 根包 0.8.28 → **0.8.29**（patch）；技能版本：topmind-briefs 0.2.11 → 0.2.12、topmind-cover 0.4.4 → 0.4.5、topmind-poster 0.1.2 → 0.1.3。
+
+### 优化
+
+- `topmind-briefs`、`topmind-poster`：description 的 Do NOT 互相点名分流——「写干货短文、快讯、数据榜单文案」归 briefs，「单独出长图、海报、信息图 PNG」归 poster，减少榜单类请求的路由歧义。
+- `topmind-cover`：风格库口径统一为 22 种——`cover-styles.md` 标题、`cover-prompts.md` 说明、`assets/examples/README.md` 与两份 README 的风格数、示例图数量（55 张示例 + 1 张总览）、总览图 alt 文案与实际文件对齐；示例说明补全 `orange-warm`、`sketch-cartoon`、`cyber-neon` 三种风格。
+- 删除 `topmind-cover/references/cover-study/`（一次性的封面研究过程文档与 5 张对比图，约 4.4 MB），同步去掉 `package.json` 与 `scripts/sync_npm_files.js` 里对应的排除规则和 README 说明；风格与设计手法仍以 `cover-styles.md` 的「高级感设计系统」为准。
+
 ## [0.8.28] - 2026-10-11
 
 > 根包 0.8.27 → **0.8.28**（patch）；技能版本：topmind-wechat-post 0.3.3 → 0.3.4、topmind-briefs 0.2.10 → 0.2.11。

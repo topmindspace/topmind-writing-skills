@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.12 (2026-10-11)
+
+- 优化：description 的 Do NOT 增加「单独出长图/海报/信息图 PNG → topmind-poster」分流，与 poster 的触发词边界互相点名
+
 ## 0.2.11 (2026-10-11)
 
 - 修文案：交付脚本 `md2wechat.py` 的 `--author` 帮助文本改为「留空则不输出署名行」，
