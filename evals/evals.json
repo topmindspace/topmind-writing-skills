@@ -52,6 +52,9 @@
     {"id": "cover-neg-3", "target_skill": "topmind-cover", "prompt": "写个互关帖，要带话题标签。", "expected_skill": "topmind-viral-posts", "expected_behavior": "写稿走 viral-posts；cover 只在需要生图时被调用。"},
     {"id": "poster-4", "target_skill": "topmind-poster", "prompt": "给文章做一张信息图配图，数字和型号要逐字正确。", "expected_skill": "topmind-poster", "expected_behavior": "HTML 排版 + 渲染，文字数字逐字正确。"},
     {"id": "poster-neg-2", "target_skill": "topmind-poster", "prompt": "写个榜单快讯的文案，公众号和 X 各一版。", "expected_skill": "topmind-briefs", "expected_behavior": "榜单快讯文案走 briefs。"},
-    {"id": "poster-neg-3", "target_skill": "topmind-poster", "prompt": "给这篇文章做个封面。", "expected_skill": "topmind-cover", "expected_behavior": "单张封面走 cover。"}
+    {"id": "poster-neg-3", "target_skill": "topmind-poster", "prompt": "给这篇文章做个封面。", "expected_skill": "topmind-cover", "expected_behavior": "单张封面走 cover。"},
+    {"id": "cover-xpost-1", "target_skill": "topmind-cover", "prompt": "给这条 X 短文配一张短帖封面，16:9 的。", "expected_skill": "topmind-cover", "expected_behavior": "走「X 短文封面」场景：按场景→风格→标题花式选型，16:9 生成，crop-cover.py --preset x-post 落盘 00-封面-X短文.png（1200×675），封面数字须在正文有出处。"},
+    {"id": "briefs-xsource-1", "target_skill": "topmind-briefs", "prompt": "写一篇 X 短文，讲今天编程榜单的变化，要带来源链接。", "expected_skill": "topmind-briefs", "expected_behavior": "X 版纯文本、emoji 列表，正文后单独一行「来源：名称 URL」，厂商数字标厂商口径；默认调用 topmind-cover 出 16:9 封面作第 1 张图；lint_x_post 无错误、W8/W9/W10 处理完。"},
+    {"id": "viral-cover-1", "target_skill": "topmind-viral-posts", "prompt": "来 3 条热点段子，记得配图和来源。", "expected_skill": "topmind-viral-posts", "expected_behavior": "每条带来源行（URL）与配图；原图优先，无原图走 topmind-cover 出 16:9 图；去 AI 味，不写「不是 A 而是 B」「综上所述」。"}
   ]
 }

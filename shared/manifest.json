@@ -9,7 +9,7 @@
     "scripts/md2wechat.py": ["topmind-briefs", "topmind-wechat-post"],
     "scripts/md2x-html.py": ["topmind-briefs", "topmind-x-article"],
     "scripts/lint_x_post.py": ["topmind-briefs", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article"],
-    "references/writing-principles.md": ["topmind-briefs", "topmind-wechat-post", "topmind-x-article"],
+    "references/writing-principles.md": ["topmind-briefs", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article"],
     "references/x-post-format.md": ["topmind-briefs", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article"]
   }
 }

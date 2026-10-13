@@ -4,7 +4,7 @@
 
 Short, real, hooked — read in 3 seconds, impossible not to like/comment/follow. 14 post types summarised from common high-engagement writing patterns in the Chinese X community (all examples are original, written for this skill), each post paired with 1 image, a hashtag set and classification tags.
 
-- Version: **v0.3.5** (ships with `@topmindspace/topmind-writing-skills@0.8.30`)
+- Version: **v0.3.6** (ships with `@topmindspace/topmind-writing-skills@0.8.31`)
 
 ## Install
 

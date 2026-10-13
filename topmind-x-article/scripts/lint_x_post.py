@@ -11,6 +11,9 @@ X 的普通帖子不渲染 Markdown。本脚本检查 X 稿，并可把常见 Ma
     python3 lint_x_post.py X发布稿.txt --long      # 长文兜底稿：不查话题标签位置和字数
     cat X稿.txt | python3 lint_x_post.py -         # 从标准输入读取
 
+警告（不影响退出码，--strict 时算失败）还包括：点缀表情过多（W8）、疑似 AI 套话（W9）、
+有数据但缺来源（W10）。
+
 退出码：有错误 → 1；加 --strict 时警告也算失败；其余 → 0。
 只用 Python 标准库。
 """
@@ -59,6 +62,19 @@ MAX_ITEMS = 7
 MAX_LEVELS = 2
 MAX_TAGS = 3
 WEIGHT_LIMIT = 280
+MAX_DECOR_EMOJI = 4  # 列表符号之外的点缀表情上限（规则建议 1–3 个）
+
+# --- 去 AI 味：常见套话（只警告，不报错；规则见 writing-principles.md「去 AI 味」）--
+AI_PHRASES = [
+    "综上所述", "总而言之", "值得注意的是", "值得一提的是", "不难发现", "毋庸置疑",
+    "让我们一起", "首先，", "其次，", "最后，", "在当今", "随着.{1,12}的发展",
+    "颠覆性", "革命性", "一文读懂", "一文看懂", "建议收藏", "干货满满", "赋能",
+    "不是.{1,12}而是", "真正的", "从来不是", "一句话总结", "划重点",
+]
+AI_RE = re.compile("|".join(AI_PHRASES))
+EMOJI_RE = re.compile(r"[\U0001F300-\U0001FAFF\u2600-\u27BF]")
+NUM_FACT_RE = re.compile(r"\d+(?:\.\d+)?\s*(?:%|％|倍|万|亿|美元|元|分|名|个|款|B|K|M)")
+SOURCE_RE = re.compile(r"来源|出处|据.{0,8}(?:公告|博客|报道|论文|官网)|via|source", re.I)
 
 
 def _is_wide(ch: str) -> bool:
@@ -172,6 +188,19 @@ def lint_post(start: int, lines: list[str], long_mode: bool):
             tags = HASHTAG_RE.findall("\n".join(lines))
             if len(tags) > MAX_TAGS:
                 warns.append((start, "W6", f"话题标签 {len(tags)} 个，建议不超过 {MAX_TAGS} 个"))
+        text_all = "\n".join(lines)
+        decor = 0
+        for ln in lines:
+            bm = BULLET_RE.match(ln)
+            rest_ln = (bm.group(3) or "") if bm else ln
+            decor += len(EMOJI_RE.findall(rest_ln))
+        if decor > MAX_DECOR_EMOJI:
+            warns.append((start, "W8", f"点缀表情 {decor} 个（列表符号不计），建议 1–3 个，避免杂乱"))
+        hits = sorted({m.group(0) for m in AI_RE.finditer(text_all)})
+        if hits:
+            warns.append((start, "W9", "疑似 AI 套话：" + " / ".join(hits[:4]) + "；改成平实说法或删掉"))
+        if NUM_FACT_RE.search(text_all) and not (URL_RE.search(text_all) or SOURCE_RE.search(text_all)):
+            warns.append((start, "W10", "帖子里有数字/数据，但没有来源链接或「来源：」行"))
         w = x_weight("\n".join(ln for ln in lines if not PLACEHOLDER_RE.match(ln)))
         if w > WEIGHT_LIMIT:
             warns.append((start, "W7", f"加权字数约 {w}，超过 {WEIGHT_LIMIT}（约 140 个汉字）；长帖请确认账号支持，或精简/拆帖"))

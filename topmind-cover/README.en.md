@@ -4,7 +4,7 @@
 
 A reusable skill for generating cover art for X long-form posts and WeChat articles. Goal: **striking, eye-catching, theme-focused**.
 
-- Version: **v0.4.6** (ships with `@topmindspace/topmind-writing-skills@0.8.30`)
+- Version: **v0.4.7** (ships with `@topmindspace/topmind-writing-skills@0.8.31`)
 
 ## Style gallery
 
@@ -12,7 +12,7 @@ A reusable skill for generating cover art for X long-form posts and WeChat artic
   <img src="https://github.com/topmindspace/topmind-writing-skills/raw/main/topmind-cover/assets/examples/overview.png" alt="topmind-cover · 22 cover-style overview" width="960" />
 </p>
 
-22 styles (clean white / background blur / paper collage / news flash / giant-type manifesto / tutorial steps / minimalist / editorial magazine / 3D cute-toy / anime desk / diorama book / academic print / gallery grid / dark SaaS / cinematic flow / hardcore 3D type / viral dry-goods / brand launch / fun IP, light-first ordering): use cases, palette stories, abstract design principles, and Chinese+English prompt recipes in [`references/cover-styles.md`](./references/cover-styles.md); full-size per-style shots in [`assets/examples/`](./assets/examples/). Prefer writing your own prompts and sending them straight to an image model (bypassing the skill)? See [`references/cover-prompts.md`](./references/cover-prompts.md) — a copy-paste prompt compendium plus cross-platform viral-cover research.
+22 styles (clean white / background blur / paper collage / news flash / giant-type manifesto / tutorial steps / minimalist / editorial magazine / 3D cute-toy / anime desk / diorama book / academic print / gallery grid / dark SaaS / cinematic flow / hardcore 3D type / viral dry-goods / brand launch / fun IP / orange warm / sketch cartoon / cyber neon, light-first ordering): use cases, palette stories, abstract design principles, and Chinese+English prompt recipes in [`references/cover-styles.md`](./references/cover-styles.md); full-size per-style shots in [`assets/examples/`](./assets/examples/). Prefer writing your own prompts and sending them straight to an image model (bypassing the skill)? See [`references/cover-prompts.md`](./references/cover-prompts.md) — a copy-paste prompt compendium plus cross-platform viral-cover research.
 
 ## Install
 
@@ -33,6 +33,10 @@ npx @topmindspace/topmind-writing-skills install topmind-cover
 ```bash
 python3 scripts/crop-cover.py <main-image> --out-dir <package>/images/
 # produces 00-封面.png (1500x600) + 00-封面-公众号.png (900x383, center crop)
+
+# X short-post cover: generate a separate 16:9 master
+python3 scripts/crop-cover.py <16:9-image> --preset x-post --out-dir <dir>
+# produces 00-封面-X短文.png (1200x675)
 ```
 
 ## Sizes
@@ -41,6 +45,7 @@ python3 scripts/crop-cover.py <main-image> --out-dir <package>/images/
 |----------|------|--------|
 | X Article cover | 1500x600 | 5:2 (master image) |
 | WeChat cover large image | 900×383 | 2.35:1 (center crop) |
+| X short-post cover | 1200×675 | 16:9 (generated separately) |
 
 ## Design rules
 

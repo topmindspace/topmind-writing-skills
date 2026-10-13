@@ -1,14 +1,14 @@
 ---
 name: topmind-cover
-description: "文章封面配图生成：X 长文与公众号共用，也供 topmind-viral-posts 的生图环节调用。震撼、醒目、主题突出；平台尺寸规范、22 种风格模板、4 种构图骨架、文案排版密码、命名落盘、成图检查全流程覆盖。Use when 文章封面、封面图、头图、题图、首图、X 长文头图、公众号封面、公众号头图、封面风格、banner、cover、thumbnail。Do NOT use for 正文插图、长图、海报与信息图（→ topmind-poster）、短文与段子写稿（→ topmind-briefs / topmind-viral-posts）、PPT/报告封面与多页演示（→ topmind-presentation）。"
+description: "文章封面配图生成：X 长文与公众号共用，也是 X 短文 / 短帖的默认封面（16:9），并供 topmind-briefs、topmind-viral-posts 的配图环节调用。震撼、醒目、主题突出；平台尺寸规范、22 种风格模板、场景→风格匹配、12 种标题花式、背景库、4 种构图骨架、命名落盘、成图检查全流程覆盖。Use when 文章封面、封面图、X 短文封面、短帖封面、头图、题图、首图、X 长文头图、公众号封面、公众号头图、封面风格、banner、cover、thumbnail。Do NOT use for 正文插图、长图、海报与信息图（→ topmind-poster）、短文与段子写稿（→ topmind-briefs / topmind-viral-posts）、PPT/报告封面与多页演示（→ topmind-presentation）。"
 license: MIT
 metadata:
-  version: "0.4.6"
+  version: "0.4.7"
   action_category: "write"
-  triggers: "封面, 封面图, 头图, 题图, 首图, 封面配图, 缩略图, banner, cover, thumbnail, 公众号封面, 公众号题图, 公众号头图, X 封面, X 首图, X 长文头图, 文章封面, 封面风格"
+  triggers: "封面, 封面图, X 短文封面, 短帖封面, 头图, 题图, 首图, 封面配图, 缩略图, banner, cover, thumbnail, 公众号封面, 公众号题图, 公众号头图, X 封面, X 首图, X 长文头图, 文章封面, 封面风格"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-11"
+  updated: "2026-10-14"
 ---
 
 # topmind-cover · 封面配图生成
@@ -23,34 +23,56 @@ metadata:
 标题提炼 → MD3 配色/字体定调 → 构图简报 → 风格模板 → 生成 → 冲击力自检 → 裁剪双尺寸 → 落盘命名
 ```
 
-## 风格索引（浅色优先：1~8 浅色，9~11 深色/高饱和）
+## 风格索引（22 种，浅色优先）
 
 风格总览图见 `assets/examples/overview.png`（离线可看，npm 包也带）。
 
-| 风格 | 首选题材 |
-|------|----------|
-| 白色清新 `white-clean` | 干货清单、实测盘点、效率/副业/职场 |
-| 背景虚化 `bg-blur` | 生活方式、职场日常、运动健康 |
-| 纸感拼贴 `paper-collage` | 手账、整理术、旧物改造 |
-| 资讯快报 `news-flash` | 资讯快讯、热点解读、揭秘类选题 |
-| 巨字宣言 `big-type` | 观点评论、深度长文、发布宣言 |
-| 教程步骤 `tutorial-steps` | 教程、上手指南、分步实操 |
-| 极简留白 `minimal` | 随笔、书评、轻观点 |
-| 杂志编辑 `magazine` | 深度访谈、人物特写、商业分析 |
-| 3D萌系潮玩 `chao-wan-3d` | 爆款盘点、新手干货、合集清单 |
-| 日系动漫 `anime-desk` | 行业科普、职业揭秘、个人IP |
-| 微缩立体书 `diorama-book` | 学习路线、知识地图、万字长文 |
-| 学院版画 `academic-print` | 论文解读、原理解析、方法论 |
-| 样张矩阵 `gallery-grid` | 模型评测、LoRA展示、生图发版 |
-| 暗色SaaS `dark-saas` | 产品发布、工具测评、开发者工作流 |
-| 电影科技流 `cinematic-flow` | 自动化工作流、AI生产力 |
-| 硬核立体字 `hard-core-type` | 硬核教程、架构指南、从入门到精通 |
-| 爆款干货 `gan-huo` | 干货清单、评测、盘点、实测筛选 |
-| 品牌发布 `brand-launch` | 产品发布、版本更新、官方白皮书 |
-| IP 趣味 `ip-fun` | 实战案例、数据战报、复盘、连载 |
+| 色调 | 风格 | 首选题材 |
+|------|------|----------|
+| 浅色 | 白色清新 `white-clean` | 干货清单、实测盘点、效率/副业/职场 |
+| 浅色 | 背景虚化 `bg-blur` | 生活方式、职场日常、运动健康 |
+| 浅色 | 纸感拼贴 `paper-collage` | 手账、整理术、旧物改造 |
+| 浅色 | 资讯快报 `news-flash` | 资讯快讯、热点解读、揭秘类选题 |
+| 浅色 | 巨字宣言 `big-type` | 观点评论、深度长文、发布宣言 |
+| 浅色 | 教程步骤 `tutorial-steps` | 教程、上手指南、分步实操 |
+| 浅色 | 极简留白 `minimal` | 随笔、书评、轻观点 |
+| 浅色 | 杂志编辑 `magazine` | 深度访谈、人物特写、商业分析 |
+| 浅色 | 3D萌系潮玩 `chao-wan-3d` | 爆款盘点、新手干货、合集清单 |
+| 浅色 | 日系动漫 `anime-desk` | 行业科普、职业揭秘、个人IP |
+| 浅色 | 微缩立体书 `diorama-book` | 学习路线、知识地图、万字长文 |
+| 浅色 | 学院版画 `academic-print` | 论文解读、原理解析、方法论 |
+| 浅色 | 样张矩阵 `gallery-grid` | 模型评测、LoRA展示、生图发版 |
+| 浅色 | 卡通素描 `sketch-cartoon` | 创意、手作、轻松科普、幽默 |
+| 暖色 | 橙色暖阳 `orange-warm` | 生活方式、美食、旅行、亲子 |
+| 暖色 | IP 趣味 `ip-fun` | 实战案例、数据战报、复盘、连载 |
+| 深色 | 暗色SaaS `dark-saas` | 产品发布、工具测评、开发者工作流 |
+| 深色 | 电影科技流 `cinematic-flow` | 自动化工作流、AI生产力 |
+| 深色 | 硬核立体字 `hard-core-type` | 硬核教程、架构指南、从入门到精通 |
+| 深色 | 爆款干货 `gan-huo` | 干货清单、评测、盘点、实测筛选 |
+| 深色 | 品牌发布 `brand-launch` | 产品发布、版本更新、官方白皮书 |
+| 深色 | 赛博霓虹 `cyber-neon` | AI前沿、科幻、极客、游戏 |
 
 适用场景细则、配色故事、prompt 配方见 `references/cover-styles.md`；单风格大图 `assets/examples/<style>.png`（git clone / Release zip 安装才有；npm 包为瘦身不含单风格样张，本地没有时看 overview.png 加 `cover-styles.md` 文字配方即可，或打开 GitHub 仓库同路径）。
-构图骨架（4 种）与文案排版密码见 `references/cover-styles.md` 末尾章节。
+构图骨架（4 种）与文案排版密码见 `references/cover-styles.md` 末尾章节；12 种标题花式与背景库见 `references/typography-system.md`；
+可直接粘贴的完整提示词（22 种风格 + X 短文封面 + 场景示例）见 `references/cover-prompts.md`。
+
+## 场景 → 风格 → 标题花式（选型速查）
+
+同一类题材连续出图时，在推荐列里轮换，避免一个账号所有封面长一个样。
+
+| 场景 | 推荐风格（轮换） | 标题花式（见 typography-system） | 背景方向 |
+|------|------------------|----------------------------------|----------|
+| 资讯快讯 / 热点 | news-flash · cyber-neon · minimal | T3 报头横栏 · T9 印章角标 | 报纸纸纹、电讯网格、一处朱红 |
+| 数据榜单 / 基准 | gan-huo · dark-saas · gallery-grid | T5 巨型数字 · T10 数据胶囊 | 深炭灰、图表虚影、网格坐标 |
+| 产品发布 / 版本 | brand-launch · dark-saas · cinematic-flow | T6 玻璃浮雕 · T4 英文混排 | 深蓝渐变、产品展台、体积光 |
+| 论文 / 原理 | academic-print · minimal · diorama-book | T7 衬线宋体 · T9 印章角标 | 牛皮纸、铜版线稿、坐标纸 |
+| 教程 / 上手 | tutorial-steps · white-clean · anime-desk | T8 步骤数字串 · T2 马克笔高亮 | 宣纸、桌面实物、浅色工位 |
+| 观点 / 评论 | big-type · minimal · magazine | T1 巨字压版 · T11 断句错落 | 奶油底、单色大面、影棚颗粒 |
+| 盘点 / 合集 | chao-wan-3d · white-clean · paper-collage | T12 贴纸描边 · T5 巨型数字 | 浅色留白、悬浮卡片、纸片层叠 |
+| 生活方式 / 温暖 | orange-warm · bg-blur · sketch-cartoon | T2 马克笔高亮 · T11 断句错落 | 暖光虚化、手绘纸纹、自然光 |
+| 运营段子 / 涨粉 | ip-fun · chao-wan-3d · sketch-cartoon | T12 贴纸描边 · T2 马克笔高亮 | 舞台暖光、宠物/角色、纯色撞色 |
+
+
 
 > 示例图为原创演示：只学设计原则，不临摹第三方版式（详见 `references/cover-styles.md` 顶部"原创铁律"）。
 
@@ -75,8 +97,20 @@ metadata:
 |------|------|------|------|
 | X Article 封面 | 1500×600 | 5:2 | 主尺寸，先按这个生成 |
 | 公众号封面大图 | 900×383 | 2.35:1 | 从 5:2 主图中央裁剪（左右各裁约 3%） |
+| X 短文 / 短帖封面 | 1200×675 | 16:9 | 单独按 16:9 生成，不从 5:2 裁（会裁掉两侧约 29%） |
 
-生成 prompt 里写明"横构图 5:2"；公众号版用 `scripts/crop-cover.py` 从主图中央裁出，不重新生成（保系列一致）。
+长文封面：prompt 写明"横构图 5:2"；公众号版用 `scripts/crop-cover.py` 从主图中央裁出，不重新生成（保系列一致）。
+X 短文封面：prompt 写明"横构图 16:9"，用 `scripts/crop-cover.py <主图> --preset x-post --out-dir <目录>` 落盘为 `00-封面-X短文.png`。
+
+## X 短文封面（场景）
+
+X 短文、X 短帖默认配 1 张封面，由 `topmind-briefs`、`topmind-viral-posts` 发起，也可单独触发（「X 短文封面」「短帖封面」）。
+
+- **画幅**：16:9，1200×675；X 时间线单图预览接近完整显示，标题放中央 80% 宽度内。
+- **标题**：取帖子的核心判断或最关键的数字，≤10 字；可加 1 行 ≤14 字的副标题或胶囊标签。
+- **信息诚实**：封面数字必须在正文里出现并有来源；资讯类封面不画假的产品界面、假截图、假 logo。
+- **风格**：按上方「场景 → 风格 → 标题花式」选；纯运营段子（互关、打卡）用 viral-posts 的图库方向（宠物、风景、标语），可以不放标题。
+- **自检**：冲击力自检里 #1–#6、#9、#11 照做；#7 的安全区改为「标题在中央 80% 宽度、上下各留 10%」；不做 900×383 裁剪。
 
 ## 工作流
 
@@ -93,12 +127,14 @@ metadata:
    - 例："给 AI 从业者看的 Manus 2.0 实测封面，情绪'震撼但可信'，视觉隐喻是破壳而出的机械手，深空黑底 + 电光蓝强调。"
 3. **输入与组 prompt**：用步骤 1 定下的标题 + 3 个主题关键词 + 平台（`x` / `wechat` / `both`，默认 both；平台只影响 prompt 侧重，裁剪落盘永远产出双尺寸）。按风格配方组装 prompt，标题逐字写明（防 AI 自造错别字）。
 4. **生成**：`media.generate_image`，`name` 用 `<slug>-cover`。
+   **多样性**：同一系列或同一天连发的封面，相邻两张至少在「风格 / 标题花式 / 背景」三项中换两项；同一风格内也要换主体和构图骨架。
 5. **冲击力自检**（必做）：过下方自检清单 11 项；不通过→调整 prompt 重生成，最多 3 次；3 次仍不过→换一种风格，或回步骤 1 重写标题。
 6. **裁剪落盘**：
    ```bash
    python3 scripts/crop-cover.py <主图> --out-dir <包>/images/
    ```
-   产出 `00-封面.png`（1500×600，X/公众号共用主文件）与 `00-封面-公众号.png`（900×383）。
+   产出 `00-封面.png`（1500×600，X/公众号共用主文件）与 `00-封面-公众号.png`（900×383）；
+   X 短文封面加 `--preset x-post`，产出 `00-封面-X短文.png`（1200×675）。
    公众号包规约：正文引用 `images/00-封面.png`，`图片上传清单.md` 登记两版。
 7. **系列感**：同一系列固定色系 + 版式语言，prompt 复用同一风格模板。
 
@@ -131,15 +167,16 @@ metadata:
 
 "公众号包规约"（正文引用 `images/00-封面.png`、`图片上传清单.md` 登记两版）来自宿主智能体环境，仓库内无此文件；缺失时仍按固定命名落盘，不阻塞核心流程。
 
-## 被 topmind-viral-posts 调用时
+## 被 topmind-briefs / topmind-viral-posts 调用时
 
-段子、涨粉帖的配图由 `topmind-viral-posts` 发起生图。此时只借用本技能的风格配方与 prompt 写法（清新优雅 / MD3 商务风），
-画幅按调用方要求（X 单图 1200×675 或 1:1），不套用封面的标题字高、10% 安全区和 900×383 裁剪，也不需要「标题 ≤10 字」。
+- **briefs（干货短文）**：走「X 短文封面」场景，标题取核心数字或结论；核心证据图仍用官方原图，封面只做第 1 张。
+- **viral-posts（段子、涨粉帖）**：只借用本技能的风格配方与 prompt 写法（清新优雅 / MD3 商务风），
+  画幅按调用方要求（X 单图 1200×675 或 1:1），不套用长文封面的标题字高、10% 安全区和 900×383 裁剪；无标题的图库类配图也不需要「标题 ≤10 字」。
 
 ## When NOT to use
 
 - 长图、海报、信息图、榜单图（图里有必须逐字正确的文字和数字）：走 `topmind-poster`
-- 短文、段子、快讯的写稿：走 `topmind-briefs` / `topmind-viral-posts`
+- 短文、段子、快讯的写稿（只做它们的封面）：走 `topmind-briefs` / `topmind-viral-posts`
 - 正文插图：主体是文字说明，按正文配图流程走
 - 报告/PPT 封面：走 `topmind-presentation`（仓库 `topmind-presentation`，已从本仓独立出去）
 - 只想找现成图：走 `image_search` 技能

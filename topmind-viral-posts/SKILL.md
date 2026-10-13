@@ -1,14 +1,14 @@
 ---
 name: topmind-viral-posts
-description: "X 引流段子/爆款短篇：14 类型模板（含热点资讯型），短句分行、口语化、带互动钩子；每条帖子附话题标签（1–3 个 hashtag）与内部分类标签，列表用 emoji 项目符号（X 不渲染 Markdown）；配图原图优先（官方/第三方，逐图确认可用并保留来源），无原图才生图（清新优雅/MD3商务风）。只起草不代发。Use when 引流段子、段子、爆款短篇、爆款短文、涨粉帖、涨粉段子、互关帖、互关求粉、X 短帖、热点段子、蹭热点、新人报到、打卡帖、话题标签、hashtag、X 引流、traffic post、viral post；引流互动型（段子、钩子、涨粉）走本技能。Do NOT use for X 长文与发 X 文章（→ topmind-x-article）、公众号文章与公众号短文（→ topmind-wechat-post / topmind-briefs）、信息密度型干货短文、快讯与数据榜单（→ topmind-briefs）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、把帖子发出去（→ topmind-x，须用户确认）。"
+description: "X 引流段子/爆款短篇：14 类型模板（含热点资讯型），短句分行、口语化、带互动钩子；每条帖子附话题标签（1–3 个 hashtag）与内部分类标签，纯文本、列表用 emoji 项目符号（X 不渲染 Markdown），事实类带来源链接；每条默认配图，原图优先（官方/第三方，逐图确认可用并保留来源），无原图走 topmind-cover 出 16:9 封面。只起草不代发。Use when 引流段子、段子、爆款短篇、爆款短文、涨粉帖、涨粉段子、互关帖、互关求粉、X 短帖、热点段子、蹭热点、新人报到、打卡帖、话题标签、hashtag、X 引流、traffic post、viral post；引流互动型（段子、钩子、涨粉）走本技能。Do NOT use for X 长文与发 X 文章（→ topmind-x-article）、公众号文章与公众号短文（→ topmind-wechat-post / topmind-briefs）、信息密度型干货短文、快讯与数据榜单（→ topmind-briefs）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、把帖子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.3.5"
+  version: "0.3.6"
   action_category: "write"
   triggers: "引流段子, 段子, 爆款短篇, 爆款短文, 涨粉帖, 涨粉短帖, 涨粉段子, 互关帖, 互关求粉, X 短帖, 热点段子, 蹭热点, 新人报到, 打卡帖, 话题标签, hashtag, traffic post, viral post, 写引流段子, 涨粉内容, 互关内容, X 引流"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-11"
+  updated: "2026-10-14"
 ---
 
 # topmind-viral-posts · X 引流段子/爆款短篇
@@ -52,6 +52,7 @@ X 不渲染 Markdown。X 稿里一律不用 `- ` / `* ` / `1.` 列表、`#` 标�
 - 同一帖里同一层级用同一个符号；每条一行；层级最多两层；一个列表 3–5 条，不超过 7 条。
 - 严肃资讯、事故和争议类帖子用 • ▪ 或 🔹，不用庆祝类符号；点缀表情每帖 1–3 个。
 - 同一选题如果有公众号稿，X 稿由它派生：Markdown 列表改成 emoji 列表，只允许排版差异，数字、结论、条数和顺序保持一致。
+- 有事实的帖子（热点、数据、工具）在正文后单独一行写 `来源：<名称> <URL>`，链接直接贴，不写成 `[文字](链接)`；纯运营段子（互关、打卡）不需要来源。
 - 交付前自检：`python3 scripts/lint_x_post.py X稿.txt`（多条帖子用单独一行 `---` 分隔；加 `--fix --out 新文件` 可把 Markdown 写法自动改成 X 写法）。
 
 ## 热点资讯型（第 7 类）专项规约
@@ -129,7 +130,8 @@ X 不渲染 Markdown。X 稿里一律不用 `- ` / `* ` / `1.` 列表、`#` 标�
 5. **互动钩子**：每帖至少一个——提问、二选一、求互关、求评论。
 6. **Hashtag**：每条 1–3 个，放最后一行；互关类必带 `#蓝V互关 #follow`；干货类带 `#新手指南`、`#运营技巧` 这类读者会搜的词；日常类可带 `#日拱一卒`。数量、位置与敏感词规则见 [references/tags-and-topics.md](references/tags-and-topics.md)。
 7. **表情点缀**：1-3 个，不要堆。😭😎🤝 比纯文字有温度。列表符号不算在内，但同一帖的列表符号要统一。
-8. **去 AI 味**：不用"首先其次最后"，不用"综上所述"，不用感叹号堆砌。
+8. **去 AI 味**：不用"首先其次最后""综上所述""值得注意的是"，不写"不是 A 而是 B"式反转和三连排比，不用感叹号堆砌，结尾不升华。
+   完整清单见 [references/writing-principles.md](references/writing-principles.md)「去 AI 味清单」；lint 的 W9 警告要清掉。
 9. **不用 Markdown**：X 稿里没有 `- ` 列表、`#` 标题和 `**加粗**`，分点用 emoji 项目符号（见上节）。
 
 ## 配图铁律
@@ -176,8 +178,8 @@ clean uncluttered background, vertical 9:16
 
 **配图流程**：
 1. 写完段子 → 先找原图（官方 > 第三方），有就直接用并注明来源
-2. 无原图 → 按上表选图库，走 topmind-cover 出图（风格：清新优雅/MD3商务）
-3. 尺寸：X 单图 1200×675（16:9）；多图也可用 1:1
+2. 无原图 → 按上表选图库，走 topmind-cover 的「X 短文封面」场景出图（默认每条都配；用户说不要配图才跳过）
+3. 尺寸：X 单图 1200×675（16:9）；多图也可用 1:1；原图 + 封面合计不超过 4 张
 4. 检查：图与文案情绪一致，不抢戏，不低俗；原图不裁掉关键信息
 
 ## 工作流
@@ -185,7 +187,7 @@ clean uncluttered background, vertical 9:16
 1. **选类型**：看用户要什么效果（涨粉→互关型/新人型；互动→提问型/自嘲型；立人设→干货型/打卡型；追热点→热点资讯型）。
 2. **套公式**：从 `references/patterns.md` 取对应公式，填内容。
 3. **配图**：先找原图（官方 > 第三方，注明来源）；无原图或纯引流段子才走 topmind-cover 生图（清新优雅/MD3商务风）。
-4. **自检**：读一遍，删掉任何"正确的废话"；确认有钩子、有话题标签（1–3 个，末行）、有配图；热点型确认来源标注齐全；跑 `scripts/lint_x_post.py` 确认没有 Markdown 列表、标题和加粗。
+4. **自检**：读一遍，删掉任何"正确的废话"；确认有钩子、有话题标签（1–3 个，末行）、有配图；事实类确认来源行（URL）齐全；跑 `scripts/lint_x_post.py` 确认没有 Markdown 列表、标题和加粗。
 5. **交付**：正文 + 配图（原图附来源 / 生图附 prompt）+ 标签项（话题标签与内部分类），一次 3-5 条，用户挑。
 
 ## Output Contract
@@ -193,6 +195,7 @@ clean uncluttered background, vertical 9:16
 - 输出：3-5 条独立短帖，每条 50-150 字。
 - 每条配图：原图优先（附来源）→ 无原图则 1 张生图或 1 个可直接用的出图 prompt（含图库类型 + 风格 + 画面描述）。
 - 每条带“标签”项：话题标签 1–3 个（正文末行已带，另可列最多 2 个备选）+ 内部分类（类型 / 用途 / 平台 / 语气）。
+- 来源：热点、数据、工具类帖子必须有来源行（直接贴 URL）；厂商数字标「（厂商口径）」，未证实消息标「（传言）」。
 - 格式：纯文本，短句分行，列表用 emoji 项目符号（不用 Markdown 列表、标题、加粗），hashtag 放末尾单独一行；配图说明与标签项另起一行。
 - 不编造用户数据：粉丝数、收益等数字用户给才写，不给就用模糊表述。
 
@@ -201,6 +204,8 @@ clean uncluttered background, vertical 9:16
 ```text
 【帖 N】
 正文（短句分行；分点用 🔹 / 1️⃣ 等 emoji 项目符号）
+
+来源：<名称> <URL>（事实类必填，纯运营段子省略）
 
 #话题1 #话题2
 

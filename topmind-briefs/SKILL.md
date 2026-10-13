@@ -1,14 +1,14 @@
 ---
 name: topmind-briefs
-description: "干货短文发布：公众号 + X 双平台，一件事讲透。X 一帖或短 thread（列表用 emoji 项目符号，附 0–2 个话题标签建议），公众号约 300–800 字；1 张核心图（榜单/基准/截图/表格），不废话，只交付不代发。Use when 写短文、公众号短文、X 短文、发快讯、简讯、速报、数据榜单、榜单速报、论文解读、新品速递、来篇短的、短平快、brief；信息密度型（数据、榜单、发布）走本技能。Do NOT use for X 长文与发 X 文章（→ topmind-x-article）、公众号长文（→ topmind-wechat-post）、引流互动型短帖、段子、涨粉帖、互关帖、爆款短篇（→ topmind-viral-posts）、单独出长图/海报/信息图 PNG（→ topmind-poster）、封面与头图（→ topmind-cover）、把稿子发出去（→ topmind-x，须用户确认）。"
+description: "干货短文发布：公众号 + X 双平台，一件事讲透。X 一帖或短 thread（纯文本，列表用 emoji 项目符号，带来源链接，默认配 16:9 封面，附 0–2 个话题标签建议），公众号约 300–800 字；1 张核心图（榜单/基准/截图/表格），不废话，只交付不代发。Use when 写短文、公众号短文、X 短文、发快讯、简讯、速报、数据榜单、榜单速报、论文解读、新品速递、来篇短的、短平快、brief；信息密度型（数据、榜单、发布）走本技能。Do NOT use for X 长文与发 X 文章（→ topmind-x-article）、公众号长文（→ topmind-wechat-post）、引流互动型短帖、段子、涨粉帖、互关帖、爆款短篇（→ topmind-viral-posts）、单独出长图/海报/信息图 PNG（→ topmind-poster）、封面与头图（→ topmind-cover）、把稿子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.2.13"
+  version: "0.2.14"
   action_category: "write"
   triggers: "写短文, 公众号短文, X 短文, 发快讯, 快讯, 简讯, 速报, 干货短文, 论文解读, 数据榜单, 榜单速报, 新品速递, brief, 来篇短的, 短平快, 发个快讯"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-11"
+  updated: "2026-10-14"
 ---
 
 # topmind-briefs · 干货短文（公众号 + X）
@@ -46,14 +46,16 @@ metadata:
 3. **写**：按 `references/style-guide.md` 写。X 版和公众号版各写一版，
    内容一致，篇幅按平台调整（见 `references/platform-specs.md`）。
    **X 版是纯文本**：不用 Markdown 列表、标题和加粗（X 不渲染），分点用 emoji 项目符号，
-   并给出 0–2 个话题标签建议（见下节「X 版格式与话题标签」）。
+   正文后单独一行写来源（直接贴 URL），并给出 0–2 个话题标签建议（见下节「X 版格式与话题标签」）。
+   **X 版默认配封面**：调用 `topmind-cover` 的「X 短文封面」场景出 1 张 16:9 封面（1200×675），作为第 1 张图；
+   核心证据图（榜单、基准、截图）排在封面之后，总数不超过 4 张。用户说不要封面时跳过。
 4. **自检**：过一遍禁止清单；确认每个数字都有来源；确认图和文字说的是同一件事；
-   推测/判断必须显式标注"（推测）"，与事实段落切割，不混写；
-   X 版跑 `python3 scripts/lint_x_post.py X短文.md`，确认没有 Markdown 列表、标题和加粗。
-5. **交付**：双版 HTML，一键复制，外加 X 版话题标签建议（只交付，不发布）。两个脚本随本技能自带
+   推测/判断必须显式标注"（推测）"，与事实段落切割，不混写；按 `references/writing-principles.md`「去 AI 味清单」过一遍；
+   X 版跑 `python3 scripts/lint_x_post.py X短文.md`，错误清零，W8（表情过多）/ W9（AI 套话）/ W10（缺来源）警告逐条处理。
+5. **交付**：双版 HTML，一键复制，外加 X 版纯文本稿 `X短文.txt`、X 封面 `00-封面-X短文.png` 与话题标签建议（只交付，不发布）。两个脚本随本技能自带
    （`scripts/` 下，纯 Python 标准库），单独安装本技能即可运行，不依赖其它技能目录——
    - X 版：`python3 scripts/md2x-html.py X短文.md --out X短文.html --images-from 公众号短文.md`
-     （无封面；1–4 张图按 [图N] 顺序嵌入；thread 超长时拆条）。
+     （HTML 里不嵌封面，封面单独交付、发帖时作为第 1 张图上传；1–4 张正文图按 [图N] 顺序嵌入；thread 超长时拆条）。
      **禁止手工拼 `--images`**：文件名排序 ≠ 文档顺序，手工传参曾导致整段配图错位；
      脚本内置 `[图N]` 连续性 + 数量校验，不通过直接报错。
      公众号稿里必须有对应的本地图片 `![图注](图片路径)`，只写链接或占位文字时数量校验会报错。
@@ -79,7 +81,27 @@ metadata:
 | 重点数据 | 📌 📊 |
 | 严肃资讯 | • ▪ |
 
-完整规则（符号集、缩进、数量、语气适配）见 [references/x-post-format.md](references/x-post-format.md)。
+完整规则（符号集、缩进、数量、语气适配、版式骨架）见 [references/x-post-format.md](references/x-post-format.md)。
+
+**来源**：每个数字都要能追到出处。正文之后单独一行 `来源：<名称> <URL>`，最多 3 条；厂商数字标「（厂商口径）」，
+未证实消息标「（传言）」。X 版示例：
+
+```text
+SWE-bench Verified 榜单 10 月 13 日更新，第一名换人了。
+
+📊 前三名
+🔹 模型 A：78.2%
+🔹 模型 B：76.9%
+🔹 模型 C：74.5%
+
+分数为榜单官方口径，成本差距见图 2。
+
+来源：SWE-bench 官方榜单 https://www.swebench.com
+
+#SWEbench #AI编程
+```
+
+（示例中的模型名与分数为虚构演示。）
 
 **公众号稿 → X 稿**：公众号稿用 Markdown 列表，X 稿由它派生，列表改成 emoji 项目符号，只允许排版差异，
 数字、结论、条数和顺序保持一致。公众号稿不受影响，继续用 Markdown 列表。
