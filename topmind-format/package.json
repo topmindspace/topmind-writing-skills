@@ -1,0 +1,13 @@
+{
+  "author": "TopMindSpace",
+  "description": "X 纯文本格式化：转段子（逐行空行）/ 格式化成短文（分段 + emoji 体系），只动排版不改字。",
+  "license": "MIT",
+  "name": "topmind-format",
+  "private": true,
+  "repository": {
+    "directory": "topmind-format",
+    "type": "git",
+    "url": "git+https://github.com/topmindspace/topmind-writing-skills.git"
+  },
+  "version": "0.1.0"
+}

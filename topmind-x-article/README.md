@@ -4,7 +4,7 @@
 
 把 Markdown 原稿变成"复制 → 粘贴 → 发"的 X 长文（Article）发布包。
 
-- 版本：**v0.4.12**（随 `@topmindspace/topmind-writing-skills@0.8.31` 发布）
+- 版本：**v0.4.13**（随 `@topmindspace/topmind-writing-skills@0.8.32` 发布）
 
 ## 安装
 

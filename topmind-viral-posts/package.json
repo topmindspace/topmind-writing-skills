@@ -1,6 +1,6 @@
 {
   "author": "TopMindSpace",
-  "description": "X 引流段子/爆款短篇：14 大类型模板，短句分行口语化，每帖配图（原图优先/生图兜底）。",
+  "description": "X 引流段子/爆款短篇：18 大类型模板 + 组合玩法，段子体（行间空行）口语化，配图原图优先、生图可选。",
   "license": "MIT",
   "name": "topmind-viral-posts",
   "private": true,
@@ -9,5 +9,5 @@
     "type": "git",
     "url": "git+https://github.com/topmindspace/topmind-writing-skills.git"
   },
-  "version": "0.3.6"
+  "version": "0.3.7"
 }

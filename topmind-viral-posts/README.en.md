@@ -2,9 +2,9 @@
 
 **[中文](./README.md)** | English
 
-Short, real, hooked — read in 3 seconds, impossible not to like/comment/follow. 14 post types summarised from common high-engagement writing patterns in the Chinese X community (all examples are original, written for this skill), each post paired with 1 image, a hashtag set and classification tags.
+Short, real, hooked — read in 3 seconds, impossible not to like/comment/follow. 18 post types plus hook × body × closer combinations, summarised from common high-engagement writing patterns in the Chinese X community (all examples are original). Posts default to "duanzi" layout (one sentence per line, a blank line between lines), original images first, plus a hashtag set and classification tags. Existing text → `topmind-format`.
 
-- Version: **v0.3.6** (ships with `@topmindspace/topmind-writing-skills@0.8.31`)
+- Version: **v0.3.7** (ships with `@topmindspace/topmind-writing-skills@0.8.32`)
 
 ## Install
 
@@ -12,7 +12,7 @@ Short, real, hooked — read in 3 seconds, impossible not to like/comment/follow
 npx @topmindspace/topmind-writing-skills install topmind-viral-posts
 ```
 
-## 14 Types
+## 18 Types
 
 | Type | Hook | Image | Default tags (purpose · tone · hashtag) |
 |---|---|---|---|
@@ -30,6 +30,10 @@ npx @topmindspace/topmind-writing-skills install topmind-viral-posts
 | Practical tip | Useful tip + why it works | Infographic | persona, traffic · crisp · #运营技巧 |
 | Hard-won lesson | Beginner trap + vivid metaphor | Slogan graphic / landscape | persona · humble · #新手指南 |
 | Execution checklist | Daily numbers + period | Checklist infographic | growth, persona · crisp · #执行清单 |
+| Fun fact reveal | "Here's a fun fact:" + counter-intuitive mechanism | Slogan graphic / none | follow-back, traffic · curious · #蓝V互关 |
+| Gap sprint | Exact follower count + "only N to go" | Own profile screenshot | growth, follow-back · self-mocking · #涨粉日记 |
+| Contrast pair | "Them: / Me:" lines + self-mocking punchline | Pet / meme | engagement, daily · self-mocking · #创作者日常 |
+| Self Q&A | "People keep asking:" + one-line answer | Slogan graphic / none | persona, engagement · crisp · #运营心得 |
 
 ## Tags
 

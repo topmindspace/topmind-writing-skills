@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.15 (2026-10-14)
+
+- 变更：短文默认不出 HTML——X 版交付一段可直接复制的纯文本，公众号版交付 Markdown；`md2x-html.py` / `md2wechat.py` 仍随包自带，仅在用户明确要求时使用
+- 特性支持：新增「尊重原始信息」铁律（原始信息 / 原文 / 原图 / 口径标注 / 不洗稿）与交付格式（X 版、公众号版、配图、信息来源：来源名称｜发布时间｜链接）
+- 变更：配图原图优先，没有原图时封面可选（不再默认配封面）；接入共享 `emoji-system.md` 与 `format_text.py`
+- 优化：新增「和其他技能怎么配合」表；description 的 Do NOT 增加格式化 / 转段子 → topmind-format
+
+## 0.2.14 (2026-10-14)
+
+- X 版来源行规范、默认 16:9 封面、lint W8/W9/W10 警告处理（见根 CHANGELOG 0.8.31）
+
 ## 0.2.13 (2026-10-11)
 
 - 特性支持：X 版纯文本排版——不用 Markdown 列表、标题和加粗，分点改用 emoji 项目符号；新增共享规则文档 `references/x-post-format.md` 与检查脚本 `scripts/lint_x_post.py`

@@ -2,11 +2,13 @@
 
 **[中文](./README.md)** | English
 
-One topic, one chart, then stop. Data-driven short posts: rankings, paper explainers,
-product launches — one X post or short thread, ~300–800 Chinese characters on WeChat,
-one-click-copy HTML for both.
+One topic, then stop. Data-driven short posts: rankings, paper explainers, product launches.
+A brief is not a long-form article — **no HTML by default**: the X version is one copy-ready plain-text block
+(sensible paragraphing, restrained emoji, source links); the WeChat version is ~300–800 Chinese characters of Markdown.
+Original facts, images and quotes come first; a cover is optional when no original image exists. Every delivery lists
+each source's name, publish time and link.
 
-- Version: **v0.2.14** (ships with `@topmindspace/topmind-writing-skills@0.8.31`)
+- Version: **v0.2.15** (ships with `@topmindspace/topmind-writing-skills@0.8.32`)
 
 ## Install
 
@@ -16,21 +18,19 @@ npx @topmindspace/topmind-writing-skills install topmind-briefs
 
 ## Usage
 
-Run from this skill's directory:
+```bash
+python3 scripts/lint_x_post.py brief-x.txt                                  # check the X version
+python3 scripts/format_text.py brief-x.txt --mode short --title-emoji 📊     # layout only, words unchanged
+```
+
+HTML only on explicit request (scripts ship with the skill; single source of truth is `shared/scripts/` in the repo):
 
 ```bash
-# X version (image order derived from the WeChat draft; never hand-order --images)
 python3 scripts/md2x-html.py brief-x.md --out brief-x.html --images-from brief-wechat.md
-
-# WeChat version (images inlined as base64; writes <slug>-公众号版.html + 图片上传清单.md)
 python3 scripts/md2wechat.py --input brief-wechat.md --out-dir out --slug brief --embed-images --no-toc
 ```
 
-Both scripts ship with this skill (Python standard library only), so a standalone
-install of briefs can render HTML. They are byte-identical copies of the same-named
-scripts in `topmind-x-article` / `topmind-wechat-post`; inside the repo,
-`scripts/negative_tests.py` checks they stay in sync. See [SKILL.md](./SKILL.md)
-for the full workflow.
+See [SKILL.md](./SKILL.md) for the workflow and [references/emoji-system.md](./references/emoji-system.md) for the emoji system.
 
 ## X formatting and hashtags
 
@@ -54,6 +54,6 @@ python3 scripts/lint_x_post.py brief-x.md
 
 ## When NOT to use
 
-X long-form → `topmind-x-article`; WeChat long-form → `topmind-wechat-post`;
+Formatting existing text / converting to duanzi → `topmind-format`; X long-form → `topmind-x-article`; WeChat long-form → `topmind-wechat-post`;
 engagement-style short posts and jokes → `topmind-viral-posts`; standalone long images/posters → `topmind-poster`;
 covers and header images → `topmind-cover`; posting → `topmind-x` (only after the user confirms).

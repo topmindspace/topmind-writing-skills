@@ -1,3 +1,25 @@
+## [0.8.32] - 2026-10-14
+
+> 根包 0.8.31 → **0.8.32**（patch）；新增技能 **topmind-format 0.1.0**；技能版本：topmind-briefs 0.2.14 → 0.2.15、topmind-viral-posts 0.3.6 → 0.3.7、
+> topmind-cover 0.4.7 → 0.4.8、topmind-x-article 0.4.12 → 0.4.13、topmind-wechat-post 0.3.6 → 0.3.7、topmind-poster 0.1.4 → 0.1.5（后四者为路由 / 共享文件同步）。
+
+### 新增
+
+- **topmind-format · X 纯文本格式化**：用户贴现成文字，「转段子」→ 每句一行、行与行之间空一行；「格式化成短文」→ 合理分段、Markdown 列表改 emoji、标题 emoji 对应关键词、首尾人设点缀。只动排版不改字；新增共享脚本 `format_text.py`（`--mode duanzi|short`、`--split`、`--title-emoji`、`--open`、`--close`），输出前做原文保真校验（去空白 / 列表符号 / emoji 后逐字比对），改动文字即报错。带 README 中英文、负向测试与 6 条路由评测用例，自动进入 npm `files` 与 Release 打包。
+- **TopMind emoji 体系**：新增共享 `references/emoji-system.md`（分发到 briefs、viral-posts、format）——人设点缀（主角 🐔 🐱，配角 🐰 🐶 🦊 与 🌱 🌿 🍀 🌸 🌼）0–2 个只放首尾、严肃内容不放；标题 emoji 0–1 个、按 14 类关键词对照表取，对不上就不放；列表符号一帖一套；点缀类合计 ≤3。
+
+### 变更
+
+- **topmind-briefs**：短文不是长文，默认不出 HTML——X 版是一段纯文本，公众号版是 Markdown；HTML 脚本只在用户明确要求时使用。新增「尊重原始信息」铁律与交付格式，交付时写明信息来源、发布时间、来源链接与图片来源。
+- **配图口径统一**：原图优先；没有原图时封面可选（不再默认配封面）。`x-post-format.md`、briefs、viral-posts、cover 的「X 短文封面」场景说明同步。
+- **topmind-viral-posts**：类型从 14 扩到 18（新增冷知识揭秘、差额冲刺、反差对照、自问自答），新增「段子体排版」（一句一行、行间空行）与「组合玩法（钩子 × 主体 × 收尾）」两节、8 种常用组合；示例按用户提供的两条参考帖改写（未复制第三方截图与账号信息）；表情规则接入 emoji 体系。
+
+### 优化
+
+- 路由与分流：briefs、viral-posts、x-article、wechat-post、poster 的 Do NOT 点名 topmind-format；根 README 中英文新增「怎么选、怎么组合」表（briefs→format、viral→format、briefs+cover、x-article vs briefs 等）。
+- `lint_x_post.py` 的表情识别补上 🆕 等 U+1F100–1F2FF 区段。
+- `evals/evals.json` 增至 59 条（覆盖 7 个技能）；README、`docs/PUBLISHING.md` 版本号与能力描述同步。
+
 ## [0.8.31] - 2026-10-14
 
 > 根包 0.8.30 → **0.8.31**（patch）；技能版本：topmind-briefs 0.2.13 → 0.2.14、topmind-viral-posts 0.3.5 → 0.3.6、topmind-cover 0.4.6 → 0.4.7、

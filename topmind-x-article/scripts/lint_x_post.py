@@ -72,7 +72,7 @@ AI_PHRASES = [
     "不是.{1,12}而是", "真正的", "从来不是", "一句话总结", "划重点",
 ]
 AI_RE = re.compile("|".join(AI_PHRASES))
-EMOJI_RE = re.compile(r"[\U0001F300-\U0001FAFF\u2600-\u27BF]")
+EMOJI_RE = re.compile(r"[\U0001F100-\U0001F2FF\U0001F300-\U0001FAFF\u2600-\u27BF]")
 NUM_FACT_RE = re.compile(r"\d+(?:\.\d+)?\s*(?:%|％|倍|万|亿|美元|元|分|名|个|款|B|K|M)")
 SOURCE_RE = re.compile(r"来源|出处|据.{0,8}(?:公告|博客|报道|论文|官网)|via|source", re.I)
 

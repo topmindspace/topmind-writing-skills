@@ -1,9 +1,9 @@
 ---
 name: topmind-cover
-description: "文章封面配图生成：X 长文与公众号共用，也是 X 短文 / 短帖的默认封面（16:9），并供 topmind-briefs、topmind-viral-posts 的配图环节调用。震撼、醒目、主题突出；平台尺寸规范、22 种风格模板、场景→风格匹配、12 种标题花式、背景库、4 种构图骨架、命名落盘、成图检查全流程覆盖。Use when 文章封面、封面图、X 短文封面、短帖封面、头图、题图、首图、X 长文头图、公众号封面、公众号头图、封面风格、banner、cover、thumbnail。Do NOT use for 正文插图、长图、海报与信息图（→ topmind-poster）、短文与段子写稿（→ topmind-briefs / topmind-viral-posts）、PPT/报告封面与多页演示（→ topmind-presentation）。"
+description: "文章封面配图生成：X 长文与公众号共用，也为 X 短文 / 短帖在没有原图时出 16:9 首图，并供 topmind-briefs、topmind-viral-posts 的配图环节调用。震撼、醒目、主题突出；平台尺寸规范、22 种风格模板、场景→风格匹配、12 种标题花式、背景库、4 种构图骨架、命名落盘、成图检查全流程覆盖。Use when 文章封面、封面图、X 短文封面、短帖封面、头图、题图、首图、X 长文头图、公众号封面、公众号头图、封面风格、banner、cover、thumbnail。Do NOT use for 正文插图、长图、海报与信息图（→ topmind-poster）、短文与段子写稿（→ topmind-briefs / topmind-viral-posts）、PPT/报告封面与多页演示（→ topmind-presentation）。"
 license: MIT
 metadata:
-  version: "0.4.7"
+  version: "0.4.8"
   action_category: "write"
   triggers: "封面, 封面图, X 短文封面, 短帖封面, 头图, 题图, 首图, 封面配图, 缩略图, banner, cover, thumbnail, 公众号封面, 公众号题图, 公众号头图, X 封面, X 首图, X 长文头图, 文章封面, 封面风格"
   author: "TopMindSpace"
@@ -104,7 +104,7 @@ X 短文封面：prompt 写明"横构图 16:9"，用 `scripts/crop-cover.py <主
 
 ## X 短文封面（场景）
 
-X 短文、X 短帖默认配 1 张封面，由 `topmind-briefs`、`topmind-viral-posts` 发起，也可单独触发（「X 短文封面」「短帖封面」）。
+X 短文、X 短帖**原图优先**：有官方截图、基准图、后台截图时不另配封面；没有原图、且用户要或需要一张首图时，由 `topmind-briefs`、`topmind-viral-posts`、`topmind-format` 发起本场景，也可单独触发（「X 短文封面」「短帖封面」）。
 
 - **画幅**：16:9，1200×675；X 时间线单图预览接近完整显示，标题放中央 80% 宽度内。
 - **标题**：取帖子的核心判断或最关键的数字，≤10 字；可加 1 行 ≤14 字的副标题或胶囊标签。
@@ -169,7 +169,7 @@ X 短文、X 短帖默认配 1 张封面，由 `topmind-briefs`、`topmind-viral
 
 ## 被 topmind-briefs / topmind-viral-posts 调用时
 
-- **briefs（干货短文）**：走「X 短文封面」场景，标题取核心数字或结论；核心证据图仍用官方原图，封面只做第 1 张。
+- **briefs（干货短文）**：只在没有可用原图时走「X 短文封面」场景，标题取核心数字或结论；有原图就用原图当首图。
 - **viral-posts（段子、涨粉帖）**：只借用本技能的风格配方与 prompt 写法（清新优雅 / MD3 商务风），
   画幅按调用方要求（X 单图 1200×675 或 1:1），不套用长文封面的标题字高、10% 安全区和 900×383 裁剪；无标题的图库类配图也不需要「标题 ≤10 字」。
 
