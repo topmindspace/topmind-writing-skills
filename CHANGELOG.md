@@ -1,3 +1,25 @@
+## [0.8.33] - 2026-10-14
+
+> 根包 0.8.32 → **0.8.33**（patch）；技能版本：topmind-briefs 0.2.15 → 0.2.16、topmind-format 0.1.0 → 0.1.1、topmind-viral-posts 0.3.7 → 0.3.8、
+> topmind-wechat-post 0.3.7 → 0.3.8、topmind-x-article 0.4.13 → 0.4.14（后两者只同步共享文件 `x-post-format.md` / `lint_x_post.py`）；topmind-cover、topmind-poster 不变。
+
+### 新增
+
+- **X 短文版式规律**：新增共享文档 `references/x-layout-patterns.md`（分发到 briefs、format、viral-posts），拆解 6 条 X 参考帖的开头钩子、分段长度、空行节奏、列表写法、emoji 用法、中英混排、链接与话题标签位置、结尾，只记规律、不收录原文，逐条注明原帖链接；末尾附一页速查。
+- **交付三块**：X 短文 / 短帖 / 格式化统一交付 ① 可直接复制的纯文本正文（text 代码块，块内无 Markdown）② 原帖 / 信源地址（含发布时间）③ 1–2 张原图（图片地址或交付目录文件）。规则写入 `x-post-format.md`，briefs 附正例模板。
+- **`lint_x_post.py`**：新增 E8（普通帖里残留代码围栏 ```）、E9（删除线 ~~）、W11（连续多个空行）；`--fix` 自动去掉围栏与删除线。format 负向测试补对应用例与共享文档存在性检查。
+
+### 变更
+
+- **没有原图先询问**：briefs、format、viral-posts 与 `x-post-format.md` 统一为「没有原图时主动问用户是否配图（可选 topmind-cover），不擅自生图」；viral-posts 输出模板新增「信源」行，示例同步。
+- **emoji 体系唯一真源**：`emoji-system.md` 声明为 TopMind emoji 体系唯一出处，各技能只引用不另写；新增「只用 TopMind 的，不跟风」一节（不用 🔥 😍 凑标题、不堆话题标签、长帖可零 emoji 靠【小标题】分层），列表前「xx：」引导语，长帖资讯配额。
+- **`x-post-format.md`**：新增「版式节奏」7 条（首行给结论、列表引导语、长条目间空行、【小标题】分节、中英混排、链接单独一行、一句收尾）与第四种骨架「分节长帖」。
+- **topmind-briefs**：X 版写作步骤接入版式规律；配图改为交付 1–2 张原图；交付格式改为固定三块并附正例模板。
+
+### 文档
+
+- README 中英文、`docs/PUBLISHING.md`、各技能 README 版本号与能力描述同步。
+
 ## [0.8.32] - 2026-10-14
 
 > 根包 0.8.31 → **0.8.32**（patch）；新增技能 **topmind-format 0.1.0**；技能版本：topmind-briefs 0.2.14 → 0.2.15、topmind-viral-posts 0.3.6 → 0.3.7、

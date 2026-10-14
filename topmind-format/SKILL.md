@@ -1,9 +1,9 @@
 ---
 name: topmind-format
-description: "X 纯文本格式化：用户贴一段现成文字，只改排版、不改字。转段子 → 每句一行、行与行之间空一行；格式化成短文 → 合理分段换行，列表改 emoji 项目符号，按 TopMind emoji 体系加标题 emoji 与鸡/猫/植物人设点缀。保留原文事实与措辞，自带保真校验脚本，只交付不代发。Use when 转段子、改成段子格式、段子格式、格式化、格式化一下、格式化成短文、排一下版、整理格式、加空行、分行、加 emoji、X 排版、format。Do NOT use for 从零写段子、涨粉帖（→ topmind-viral-posts）、从零写干货短文、快讯（→ topmind-briefs）、X 长文（→ topmind-x-article）、公众号排版与公众号 HTML（→ topmind-wechat-post）、封面（→ topmind-cover）、把帖子发出去（→ topmind-x，须用户确认）。"
+description: "X 纯文本格式化：用户贴一段现成文字，只改排版、不改字。转段子 → 每句一行、行与行之间空一行；格式化成短文 → 合理分段换行，列表改 emoji 项目符号，按 TopMind emoji 体系加标题 emoji 与鸡/猫/植物人设点缀。保留原文事实与措辞，自带保真校验脚本；交付固定三块（可复制纯文本 / 原帖或信源 / 1–2 张原图），没有原图时询问是否配图。只交付不代发。Use when 转段子、改成段子格式、段子格式、格式化、格式化一下、格式化成短文、排一下版、整理格式、加空行、分行、加 emoji、X 排版、format。Do NOT use for 从零写段子、涨粉帖（→ topmind-viral-posts）、从零写干货短文、快讯（→ topmind-briefs）、X 长文（→ topmind-x-article）、公众号排版与公众号 HTML（→ topmind-wechat-post）、封面（→ topmind-cover）、把帖子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   action_category: "write"
   triggers: "转段子, 改成段子, 段子格式, 格式化, 格式化一下, 格式化成短文, 排一下版, 整理格式, 加空行, 分行, 加 emoji, X 排版, format"
   author: "TopMindSpace"
@@ -37,10 +37,10 @@ metadata:
 ## 工作流
 
 1. **读原文**：确认是用户自己的文字或用户给的文字；记下原文里的数字、链接、话题标签、表情，后面逐一核对。
-2. **断句**：
+2. **断句**（版式规律见 [references/x-layout-patterns.md](references/x-layout-patterns.md)）：
    - 段子体：一句一行。长句在逗号处断开时，只断在意思完整的地方（例：「X 创作者收益里，」/「付费蓝V用户的互动权重会高很多。」），不在词中间断。
-   - 短文体：标题一行；正文一段 1–3 行；并列信息改成列表；来源行、话题标签各自单独成行。
-3. **加 emoji**：按 [references/emoji-system.md](references/emoji-system.md)：
+   - 短文体：标题一行；正文一段 1–3 行；并列信息改成列表（列表前的「xx：」引导语单独一行；条目超过一行时条目之间空一行）；原文已有【小标题】的保留并单独成行；链接、来源行、话题标签各自单独成行。
+3. **加 emoji**：只用 TopMind 体系，唯一出处 [references/emoji-system.md](references/emoji-system.md)（本技能不另立规则）：
    - 人设点缀（🐔 🐱 为主角，🌱 🌿 🌸 等为配角）只放开头一行或结尾一行，同一帖最多 2 个；
    - 标题 emoji 必须对上标题关键词（发布 🆕、数据 📊、教程 🛠️ …），对不上就不放；
    - 列表符号一帖一套（🔹 / ▫️ / 1️⃣ / ✅❌），规则见 [references/x-post-format.md](references/x-post-format.md)；
@@ -55,13 +55,17 @@ metadata:
 
    `format_text.py` 输出前做原文保真校验（去掉空白、列表符号与 emoji 后逐字比对），改动了字就报错；
    `lint_x_post.py` 检查 Markdown 残留、符号混用、表情数量。段子体的连续空行是刻意的，lint 不会报错。
-5. **交付**：直接给出可复制的纯文本（放在代码块里，保证空行不丢），再用一两句说明做了哪些排版改动、加了哪些 emoji。
+5. **交付（固定三块，见 [references/x-post-format.md](references/x-post-format.md)「交付三块」）**：
+   - ① 正文：可直接复制的纯文本，放在 `text` 代码块里（保证空行不丢），块内无 Markdown 符号；
+   - ② 原帖 / 信源：原文自带的链接或用户说明的出处；没有就写「用户提供，未附来源」；
+   - ③ 原图：用户给了原帖或原图就列 1–2 张图片地址；没有就写「未找到原图」，并**主动问用户要不要配图**（可选 `topmind-cover`），不擅自生图；
+   - 最后用一两句说明做了哪些排版改动、加了哪些 emoji。
 
 ## 铁律
 
 - **不改字**：错别字、口头禅、粗口、标点都保留；看到明显错字或事实可疑处，在交付说明里提一句，由用户决定改不改。
 - **不加事实**：不补数据、不补来源、不加话题标签；原文缺来源时，在交付说明里提醒「这条有数据但没来源」。
-- **不用 Markdown**：X 稿里没有 `- ` 列表、`#` 标题、`**加粗**`；话题标签保留在最后一行。
+- **不用 Markdown**：X 稿里没有 `- ` 列表、`#` 标题、`**加粗**`、`> 引用`、`~~删除线~~`、代码围栏；话题标签保留在最后一行。交付前跑 `lint_x_post.py`，错误清零。
 - **只交付不代发**：发帖走 `topmind-x`，须用户确认。
 
 ## 和其他技能怎么配合
@@ -71,7 +75,7 @@ metadata:
 | 写完段子再统一排版 | `topmind-viral-posts` 出稿 → 本技能段子体（viral-posts 的段子默认已是段子体，需要重排时再用） |
 | 写完短文再统一排版 | `topmind-briefs` 出 X 版 → 本技能短文体 |
 | 公众号稿转 X 稿 | `topmind-wechat-post` 或 `topmind-briefs` 的公众号稿 → 本技能短文体（Markdown 列表自动改 emoji） |
-| 格式化后要配图 | 先找原图；没有原图再走 `topmind-cover` 的「X 短文封面」 |
+| 格式化后要配图 | 先找原图；没有原图先问用户，同意后走 `topmind-cover` 的「X 短文封面」 |
 
 ## 示例（原创演示）
 

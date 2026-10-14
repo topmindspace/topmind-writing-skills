@@ -33,7 +33,7 @@ npx @topmindspace/topmind-writing-skills install topmind-x-article
 
 ### topmind-briefs · 干货短文
 
-公众号 + X 双平台干货短文：一件事讲透（数据榜单 / 论文解读 / 新品速递 / 机制讲解）。短文不是长文，**默认不出 HTML**：X 版是一段可直接复制的纯文本（分段换行、克制的 emoji、来源链接、0–2 个话题标签），公众号版约 300–800 字 Markdown。尊重原始信息、原图、原文，配图原图优先、封面可选；交付时写明信息来源、发布时间与来源链接。只起草不代发。
+公众号 + X 双平台干货短文：一件事讲透（数据榜单 / 论文解读 / 新品速递 / 机制讲解）。短文不是长文，**默认不出 HTML**：X 版是一段可直接复制的纯文本（分段换行、克制的 emoji、来源链接、0–2 个话题标签），公众号版约 300–800 字 Markdown。尊重原始信息、原图、原文；交付固定三块：可复制纯文本正文、原帖 / 信源地址（含发布时间）、1–2 张原图，没有原图时主动询问是否配图（可选 topmind-cover），不擅自生图。只起草不代发。
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-briefs
@@ -41,7 +41,7 @@ npx @topmindspace/topmind-writing-skills install topmind-briefs
 
 ### topmind-viral-posts · X 引流段子/爆款短篇
 
-基于对 X 中文区常见高互动写法的归纳，提供 18 类型模板 + 钩子×主体×收尾组合玩法（示例均为自编），默认**段子体**（一句一行、行与行之间空一行）、口语化、带互动钩子，配图原图优先（官方 / 第三方 / 自己的后台截图），没有原图时可选走 topmind-cover 出图，并附**话题标签（1–3 个 hashtag）与内部分类标签**；X 稿不用 Markdown 列表，分点用 emoji 项目符号。
+基于对 X 中文区常见高互动写法的归纳，提供 18 类型模板 + 钩子×主体×收尾组合玩法（示例均为自编），默认**段子体**（一句一行、行与行之间空一行）、口语化、带互动钩子，配图原图优先（官方 / 第三方 / 自己的后台截图），没有原图时先问是否配图、同意后走 topmind-cover 出图，并附**话题标签（1–3 个 hashtag）与内部分类标签**；X 稿不用 Markdown 列表，分点用 emoji 项目符号。
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-viral-posts
@@ -91,15 +91,15 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 
 | 技能 | 版本 | 做什么 |
 |------|------|--------|
-| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.7** | 公众号文章全生命周期：交付包、审校改写、质量三关、微信内联排版与发布清单 |
-| [`topmind-x-article`](./topmind-x-article/) | **0.4.13** | X 长文一键发布：Markdown 原稿 → 一键复制 HTML（含配图/提示词复制、图片点击放大）/ 纯文本兜底 + 封面图 + 发布清单 |
+| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.8** | 公众号文章全生命周期：交付包、审校改写、质量三关、微信内联排版与发布清单 |
+| [`topmind-x-article`](./topmind-x-article/) | **0.4.14** | X 长文一键发布：Markdown 原稿 → 一键复制 HTML（含配图/提示词复制、图片点击放大）/ 纯文本兜底 + 封面图 + 发布清单 |
 | [`topmind-cover`](./topmind-cover/) | **0.4.8** | 文章封面配图（X / 公众号共用，X 主尺寸 1500×600 / 5:2）：震撼醒目主题突出；22 种封面风格库 + X 短文 16:9 封面场景 + 12 种标题花式 + 55 张示例图（22 种风格 × 2 尺寸 + 11 张变体样张） + 1 张风格总览图 |
-| [`topmind-briefs`](./topmind-briefs/) | **0.2.15** | 干货短文（公众号 + X 双平台）：一件事讲透，数据榜单/论文解读/新品速递；X 版一段纯文本（默认不出 HTML）+ emoji 列表 + 来源链接 + 话题标签建议；原图优先、封面可选；交付附信息来源 / 发布时间 / 链接 |
-| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.7** | X 引流段子/爆款短篇：18 大类型模板 + 组合玩法，段子体（行间空行）、事实类带来源链接、带话题标签与分类标签；配图原图优先，无原图可选走 topmind-cover 出 16:9 图 |
-| [`topmind-format`](./topmind-format/) | **0.1.0** | X 纯文本格式化：转段子（行间空行）/ 格式化成短文（分段 + emoji 体系），只动排版不改字，带原文保真校验 |
+| [`topmind-briefs`](./topmind-briefs/) | **0.2.16** | 干货短文（公众号 + X 双平台）：一件事讲透，数据榜单/论文解读/新品速递；X 版一段纯文本（默认不出 HTML）+ emoji 列表 + 来源链接 + 话题标签建议；交付三块（纯文本 / 信源 / 1–2 张原图），无原图先询问配图 |
+| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.8** | X 引流段子/爆款短篇：18 大类型模板 + 组合玩法，段子体（行间空行）、事实类带来源链接、带话题标签与分类标签；配图原图优先，无原图先询问再走 topmind-cover 出 16:9 图 |
+| [`topmind-format`](./topmind-format/) | **0.1.1** | X 纯文本格式化：转段子（行间空行）/ 格式化成短文（分段 + emoji 体系），只动排版不改字，带原文保真校验；交付三块，无原图先询问配图 |
 | [`topmind-poster`](./topmind-poster/) | **0.1.5** | HTML+CSS → 高清长图 / 海报 / 信息图 PNG：无头 Chrome 2× 截图 + 自动裁白；「一段一图」分段图批量出图（生成器 + 渲染器） |
 
-安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.32**（整仓同 tag 发版）。
+安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.33**（整仓同 tag 发版）。
 
 ### 怎么选、怎么组合
 

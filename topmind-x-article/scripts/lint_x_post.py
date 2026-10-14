@@ -12,7 +12,9 @@ X 的普通帖子不渲染 Markdown。本脚本检查 X 稿，并可把常见 Ma
     cat X稿.txt | python3 lint_x_post.py -         # 从标准输入读取
 
 警告（不影响退出码，--strict 时算失败）还包括：点缀表情过多（W8）、疑似 AI 套话（W9）、
-有数据但缺来源（W10）。
+有数据但缺来源（W10）、连续多个空行（W11）。
+普通帖（非 --long）里出现代码围栏 ``` 记 E8（多半是把交付代码块的围栏一起复制进来了），
+删除线 ~~文字~~ 记 E9；--fix 会去掉这两类符号。
 
 退出码：有错误 → 1；加 --strict 时警告也算失败；其余 → 0。
 只用 Python 标准库。
@@ -40,6 +42,8 @@ TABLE_RE = re.compile(r"^\s*\|.*\|\s*$")
 CODE_RE = re.compile(r"`[^`\n]+`")
 SEP_RE = re.compile(r"^\s*(-{3,}|={3,}|\*{3,})\s*$")
 FENCE_RE = re.compile(r"^\s*(```|~~~)")
+STRIKE_RE = re.compile(r"~~[^~\n]+~~")
+MAX_BLANK_RUN = 1  # 段间只空一行；连续 2 个以上空行记 W11
 
 # --- 项目符号识别（emoji / 纯文本符号 / 序号）----------------------------------
 KEYCAP = r"[0-9]\uFE0F?\u20E3"
@@ -127,11 +131,23 @@ def lint_post(start: int, lines: list[str], long_mode: bool):
     errs, warns = [], []
     in_fence = False
     bullets = []  # (行号, 缩进宽度, 符号)
+    blank_run = 0
     for off, ln in enumerate(lines):
         no = start + off
+        if not ln.strip():
+            blank_run += 1
+            if blank_run == MAX_BLANK_RUN + 1:
+                warns.append((no, "W11", "连续多个空行：段与段之间只空一行"))
+        else:
+            blank_run = 0
         if FENCE_RE.match(ln):
+            if not long_mode:
+                errs.append((no, "E8", "代码围栏（``` / ~~~）：X 不渲染，复制正文时不要带上代码块围栏"))
+                continue
             in_fence = not in_fence
             continue
+        if STRIKE_RE.search(ln):
+            errs.append((no, "E9", "Markdown 删除线（~~）：X 不渲染，去掉波浪线"))
         if in_fence or (long_mode and indent_width(ln[: len(ln) - len(ln.lstrip())]) >= 4 and ln.strip()):
             continue
         if UL_RE.match(ln) and not SEP_RE.match(ln):
@@ -213,6 +229,8 @@ def fix_lines(lines: list[str], long_mode: bool) -> list[str]:
     counters: dict[int, int] = {}
     for ln in lines:
         if FENCE_RE.match(ln):
+            if not long_mode:
+                continue  # 普通帖：去掉误带的代码块围栏
             in_fence = not in_fence
             out.append(ln)
             continue
@@ -240,6 +258,7 @@ def fix_lines(lines: list[str], long_mode: bool) -> list[str]:
             s = re.sub(r"^\s*>\s?", "", s)
         s = re.sub(r"\*\*([^*\n]+)\*\*", r"\1", s)
         s = re.sub(r"(?<![\w_])__([^_\n]+)__(?![\w_])", r"\1", s)
+        s = STRIKE_RE.sub(lambda mm: mm.group(0)[2:-2], s)
         s = LINK_RE.sub(lambda mm: f"{mm.group(1)} {mm.group(2)}", s)
         s = CODE_RE.sub(lambda mm: mm.group(0).strip("`"), s)
         out.append(s)

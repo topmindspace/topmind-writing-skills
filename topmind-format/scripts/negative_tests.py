@@ -48,6 +48,10 @@ def main() -> None:
             outside.append(md.relative_to(ROOT).as_posix())
     check("不引用技能目录外的相对路径", not outside, "、".join(outside))
 
+    # 1b. 共享版式文档随包自带（emoji 体系唯一真源 + 参考帖版式规律）
+    for ref in ("emoji-system.md", "x-post-format.md", "x-layout-patterns.md"):
+        check(f"共享文档随包自带: references/{ref}", (ROOT / "references" / ref).is_file())
+
     # 2. frontmatter 损坏 → audit_skill 退出 1 且不崩溃
     with tempfile.TemporaryDirectory() as td:
         t = Path(td)
@@ -90,6 +94,14 @@ def main() -> None:
             fixed = (t / "fixed.txt").read_text(encoding="utf-8") if (t / "fixed.txt").exists() else ""
             check("lint_x_post --fix 后无 Markdown 列表且检查通过",
                   r.returncode == 0 and "🔹 响应更快" in fixed and "1️⃣ 先装" in fixed and "**" not in fixed, r.stdout[-200:])
+            resid = t / "resid.txt"
+            resid.write_text("```text\n标题\n\n\n~~旧价~~ 新价\n```\n", encoding="utf-8")
+            r = run_quiet([str(lint), str(resid)], t)
+            check("lint_x_post 对代码围栏/删除线残留报 E8/E9、连续空行报 W11",
+                  r.returncode == 1 and "[E8]" in r.stdout and "[E9]" in r.stdout and "[W11]" in r.stdout, r.stdout[-300:])
+            r = run_quiet([str(lint), str(resid), "--fix", "--out", str(t / "resid.fixed.txt")], t)
+            rf = (t / "resid.fixed.txt").read_text(encoding="utf-8") if (t / "resid.fixed.txt").exists() else ""
+            check("lint_x_post --fix 去掉围栏与删除线", "```" not in rf and "~~" not in rf and "旧价 新价" in rf, rf[-200:])
             r = run_quiet([str(lint), str(t / "nope.txt")], t)
             check("lint_x_post 缺失文件干净报错", r.returncode == 2 and "Traceback" not in (r.stderr or ""))
 

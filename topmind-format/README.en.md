@@ -4,7 +4,7 @@
 
 Lays out existing text for X: **duanzi mode** (one sentence per line, a blank line between every line) or **short-post mode** (paragraphing, emoji bullets, a keyword-matched title emoji, and the account's chicken/cat/plant motif at the start or end). Layout only — the words are never changed; a fidelity check enforces it.
 
-- Version: **v0.1.0** (ships with `@topmindspace/topmind-writing-skills@0.8.32`)
+- Version: **v0.1.1** (ships with `@topmindspace/topmind-writing-skills@0.8.33`)
 
 ## Install
 

@@ -12,6 +12,7 @@
     "references/writing-principles.md": ["topmind-briefs", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article"],
     "scripts/format_text.py": ["topmind-briefs", "topmind-format", "topmind-viral-posts"],
     "references/emoji-system.md": ["topmind-briefs", "topmind-format", "topmind-viral-posts"],
+    "references/x-layout-patterns.md": ["topmind-briefs", "topmind-format", "topmind-viral-posts"],
     "references/x-post-format.md": ["topmind-briefs", "topmind-format", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article"]
   }
 }

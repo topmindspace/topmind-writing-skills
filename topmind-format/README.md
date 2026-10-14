@@ -4,7 +4,7 @@
 
 把现成的文字排成 X 上好读的样子：**转段子**（每句一行、行间空一行）或**格式化成短文**（分段换行 + emoji 列表 + 标题 emoji + 鸡/猫/植物人设点缀）。只动排版，不改字，自带原文保真校验。
 
-- 版本：**v0.1.0**（随 `@topmindspace/topmind-writing-skills@0.8.32` 发布）
+- 版本：**v0.1.1**（随 `@topmindspace/topmind-writing-skills@0.8.33` 发布）
 
 ## 安装
 

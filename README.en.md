@@ -91,15 +91,15 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 
 | Skill | Version | What it does |
 |-------|---------|--------------|
-| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.7** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
-| [`topmind-x-article`](./topmind-x-article/) | **0.4.13** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
+| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.8** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
+| [`topmind-x-article`](./topmind-x-article/) | **0.4.14** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
 | [`topmind-cover`](./topmind-cover/) | **0.4.8** | Cover art for X / WeChat (X master 1500×600 / 5:2): striking, theme-focused; 22-style cover style library + 16:9 X short-post cover scene + 12 title treatments + 55 example images (22 styles × 2 sizes + 11 variant samples) + 1 style overview |
-| [`topmind-briefs`](./topmind-briefs/) | **0.2.15** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper explainers / product alerts / mechanism explainers; one plain-text X block (no HTML by default) with emoji bullets, source links and hashtag suggestions; original images first, cover optional; delivery lists source / publish time / link |
-| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.7** | X viral short posts: 18 template types + combinations, duanzi layout (blank line between lines), hashtags + classification tags, source links for factual posts; original images first, optional 16:9 image via topmind-cover |
-| [`topmind-format`](./topmind-format/) | **0.1.0** | X plain-text formatter: to duanzi (blank lines) / to short post (paragraphing + emoji system); layout only, words unchanged, with a fidelity check |
+| [`topmind-briefs`](./topmind-briefs/) | **0.2.16** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper explainers / product alerts / mechanism explainers; one plain-text X block (no HTML by default) with emoji bullets, source links and hashtag suggestions; fixed 3-part delivery (copyable plain text / source links / 1–2 original images); asks before generating any image when no original exists |
+| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.8** | X viral short posts: 18 template types + combinations, duanzi layout (blank line between lines), hashtags + classification tags, source links for factual posts; original images first; asks before generating a 16:9 image via topmind-cover |
+| [`topmind-format`](./topmind-format/) | **0.1.1** | X plain-text formatter: to duanzi (blank lines) / to short post (paragraphing + emoji system); layout only, words unchanged, with a fidelity check; 3-part delivery |
 | [`topmind-poster`](./topmind-poster/) | **0.1.5** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
 
-Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.32** (whole-repo same-tag releases).
+Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.33** (whole-repo same-tag releases).
 
 ### Which skill, and how they combine
 

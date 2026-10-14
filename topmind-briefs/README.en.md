@@ -8,7 +8,7 @@ A brief is not a long-form article — **no HTML by default**: the X version is 
 Original facts, images and quotes come first; a cover is optional when no original image exists. Every delivery lists
 each source's name, publish time and link.
 
-- Version: **v0.2.15** (ships with `@topmindspace/topmind-writing-skills@0.8.32`)
+- Version: **v0.2.16** (ships with `@topmindspace/topmind-writing-skills@0.8.33`)
 
 ## Install
 
