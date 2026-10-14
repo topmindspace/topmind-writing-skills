@@ -1,3 +1,17 @@
+## [0.8.35] - 2026-10-14
+
+> 根包 0.8.34 → **0.8.35**（patch）；技能版本：topmind-briefs 0.2.17 → 0.2.18、topmind-format 0.1.2 → 0.1.3、topmind-viral-posts 0.3.9 → 0.3.10、
+> topmind-wechat-post 0.3.9 → 0.3.10、topmind-x-article 0.4.15 → 0.4.16；topmind-cover、topmind-poster 不变。
+
+### 变更（更正 0.8.34：短文用 emoji，段子不用）
+
+- **段子体完全不用 emoji**：不加人设点缀（🐔 🐱 🌱）、情绪表情和 emoji 列表符号；分点一条一行、靠行间空行区分，不加任何符号。
+- **短文体分点必须用 emoji 列表符号**，按 `emoji-system.md`（该体系只适用于短文体，段子配额全为 0）。
+- **`format_text.py --mode duanzi`**：去掉原文 emoji 与列表符号（Markdown 列表、🔹 等）后输出纯文字条目；不再接受 `--open` / `--close` / `--title-emoji`（报错退出 2）。
+- **`lint_x_post.py --duanzi`**：新增 W13，段子里出现任何 emoji（含点缀和列表符号）时警告。
+- 同步修正：`x-delivery-contract.md`（第一节改为短文 / 段子对照表，正反例更新）、`x-post-format.md`、`x-layout-patterns.md`、viral-posts SKILL / `patterns.md` / `tags-and-topics.md` 示例去 emoji、format SKILL 与示例、各 README。
+- 评测 63 → 66 条（新增段子零 emoji、段子拒绝点缀、短文 emoji 列表）；format 负向测试改为验证段子去 emoji、拒绝 `--open`、lint W13。
+
 ## [0.8.34] - 2026-10-14
 
 > 根包 0.8.33 → **0.8.34**（patch）；技能版本：topmind-briefs 0.2.16 → 0.2.17、topmind-format 0.1.1 → 0.1.2、topmind-viral-posts 0.3.8 → 0.3.9、

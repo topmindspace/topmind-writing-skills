@@ -43,7 +43,7 @@ npx @topmindspace/topmind-writing-skills install topmind-briefs
 
 ### topmind-viral-posts · X viral short posts
 
-18 post types plus hook × body × closer combinations, summarised from common high-engagement writing patterns in the Chinese X community (all examples are original): **duanzi layout** (one sentence per line, a blank line between lines), conversational tone, an engagement hook; original images first; asks before generating one via `topmind-cover`. Hashtags (1–3) are part of the post body; classification tags (type / purpose / platform / tone) are listed separately. Jokes may use bullets too — always emoji bullets, one per line with blank lines between. Each post is delivered in its own copyable block.
+18 post types plus hook × body × closer combinations, summarised from common high-engagement writing patterns in the Chinese X community (all examples are original): **duanzi layout** (one sentence per line, a blank line between lines), conversational tone, an engagement hook; original images first; asks before generating one via `topmind-cover`. Hashtags (1–3) are part of the post body; classification tags (type / purpose / platform / tone) are listed separately. Duanzi posts use no emoji at all — no persona motif, no reaction emoji, no bullet symbols; bullets are plain lines separated by blank lines. Each post is delivered in its own copyable block.
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-viral-posts
@@ -51,7 +51,7 @@ npx @topmindspace/topmind-writing-skills install topmind-viral-posts
 
 ### topmind-format · X plain-text formatter
 
-Paste existing text: **to duanzi** → one sentence per line with blank lines between, bullets turned into emoji bullets; **to short post** → paragraphing, emoji bullets, a keyword-matched title emoji and the chicken/cat/plant persona motif (🐔 🐱 🌱 🌸) at the start or end. Layout only — words never change; `format_text.py` enforces fidelity.
+Paste existing text: **to duanzi** → one sentence per line with blank lines between, all emoji and bullet symbols removed; **to short post** → paragraphing, emoji bullets, a keyword-matched title emoji and the chicken/cat/plant persona motif (🐔 🐱 🌱 🌸) at the start or end. Layout only — words never change; `format_text.py` enforces fidelity.
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-format
@@ -63,12 +63,12 @@ Single source in `shared/references/`, distributed to each skill's `references/`
 
 | Doc | Covers |
 |---|---|
-| `x-delivery-contract.md` (must read) | Bullets are always emoji bullets (jokes and briefs alike; no `- ` / `1. `); the post body is one copy-ready block (including the source line and hashtags); sources, original images, image suggestions, internal tags and notes are listed separately; one block per post |
+| `x-delivery-contract.md` (must read) | Short posts must use emoji bullets; duanzi posts use no emoji at all (plain bullet lines); never `- ` / `1. `; the post body is one copy-ready block (including the source line and hashtags); sources, original images, image suggestions, internal tags and notes are listed separately; one block per post |
 | `x-post-format.md` | No Markdown, bullet sets, spacing, sources, skeletons, images, WeChat → X |
-| `emoji-system.md` | The TopMind emoji system: 0–2 persona motifs (🐔 🐱 🌱) at start/end; 0–1 keyword-matched title emoji; one bullet set per post |
+| `emoji-system.md` | The TopMind emoji system (short posts only): 0–2 persona motifs (🐔 🐱 🌱) at start/end; 0–1 keyword-matched title emoji; one bullet set per post |
 | `x-layout-patterns.md` | Layout patterns distilled from reference posts |
 
-Checks: `lint_x_post.py` (E1–E9 Markdown leftovers; W12 notes / sources / image lines / internal tags inside the post body).
+Checks: `lint_x_post.py` (E1–E9 Markdown leftovers; W12 notes / sources / image lines / internal tags inside the post body; W13 any emoji in a duanzi post with `--duanzi`).
 
 ### topmind-cover · Cover art generation
 
@@ -102,15 +102,15 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 
 | Skill | Version | What it does |
 |-------|---------|--------------|
-| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.9** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
-| [`topmind-x-article`](./topmind-x-article/) | **0.4.15** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
+| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.10** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
+| [`topmind-x-article`](./topmind-x-article/) | **0.4.16** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
 | [`topmind-cover`](./topmind-cover/) | **0.4.8** | Cover art for X / WeChat (X master 1500×600 / 5:2): striking, theme-focused; 22-style cover style library + 16:9 X short-post cover scene + 12 title treatments + 55 example images (22 styles × 2 sizes + 11 variant samples) + 1 style overview |
-| [`topmind-briefs`](./topmind-briefs/) | **0.2.17** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper explainers / product alerts / mechanism explainers; one plain-text X block (no HTML by default) with emoji bullets, source links and hashtag suggestions; post body in its own copy-ready block, sources and 1–2 original images listed separately; asks before generating any image |
-| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.9** | X viral short posts: 18 template types + combinations, duanzi layout (blank lines, emoji bullets), one copy-ready block per post, hashtags in the body and classification tags listed separately; asks before generating an image |
-| [`topmind-format`](./topmind-format/) | **0.1.2** | X plain-text formatter: to duanzi (blank lines) / to short post (paragraphing + emoji system); layout only, words unchanged, with a fidelity check; body delivered as its own block |
+| [`topmind-briefs`](./topmind-briefs/) | **0.2.18** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper explainers / product alerts / mechanism explainers; one plain-text X block (no HTML by default) with emoji bullets, source links and hashtag suggestions; post body in its own copy-ready block, sources and 1–2 original images listed separately; asks before generating any image |
+| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.10** | X viral short posts: 18 template types + combinations, duanzi layout (blank lines, no emoji, plain bullet lines), one copy-ready block per post, hashtags in the body and classification tags listed separately; asks before generating an image |
+| [`topmind-format`](./topmind-format/) | **0.1.3** | X plain-text formatter: to duanzi (blank lines, no emoji) / to short post (paragraphing + emoji system); layout only, words unchanged, with a fidelity check; body delivered as its own block |
 | [`topmind-poster`](./topmind-poster/) | **0.1.5** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
 
-Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.34** (whole-repo same-tag releases).
+Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.35** (whole-repo same-tag releases).
 
 ### Which skill, and how they combine
 

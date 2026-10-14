@@ -6,7 +6,7 @@
 X 版是一段可直接复制的纯文本（分段换行 + 克制的 emoji + 来源链接），公众号版约 300–800 字 Markdown。
 尊重原始信息、原图、原文；配图原图优先，没有原图时封面可选（`topmind-cover`）；交付时写明信息来源、发布时间与来源链接。
 
-- 版本：**v0.2.17**（随 `@topmindspace/topmind-writing-skills@0.8.34` 发布）
+- 版本：**v0.2.18**（随 `@topmindspace/topmind-writing-skills@0.8.35` 发布）
 
 ## 安装
 

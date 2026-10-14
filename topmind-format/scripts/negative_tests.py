@@ -119,12 +119,15 @@ def main() -> None:
             src = t / "in.txt"
             src.write_text("说个冷知识：\n收益看互动权重。哪怕10万浏览，收益也可能很低。\n蓝V互关，评论区报到！！\n", encoding="utf-8")
             r = run_quiet([str(fmt), str(src), "--mode", "duanzi", "--split", "--open", "🐱", "--close", "🌱"], t)
+            check("段子体：拒绝 --open/--close 点缀（退出码=2）", r.returncode == 2 and "Traceback" not in (r.stderr or ""))
+            src.write_text("说个冷知识 🐱：\n收益看互动权重。哪怕10万浏览，收益也可能很低。\n蓝V互关，评论区报到！！😂\n", encoding="utf-8")
+            r = run_quiet([str(fmt), str(src), "--mode", "duanzi", "--split"], t)
             out = r.stdout
             lines = out.rstrip("\n").split("\n")
             check("段子体：退出码=0", r.returncode == 0, r.stderr[-200:])
             check("段子体：每行之间都隔一个空行",
                   len(lines) >= 5 and all((ln == "") == (i % 2 == 1) for i, ln in enumerate(lines)), repr(out[:200]))
-            check("段子体：人设点缀只在首尾", lines[0].endswith("🐱") and lines[-1].endswith("🌱"))
+            check("段子体：原文 emoji 全部去掉", "🐱" not in out and "😂" not in out, repr(out[:200]))
             md = t / "md.txt"
             md.write_text("三处变化\n\n\n- 更快\n- 更省\n1. 先装\n\n#AI\n", encoding="utf-8")
             r = run_quiet([str(fmt), str(md), "--mode", "short", "--title-emoji", "🆕"], t)
@@ -134,9 +137,16 @@ def main() -> None:
             dl = t / "dl.txt"
             dl.write_text("这周就三步：\n- 早上回评论\n- 中午发原创。真的有用！\n1. 睡前回访\n", encoding="utf-8")
             r = run_quiet([str(fmt), str(dl), "--mode", "duanzi", "--split"], t)
-            check("段子体：Markdown 列表 → emoji 列表，条目行间空行且不拆句",
-                  r.returncode == 0 and "\n\n🔹 早上回评论\n\n🔹 中午发原创。真的有用！\n\n1️⃣ 睡前回访" in r.stdout
-                  and "- " not in r.stdout, r.stdout[-200:])
+            check("段子体：列表去符号不加 emoji，条目行间空行且不拆句",
+                  r.returncode == 0 and "\n\n早上回评论\n\n中午发原创。真的有用！\n\n睡前回访" in r.stdout
+                  and "- " not in r.stdout and "🔹" not in r.stdout and "1️⃣" not in r.stdout, r.stdout[-200:])
+            dz = t / "dz.txt"
+            dz.write_text("今天打卡\n\n🔹 回评论\n\n冲 🐔\n", encoding="utf-8")
+            r = run_quiet([str(lint), str(dz), "--duanzi"], t)
+            check("lint --duanzi：段子出现 emoji 报 W13", "W13" in (r.stdout + r.stderr), (r.stdout + r.stderr)[-200:])
+            dz.write_text("今天打卡\n\n回评论\n\n冲\n", encoding="utf-8")
+            r = run_quiet([str(lint), str(dz), "--duanzi"], t)
+            check("lint --duanzi：零 emoji 段子不报 W13", "W13" not in (r.stdout + r.stderr), (r.stdout + r.stderr)[-200:])
             r = run_quiet([str(fmt), str(t / "nope.txt"), "--mode", "short"], t)
             check("format_text 缺失文件干净报错", r.returncode == 2 and "Traceback" not in (r.stderr or ""))
             empty = t / "empty.txt"

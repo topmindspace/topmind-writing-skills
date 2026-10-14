@@ -9,11 +9,12 @@ X 的普通帖子不渲染 Markdown。本脚本检查 X 稿，并可把常见 Ma
     python3 lint_x_post.py X稿.txt                 # 检查（一个文件里多条帖子用单独一行 --- 分隔）
     python3 lint_x_post.py X稿.txt --fix --out X稿.fixed.txt   # 自动改写后输出到新文件
     python3 lint_x_post.py X发布稿.txt --long      # 长文兜底稿：不查话题标签位置和字数
+    python3 lint_x_post.py 段子.txt --duanzi       # 段子体：出现任何 emoji（含列表符号、人设点缀）记 W13
     cat X稿.txt | python3 lint_x_post.py -         # 从标准输入读取
 
 警告（不影响退出码，--strict 时算失败）还包括：点缀表情过多（W8）、疑似 AI 套话（W9）、
 有数据但缺来源（W10）、连续多个空行（W11）、正文里混入非发布内容（W12：信源清单 / 配图 / 图注 / 说明 /
-内部标签 / 帖序号等，应按 x-delivery-contract.md 另列，不放进可复制正文）。
+内部标签 / 帖序号等，应按 x-delivery-contract.md 另列，不放进可复制正文）、段子体出现 emoji（W13，需 --duanzi）。
 普通帖（非 --long）里出现代码围栏 ``` 记 E8（多半是把交付代码块的围栏一起复制进来了），
 删除线 ~~文字~~ 记 E9；--fix 会去掉这两类符号。
 
@@ -133,7 +134,12 @@ def keycap_for(n: int) -> str:
     return f"{n}）"
 
 
-def lint_post(start: int, lines: list[str], long_mode: bool):
+DUANZI_EMOJI_RE = re.compile(
+    r"[\U0001F100-\U0001F2FF\U0001F300-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\u25AA\u25AB\u2022\u20E3\u2460-\u2473]"
+)
+
+
+def lint_post(start: int, lines: list[str], long_mode: bool, duanzi: bool = False):
     """返回 (errors, warnings)，元素为 (行号, 代码, 说明)。"""
     errs, warns = [], []
     in_fence = False
@@ -153,6 +159,8 @@ def lint_post(start: int, lines: list[str], long_mode: bool):
                 continue
             in_fence = not in_fence
             continue
+        if duanzi and DUANZI_EMOJI_RE.search(ln):
+            warns.append((no, "W13", "段子体不用 emoji（含人设点缀和列表符号）：分点一条一行、靠行间空行区分"))
         if not long_mode and NONPUB_RE.match(ln):
             warns.append((no, "W12", "正文里混入非发布内容（信源清单 / 配图 / 说明 / 内部标签等）：另列，不放进可复制正文"))
         if STRIKE_RE.search(ln):
@@ -285,6 +293,7 @@ def main() -> int:
     ap.add_argument("--long", action="store_true", help="长文兜底稿模式（X发布稿.txt）：整份当一篇，不查话题标签位置和字数")
     ap.add_argument("--fix", action="store_true", help="自动改写 Markdown 写法为 X 写法（需 --out；只处理单个文件）")
     ap.add_argument("--out", help="--fix 的输出文件")
+    ap.add_argument("--duanzi", action="store_true", help="段子体模式：出现任何 emoji（含列表符号、人设点缀）记 W13")
     ap.add_argument("--strict", action="store_true", help="警告也算失败")
     args = ap.parse_args()
 
@@ -307,7 +316,7 @@ def main() -> int:
             print(f"错误：无法读取 {f}（{e}）", file=sys.stderr)
             return 2
         for idx, (start, lines) in enumerate(split_posts(text, args.long), 1):
-            errs, warns = lint_post(start, lines, args.long)
+            errs, warns = lint_post(start, lines, args.long, args.duanzi)
             label = "" if args.long else f"#帖{idx} "
             for no, code, msg in errs:
                 print(f"{f}:{no}: {label}[{code}] 错误：{msg}")

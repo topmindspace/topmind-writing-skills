@@ -1,9 +1,9 @@
 ---
 name: topmind-viral-posts
-description: "X 引流段子/爆款短篇：18 类型模板（含热点资讯、冷知识、差额冲刺）+ 钩子×主体×收尾组合玩法；段子体排版（一句一行、行间空一行）、口语化、带互动钩子；每条帖子附话题标签（1–3 个 hashtag）与内部分类标签，纯文本、列表用 emoji 项目符号（X 不渲染 Markdown），事实类带来源链接；配图原图优先（官方/第三方/自己的后台截图，保留来源），交付遵守 X 交付规约：每条正文单独成块可直接复制（含话题标签），信源、原图、内部标签各自另列；没有原图时先问用户是否配图，同意后才走 topmind-cover 出 16:9 图。只起草不代发。Use when 引流段子、段子、爆款短篇、爆款短文、涨粉帖、涨粉段子、互关帖、互关求粉、X 短帖、热点段子、蹭热点、新人报到、打卡帖、话题标签、hashtag、X 引流、traffic post、viral post；引流互动型（段子、钩子、涨粉）走本技能。Do NOT use for 把现成文字转段子、格式化、排版（→ topmind-format）、X 长文与发 X 文章（→ topmind-x-article）、公众号文章与公众号短文（→ topmind-wechat-post / topmind-briefs）、信息密度型干货短文、快讯与数据榜单（→ topmind-briefs）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、把帖子发出去（→ topmind-x，须用户确认）。"
+description: "X 引流段子/爆款短篇：18 类型模板（含热点资讯、冷知识、差额冲刺）+ 钩子×主体×收尾组合玩法；段子体排版（一句一行、行间空一行、完全不用 emoji，分点不加符号）、口语化、带互动钩子；每条帖子附话题标签（1–3 个 hashtag）与内部分类标签，纯文本（X 不渲染 Markdown），事实类带来源链接；配图原图优先（官方/第三方/自己的后台截图，保留来源），交付遵守 X 交付规约：每条正文单独成块可直接复制（含话题标签），信源、原图、内部标签各自另列；没有原图时先问用户是否配图，同意后才走 topmind-cover 出 16:9 图。只起草不代发。Use when 引流段子、段子、爆款短篇、爆款短文、涨粉帖、涨粉段子、互关帖、互关求粉、X 短帖、热点段子、蹭热点、新人报到、打卡帖、话题标签、hashtag、X 引流、traffic post、viral post；引流互动型（段子、钩子、涨粉）走本技能。Do NOT use for 把现成文字转段子、格式化、排版（→ topmind-format）、X 长文与发 X 文章（→ topmind-x-article）、公众号文章与公众号短文（→ topmind-wechat-post / topmind-briefs）、信息密度型干货短文、快讯与数据榜单（→ topmind-briefs）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、把帖子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.3.9"
+  version: "0.3.10"
   action_category: "write"
   triggers: "引流段子, 段子, 写段子, 冷知识段子, 冲粉帖, 破千, 爆款短篇, 爆款短文, 涨粉帖, 涨粉短帖, 涨粉段子, 互关帖, 互关求粉, X 短帖, 热点段子, 蹭热点, 新人报到, 打卡帖, 话题标签, hashtag, traffic post, viral post, 写引流段子, 涨粉内容, 互关内容, X 引流"
   author: "TopMindSpace"
@@ -15,7 +15,7 @@ metadata:
 
 基于对 X 中文区常见高互动写法的归纳，示例均为自编。目标：**短、真、钩子**——读者 3 秒能看完，忍不住点赞/评论/关注。
 
-> **必读必守**：[references/x-delivery-contract.md](references/x-delivery-contract.md)——段子也可以分点，分点必须用 emoji 列表符号（禁用 `- ` `1. `），条目一条一行、行间空行；每条帖子正文单独一个 `text` 块，信源、原图、内部标签块外另列。
+> **必读必守**：[references/x-delivery-contract.md](references/x-delivery-contract.md)——**段子完全不用 emoji**（无人设点缀、无情绪表情、无列表符号）；分点就一条一行、靠行间空行区分，禁用 `- ` `1. `；每条帖子正文单独一个 `text` 块，信源、原图、内部标签块外另列。
 
 ## 十八大类型
 
@@ -56,9 +56,9 @@ metadata:
 
 规则见 [references/x-post-format.md](references/x-post-format.md) 与交付规约：
 
-- 不用 Markdown；分点用 emoji 列表符号（🔹 / 1️⃣ / ✅❌，一帖一套），段子体条目一条一行、行间空行。
+- 不用 Markdown；段子体完全不用 emoji，分点不加符号，一条一行、行间空行；热点资讯型的「短文版」才按 emoji 体系用 emoji 列表符号。
 - 有事实的帖子（热点、数据、工具）正文后单独一行 `来源：名称 URL`（属正文）；纯运营段子不需要。
-- 自检：`python3 scripts/lint_x_post.py X稿.txt`（多条用 `---` 分隔；`--fix --out 新文件` 自动改 Markdown）。
+- 自检：`python3 scripts/lint_x_post.py X稿.txt --duanzi`（出现 emoji 报 W13；多条用 `---` 分隔；`--fix --out 新文件` 自动改 Markdown）。
 
 ## 热点资讯型（第 7 类）专项规约
 
@@ -130,12 +130,12 @@ metadata:
    结构：第一行即钩子 → 2-4 行核心事实 → 最后一行神评论/提问。
    写完数一下字数，超了就砍废话，砍到 140 字内。
 2. **段子体排版**：一句一行，**行与行之间都空一行**；一行一个意思，尽量不超过 20 字，长句在逗号处断开。
-   现成文字要转段子体时交给 `topmind-format`（只排版不改字）；emoji 配额见 [references/emoji-system.md](references/emoji-system.md)（人设点缀 🐔 🐱 🌱 只放开头或结尾）。
+   现成文字要转段子体时交给 `topmind-format`（只排版不改字）；段子体零 emoji（emoji 体系只用于短文体）。
 3. **口语化**：说人话，不说书面语。"蓝朋友""上岸""串门"比"用户""成功""交流"好。
 4. **具体数字**：4869 个粉 > "几千个粉"；3 小时 > "刚才"。
 5. **互动钩子**：每帖至少一个——提问、二选一、求互关、求评论。
 6. **Hashtag**：每条 1–3 个，放最后一行；互关类必带 `#蓝V互关 #follow`；干货类带 `#新手指南`、`#运营技巧` 这类读者会搜的词；日常类可带 `#日拱一卒`。数量、位置与敏感词规则见 [references/tags-and-topics.md](references/tags-and-topics.md)。
-7. **表情点缀**：按 TopMind emoji 体系——人设点缀（🐔 🐱 🌱 🌸）最多 2 个、只放首尾，情绪表情（😂 😭 🤝）最多 1 个；列表符号不算在内，但同一帖要统一。
+7. **不用 emoji**：段子里没有人设点缀、情绪表情和列表符号，语气全靠文字本身。
 8. **去 AI 味**：不用"首先其次最后""综上所述""值得注意的是"，不写"不是 A 而是 B"式反转和三连排比，不用感叹号堆砌，结尾不升华。
    完整清单见 [references/writing-principles.md](references/writing-principles.md)「去 AI 味清单」；lint 的 W9 警告要清掉。
 9. **不用 Markdown**：分点用 emoji 列表符号，见上节与交付规约。
@@ -193,14 +193,14 @@ clean uncluttered background, vertical 9:16
 1. **选类型**：看用户要什么效果（涨粉→互关型/新人型；互动→提问型/自嘲型；立人设→干货型/打卡型；追热点→热点资讯型）。
 2. **套公式**：从 `references/patterns.md` 取对应公式，填内容。
 3. **配图**：先找原图（官方 > 第三方 / 原帖图，注明来源），给 1–2 张图片地址；没有原图时**先问用户要不要配图**，用户同意才走 topmind-cover 生图（清新优雅/MD3商务风），可先附一个出图 prompt 供用户决定；不擅自生图。
-4. **自检**：删掉"正确的废话"；确认有钩子、段子体行间空行、话题标签 1–3 个在末行、事实类有来源行；`scripts/lint_x_post.py` E 类清零、W12（正文混入配图 / 标签 / 说明）清零。
+4. **自检**：删掉"正确的废话"；确认有钩子、段子体行间空行、话题标签 1–3 个在末行、事实类有来源行；`scripts/lint_x_post.py` E 类清零、W12（正文混入配图 / 标签 / 说明）清零；加 `--duanzi` 时 W13（出现 emoji）清零。
 5. **交付**：一次 3–5 条让用户挑，严格按 [references/x-delivery-contract.md](references/x-delivery-contract.md)。
 
 ## Output Contract
 
 - 3–5 条独立短帖，每条 50–150 字，默认段子体；**每条正文单独一个 `text` 块**（块名「帖 N」写在块外），块里只有正文、来源行（事实类）和末行话题标签。
 - 正文块之后依次另列：**信源**（每条一行，纯运营段子写「无」）→ **原图 / 配图**（1–2 张地址 + 来源；没有就写「未找到原图」并问要不要配图，可附 1 个出图 prompt 供决定；纯文字段子可写「不配」）→ **内部标签**（类型 / 用途 / 平台 / 语气 + 备选话题标签）。
-- emoji 只用 TopMind 体系（[references/emoji-system.md](references/emoji-system.md)）；厂商数字标「（厂商口径）」，未证实标「（传言）」。
+- 段子零 emoji；热点短文版的 emoji 按 [references/emoji-system.md](references/emoji-system.md)；厂商数字标「（厂商口径）」，未证实标「（传言）」。
 - 不编造用户数据：粉丝数、收益等数字用户给才写。
 
 示例（原创，数字与名称为虚构）：
@@ -208,13 +208,13 @@ clean uncluttered background, vertical 9:16
 ````text
 帖 1：
 ```text
-说个冷知识 🐱
+说个冷知识：
 
 X 的创作者收益，不只看浏览量。
 
 蓝V用户的互动，据说权重更高（传言，以官方说明为准）。
 
-难怪大家都在找蓝V互动😂
+难怪大家都在找蓝V互动
 
 蓝V互关，评论区报到！！
 
@@ -225,13 +225,13 @@ X 的创作者收益，不只看浏览量。
 ```text
 这周把发帖流程压缩成三步：
 
-1️⃣ 早上先回评论
+早上先回评论
 
-2️⃣ 中午发一条原创
+中午发一条原创
 
-3️⃣ 睡前回访新关注
+睡前回访新关注
 
-三步走完，不焦虑 🌱
+三步走完，不焦虑
 
 #日拱一卒
 ```

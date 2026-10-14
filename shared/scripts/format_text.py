@@ -3,10 +3,10 @@
 """format_text.py — 把一段文字格式化成 X 段子体或短文体，只动排版，不改字。
 
 用法：
-    python3 format_text.py 原文.txt --mode duanzi              # 段子体：每句一行，行与行之间空一行；列表 → emoji 列表
+    python3 format_text.py 原文.txt --mode duanzi              # 段子体：每句一行，行与行之间空一行；完全不用 emoji，分点只去掉符号
     python3 format_text.py 原文.txt --mode duanzi --split      # 同上，并按句末标点（。！？!?）拆句
     python3 format_text.py 原文.txt --mode short               # 短文体：合并多余空行，Markdown 列表 → emoji 列表
-    python3 format_text.py 原文.txt --mode short --title-emoji 🆕 --open 🐔 --close 🌱
+    python3 format_text.py 原文.txt --mode short --title-emoji 🆕 --open 🐔 --close 🌱   # 点缀只用于短文体
     python3 format_text.py 原文.txt --mode duanzi --out 段子.txt
     cat 原文.txt | python3 format_text.py - --mode duanzi
 
@@ -53,6 +53,12 @@ def skeleton(text: str) -> str:
 BULLET_RE = re.compile(r"^\s*(?:[0-9]\uFE0F?\u20E3|\U0001F51F|[\u2460-\u2473]|[🔹🔸▫▪•✅❌📌➡→])")
 
 
+def strip_emoji(s: str) -> str:
+    """段子体用：去掉 emoji 及其变体选择符、零宽连接符，再收拾多余空格。"""
+    s = EMOJI_RE.sub("", s).replace("\u200d", "")
+    return re.sub(r"[ \t]{2,}", " ", s).strip()
+
+
 def to_bullet(ln: str) -> str | None:
     """Markdown 列表行 → emoji 列表行（一级 🔹 / 1️⃣，二级缩进 ▫️）；不是列表行返回 None。"""
     m = UL_RE.match(ln)
@@ -67,20 +73,22 @@ def to_bullet(ln: str) -> str | None:
 
 
 def duanzi(text: str, split: bool) -> list[str]:
-    """段子体：一句一行、行间空一行。列表条目同样一条一行、行间空行，用 emoji 列表符号；--split 不拆列表条目。"""
+    """段子体：一句一行、行间空一行，完全不用 emoji。
+    分点条目去掉列表符号（Markdown 标记与 emoji 符号都去掉），一条一行、靠行间空行区分；--split 不拆列表条目。
+    原文里的 emoji（含人设点缀、情绪表情）一并去掉。"""
     lines: list[str] = []
     for raw in text.splitlines():
         if not raw.strip():
             continue
-        b = to_bullet(raw.rstrip())
-        if b is not None:
-            lines.append(b.strip() if not b.startswith("  ") else b)
-        elif BULLET_RE.match(raw):
-            lines.append(raw.strip())
+        m, o = UL_RE.match(raw.rstrip()), OL_RE.match(raw.rstrip())
+        if m or o or BULLET_RE.match(raw):
+            item = m.group(2) if m else (o.group(3) if o else BULLET_RE.sub("", raw, count=1))
+            lines.append(strip_emoji(item))
         elif split:
-            lines += [p.strip() for p in SENT_RE.split(raw.strip()) if p.strip()]
+            lines += [strip_emoji(p) for p in SENT_RE.split(raw.strip()) if strip_emoji(p)]
         else:
-            lines.append(raw.strip())
+            lines.append(strip_emoji(raw))
+    lines = [ln for ln in lines if ln]
     out: list[str] = []
     for ln in lines:
         out += [ln, ""]
@@ -145,10 +153,10 @@ def main() -> int:
         print("错误：原文为空", file=sys.stderr)
         return 2
 
+    if args.mode == "duanzi" and (args.title_emoji or args.open_e or args.close_e):
+        print("错误：段子体完全不用 emoji，不接受 --title-emoji / --open / --close（点缀只用于 --mode short）", file=sys.stderr)
+        return 2
     lines = duanzi(text, args.split) if args.mode == "duanzi" else short(text)
-    if args.mode == "duanzi" and args.title_emoji:
-        print("提示：段子体没有标题行，已忽略 --title-emoji", file=sys.stderr)
-        args.title_emoji = None
     lines = decorate(lines, args.title_emoji, args.open_e, args.close_e)
     result = "\n".join(lines) + "\n"
 

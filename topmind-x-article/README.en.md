@@ -4,7 +4,7 @@
 
 Turn a Markdown draft into a "copy → paste → publish" X long-form (Article) package.
 
-- Version: **v0.4.15** (ships with `@topmindspace/topmind-writing-skills@0.8.34`)
+- Version: **v0.4.16** (ships with `@topmindspace/topmind-writing-skills@0.8.35`)
 
 ## Install
 

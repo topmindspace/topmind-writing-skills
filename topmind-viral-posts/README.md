@@ -4,7 +4,7 @@
 
 短、真、钩子——3 秒看完，忍不住点赞/评论/关注。基于对 X 中文区常见高互动写法的归纳，提供 18 类型模板 + 钩子×主体×收尾组合玩法（示例均为自编），默认段子体排版（一句一行、行间空一行），配图原图优先，并附话题标签与分类标签。
 
-- 版本：**v0.3.9**（随 `@topmindspace/topmind-writing-skills@0.8.34` 发布）
+- 版本：**v0.3.10**（随 `@topmindspace/topmind-writing-skills@0.8.35` 发布）
 
 ## 安装
 
@@ -46,16 +46,16 @@ npx @topmindspace/topmind-writing-skills install topmind-viral-posts
 
 ## X 纯文本排版
 
-X 不渲染 Markdown，所以 X 稿不用 `- ` 列表、`#` 标题和 `**加粗**`。分点用 emoji 项目符号（🔹 一级、▫️ 二级、1️⃣ 步骤、✅/❌ 对比），层级最多两层。公众号稿改写成 X 稿时只改排版，内容保持一致。规则见 [references/x-post-format.md](./references/x-post-format.md)。
+X 不渲染 Markdown，所以 X 稿不用 `- ` 列表、`#` 标题和 `**加粗**`。段子体完全不用 emoji，分点不加符号、一条一行靠行间空行区分；热点资讯型的短文版才用 emoji 列表符号。公众号稿改写成 X 稿时只改排版，内容保持一致。规则见 [references/x-post-format.md](./references/x-post-format.md)。
 
 ```bash
 # 检查 X 稿：无 Markdown 列表/标题/加粗，话题标签在末行；加 --fix --out 自动改写
-python3 scripts/lint_x_post.py X稿.txt
+python3 scripts/lint_x_post.py X稿.txt --duanzi   # 段子出现 emoji 报 W13
 ```
 
-## 段子体与 emoji
+## 段子体
 
-段子默认一句一行、行与行之间空一行；人设点缀（🐔 🐱 🌱 🌸）只放开头或结尾，规则见 [references/emoji-system.md](./references/emoji-system.md)。现成文字转段子交给 `topmind-format`。
+段子默认一句一行、行与行之间空一行，**完全不用 emoji**（无人设点缀、无情绪表情、无列表符号）；交付见 [references/x-delivery-contract.md](./references/x-delivery-contract.md)。现成文字转段子交给 `topmind-format`。
 
 ## 配图
 

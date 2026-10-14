@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.18 (2026-10-14)
+
+- 更正：共享规约改为「短文分点用 emoji 列表符号、段子完全不用 emoji」；`emoji-system.md` 标明只适用于短文体；`lint_x_post.py` 新增 `--duanzi`（W13）
+
 ## 0.2.17 (2026-10-14)
 
 - 特性支持：接入共享 X 交付规约 `x-delivery-contract.md`（必读必守）——X 正文单独成块，信源 / 原图 / 说明另列；分点必须用 emoji 列表符号

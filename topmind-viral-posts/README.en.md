@@ -4,7 +4,7 @@
 
 Short, real, hooked — read in 3 seconds, impossible not to like/comment/follow. 18 post types plus hook × body × closer combinations, summarised from common high-engagement writing patterns in the Chinese X community (all examples are original). Posts default to "duanzi" layout (one sentence per line, a blank line between lines), original images first, plus a hashtag set and classification tags. Existing text → `topmind-format`.
 
-- Version: **v0.3.9** (ships with `@topmindspace/topmind-writing-skills@0.8.34`)
+- Version: **v0.3.10** (ships with `@topmindspace/topmind-writing-skills@0.8.35`)
 
 ## Install
 
@@ -46,11 +46,11 @@ See [references/tags-and-topics.md](./references/tags-and-topics.md) for the ful
 
 ## Plain-text formatting for X
 
-X does not render Markdown, so X drafts never use `- ` lists, `#` headings or `**bold**`. Lists use emoji bullets (🔹 level one, ▫️ level two, 1️⃣ steps, ✅/❌ contrasts), at most two levels. When a WeChat draft is turned into an X draft, only the layout may change; the content stays the same. See [references/x-post-format.md](./references/x-post-format.md).
+X does not render Markdown, so X drafts never use `- ` lists, `#` headings or `**bold**`. Duanzi posts use no emoji at all: bullets get no symbol, one item per line separated by blank lines; only the short-post version of hot-news posts uses emoji bullets. When a WeChat draft is turned into an X draft, only the layout may change; the content stays the same. See [references/x-post-format.md](./references/x-post-format.md).
 
 ```bash
 # Check an X draft: no Markdown list/heading/bold, hashtags on the last line; add --fix --out to rewrite
-python3 scripts/lint_x_post.py x-draft.txt
+python3 scripts/lint_x_post.py x-draft.txt --duanzi   # W13 on any emoji in a duanzi post
 ```
 
 ## Images

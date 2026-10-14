@@ -3,7 +3,7 @@ name: topmind-briefs
 description: "干货短文：一件事讲透，X + 公众号双平台。短文不是长文——默认不出 HTML：X 版是一段可直接复制的纯文本（首行给结论、合理分段换行、emoji 项目符号列表，emoji 只用 TopMind 体系，带来源链接，0–2 个话题标签），公众号版是 300–800 字 Markdown；交付遵守 X 交付规约：正文单独成块可直接复制（含来源行与话题标签），信源、原图（1–2 张）、说明各自分块；分点必须用 emoji 列表符号；没有原图时主动询问是否配图，不擅自生图。尊重原始信息、原图、原文。只交付不代发。Use when 写短文、公众号短文、X 短文、发快讯、简讯、速报、数据榜单、榜单速报、论文解读、新品速递、来篇短的、短平快、brief；信息密度型（数据、榜单、发布）走本技能。Do NOT use for 把现成文字格式化、转段子、排版（→ topmind-format）、X 长文与发 X 文章（→ topmind-x-article）、公众号长文与公众号排版 HTML（→ topmind-wechat-post）、引流互动型短帖、段子、涨粉帖、互关帖、爆款短篇（→ topmind-viral-posts）、单独出长图/海报/信息图 PNG（→ topmind-poster）、封面与头图（→ topmind-cover）、把稿子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.2.17"
+  version: "0.2.18"
   action_category: "write"
   triggers: "写短文, 公众号短文, X 短文, 发快讯, 快讯, 简讯, 速报, 干货短文, 论文解读, 数据榜单, 榜单速报, 新品速递, brief, 来篇短的, 短平快, 发个快讯"
   author: "TopMindSpace"
