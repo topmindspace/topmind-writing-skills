@@ -1,9 +1,9 @@
 ---
 name: topmind-wechat-post
-description: "管一篇公众号文章从选题/底稿到发布清单的完整生命周期：交付包搭建、审校改写、质量三关（事实/逻辑/去AI味，含改稿保真溯源审计）、状态同步、微信内联排版与发布清单。只出 HTML 与清单，不代发。Use when 写公众号、写公众号文章、公众号长文、公众号排版、微信排版、公众号定稿、发公众号、公众号交付包、公众号发布清单、wechat、mp format。Do NOT use for 公众号短文与快讯（300–800 字，→ topmind-briefs）、X 帖子与段子（→ topmind-viral-posts）、X 纯文本格式化与转段子（→ topmind-format）、X 长文（→ topmind-x-article）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、只改错别字、小红书/知乎、纯网页发布、通用长文润色（→ topmind-write）。"
+description: "管一篇公众号文章从选题/底稿到发布清单的完整生命周期：交付包搭建、审校改写、质量三关（事实/逻辑/去AI味，含改稿保真溯源审计）、状态同步、微信内联排版与发布清单。只出 HTML 与清单，不代发。Use when 写公众号、写公众号文章、公众号长文、公众号排版、微信排版、公众号定稿、发公众号、公众号交付包、公众号发布清单、wechat、mp format。Do NOT use for 公众号短文与快讯（300–800 字，→ topmind-briefs）、X 帖子与段子（→ topmind-viral-posts；派生的 X 短帖交付一段可复制纯文本，链接、原图另发）、X 纯文本格式化与转段子（→ topmind-format）、X 长文（→ topmind-x-article）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、只改错别字、小红书/知乎、纯网页发布、通用长文润色（→ topmind-write）。"
 license: MIT
 metadata:
-  version: "0.3.10"
+  version: "0.3.11"
   action_category: "write"
   triggers: "公众号, 写公众号, 微信排版, 公众号排版, 公众号稿, 公众号长文, 排版这篇文章, 定稿, 发公众号, 公众号交付, wechat, mp format, 写公众号文章, 公众号排版定稿, 公众号发布清单"
   author: "TopMindSpace"
@@ -21,10 +21,10 @@ metadata:
 
 > 用户明确说公众号 / 微信排版时进本技能；通用长文写作不在本技能范围内。
 > 篇幅在 300–800 字的公众号短文走 `topmind-briefs`（双平台短文），本技能管长文与完整交付包。
-> 同一选题要出 X 版时，X 稿由公众号稿派生：公众号稿的 Markdown 列表在 X 稿里改成 emoji 项目符号
+> 同一选题要出 X 版时，X 稿由公众号稿派生：公众号稿的 Markdown 列表在 X 稿里改成纯文本列表（emoji 或「1）」「·」，emoji 不强制）
 >（X 纯文本不渲染 Markdown 列表，规则见 [references/x-post-format.md](references/x-post-format.md)），
 > 只允许排版差异，内容一致；公众号稿本身继续用 Markdown 列表。
-> 派生的 X 稿按 **[references/x-delivery-contract.md](references/x-delivery-contract.md)（必读必守）** 交付：正文单独一个可直接复制的块，信源、原图、说明另列。
+> 派生的 X 稿按 **[references/x-delivery-contract.md](references/x-delivery-contract.md)（必读必守）** 交付：正文是一段可直接复制的纯文本，**不含 URL 和来源行**；公众号稿里的文内链接和原图挪到另发的链接 / 图片消息。公众号长文本身可以有文内链接，不受此限。
 
 ## 语言铁律
 
@@ -44,7 +44,7 @@ metadata:
 | `scripts/push-to-topstream.py` | 可选回推：公众号稿降级为纯 Markdown notes |
 | `scripts/lint-wechat.py` | 排版体检 + 自动修复（中英文间距、段长、AI 腔…） |
 | `scripts/md2wechat.py` | Markdown → 全内联 HTML；**必加 `--embed-images`** |
-| `scripts/lint_x_post.py` | 派生 X 版时的 X 稿检查：无 Markdown 列表/标题/加粗，列表用 emoji 项目符号（公众号稿本身不检查；与 briefs、viral-posts、x-article 同一份） |
+| `scripts/lint_x_post.py` | 派生 X 版时的 X 稿检查：无 Markdown 列表/标题/加粗，正文无 URL / 来源行 / 配图说明（公众号稿本身不检查；与 briefs、viral-posts、x-article 同一份） |
 | `scripts/scan_ai_flavor.py` | 中文去 AI 味扫描**转发器**：装了 `qu-aiwei-zh` 就调 canonical（含作者姿态分），没装回落内置 `scan_ai_flavor_builtin.py` 并提示缺姿态维度；`--which` 查实际执行哪份 |
 | `scripts/audit-provenance.py` | **改稿保真审计**：双向逐段溯源（本稿→源稿 / 源稿→本稿），抓悄悄扩写与被落下的段。有源稿时定稿必跑 |
 | `scripts/wechat_paths.py` | 路径解析模块（被上面脚本导入）：不写死个人路径、类别编号与年份 |

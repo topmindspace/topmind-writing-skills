@@ -1,22 +1,29 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""lint_x_post.py — X 纯文本帖检查：不含 Markdown 列表/标题/加粗，列表用 emoji 项目符号。
+"""lint_x_post.py — X 纯文本帖检查：不含 Markdown 列表/标题/加粗，正文不含链接、来源行和配图说明。
 
 X 的普通帖子不渲染 Markdown。本脚本检查 X 稿，并可把常见 Markdown 写法改成 X 写法。
 公众号稿不在检查范围内（公众号稿继续用 Markdown 列表）。规则见 references/x-post-format.md。
 
 用法：
     python3 lint_x_post.py X稿.txt                 # 检查（一个文件里多条帖子用单独一行 --- 分隔）
-    python3 lint_x_post.py X稿.txt --fix --out X稿.fixed.txt   # 自动改写后输出到新文件
+    python3 lint_x_post.py X稿.txt --fix --out X稿.fixed.txt   # 自动改写后输出到新文件（列表改 🔹 / 1️⃣）
+    python3 lint_x_post.py X稿.txt --fix --style plain --out X稿.fixed.txt   # 列表改「·」/「1）」
     python3 lint_x_post.py X发布稿.txt --long      # 长文兜底稿：不查话题标签位置和字数
     python3 lint_x_post.py 段子.txt --duanzi       # 段子体：出现任何 emoji（含列表符号、人设点缀）记 W13
     cat X稿.txt | python3 lint_x_post.py -         # 从标准输入读取
 
-警告（不影响退出码，--strict 时算失败）还包括：点缀表情过多（W8）、疑似 AI 套话（W9）、
-有数据但缺来源（W10）、连续多个空行（W11）、正文里混入非发布内容（W12：信源清单 / 配图 / 图注 / 说明 /
-内部标签 / 帖序号等，应按 x-delivery-contract.md 另列，不放进可复制正文）、段子体出现 emoji（W13，需 --duanzi）。
-普通帖（非 --long）里出现代码围栏 ``` 记 E8（多半是把交付代码块的围栏一起复制进来了），
-删除线 ~~文字~~ 记 E9；--fix 会去掉这两类符号。
+交付规约（x-delivery-contract.md）：X 短文 / 段子的正文是一段可直接复制的纯文本，链接、原图、配图另发。
+因此普通帖（非 --long）里：
+  E10 正文出现 URL（含来源链接）——链接另发一条；
+  E11 正文出现来源行（来源： / 信源： / 出处： / 原帖： / 原文： / 链接： / via: / source:）——另发；
+  E12 正文出现配图说明（配图： / 原图： / 图注： / [图1] 占位）——图片另发；
+  E8 代码围栏 ```（多半是把交付代码块的围栏一起复制进来了）；E9 删除线 ~~文字~~；--fix 会去掉 E8/E9 符号。
+--long（x-article 的 X发布稿.txt 长文兜底稿）允许文内链接，不查 E10–E12。
+警告（不影响退出码，--strict 时算失败）：点缀表情过多（W8）、疑似 AI 套话（W9，含排比、「不仅…更…」、空泛形容等）、
+首行过长不像钩子（W10）、连续多个空行（W11）、正文里混入其他非发布内容（W12：说明 / 内部标签 / 帖序号等）、
+段子体出现 emoji（W13，需 --duanzi）。
+短文分点不强制 emoji：🔹 / 1️⃣ 等 emoji 符号，或「1）」「·」「【小标题】」等纯文本方式都可以；只禁止会被当成 Markdown 的 - * + 1.。
 
 退出码：有错误 → 1；加 --strict 时警告也算失败；其余 → 0。
 只用 Python 标准库。
@@ -45,10 +52,12 @@ CODE_RE = re.compile(r"`[^`\n]+`")
 SEP_RE = re.compile(r"^\s*(-{3,}|={3,}|\*{3,})\s*$")
 FENCE_RE = re.compile(r"^\s*(```|~~~)")
 STRIKE_RE = re.compile(r"~~[^~\n]+~~")
-# 正文块里不该出现的交付附注（行首）；「来源：」行与话题标签属于正文，不在此列
+# 正文块里不该出现的交付附注（行首）。话题标签属于正文；来源行、链接、配图说明不属于正文（E10–E12）
+SOURCE_LINE_RE = re.compile(r"^\s*(?:来源|信源|信息来源|出处|原帖|原文|原文链接|链接|参考|via|source)\s*[:：]", re.I)
+IMAGE_LINE_RE = re.compile(r"^\s*(?:(?:配图|原图|图注|图片|插图)\s*[:：]|\[(?:图|图片|配图|视频)[^\]]*\]|【配图[^】]*】)")
 NONPUB_RE = re.compile(
-    r"^\s*(?:【(?:帖|X ?版|公众号版|配图|信息来源|说明)[^】]*】|[①②③④]\s*(?:正文|原帖|信源|原图)"
-    r"|(?:信源|信息来源|配图|图注|原图|说明|备注|注|标签|内部标签|分类|备选|备选标签|提示词|prompt|发布时间)\s*[:：])",
+    r"^\s*(?:【(?:帖|X ?版|公众号版|信息来源|说明)[^】]*】|[①②③④]\s*(?:正文|原帖|信源|原图)"
+    r"|(?:说明|备注|注|标签|内部标签|分类|备选|备选标签|提示词|prompt|发布时间)\s*[:：])",
     re.I,
 )
 MAX_BLANK_RUN = 1  # 段间只空一行；连续 2 个以上空行记 W11
@@ -57,10 +66,11 @@ MAX_BLANK_RUN = 1  # 段间只空一行；连续 2 个以上空行记 W11
 KEYCAP = r"[0-9]\uFE0F?\u20E3"
 CIRCLED = r"[\u2460-\u2473]"
 SYMBOL = (
-    r"(?:[\u2022\u25AA\u25AB\u25E6\u2023\u2192\u25B6\u25B8]"
+    r"(?:[\u00B7\u2022\u25AA\u25AB\u25E6\u2023\u2192\u25B6\u25B8]"
     r"|[\U0001F300-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\u2190-\u21FF])\uFE0F?"
 )
-BULLET_RE = re.compile(r"^(\s*)(%s|%s|%s|\U0001F51F)\s*(\S.*)?$" % (KEYCAP, CIRCLED, SYMBOL))
+PLAIN_NUM = r"\d{1,2}）"  # 全角「1）」是纯文本序号，X 不当 Markdown
+BULLET_RE = re.compile(r"^(\s*)(%s|%s|%s|%s|\U0001F51F)\s*(\S.*)?$" % (KEYCAP, CIRCLED, PLAIN_NUM, SYMBOL))
 HASHTAG_RE = re.compile(r"(?<![\w&#])#(?!\d+(?![\w\u4e00-\u9fff]))[\w\u4e00-\u9fff]{1,40}")  # #2 这类名次不是话题标签
 HASHTAG_TAIL_RE = re.compile(r"(?:\s*#(?!\d+(?![\w\u4e00-\u9fff]))[\w\u4e00-\u9fff]{1,40})+\s*$")
 PLACEHOLDER_RE = re.compile(r"^\s*\[(?:图|视频|图片|配图)[^\]]*\]\s*$")  # 配图占位行不计字数
@@ -82,11 +92,15 @@ AI_PHRASES = [
     "让我们一起", "首先，", "其次，", "最后，", "在当今", "随着.{1,12}的发展",
     "颠覆性", "革命性", "一文读懂", "一文看懂", "建议收藏", "干货满满", "赋能",
     "不是.{1,12}而是", "真正的", "从来不是", "一句话总结", "划重点",
+    "总的来说", "总体而言", "总体来看", "不仅.{1,16}更", "不仅.{1,16}还", "毫无疑问", "不可否认", "众所周知",
+    "重磅", "炸裂", "震撼", "惊艳", "里程碑式", "划时代", "全方位", "一站式", "无缝", "深度赋能",
+    "让我们拭目以待", "拭目以待", "未来已来", "这或许就是", "开启.{1,8}新篇章", "新纪元",
+    r"更[^\s、，。]{1,3}、更[^\s、，。]{1,3}、更[^\s、，。]{1,3}",
+    "进行了一个", "做出了.{0,4}改进",
 ]
+HOOK_MAX_WEIGHT = 60  # 首行（钩子）加权字数上限，约 30 个汉字
 AI_RE = re.compile("|".join(AI_PHRASES))
 EMOJI_RE = re.compile(r"[\U0001F100-\U0001F2FF\U0001F300-\U0001FAFF\u2600-\u27BF]")
-NUM_FACT_RE = re.compile(r"\d+(?:\.\d+)?\s*(?:%|％|倍|万|亿|美元|元|分|名|个|款|B|K|M)")
-SOURCE_RE = re.compile(r"来源|出处|据.{0,8}(?:公告|博客|报道|论文|官网)|via|source", re.I)
 
 
 def _is_wide(ch: str) -> bool:
@@ -161,16 +175,23 @@ def lint_post(start: int, lines: list[str], long_mode: bool, duanzi: bool = Fals
             continue
         if duanzi and DUANZI_EMOJI_RE.search(ln):
             warns.append((no, "W13", "段子体不用 emoji（含人设点缀和列表符号）：分点一条一行、靠行间空行区分"))
-        if not long_mode and NONPUB_RE.match(ln):
-            warns.append((no, "W12", "正文里混入非发布内容（信源清单 / 配图 / 说明 / 内部标签等）：另列，不放进可复制正文"))
+        if not long_mode:
+            if URL_RE.search(ln):
+                errs.append((no, "E10", "正文里有 URL：X 短文 / 段子的链接（含来源链接）另发一条，不和正文混在一起"))
+            if SOURCE_LINE_RE.match(ln):
+                errs.append((no, "E11", "正文里有来源行：来源 / 原帖链接另发，正文只放可发布的纯文本"))
+            if IMAGE_LINE_RE.match(ln):
+                errs.append((no, "E12", "正文里有配图说明或图片占位：原图 / 配图另发"))
+            elif NONPUB_RE.match(ln):
+                warns.append((no, "W12", "正文里混入非发布内容（说明 / 内部标签 / 帖序号等）：另列，不放进可复制正文"))
         if STRIKE_RE.search(ln):
             errs.append((no, "E9", "Markdown 删除线（~~）：X 不渲染，去掉波浪线"))
         if in_fence or (long_mode and indent_width(ln[: len(ln) - len(ln.lstrip())]) >= 4 and ln.strip()):
             continue
         if UL_RE.match(ln) and not SEP_RE.match(ln):
-            errs.append((no, "E1", "Markdown 无序列表（- * +）：X 不渲染，改用 🔹 等 emoji 项目符号"))
+            errs.append((no, "E1", "Markdown 无序列表（- * +）：X 不渲染，改用「·」「1）」或 🔹 等符号"))
         elif OL_RE.match(ln):
-            errs.append((no, "E2", "Markdown 有序列表（1.）：改用 1️⃣ 2️⃣ 3️⃣ 或 ① ② ③"))
+            errs.append((no, "E2", "Markdown 有序列表（1. / 1)）：改用全角「1）」、① ② ③ 或 1️⃣ 2️⃣ 3️⃣"))
         if HEADING_RE.match(ln):
             errs.append((no, "E3", "Markdown 标题（#）：X 不渲染，改成普通文字行"))
         if BOLD_RE.search(ln):
@@ -194,8 +215,13 @@ def lint_post(start: int, lines: list[str], long_mode: bool, duanzi: bool = Fals
         # 两个列表项之间只有空行（段子体行间空行）仍算同一个列表
         return any(lines[k - start].strip() for k in range(a + 1, b))
 
+    def _family(sym: str) -> str:
+        return "num" if (sym.endswith("\u20e3") or re.fullmatch(CIRCLED + "|\U0001F51F|" + PLAIN_NUM, sym)) else sym
+
     for item in bullets:
-        if cur and item[0] - cur[-1][0] > 1 and _gap_has_text(cur[-1][0], item[0]):
+        gap = cur and item[0] - cur[-1][0] > 1
+        # 空行隔开、符号体系不同的，算两个列表（如先「1）」再「·」）
+        if gap and (_gap_has_text(cur[-1][0], item[0]) or _family(item[2]) != _family(cur[-1][2])):
             blocks.append(cur)
             cur = []
         cur.append(item)
@@ -207,7 +233,7 @@ def lint_post(start: int, lines: list[str], long_mode: bool, duanzi: bool = Fals
             warns.append((blk[0][0], "W2", f"列表缩进超过 {MAX_LEVELS} 层（出现 {len(widths)} 种缩进）"))
         for w in widths:
             kinds = {s for _, ww, s in blk if ww == w}
-            numbered = all(k.endswith("\u20e3") or re.fullmatch(CIRCLED + "|\U0001F51F", k) for k in kinds)
+            numbered = all(k.endswith("\u20e3") or re.fullmatch(CIRCLED + "|\U0001F51F|" + PLAIN_NUM, k) for k in kinds)
             if len(kinds) > 1 and not numbered and not kinds <= CONTRAST_PAIR:
                 warns.append((blk[0][0], "W3", "同一层级混用了多种项目符号：" + " ".join(sorted(kinds))))
         top = [no for no, w, _ in blk if w == widths[0]]
@@ -237,15 +263,16 @@ def lint_post(start: int, lines: list[str], long_mode: bool, duanzi: bool = Fals
         hits = sorted({m.group(0) for m in AI_RE.finditer(text_all)})
         if hits:
             warns.append((start, "W9", "疑似 AI 套话：" + " / ".join(hits[:4]) + "；改成平实说法或删掉"))
-        if NUM_FACT_RE.search(text_all) and not (URL_RE.search(text_all) or SOURCE_RE.search(text_all)):
-            warns.append((start, "W10", "帖子里有数字/数据，但没有来源链接或「来源：」行"))
+        first = next((ln for ln in lines if ln.strip()), "")
+        if x_weight(first) > HOOK_MAX_WEIGHT:
+            warns.append((start, "W10", f"首行加权字数约 {x_weight(first)}，超过 {HOOK_MAX_WEIGHT}（约 30 个汉字）：首行做钩子，先给结论或最扎眼的数字"))
         w = x_weight("\n".join(ln for ln in lines if not PLACEHOLDER_RE.match(ln)))
         if w > WEIGHT_LIMIT:
             warns.append((start, "W7", f"加权字数约 {w}，超过 {WEIGHT_LIMIT}（约 140 个汉字）；长帖请确认账号支持，或精简/拆帖"))
     return errs, warns
 
 
-def fix_lines(lines: list[str], long_mode: bool) -> list[str]:
+def fix_lines(lines: list[str], long_mode: bool, style: str = "emoji") -> list[str]:
     """把 Markdown 列表/标题/加粗/引用/链接改成 X 纯文本写法；表格与其他情况不自动处理。"""
     out, in_fence = [], False
     counters: dict[int, int] = {}
@@ -267,12 +294,16 @@ def fix_lines(lines: list[str], long_mode: bool) -> list[str]:
         o = OL_RE.match(s) if not m else None
         if m:
             level = 0 if indent_width(m.group(1)) == 0 else 1
-            s = ("  " * level) + ("🔹 " if level == 0 else "▫️ ") + m.group(3)
+            if style == "plain":
+                s = ("  " * level) + "· " + m.group(3)
+            else:
+                s = ("  " * level) + ("🔹 " if level == 0 else "▫️ ") + m.group(3)
         elif o:
             w = indent_width(o.group(1))
             level = 0 if w == 0 else 1
             counters[level] = counters.get(level, 0) + 1
-            s = ("  " * level) + keycap_for(int(o.group(2))) + " " + o.group(3)
+            mark = f"{int(o.group(2))}）" if style == "plain" else keycap_for(int(o.group(2))) + " "
+            s = ("  " * level) + mark + o.group(3)
         else:
             if not ln.strip():
                 counters.clear()
@@ -288,11 +319,12 @@ def fix_lines(lines: list[str], long_mode: bool) -> list[str]:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="X 纯文本帖检查：无 Markdown 列表/标题/加粗，列表用 emoji 项目符号")
+    ap = argparse.ArgumentParser(description="X 纯文本帖检查：无 Markdown 列表/标题/加粗，正文不含链接/来源行/配图说明")
     ap.add_argument("files", nargs="+", help="X 稿文件，- 表示标准输入")
     ap.add_argument("--long", action="store_true", help="长文兜底稿模式（X发布稿.txt）：整份当一篇，不查话题标签位置和字数")
     ap.add_argument("--fix", action="store_true", help="自动改写 Markdown 写法为 X 写法（需 --out；只处理单个文件）")
     ap.add_argument("--out", help="--fix 的输出文件")
+    ap.add_argument("--style", choices=["emoji", "plain"], default="emoji", help="--fix 的列表写法：emoji（🔹 / 1️⃣，默认）或 plain（· / 1））")
     ap.add_argument("--duanzi", action="store_true", help="段子体模式：出现任何 emoji（含列表符号、人设点缀）记 W13")
     ap.add_argument("--strict", action="store_true", help="警告也算失败")
     args = ap.parse_args()
@@ -303,7 +335,7 @@ def main() -> int:
             return 2
         src = args.files[0]
         text = sys.stdin.read() if src == "-" else Path(src).read_text(encoding="utf-8-sig")
-        fixed = "\n".join(fix_lines(text.splitlines(), args.long)) + "\n"
+        fixed = "\n".join(fix_lines(text.splitlines(), args.long, args.style)) + "\n"
         Path(args.out).write_text(fixed, encoding="utf-8")
         print(f"已写出 {args.out}")
         args.files = [args.out]

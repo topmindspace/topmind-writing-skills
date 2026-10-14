@@ -5,13 +5,18 @@
 用法：
     python3 format_text.py 原文.txt --mode duanzi              # 段子体：每句一行，行与行之间空一行；完全不用 emoji，分点只去掉符号
     python3 format_text.py 原文.txt --mode duanzi --split      # 同上，并按句末标点（。！？!?）拆句
-    python3 format_text.py 原文.txt --mode short               # 短文体：合并多余空行，Markdown 列表 → emoji 列表
-    python3 format_text.py 原文.txt --mode short --title-emoji 🆕 --open 🐔 --close 🌱   # 点缀只用于短文体
+    python3 format_text.py 原文.txt --mode short               # 短文体：合并多余空行，Markdown 列表 → 「·」/「1）」纯文本列表
+    python3 format_text.py 原文.txt --mode short --bullets emoji   # Markdown 列表 → 🔹 / 1️⃣ emoji 列表（emoji 不强制，可选）
+    python3 format_text.py 原文.txt --mode short --title-emoji 🆕 --open 🐔 --close 🌱   # 点缀只用于短文体，可选
+    python3 format_text.py 原文.txt --mode short --links-out 链接.txt   # 另存从正文里拿出来的链接 / 来源行 / 配图行
     python3 format_text.py 原文.txt --mode duanzi --out 段子.txt
     cat 原文.txt | python3 format_text.py - --mode duanzi
 
 规则见 references/emoji-system.md 与 references/x-post-format.md。
-每次输出前做「原文保真」校验：去掉空白、列表符号和新增的 emoji 后，与原文逐字一致；不一致即报错（退出码 1）。
+交付规约（x-delivery-contract.md）：正文是一段可直接复制的纯文本，链接、原图、配图另发。
+所以两种模式都会把 URL、来源行（来源：/ 出处：/ 原帖：…）、配图行（配图：/ [图1]…）从正文里拿出来，
+打印到标准错误的「另发」清单里（或用 --links-out 写进文件），正文里不留。
+每次输出前做「原文保真」校验：去掉空白、列表符号、emoji 和上述拿出来的链接 / 来源 / 配图行后，与原文逐字一致；不一致即报错（退出码 1）。
 只用 Python 标准库。
 """
 from __future__ import annotations
@@ -45,12 +50,33 @@ def skeleton(text: str) -> str:
             if o:
                 ln = o.group(3)
         out.append(ln)
-    s = "".join(re.sub(r"^\s*(?:[0-9]\uFE0F?\u20E3|\U0001F51F)", "", ln) for ln in out)
+    s = "".join(re.sub(r"^\s*(?:[0-9]\uFE0F?\u20E3|\U0001F51F|\d{1,2}）|·)", "", ln) for ln in out)
     s = EMOJI_RE.sub("", s)
     return re.sub(r"\s+", "", s)
 
 
-BULLET_RE = re.compile(r"^\s*(?:[0-9]\uFE0F?\u20E3|\U0001F51F|[\u2460-\u2473]|[🔹🔸▫▪•✅❌📌➡→])")
+BULLET_RE = re.compile(r"^\s*(?:[0-9]\uFE0F?\u20E3|\U0001F51F|[\u2460-\u2473]|\d{1,2}）|[🔹🔸▫▪•·✅❌📌➡→])")
+URL_RE = re.compile(r"https?://\S+")
+SOURCE_LINE_RE = re.compile(r"^\s*(?:来源|信源|信息来源|出处|原帖|原文|原文链接|链接|参考|via|source)\s*[:：]", re.I)
+IMAGE_LINE_RE = re.compile(r"^\s*(?:(?:配图|原图|图注|图片|插图)\s*[:：]|\[(?:图|图片|配图|视频)[^\]]*\]|【配图[^】]*】)")
+
+
+def split_links(text: str) -> tuple[str, list[str]]:
+    """把来源行、配图行整行拿出；其余行里的 URL 摘出来。返回 (正文, 另发清单)。"""
+    body, extra = [], []
+    for ln in text.splitlines():
+        if SOURCE_LINE_RE.match(ln) or IMAGE_LINE_RE.match(ln):
+            extra.append(ln.strip())
+            continue
+        urls = URL_RE.findall(ln)
+        if urls:
+            extra += urls
+            ln = URL_RE.sub("", ln).rstrip()
+            ln = re.sub(r"[ \t]{2,}", " ", ln)
+            if not ln.strip() or re.fullmatch(r"\s*[:：（(）)\-—]*\s*", ln):
+                continue
+        body.append(ln)
+    return "\n".join(body) + "\n", extra
 
 
 def strip_emoji(s: str) -> str:
@@ -59,16 +85,22 @@ def strip_emoji(s: str) -> str:
     return re.sub(r"[ \t]{2,}", " ", s).strip()
 
 
-def to_bullet(ln: str) -> str | None:
-    """Markdown 列表行 → emoji 列表行（一级 🔹 / 1️⃣，二级缩进 ▫️）；不是列表行返回 None。"""
+def to_bullet(ln: str, style: str = "plain") -> str | None:
+    """Markdown 列表行 → X 纯文本列表行；不是列表行返回 None。
+    plain：无序「· 」、有序「1）」；emoji：一级 🔹 / 1️⃣，二级缩进 ▫️。"""
     m = UL_RE.match(ln)
     if m:
-        return ("  ▫️ " if len(m.group(1).expandtabs(2)) else "🔹 ") + m.group(2)
+        lvl = 1 if len(m.group(1).expandtabs(2)) else 0
+        if style == "plain":
+            return ("  " * lvl) + "· " + m.group(2)
+        return ("  ▫️ " if lvl else "🔹 ") + m.group(2)
     o = OL_RE.match(ln)
     if o:
         n = int(o.group(2))
         lvl = 1 if len(o.group(1).expandtabs(2)) else 0
-        return ("  " * lvl) + (KEYCAPS[n] if n < len(KEYCAPS) else f"{n}.") + " " + o.group(3)
+        if style == "plain":
+            return ("  " * lvl) + f"{n}）" + o.group(3)
+        return ("  " * lvl) + (KEYCAPS[n] if n < len(KEYCAPS) else f"{n}）") + " " + o.group(3)
     return None
 
 
@@ -95,7 +127,7 @@ def duanzi(text: str, split: bool) -> list[str]:
     return out[:-1]
 
 
-def short(text: str) -> list[str]:
+def short(text: str, style: str = "plain") -> list[str]:
     out: list[str] = []
     blank = False
     for raw in text.splitlines():
@@ -106,7 +138,7 @@ def short(text: str) -> list[str]:
             blank = True
             continue
         blank = False
-        b = to_bullet(ln)
+        b = to_bullet(ln, style)
         ln = b if b is not None else ln.strip()
         out.append(ln)
     while out and not out[-1]:
@@ -123,10 +155,10 @@ def decorate(lines: list[str], title_emoji: str | None, open_e: str | None, clos
         lines[0] = f"{lines[0]} {open_e}"
     if close_e:
         idx = len(lines) - 1
-        # 来源行、话题标签行之前的最后一句
-        while idx > 0 and (lines[idx].startswith(("#", "来源", "出处", "http")) or not lines[idx].strip()):
+        # 话题标签行之前的最后一句
+        while idx > 0 and (lines[idx].startswith("#") or not lines[idx].strip()):
             idx -= 1
-        if re.match(r"^\s*(?:🔹|▫️|•|▪|✅|❌|📌|[0-9]\uFE0F?\u20E3|🔟)", lines[idx]):
+        if re.match(r"^\s*(?:🔹|▫️|•|·|▪|✅|❌|📌|[0-9]\uFE0F?\u20E3|🔟|\d{1,2}）)", lines[idx]):
             lines[idx + 1:idx + 1] = ["", close_e]  # 列表项里不放人设点缀，单独成行
         else:
             lines[idx] = f"{lines[idx]} {close_e}"
@@ -141,6 +173,8 @@ def main() -> int:
     ap.add_argument("--title-emoji", help="短文体：标题 emoji（须与标题关键词对应）")
     ap.add_argument("--open", dest="open_e", help="开头人设点缀，如 🐔 🐱")
     ap.add_argument("--close", dest="close_e", help="结尾人设点缀，如 🌱 🌸")
+    ap.add_argument("--bullets", choices=["plain", "emoji"], default="plain", help="短文体 Markdown 列表改写方式：plain（· / 1），默认）或 emoji（🔹 / 1️⃣）")
+    ap.add_argument("--links-out", help="把从正文拿出的链接 / 来源行 / 配图行写进这个文件（另发用）")
     ap.add_argument("--out", help="输出文件；省略则打印到标准输出")
     args = ap.parse_args()
 
@@ -156,13 +190,18 @@ def main() -> int:
     if args.mode == "duanzi" and (args.title_emoji or args.open_e or args.close_e):
         print("错误：段子体完全不用 emoji，不接受 --title-emoji / --open / --close（点缀只用于 --mode short）", file=sys.stderr)
         return 2
-    lines = duanzi(text, args.split) if args.mode == "duanzi" else short(text)
+    body, extra = split_links(text)
+    lines = duanzi(body, args.split) if args.mode == "duanzi" else short(body, args.bullets)
     lines = decorate(lines, args.title_emoji, args.open_e, args.close_e)
     result = "\n".join(lines) + "\n"
 
-    if skeleton(result) != skeleton(text):
+    if skeleton(result) != skeleton(body):
         print("错误：原文保真校验未通过（格式化改动了文字）", file=sys.stderr)
         return 1
+    if extra:
+        if args.links_out:
+            Path(args.links_out).write_text("\n".join(extra) + "\n", encoding="utf-8")
+        print("另发（不放进正文）：\n" + "\n".join(extra), file=sys.stderr)
     if args.out:
         Path(args.out).write_text(result, encoding="utf-8")
         print(f"已写出 {args.out}（原文保真校验通过）", file=sys.stderr)

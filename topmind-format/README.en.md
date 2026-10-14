@@ -2,9 +2,9 @@
 
 **[中文](./README.md)** | English
 
-Lays out existing text for X: **duanzi mode** (one sentence per line, a blank line between every line, no emoji at all, bullets without symbols) or **short-post mode** (paragraphing, emoji bullets, a keyword-matched title emoji, and the account's chicken/cat/plant motif at the start or end). Layout only — the words are never changed; a fidelity check enforces it.
+Lays out existing text for X: **duanzi mode** (one sentence per line, a blank line between every line, no emoji at all, bullets without symbols) or **short-post mode** (paragraphing; lists become 「·」/「1）」 or, optionally, emoji bullets; title emoji and motifs are optional). Layout only — the words are never changed; a fidelity check enforces it. Links, source lines and image notes are pulled out of the body so it stays one copy-ready plain-text block; links and images are sent separately.
 
-- Version: **v0.1.3** (ships with `@topmindspace/topmind-writing-skills@0.8.35`)
+- Version: **v0.1.4** (ships with `@topmindspace/topmind-writing-skills@0.8.36`)
 
 ## Install
 
@@ -16,7 +16,8 @@ npx @topmindspace/topmind-writing-skills install topmind-format
 
 ```bash
 python3 scripts/format_text.py input.txt --mode duanzi --split   # duanzi rejects --open / --close / --title-emoji
-python3 scripts/format_text.py input.txt --mode short --title-emoji 🆕 --open 🐔
+python3 scripts/format_text.py input.txt --mode short --links-out links.txt   # links / source lines saved to send separately
+python3 scripts/format_text.py input.txt --mode short --bullets emoji --title-emoji 🆕   # emoji optional
 python3 scripts/lint_x_post.py output.txt
 ```
 

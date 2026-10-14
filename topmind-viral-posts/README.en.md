@@ -4,7 +4,7 @@
 
 Short, real, hooked — read in 3 seconds, impossible not to like/comment/follow. 18 post types plus hook × body × closer combinations, summarised from common high-engagement writing patterns in the Chinese X community (all examples are original). Posts default to "duanzi" layout (one sentence per line, a blank line between lines), original images first, plus a hashtag set and classification tags. Existing text → `topmind-format`.
 
-- Version: **v0.3.10** (ships with `@topmindspace/topmind-writing-skills@0.8.35`)
+- Version: **v0.3.11** (ships with `@topmindspace/topmind-writing-skills@0.8.36`)
 
 ## Install
 
@@ -46,11 +46,11 @@ See [references/tags-and-topics.md](./references/tags-and-topics.md) for the ful
 
 ## Plain-text formatting for X
 
-X does not render Markdown, so X drafts never use `- ` lists, `#` headings or `**bold**`. Duanzi posts use no emoji at all: bullets get no symbol, one item per line separated by blank lines; only the short-post version of hot-news posts uses emoji bullets. When a WeChat draft is turned into an X draft, only the layout may change; the content stays the same. See [references/x-post-format.md](./references/x-post-format.md).
+X does not render Markdown, so X drafts never use `- ` lists, `#` headings or `**bold**`. Duanzi posts use no emoji at all: bullets get no symbol, one item per line separated by blank lines; the short-post version of hot-news posts follows short-post rules (emoji or plain markers like 「1）」/「·」; emoji optional). Each post body is one copy-ready plain-text block; **links (including sources), original images and generated images are sent separately**. When a WeChat draft is turned into an X draft, only the layout may change; the content stays the same. See [references/x-post-format.md](./references/x-post-format.md).
 
 ```bash
 # Check an X draft: no Markdown list/heading/bold, hashtags on the last line; add --fix --out to rewrite
-python3 scripts/lint_x_post.py x-draft.txt --duanzi   # W13 on any emoji in a duanzi post
+python3 scripts/lint_x_post.py x-draft.txt --duanzi   # W13 on any emoji in a duanzi post; E10–E12 on URLs, source lines or image notes in the body
 ```
 
 ## Images

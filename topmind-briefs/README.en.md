@@ -3,12 +3,11 @@
 **[中文](./README.md)** | English
 
 One topic, then stop. Data-driven short posts: rankings, paper explainers, product launches.
-A brief is not a long-form article — **no HTML by default**: the X version is one copy-ready plain-text block
-(sensible paragraphing, restrained emoji, source links); the WeChat version is ~300–800 Chinese characters of Markdown.
-Original facts, images and quotes come first; a cover is optional when no original image exists. Every delivery lists
-each source's name, publish time and link.
+A brief is not a long-form article — **no HTML by default**: the workflow is verify first-hand sources → find the original post and images → write → lay out.
+The X version is one copy-ready plain-text block (emoji optional); **links (including sources), original images and any generated images are sent separately**, never mixed into the body.
+The WeChat version is ~300–800 Chinese characters of Markdown. With no original image it asks before generating one.
 
-- Version: **v0.2.18** (ships with `@topmindspace/topmind-writing-skills@0.8.35`)
+- Version: **v0.2.19** (ships with `@topmindspace/topmind-writing-skills@0.8.36`)
 
 ## Install
 
@@ -34,8 +33,8 @@ See [SKILL.md](./SKILL.md) for the workflow and [references/emoji-system.md](./r
 
 ## X formatting and hashtags
 
-X does not render Markdown, so the X version never uses `- ` lists, `#` headings or `**bold**`. Lists use emoji bullets
-(🔹 items, ▫️ sub-items, 1️⃣ steps, ✅/❌ contrasts); one style per post, one item per line, at most two levels.
+X does not render Markdown, so the X version never uses `- ` lists, `#` headings or `**bold**`. Lists may use emoji bullets
+(🔹 items, 1️⃣ steps, ✅/❌ contrasts) or plain-text markers (「1）」, 「·」, 【headings】); emoji are optional; one style per post, at most two levels.
 The WeChat draft keeps Markdown lists; the X draft is derived from it and only the layout may differ.
 Each X version ends with 0–2 suggested hashtags on their own last line (none on the WeChat version). See
 [references/x-post-format.md](./references/x-post-format.md) and [references/platform-specs.md](./references/platform-specs.md).

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.19 (2026-10-14)
+
+- 变更：工作流改为「信源 → 原帖原图 → 内容 → 排版」；X 正文一段可复制纯文本，不含 URL 与来源行，链接 / 原图另发；emoji 不强制，分点可用「1）」「·」【小标题】
+- 优化：示例与 platform-specs、style-guide 按新规约重写；去 AI 味 + 吸引力清单并入 writing-principles
+
 ## 0.2.18 (2026-10-14)
 
 - 更正：共享规约改为「短文分点用 emoji 列表符号、段子完全不用 emoji」；`emoji-system.md` 标明只适用于短文体；`lint_x_post.py` 新增 `--duanzi`（W13）

@@ -1,3 +1,19 @@
+## [0.8.36] - 2026-10-14
+
+> 根包 0.8.35 → **0.8.36**（patch）；技能版本：topmind-briefs 0.2.18 → 0.2.19、topmind-format 0.1.3 → 0.1.4、topmind-viral-posts 0.3.10 → 0.3.11、
+> topmind-wechat-post 0.3.10 → 0.3.11、topmind-x-article 0.4.16 → 0.4.17；topmind-cover、topmind-poster 不变。
+
+### 变更（交付规约重写）
+
+- **短文工作流顺序**：核实信源（一手来源，厂商口径 / 传言标注）→ 找原帖原图 → 写内容 → 排版；排版目标是方便阅读（合理分段、合理列表）。
+- **短文 emoji 不强制**：撤销 0.8.35「短文分点必须用 emoji」；分点可用 emoji，也可用「1）」「·」【小标题】，只禁用 `- ` `* ` `1. `；用 emoji 时必须合理并遵循 TopMind 体系。段子仍完全不用 emoji。
+- **交付**：X 短文 / 段子的正文是一段可直接复制的纯文本；链接（含来源 URL）、原图、配图另发，聊天里正文一条、链接一条、图片一条。撤销「来源：名称 URL 行属于正文」；X 长文与公众号长文可保留文内链接（写明适用范围）。
+- **`lint_x_post.py`**：新增 E10（正文有 URL）、E11（来源行）、E12（配图说明 / 图片占位），`--long` 不查；W10 改为「首行过长不像钩子」（原「有数据缺来源」随来源另发而撤销）；W9 套话扩充（「总的来说」「不仅…更…」、三连「更×、更×、更×」、空泛形容、升华结尾等）；「1）」「·」识别为列表符号；`--fix --style plain` 改写成「·」「1）」。
+- **`format_text.py`**：短文默认把 Markdown 列表改成「·」「1）」，`--bullets emoji` 改 🔹 / 1️⃣；两种模式都把 URL、来源行、配图行拿出正文，打印「另发」清单，`--links-out` 另存。
+- **去 AI 味 + 吸引力**：合并进 `writing-principles.md` 第五点五节（递进套句、过度对称、空洞断言等；首行钩子、具体数字和场景、人话、有观点的收尾）。
+- **对齐清理**：briefs / viral-posts / format / x-article / wechat-post 的 description 与正文；`x-post-format.md`、`emoji-system.md`、`x-layout-patterns.md`、briefs `platform-specs.md` / `style-guide.md` / `examples.md`、viral `patterns.md` / `tags-and-topics.md` 里的来源行与强制 emoji 表述全部改掉；各 README。
+- 评测 66 → 70 条并改写 12 条期望；format 负向测试新增链接拿出、E10–E12、`--long` 豁免、零 emoji 短文通过、W9 / W10。
+
 ## [0.8.35] - 2026-10-14
 
 > 根包 0.8.34 → **0.8.35**（patch）；技能版本：topmind-briefs 0.2.17 → 0.2.18、topmind-format 0.1.2 → 0.1.3、topmind-viral-posts 0.3.9 → 0.3.10、

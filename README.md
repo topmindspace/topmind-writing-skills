@@ -33,7 +33,7 @@ npx @topmindspace/topmind-writing-skills install topmind-x-article
 
 ### topmind-briefs · 干货短文
 
-公众号 + X 双平台干货短文：一件事讲透（数据榜单 / 论文解读 / 新品速递 / 机制讲解）。短文不是长文，**默认不出 HTML**：X 版是一段可直接复制的纯文本（分段换行、克制的 emoji、来源链接、0–2 个话题标签），公众号版约 300–800 字 Markdown。尊重原始信息、原图、原文；按 X 交付规约交付：正文单独一块可直接复制，信源（含发布时间）、1–2 张原图、说明各自另列；没有原图时主动询问是否配图（可选 topmind-cover），不擅自生图。只起草不代发。
+公众号 + X 双平台干货短文：一件事讲透（数据榜单 / 论文解读 / 新品速递 / 机制讲解）。短文不是长文，**默认不出 HTML**：工作流按「核实一手信源 → 找原帖原图 → 写内容（去 AI 味、首行钩子）→ 排版（合理分段、合理列表）」；X 版交付一段可直接复制的纯文本（emoji 可选、0–2 个话题标签），**链接（含来源与发布时间）、1–2 张原图、配图另发**，不混进正文；公众号版约 300–800 字 Markdown；没有原图时主动询问是否配图（可选 topmind-cover），不擅自生图。只起草不代发。
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-briefs
@@ -41,7 +41,7 @@ npx @topmindspace/topmind-writing-skills install topmind-briefs
 
 ### topmind-viral-posts · X 引流段子/爆款短篇
 
-基于对 X 中文区常见高互动写法的归纳，提供 18 类型模板 + 钩子×主体×收尾组合玩法（示例均为自编），默认**段子体**（一句一行、行与行之间空一行）、口语化、带互动钩子，配图原图优先（官方 / 第三方 / 自己的后台截图），没有原图时先问是否配图、同意后走 topmind-cover 出图，话题标签（1–3 个）在正文末行，内部分类标签另列；段子**完全不用 emoji**，分点不加符号、一条一行靠行间空行区分；每条正文单独一块。
+基于对 X 中文区常见高互动写法的归纳，提供 18 类型模板 + 钩子×主体×收尾组合玩法（示例均为自编），默认**段子体**（一句一行、行与行之间空一行）、口语化、带互动钩子，配图原图优先（官方 / 第三方 / 自己的后台截图），没有原图时先问是否配图、同意后走 topmind-cover 出图，话题标签（1–3 个）在正文末行，内部分类标签另列；段子**完全不用 emoji**，分点不加符号、一条一行靠行间空行区分；每条交付一段可直接复制的纯文本，链接、原图、配图另发。
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-viral-posts
@@ -51,7 +51,7 @@ npx @topmindspace/topmind-writing-skills install topmind-viral-posts
 
 ### topmind-format · X 纯文本格式化
 
-用户贴一段现成文字：**转段子** → 每句一行、行间空一行，去掉所有 emoji 与列表符号；**格式化成短文** → 合理分段换行、列表改 emoji、标题 emoji 对应关键词、开头结尾加鸡/猫/植物人设点缀（🐔 🐱 🌱 🌸）。只动排版不改字，`format_text.py` 自带原文保真校验。
+用户贴一段现成文字：**转段子** → 每句一行、行间空一行，去掉所有 emoji 与列表符号；**格式化成短文** → 合理分段换行，列表改「·」「1）」或 emoji，标题 emoji 与人设点缀可选。只动排版不改字，`format_text.py` 自带原文保真校验；原文里的链接、来源行、配图行拿出来另发。
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-format
@@ -63,12 +63,12 @@ npx @topmindspace/topmind-writing-skills install topmind-format
 
 | 文档 | 管什么 |
 |---|---|
-| `x-delivery-contract.md`（必读必守） | 短文分点必须用 emoji 列表符号，段子完全不用 emoji（分点不加符号），都禁用 `- ` `1. `；正文单独一个可直接复制的块（含来源行与话题标签），信源、原图、配图建议、内部标签、说明各自另列；多条帖子每条一块 |
+| `x-delivery-contract.md`（必读必守） | 短文工作流：信源 → 原帖原图 → 内容 → 排版；短文 emoji 不强制（分点可用 emoji 或「1）」「·」【小标题】），段子完全不用 emoji，都禁用 `- ` `1. `；X 短文 / 段子的正文是一段可直接复制的纯文本（话题标签在末行），**链接（含来源）、原图、配图另发**；X 长文与公众号长文可保留文内链接 |
 | `x-post-format.md` | 不用 Markdown、列表符号、留白、来源、骨架、配图、公众号稿→X 稿 |
-| `emoji-system.md` | TopMind emoji 体系唯一出处（只用于短文体）：人设点缀 🐔 🐱 🌱 0–2 个只放首尾；标题 emoji 0–1 个对上关键词；列表符号一帖一套 |
+| `emoji-system.md` | TopMind emoji 体系唯一出处（只用于短文体，且不强制）：人设点缀 🐔 🐱 🌱 0–2 个只放首尾；标题 emoji 0–1 个对上关键词；列表符号一帖一套 |
 | `x-layout-patterns.md` | 参考帖拆出的版式规律（首行给结论、列表引导语、【小标题】分节等） |
 
-检查：`lint_x_post.py`（E1–E9 Markdown 残留；W12 正文混入信源 / 配图 / 说明 / 内部标签；`--duanzi` 时 W13 段子里出现 emoji）。
+检查：`lint_x_post.py`（E1–E9 Markdown 残留；E10–E12 正文有 URL / 来源行 / 配图说明；W9 AI 套话、W10 首行太长不像钩子、W12 混入说明 / 内部标签；`--duanzi` 时 W13 段子里出现 emoji；`--long` 长文不查 E10–E12）。去 AI 味与吸引力清单在 `writing-principles.md` 第五点五节。
 
 ### topmind-cover · 封面配图生成
 
@@ -102,15 +102,15 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 
 | 技能 | 版本 | 做什么 |
 |------|------|--------|
-| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.10** | 公众号文章全生命周期：交付包、审校改写、质量三关、微信内联排版与发布清单 |
-| [`topmind-x-article`](./topmind-x-article/) | **0.4.16** | X 长文一键发布：Markdown 原稿 → 一键复制 HTML（含配图/提示词复制、图片点击放大）/ 纯文本兜底 + 封面图 + 发布清单 |
+| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.11** | 公众号文章全生命周期：交付包、审校改写、质量三关、微信内联排版与发布清单 |
+| [`topmind-x-article`](./topmind-x-article/) | **0.4.17** | X 长文一键发布：Markdown 原稿 → 一键复制 HTML（含配图/提示词复制、图片点击放大）/ 纯文本兜底 + 封面图 + 发布清单 |
 | [`topmind-cover`](./topmind-cover/) | **0.4.8** | 文章封面配图（X / 公众号共用，X 主尺寸 1500×600 / 5:2）：震撼醒目主题突出；22 种封面风格库 + X 短文 16:9 封面场景 + 12 种标题花式 + 55 张示例图（22 种风格 × 2 尺寸 + 11 张变体样张） + 1 张风格总览图 |
-| [`topmind-briefs`](./topmind-briefs/) | **0.2.18** | 干货短文（公众号 + X 双平台）：一件事讲透，数据榜单/论文解读/新品速递；X 版一段纯文本（默认不出 HTML）+ emoji 列表 + 来源链接 + 话题标签建议；正文单独成块，信源 / 原图另列，无原图先询问配图 |
-| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.10** | X 引流段子/爆款短篇：18 大类型模板 + 组合玩法，段子体（行间空行，零 emoji，分点不加符号）、每条正文单独成块、话题标签在正文、分类标签另列；无原图先询问再走 topmind-cover |
-| [`topmind-format`](./topmind-format/) | **0.1.3** | X 纯文本格式化：转段子（行间空行，零 emoji）/ 格式化成短文（分段 + emoji 体系），只动排版不改字，带原文保真校验；正文单独成块 |
+| [`topmind-briefs`](./topmind-briefs/) | **0.2.19** | 干货短文（公众号 + X 双平台）：一件事讲透，数据榜单/论文解读/新品速递；信源 → 原图 → 内容 → 排版；X 版交付一段可复制纯文本（默认不出 HTML，emoji 可选，去 AI 味），链接 / 原图 / 配图另发，无原图先询问配图 |
+| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.11** | X 引流段子/爆款短篇：18 大类型模板 + 组合玩法，段子体（行间空行，零 emoji，分点不加符号）、每条一段可复制纯文本、话题标签在末行，链接 / 原图另发、分类标签另列；无原图先询问再走 topmind-cover |
+| [`topmind-format`](./topmind-format/) | **0.1.4** | X 纯文本格式化：转段子（行间空行，零 emoji）/ 格式化成短文（分段 + 合理列表，emoji 可选），只动排版不改字，带原文保真校验；交付一段可复制纯文本，链接 / 原图另发 |
 | [`topmind-poster`](./topmind-poster/) | **0.1.5** | HTML+CSS → 高清长图 / 海报 / 信息图 PNG：无头 Chrome 2× 截图 + 自动裁白；「一段一图」分段图批量出图（生成器 + 渲染器） |
 
-安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.35**（整仓同 tag 发版）。
+安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.36**（整仓同 tag 发版）。
 
 ### 怎么选、怎么组合
 

@@ -130,10 +130,21 @@ def main() -> None:
             check("段子体：原文 emoji 全部去掉", "🐱" not in out and "😂" not in out, repr(out[:200]))
             md = t / "md.txt"
             md.write_text("三处变化\n\n\n- 更快\n- 更省\n1. 先装\n\n#AI\n", encoding="utf-8")
-            r = run_quiet([str(fmt), str(md), "--mode", "short", "--title-emoji", "🆕"], t)
-            check("短文体：Markdown 列表 → emoji 列表，标题 emoji 在行首",
+            r = run_quiet([str(fmt), str(md), "--mode", "short"], t)
+            check("短文体默认：Markdown 列表 → 「·」/「1）」纯文本列表，不强加 emoji",
+                  r.returncode == 0 and "· 更快" in r.stdout and "1）先装" in r.stdout
+                  and "🔹" not in r.stdout and r.stdout.startswith("三处变化") and "\n\n\n" not in r.stdout, r.stdout[-200:])
+            r = run_quiet([str(fmt), str(md), "--mode", "short", "--bullets", "emoji", "--title-emoji", "🆕"], t)
+            check("短文体 --bullets emoji：列表 → 🔹 / 1️⃣，标题 emoji 在行首",
                   r.returncode == 0 and "🔹 更快" in r.stdout and "1️⃣ 先装" in r.stdout
-                  and r.stdout.startswith("🆕 三处变化") and "\n\n\n" not in r.stdout, r.stdout[-200:])
+                  and r.stdout.startswith("🆕 三处变化"), r.stdout[-200:])
+            lk = t / "lk.txt"
+            lk.write_text("新版发布\n补全更快了。\n来源：官方日志 https://example.com/log\n详情见官网 https://example.com\n[图1] 截图\n#AI\n", encoding="utf-8")
+            r = run_quiet([str(fmt), str(lk), "--mode", "short", "--links-out", str(t / "links.txt")], t)
+            links = (t / "links.txt").read_text(encoding="utf-8") if (t / "links.txt").exists() else ""
+            check("链接 / 来源行 / 配图行拿出正文、另存另发",
+                  r.returncode == 0 and "http" not in r.stdout and "来源：" not in r.stdout and "[图1]" not in r.stdout
+                  and "https://example.com/log" in links and "https://example.com" in links and "[图1]" in links, r.stdout + links)
             dl = t / "dl.txt"
             dl.write_text("这周就三步：\n- 早上回评论\n- 中午发原创。真的有用！\n1. 睡前回访\n", encoding="utf-8")
             r = run_quiet([str(fmt), str(dl), "--mode", "duanzi", "--split"], t)
@@ -144,6 +155,22 @@ def main() -> None:
             dz.write_text("今天打卡\n\n🔹 回评论\n\n冲 🐔\n", encoding="utf-8")
             r = run_quiet([str(lint), str(dz), "--duanzi"], t)
             check("lint --duanzi：段子出现 emoji 报 W13", "W13" in (r.stdout + r.stderr), (r.stdout + r.stderr)[-200:])
+            src2 = t / "src2.txt"
+            src2.write_text("新版发布\n\n来源：官方 https://example.com/a\n\n配图：官方截图\n\n#AI\n", encoding="utf-8")
+            r = run_quiet([str(lint), str(src2)], t)
+            out2 = r.stdout + r.stderr
+            check("lint：正文有 URL / 来源行 / 配图说明报 E10 / E11 / E12（退出码 1）",
+                  r.returncode == 1 and "E10" in out2 and "E11" in out2 and "E12" in out2, out2[-300:])
+            r = run_quiet([str(lint), str(src2), "--long"], t)
+            check("lint --long：长文允许文内链接，不报 E10–E12", "E10" not in (r.stdout + r.stderr) and "E11" not in (r.stdout + r.stderr), (r.stdout + r.stderr)[-200:])
+            plain = t / "plain.txt"
+            plain.write_text("某编辑器 3.0：补全延迟压到 200ms 以内\n\n这次改了三处：\n\n1）补全更快\n2）多文件修改\n3）免费 50 次\n\n· 适合小脚本\n· 大仓库待测\n\n#AI编程\n", encoding="utf-8")
+            r = run_quiet([str(lint), str(plain), "--strict"], t)
+            check("lint：零 emoji、「1）」「·」列表的短文完全通过", r.returncode == 0, (r.stdout + r.stderr)[-300:])
+            ai = t / "ai.txt"
+            ai.write_text("总的来说，这次更新不仅更快，更稳定，堪称更快、更强、更智能的重磅升级\n\n#AI\n", encoding="utf-8")
+            r = run_quiet([str(lint), str(ai)], t)
+            check("lint：AI 套话报 W9、首行过长报 W10", "W9" in r.stdout and "W10" in r.stdout, r.stdout[-300:])
             dz.write_text("今天打卡\n\n回评论\n\n冲\n", encoding="utf-8")
             r = run_quiet([str(lint), str(dz), "--duanzi"], t)
             check("lint --duanzi：零 emoji 段子不报 W13", "W13" not in (r.stdout + r.stderr), (r.stdout + r.stderr)[-200:])
