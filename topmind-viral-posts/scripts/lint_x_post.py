@@ -12,7 +12,8 @@ X 的普通帖子不渲染 Markdown。本脚本检查 X 稿，并可把常见 Ma
     cat X稿.txt | python3 lint_x_post.py -         # 从标准输入读取
 
 警告（不影响退出码，--strict 时算失败）还包括：点缀表情过多（W8）、疑似 AI 套话（W9）、
-有数据但缺来源（W10）、连续多个空行（W11）。
+有数据但缺来源（W10）、连续多个空行（W11）、正文里混入非发布内容（W12：信源清单 / 配图 / 图注 / 说明 /
+内部标签 / 帖序号等，应按 x-delivery-contract.md 另列，不放进可复制正文）。
 普通帖（非 --long）里出现代码围栏 ``` 记 E8（多半是把交付代码块的围栏一起复制进来了），
 删除线 ~~文字~~ 记 E9；--fix 会去掉这两类符号。
 
@@ -43,6 +44,12 @@ CODE_RE = re.compile(r"`[^`\n]+`")
 SEP_RE = re.compile(r"^\s*(-{3,}|={3,}|\*{3,})\s*$")
 FENCE_RE = re.compile(r"^\s*(```|~~~)")
 STRIKE_RE = re.compile(r"~~[^~\n]+~~")
+# 正文块里不该出现的交付附注（行首）；「来源：」行与话题标签属于正文，不在此列
+NONPUB_RE = re.compile(
+    r"^\s*(?:【(?:帖|X ?版|公众号版|配图|信息来源|说明)[^】]*】|[①②③④]\s*(?:正文|原帖|信源|原图)"
+    r"|(?:信源|信息来源|配图|图注|原图|说明|备注|注|标签|内部标签|分类|备选|备选标签|提示词|prompt|发布时间)\s*[:：])",
+    re.I,
+)
 MAX_BLANK_RUN = 1  # 段间只空一行；连续 2 个以上空行记 W11
 
 # --- 项目符号识别（emoji / 纯文本符号 / 序号）----------------------------------
@@ -146,6 +153,8 @@ def lint_post(start: int, lines: list[str], long_mode: bool):
                 continue
             in_fence = not in_fence
             continue
+        if not long_mode and NONPUB_RE.match(ln):
+            warns.append((no, "W12", "正文里混入非发布内容（信源清单 / 配图 / 说明 / 内部标签等）：另列，不放进可复制正文"))
         if STRIKE_RE.search(ln):
             errs.append((no, "E9", "Markdown 删除线（~~）：X 不渲染，去掉波浪线"))
         if in_fence or (long_mode and indent_width(ln[: len(ln) - len(ln.lstrip())]) >= 4 and ln.strip()):
@@ -167,13 +176,18 @@ def lint_post(start: int, lines: list[str], long_mode: bool):
         if CODE_RE.search(ln):
             warns.append((no, "W1", "行内反引号：X 不渲染，会原样显示反引号"))
         m = BULLET_RE.match(ln)
-        if m and m.group(3):
+        is_title = not any(x.strip() for x in lines[:off])  # 首行的标题 emoji 不算列表项
+        if m and m.group(3) and not is_title:
             bullets.append((no, indent_width(m.group(1)), m.group(2).replace("\uFE0F", "")))
 
     # 按连续的列表块分别检查（空行或正文行隔开的是不同的列表）
     blocks, cur = [], []
+    def _gap_has_text(a: int, b: int) -> bool:
+        # 两个列表项之间只有空行（段子体行间空行）仍算同一个列表
+        return any(lines[k - start].strip() for k in range(a + 1, b))
+
     for item in bullets:
-        if cur and item[0] - cur[-1][0] > 1:
+        if cur and item[0] - cur[-1][0] > 1 and _gap_has_text(cur[-1][0], item[0]):
             blocks.append(cur)
             cur = []
         cur.append(item)

@@ -1,5 +1,6 @@
 # TopMind emoji 体系（账号人设 · 标题 · 列表）
 
+> 交付与列表规约见 `x-delivery-contract.md`（必读必守）。
 > 适用：`topmind-briefs`（短文）、`topmind-viral-posts`（段子）、`topmind-format`（格式化）的 X 稿，以及其他技能派生 X 纯文本稿时。
 > 公众号稿正文不用人设点缀。列表符号的细则见 `x-post-format.md`，本文只定「用哪些、用几个、放哪里」。
 > **唯一真源**：本文是 TopMind emoji 体系的唯一出处（仓库 `shared/references/emoji-system.md`，各技能目录里是逐字节副本）。各技能 SKILL.md 只引用本文，不另写一套 emoji 规则；要改体系只改这里。
@@ -76,7 +77,7 @@
 
 | 体裁 | 人设点缀 | 标题 emoji | 列表符号 | 情绪表情 |
 |---|---|---|---|---|
-| 段子（topmind-viral-posts / 转段子） | 0–2 | 不用（段子没有标题行） | 一般不用列表 | ≤1 |
+| 段子（topmind-viral-posts / 转段子） | 0–2 | 不用（段子没有标题行） | 分点时一套（条目间空一行） | ≤1 |
 | 短文（topmind-briefs / 格式化成短文） | 0–2 | 0–1 | 一套 | 0 |
 | 严肃资讯 | 0 | 0–1（只用 ⚡ 📄 ⚠️ 📅） | • ▪ 或 🔹 | 0 |
 | 长帖资讯（【小标题】分节） | 0–1（只放结尾） | 0–1 | 一套或不用 | 0 |

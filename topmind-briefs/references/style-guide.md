@@ -18,26 +18,7 @@
 
 ## 正文：列表 > 段落
 
-能用列表就不用段落。X 版不用 Markdown 的 `- `（X 不渲染，见 platform-specs.md），
-用 emoji 项目符号：并列要点 🔹（二级 ▫️，缩进两格），步骤 1️⃣ 2️⃣ 3️⃣，结论/对比 ✅ / ❌；
-同帖风格一致，每条一行，最多两层。公众号版用 Markdown 列表。
-同一选题两个版本的列表只允许排版差异，内容一致。符号集与使用规则见 [x-post-format.md](x-post-format.md)。
-
-X 版参考格式：
-
-```
-[结论一句]
-
-🔹 关键数据 1
-🔹 关键数据 2
-🔹 关键数据 3
-
-[图]
-
-来源：[链接]
-
-#话题1 #话题2
-```
+能用列表就不用段落。X 版分点一律 emoji 列表符号、骨架与交付见 [platform-specs.md](platform-specs.md) 和 [x-delivery-contract.md](x-delivery-contract.md)；公众号版用 Markdown 列表，两版内容一致。
 
 ## 禁止清单
 

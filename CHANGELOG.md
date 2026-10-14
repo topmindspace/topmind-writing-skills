@@ -1,3 +1,32 @@
+## [0.8.34] - 2026-10-14
+
+> 根包 0.8.33 → **0.8.34**（patch）；技能版本：topmind-briefs 0.2.16 → 0.2.17、topmind-format 0.1.1 → 0.1.2、topmind-viral-posts 0.3.8 → 0.3.9、
+> topmind-wechat-post 0.3.8 → 0.3.9、topmind-x-article 0.4.14 → 0.4.15；topmind-cover、topmind-poster 不变。
+
+### 新增
+
+- **X 文本交付规约** `references/x-delivery-contract.md`（共享，分发到 briefs、format、viral-posts、wechat-post、x-article；各 SKILL.md 开头「必读必守」引用）：
+  - 列表：段子和短文都可以分点，分点必须用 emoji 列表符号，禁用 `- ` `* ` `1. `；段子体条目一条一行、行间空行。
+  - 交付分离：正文单独一个可直接复制的 `text` 块，只放可发布内容（标题、正文、emoji 列表、`来源：名称 URL` 行、末行话题标签）；信源清单、原图 / 配图建议、内部分类与备选标签、说明各自块外另列；多条帖子每条一块；落盘文件同理。附聊天交付正例 2 个、反例 1 个。
+- **`lint_x_post.py` W12**：正文里混入「信源：」「配图：」「说明：」「标签：」「【帖 N】」等非发布内容时警告。
+
+### 变更
+
+- **`format_text.py` 段子体支持列表**：`--mode duanzi` 把 Markdown 列表改成 emoji 列表符号，条目行间空行；`--split` 不拆列表条目。
+- **lint 列表判定**：只隔空行的列表项算同一个列表（段子体列表也查同层混用）；帖子首行的标题 emoji 不再算列表项。
+- 去掉「段子体不用列表符号」等矛盾措辞（`x-post-format.md`、`emoji-system.md`、format SKILL、viral-posts `patterns.md`）。
+- **viral-posts**：Output Contract 与示例改为每条正文单独成块，信源 / 原图 / 内部标签另列；`tags-and-topics.md` 的「标签项」改为块外「内部标签」。
+- **briefs**：交付格式按规约重写；`examples.md` 4 个示例改为中文、去掉正文里的 `[图]` 占位、补来源行；`platform-specs.md`、`style-guide.md` 的重复列表规则改为引用规约。
+- **x-article / wechat-post**：引用规约；x-article 交付物不用 `--list-style keep`。
+- 评测：更新 5 条、新增 4 条（段子分点、多条分块、format 段子列表、briefs 分块交付），共 63 条；format 负向测试补段子列表与 W12 用例。
+
+### 清理
+
+- `x-post-format.md` 重写精简（174 → 93 行）：删除与规约重复的「交付三块」、与 `emoji-system.md` 重复的 emoji 规则、与 `x-layout-patterns.md` 重复的「版式节奏」长段和重复示例。
+- briefs SKILL.md 删除与工作流重复的「配图铁律」节。
+- 删除 `topmind-wechat-post/references/design.md`（无引用；描述的桌面端对拍测试不在本仓库，已过时）。
+- README 中英文新增「X 文本统一规约」表，替换旧的 emoji 体系单行说明；版本号与能力描述同步。
+
 ## [0.8.33] - 2026-10-14
 
 > 根包 0.8.32 → **0.8.33**（patch）；技能版本：topmind-briefs 0.2.15 → 0.2.16、topmind-format 0.1.0 → 0.1.1、topmind-viral-posts 0.3.7 → 0.3.8、

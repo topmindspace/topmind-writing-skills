@@ -3,7 +3,7 @@
 """format_text.py — 把一段文字格式化成 X 段子体或短文体，只动排版，不改字。
 
 用法：
-    python3 format_text.py 原文.txt --mode duanzi              # 段子体：每句一行，行与行之间空一行
+    python3 format_text.py 原文.txt --mode duanzi              # 段子体：每句一行，行与行之间空一行；列表 → emoji 列表
     python3 format_text.py 原文.txt --mode duanzi --split      # 同上，并按句末标点（。！？!?）拆句
     python3 format_text.py 原文.txt --mode short               # 短文体：合并多余空行，Markdown 列表 → emoji 列表
     python3 format_text.py 原文.txt --mode short --title-emoji 🆕 --open 🐔 --close 🌱
@@ -50,10 +50,37 @@ def skeleton(text: str) -> str:
     return re.sub(r"\s+", "", s)
 
 
+BULLET_RE = re.compile(r"^\s*(?:[0-9]\uFE0F?\u20E3|\U0001F51F|[\u2460-\u2473]|[🔹🔸▫▪•✅❌📌➡→])")
+
+
+def to_bullet(ln: str) -> str | None:
+    """Markdown 列表行 → emoji 列表行（一级 🔹 / 1️⃣，二级缩进 ▫️）；不是列表行返回 None。"""
+    m = UL_RE.match(ln)
+    if m:
+        return ("  ▫️ " if len(m.group(1).expandtabs(2)) else "🔹 ") + m.group(2)
+    o = OL_RE.match(ln)
+    if o:
+        n = int(o.group(2))
+        lvl = 1 if len(o.group(1).expandtabs(2)) else 0
+        return ("  " * lvl) + (KEYCAPS[n] if n < len(KEYCAPS) else f"{n}.") + " " + o.group(3)
+    return None
+
+
 def duanzi(text: str, split: bool) -> list[str]:
-    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
-    if split:
-        lines = [p.strip() for ln in lines for p in SENT_RE.split(ln) if p.strip()]
+    """段子体：一句一行、行间空一行。列表条目同样一条一行、行间空行，用 emoji 列表符号；--split 不拆列表条目。"""
+    lines: list[str] = []
+    for raw in text.splitlines():
+        if not raw.strip():
+            continue
+        b = to_bullet(raw.rstrip())
+        if b is not None:
+            lines.append(b.strip() if not b.startswith("  ") else b)
+        elif BULLET_RE.match(raw):
+            lines.append(raw.strip())
+        elif split:
+            lines += [p.strip() for p in SENT_RE.split(raw.strip()) if p.strip()]
+        else:
+            lines.append(raw.strip())
     out: list[str] = []
     for ln in lines:
         out += [ln, ""]
@@ -71,17 +98,8 @@ def short(text: str) -> list[str]:
             blank = True
             continue
         blank = False
-        m = UL_RE.match(ln)
-        o = OL_RE.match(ln) if not m else None
-        if m:
-            lvl = 1 if len(m.group(1).expandtabs(2)) else 0
-            ln = ("  ▫️ " if lvl else "🔹 ") + m.group(2)
-        elif o:
-            n = int(o.group(2))
-            lvl = 1 if len(o.group(1).expandtabs(2)) else 0
-            ln = ("  " * lvl) + (KEYCAPS[n] if n < len(KEYCAPS) else f"{n}.") + " " + o.group(3)
-        else:
-            ln = ln.strip()
+        b = to_bullet(ln)
+        ln = b if b is not None else ln.strip()
         out.append(ln)
     while out and not out[-1]:
         out.pop()

@@ -49,7 +49,7 @@ def main() -> None:
     check("不引用技能目录外的相对路径", not outside, "、".join(outside))
 
     # 1b. 共享版式文档随包自带（emoji 体系唯一真源 + 参考帖版式规律）
-    for ref in ("emoji-system.md", "x-post-format.md", "x-layout-patterns.md"):
+    for ref in ("emoji-system.md", "x-post-format.md", "x-layout-patterns.md", "x-delivery-contract.md"):
         check(f"共享文档随包自带: references/{ref}", (ROOT / "references" / ref).is_file())
 
     # 2. frontmatter 损坏 → audit_skill 退出 1 且不崩溃
@@ -102,6 +102,11 @@ def main() -> None:
             r = run_quiet([str(lint), str(resid), "--fix", "--out", str(t / "resid.fixed.txt")], t)
             rf = (t / "resid.fixed.txt").read_text(encoding="utf-8") if (t / "resid.fixed.txt").exists() else ""
             check("lint_x_post --fix 去掉围栏与删除线", "```" not in rf and "~~" not in rf and "旧价 新价" in rf, rf[-200:])
+            mix = t / "mix.txt"
+            mix.write_text("三步：\n\n🔹 回评论\n\n🔹 发原创\n\n#日拱一卒\n\n配图：不配\n标签：类型=打卡\n", encoding="utf-8")
+            r = run_quiet([str(lint), str(mix)], t)
+            check("lint_x_post 对正文混入配图/标签报 W12，段子体行间空行列表不报 W11/W3",
+                  "[W12]" in r.stdout and "[W11]" not in r.stdout and "[W3]" not in r.stdout, r.stdout[-300:])
             r = run_quiet([str(lint), str(t / "nope.txt")], t)
             check("lint_x_post 缺失文件干净报错", r.returncode == 2 and "Traceback" not in (r.stderr or ""))
 
@@ -126,6 +131,12 @@ def main() -> None:
             check("短文体：Markdown 列表 → emoji 列表，标题 emoji 在行首",
                   r.returncode == 0 and "🔹 更快" in r.stdout and "1️⃣ 先装" in r.stdout
                   and r.stdout.startswith("🆕 三处变化") and "\n\n\n" not in r.stdout, r.stdout[-200:])
+            dl = t / "dl.txt"
+            dl.write_text("这周就三步：\n- 早上回评论\n- 中午发原创。真的有用！\n1. 睡前回访\n", encoding="utf-8")
+            r = run_quiet([str(fmt), str(dl), "--mode", "duanzi", "--split"], t)
+            check("段子体：Markdown 列表 → emoji 列表，条目行间空行且不拆句",
+                  r.returncode == 0 and "\n\n🔹 早上回评论\n\n🔹 中午发原创。真的有用！\n\n1️⃣ 睡前回访" in r.stdout
+                  and "- " not in r.stdout, r.stdout[-200:])
             r = run_quiet([str(fmt), str(t / "nope.txt"), "--mode", "short"], t)
             check("format_text 缺失文件干净报错", r.returncode == 2 and "Traceback" not in (r.stderr or ""))
             empty = t / "empty.txt"
