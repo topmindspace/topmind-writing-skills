@@ -97,29 +97,33 @@ def main() -> None:
 
     # 5. title-engine：坏输入干净报错；设计规范静态检查（字号下限、层级、克制）；示例 spec 全部达标
     ENGINE = ROOT / "scripts" / "title-engine.py"
-    with tempfile.TemporaryDirectory() as t2:
-        t2 = Path(t2)
-        r = subprocess.run([sys.executable, str(ENGINE), str(t2 / "nope.png"), str(t2 / "x.json"), "--out", str(t2 / "o.png")], capture_output=True, text=True)
-        check("引擎：缺场景图干净报错", r.returncode == 1 and "Traceback" not in r.stderr, r.stderr[:100])
-        def chk(layers):
-            f = t2 / "c.json"; f.write_text(json.dumps({"layers": layers}, ensure_ascii=False), encoding="utf-8")
-            return subprocess.run([sys.executable, str(ENGINE), "--check", str(f)], capture_output=True, text=True)
-        main = {"type": "text", "role": "main", "text": "标题", "size": 0.3}
-        r = chk([main, {"type": "text", "role": "label", "text": "小字", "size": 0.035}])
-        check("引擎：标签字号低于 6% 被拦下", r.returncode == 1 and "低于下限" in r.stdout, r.stdout[:120])
-        r = chk([main, {"type": "text", "role": "sub", "text": "副标题", "size": 0.25}])
-        check("引擎：主副字号比 <1.6 被拦下", r.returncode == 1 and "层级不清" in r.stdout, r.stdout[:120])
-        r = chk([dict(main, glow={"color": "#0F0"}), {"type": "text", "role": "sub", "text": "副", "size": 0.1, "extrude": {"depth": 0.1}}])
-        check("引擎：重特效超过一个字块被拦下", r.returncode == 1 and "只能用在一个重点词" in r.stdout, r.stdout[:120])
-        r = chk([dict(main, rotate=8)])
-        check("引擎：旋转没写 reason 被拦下", r.returncode == 1 and "reason" in r.stdout, r.stdout[:120])
-        r = chk([main] + [{"type": "deco", "kind": "star", "x": 0.5, "y": 0.5}] * 3)
-        check("引擎：装饰超过 2 个被拦下", r.returncode == 1 and "上限 2 个" in r.stdout, r.stdout[:120])
-        r = chk([main, {"type": "text", "role": "sub", "text": "副标题", "size": 0.1}])
-        check("引擎：合规层级通过", r.returncode == 0, r.stdout[:120])
-        for sp in sorted((ROOT / "assets" / "title-specs").glob("*.json")):
-            r = subprocess.run([sys.executable, str(ENGINE), "--check", str(sp)], capture_output=True, text=True)
-            check(f"引擎：示例 spec {sp.name} 达标", r.returncode == 0, r.stdout[-120:])
+    import importlib.util as _iu
+    if not (_iu.find_spec("numpy") and _iu.find_spec("PIL")):
+        print("  - 跳过 title-engine 测试（无 numpy / Pillow）")
+    else:
+        with tempfile.TemporaryDirectory() as t2:
+            t2 = Path(t2)
+            r = subprocess.run([sys.executable, str(ENGINE), str(t2 / "nope.png"), str(t2 / "x.json"), "--out", str(t2 / "o.png")], capture_output=True, text=True)
+            check("引擎：缺场景图干净报错", r.returncode == 1 and "Traceback" not in r.stderr, r.stderr[:100])
+            def chk(layers):
+                f = t2 / "c.json"; f.write_text(json.dumps({"layers": layers}, ensure_ascii=False), encoding="utf-8")
+                return subprocess.run([sys.executable, str(ENGINE), "--check", str(f)], capture_output=True, text=True)
+            main = {"type": "text", "role": "main", "text": "标题", "size": 0.3}
+            r = chk([main, {"type": "text", "role": "label", "text": "小字", "size": 0.035}])
+            check("引擎：标签字号低于 6% 被拦下", r.returncode == 1 and "低于下限" in r.stdout, r.stdout[:120])
+            r = chk([main, {"type": "text", "role": "sub", "text": "副标题", "size": 0.25}])
+            check("引擎：主副字号比 <1.6 被拦下", r.returncode == 1 and "层级不清" in r.stdout, r.stdout[:120])
+            r = chk([dict(main, glow={"color": "#0F0"}), {"type": "text", "role": "sub", "text": "副", "size": 0.1, "extrude": {"depth": 0.1}}])
+            check("引擎：重特效超过一个字块被拦下", r.returncode == 1 and "只能用在一个重点词" in r.stdout, r.stdout[:120])
+            r = chk([dict(main, rotate=8)])
+            check("引擎：旋转没写 reason 被拦下", r.returncode == 1 and "reason" in r.stdout, r.stdout[:120])
+            r = chk([main] + [{"type": "deco", "kind": "star", "x": 0.5, "y": 0.5}] * 3)
+            check("引擎：装饰超过 2 个被拦下", r.returncode == 1 and "上限 2 个" in r.stdout, r.stdout[:120])
+            r = chk([main, {"type": "text", "role": "sub", "text": "副标题", "size": 0.1}])
+            check("引擎：合规层级通过", r.returncode == 0, r.stdout[:120])
+            for sp in sorted((ROOT / "assets" / "title-specs").glob("*.json")):
+                r = subprocess.run([sys.executable, str(ENGINE), "--check", str(sp)], capture_output=True, text=True)
+                check(f"引擎：示例 spec {sp.name} 达标", r.returncode == 0, r.stdout[-120:])
 
     # 6. check-title：形近字 / 超长 / 繁体 / 生僻字被标出，常用短标题通过
     CT = ROOT / "scripts" / "check-title.py"
