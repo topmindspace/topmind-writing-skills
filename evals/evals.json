@@ -10,7 +10,7 @@
     {"id": "x-article-1", "target_skill": "topmind-x-article", "prompt": "把这篇稿子做成 X 长文发布包，要能一键复制。", "expected_skill": "topmind-x-article", "expected_behavior": "产出 X长文.html + X发布稿.txt + 发布清单，用户人工点发布。"},
     {"id": "x-article-2", "target_skill": "topmind-x-article", "prompt": "X 长文的配图顺序要和公众号版一致。", "expected_skill": "topmind-x-article", "expected_behavior": "用 --images-from 公众号稿.md 派生图片顺序，不手工拼 --images。"},
     {"id": "x-article-3", "target_skill": "topmind-x-article", "prompt": "推特长文怎么发？给我准备好材料。", "expected_skill": "topmind-x-article", "expected_behavior": "准备发布包，不通过 API 发长文。"},
-    {"id": "x-article-neg-1", "target_skill": "topmind-x-article", "prompt": "写一条 280 字以内的涨粉短帖。", "expected_skill": "topmind-viral-posts", "expected_behavior": "短帖写稿走 viral-posts；x-article 不接。"},
+    {"id": "x-article-neg-1", "target_skill": "topmind-x-article", "prompt": "写一条涨粉短帖。", "expected_skill": "topmind-viral-posts", "expected_behavior": "短帖写稿走 viral-posts；x-article 不接。"},
     {"id": "briefs-1", "target_skill": "topmind-briefs", "prompt": "根据这张最新的模型榜单写个快讯，公众号和 X 各一版。", "expected_skill": "topmind-briefs", "expected_behavior": "一件事一张图，按「信源 → 原图 → 内容 → 排版」；X 正文是一段可复制纯文本（不含 URL / 来源行）、公众号版单独 markdown 块（默认不出 HTML），数字有一手来源，链接与原图另发，只交付不发布。"},
     {"id": "briefs-2", "target_skill": "topmind-briefs", "prompt": "来篇短的，讲讲这篇论文的核心结论。", "expected_skill": "topmind-briefs", "expected_behavior": "论文解读型短文，推测显式标注。"},
     {"id": "briefs-3", "target_skill": "topmind-briefs", "prompt": "新品速递：这款新手机的关键参数整理成短文。", "expected_skill": "topmind-briefs", "expected_behavior": "新品速递，厂商数字标口径。"},

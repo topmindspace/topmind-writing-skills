@@ -115,17 +115,20 @@ Every skill ships sample outputs written by us (fictional or neutral topics; no 
 
 ## Skills
 
+> Terms: **short post (短文)** = a plain-text X post, anything up to about 1000 Chinese characters (no 280-character limit); **long-form (长文)** = an X Article; **duanzi (段子)** = a one-sentence-per-line short-post style.
+
+
 | Skill | Version | What it does |
 |-------|---------|--------------|
-| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.12** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
-| [`topmind-x-article`](./topmind-x-article/) | **0.4.18** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
+| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.13** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
+| [`topmind-x-article`](./topmind-x-article/) | **0.4.19** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
 | [`topmind-cover`](./topmind-cover/) | **0.4.11** | Cover art for X / WeChat (X master 1500×600 / 5:2): striking, theme-focused; 22-style cover style library + 16:9 X short-post cover scene + 24 title treatments + 7-layer scene recipe + 55 example images (22 styles × 2 sizes + 11 variant samples) + 1 style overview |
-| [`topmind-briefs`](./topmind-briefs/) | **0.2.20** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper explainers / product alerts / mechanism explainers; sources → images → content → layout; one copy-ready plain-text X block (no HTML by default, emoji optional, no AI tone), links / images sent separately; asks before generating any image |
-| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.12** | X viral short posts: 18 template types + combinations, duanzi layout (blank lines, no emoji, plain bullet lines), one copy-ready plain-text block per post with hashtags last, links / images sent separately, classification tags listed separately; asks before generating an image |
-| [`topmind-format`](./topmind-format/) | **0.1.5** | X plain-text formatter: to duanzi (blank lines, no emoji) / to short post (paragraphing + sensible lists, emoji optional); layout only, words unchanged, with a fidelity check; one copy-ready plain-text body, links / images sent separately |
+| [`topmind-briefs`](./topmind-briefs/) | **0.2.21** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper explainers / product alerts / mechanism explainers; sources → images → content → layout; one copy-ready plain-text X block (no HTML by default, emoji optional, no AI tone), links / images sent separately; asks before generating any image |
+| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.13** | X viral short posts: 18 template types + combinations, duanzi layout (blank lines, no emoji, plain bullet lines), one copy-ready plain-text block per post with hashtags last, links / images sent separately, classification tags listed separately; asks before generating an image |
+| [`topmind-format`](./topmind-format/) | **0.1.6** | X plain-text formatter: to duanzi (blank lines, no emoji) / to short post (paragraphing + sensible lists, emoji optional); layout only, words unchanged, with a fidelity check; one copy-ready plain-text body, links / images sent separately |
 | [`topmind-poster`](./topmind-poster/) | **0.1.6** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
 
-Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.39** (whole-repo same-tag releases).
+Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.40** (whole-repo same-tag releases).
 
 ### Which skill, and how they combine
 

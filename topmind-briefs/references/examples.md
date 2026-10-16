@@ -2,7 +2,7 @@
 
 > 模型名、基准名、数字、链接皆为虚构，只演示结构。
 > 交付按 [x-delivery-contract.md](x-delivery-contract.md)：正文是一段可直接复制的纯文本（不含 URL、来源行、配图说明），链接一条、图片一条另发；分点可用 emoji 或「1）」「·」【小标题】，emoji 不强制，规则见 [x-post-format.md](x-post-format.md)。
-> 正文超过 280 加权字符时按 thread 拆条，每条一块。
+> X 短文是一条纯文本帖，约 1000 字内都可以，不需要拆条。
 
 ## 例 1：数据榜单型（不用 emoji）
 

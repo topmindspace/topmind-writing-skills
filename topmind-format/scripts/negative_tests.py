@@ -189,6 +189,17 @@ def main() -> None:
         except SyntaxError as e:
             check(f"可编译: scripts/{py.name}", False, str(e))
 
+    # 短文没有 280 字限制：约 900 字的纯文本不触发 W7；超过约 1000 字才提示写成长文（X Article）
+    import tempfile as _tf
+    LINT = ROOT / "scripts" / "lint_x_post.py"
+    with _tf.TemporaryDirectory() as _d:
+        f9 = Path(_d) / "s.txt"; f9.write_text("一段很长的短文\n\n" + "这是正文内容。" * 128 + "\n", encoding="utf-8")
+        r = subprocess.run([sys.executable, str(LINT), str(f9)], capture_output=True, text=True)
+        check("短文约 900 字不报 W7", "W7" not in r.stdout, r.stdout[:120])
+        f9.write_text("一段很长的短文\n\n" + "这是正文内容。" * 160 + "\n", encoding="utf-8")
+        r = subprocess.run([sys.executable, str(LINT), str(f9)], capture_output=True, text=True)
+        check("超过约 1000 字提示写成 X Article", "W7" in r.stdout and "X Article" in r.stdout, r.stdout[:120])
+
     if fails:
         print(f"\n[negative_tests] topmind-format: {len(fails)} 项失败")
         sys.exit(1)

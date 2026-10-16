@@ -21,7 +21,7 @@ X 的普通帖子不渲染 Markdown。本脚本检查 X 稿，并可把常见 Ma
   E8 代码围栏 ```（多半是把交付代码块的围栏一起复制进来了）；E9 删除线 ~~文字~~；--fix 会去掉 E8/E9 符号。
 --long（x-article 的 X发布稿.txt 长文兜底稿）允许文内链接，不查 E10–E12。
 警告（不影响退出码，--strict 时算失败）：点缀表情过多（W8）、疑似 AI 套话（W9，含排比、「不仅…更…」、空泛形容等）、
-首行过长不像钩子（W10）、连续多个空行（W11）、正文里混入其他非发布内容（W12：说明 / 内部标签 / 帖序号等）、
+首行过长不像钩子（W10）、超过约 1000 字（W7，短文上限，更长的写成 X Article）、连续多个空行（W11）、正文里混入其他非发布内容（W12：说明 / 内部标签 / 帖序号等）、
 段子体出现 emoji（W13，需 --duanzi）。
 短文分点不强制 emoji：🔹 / 1️⃣ 等 emoji 符号，或「1）」「·」「【小标题】」等纯文本方式都可以；只禁止会被当成 Markdown 的 - * + 1.。
 
@@ -83,7 +83,7 @@ CONTRAST_PAIR = {"✅", "❌"}
 MAX_ITEMS = 7
 MAX_LEVELS = 2
 MAX_TAGS = 3
-WEIGHT_LIMIT = 280
+CHAR_LIMIT = 1000  # 短文（X 纯文本帖）约 1000 字内；更长的写成长文（X Article）
 MAX_DECOR_EMOJI = 4  # 列表符号之外的点缀表情上限（规则建议 1–3 个）
 
 # --- 去 AI 味：常见套话（只警告，不报错；规则见 writing-principles.md「去 AI 味」）--
@@ -266,9 +266,9 @@ def lint_post(start: int, lines: list[str], long_mode: bool, duanzi: bool = Fals
         first = next((ln for ln in lines if ln.strip()), "")
         if x_weight(first) > HOOK_MAX_WEIGHT:
             warns.append((start, "W10", f"首行加权字数约 {x_weight(first)}，超过 {HOOK_MAX_WEIGHT}（约 30 个汉字）：首行做钩子，先给结论或最扎眼的数字"))
-        w = x_weight("\n".join(ln for ln in lines if not PLACEHOLDER_RE.match(ln)))
-        if w > WEIGHT_LIMIT:
-            warns.append((start, "W7", f"加权字数约 {w}，超过 {WEIGHT_LIMIT}（约 140 个汉字）；长帖请确认账号支持，或精简/拆帖"))
+        n = sum(1 for ch in URL_RE.sub("", "\n".join(ln for ln in lines if not PLACEHOLDER_RE.match(ln))) if not ch.isspace())
+        if n > CHAR_LIMIT:
+            warns.append((start, "W7", f"约 {n} 字，超过短文的 {CHAR_LIMIT} 字左右；这么长的内容写成长文（X Article）"))
     return errs, warns
 
 

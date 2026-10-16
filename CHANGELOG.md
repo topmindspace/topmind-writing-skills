@@ -1,4 +1,14 @@
-## [0.8.39] - 2026-10-16
+## [0.8.40] - 2026-10-16
+
+> 根包 0.8.39 → **0.8.40**（patch）；技能版本：topmind-briefs 0.2.20 → 0.2.21、topmind-format 0.1.5 → 0.1.6、topmind-viral-posts 0.3.12 → 0.3.13、topmind-wechat-post 0.3.12 → 0.3.13、topmind-x-article 0.4.18 → 0.4.19。
+
+### 变更（短文去掉 280 字限制）
+
+- 统一定义：**短文** = X 纯文本帖，约 1000 字以内都可以；**长文** = X Article；段子规则不变。
+- 删掉所有 280 字 / 加权字数限制和「超了拆 thread / 确认账号支持长帖」的说法；briefs 的 platform-specs、style-guide、examples、SKILL.md，viral-posts 写作铁律，evals 同步。
+- `lint_x_post.py` 的 W7 改为：超过约 1000 字才提示写成长文（X Article）；format negative_tests 新增对应用例。
+
+ - 2026-10-16
 
 > 根包 0.8.38 → **0.8.39**（patch）；技能版本：topmind-briefs 0.2.19 → 0.2.20、topmind-cover 0.4.10 → 0.4.11、topmind-format 0.1.4 → 0.1.5、topmind-poster 0.1.5 → 0.1.6、topmind-viral-posts 0.3.11 → 0.3.12、topmind-wechat-post 0.3.11 → 0.3.12、topmind-x-article 0.4.17 → 0.4.18。
 
