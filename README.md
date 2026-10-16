@@ -128,7 +128,7 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 | [`topmind-format`](./topmind-format/) | **0.1.6** | X 纯文本格式化：转段子（行间空行，零 emoji）/ 格式化成短文（分段 + 合理列表，emoji 可选），只动排版不改字，带原文保真校验；交付一段可复制纯文本，链接 / 原图另发 |
 | [`topmind-poster`](./topmind-poster/) | **0.1.6** | HTML+CSS → 高清长图 / 海报 / 信息图 PNG：无头 Chrome 2× 截图 + 自动裁白；「一段一图」分段图批量出图（生成器 + 渲染器） |
 
-安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.40**（整仓同 tag 发版）。
+安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.41**（整仓同 tag 发版）。
 
 ### 怎么选、怎么组合
 
@@ -166,7 +166,7 @@ npx github:topmindspace/topmind-writing-skills install topmind-briefs
 
 默认探测：`./.agents` → `./.claude` → `./.cursor` → `./.codex` → `./.mimocode`，再用户级 `~/.claude` 等；也可用 `--to`。未给 `--to` 时安装摘要会明确打印探测到的目标目录。不要 `npm install topmind-briefs`（技能 id 不是独立包）。
 
-`install` 细节：若同名技能已存在，会报出已装版本并拒绝覆盖，需加 `--force` 才替换（或先 `uninstall` 再装）。安装成功后打印三行摘要：装到哪里 / 装的技能版本与安装器版本 / 下一步。
+`install` 细节：默认升级：已装版本比包里旧（或读不到版本）就直接覆盖（不备份），打印 `Upgraded <技能> <旧> -> <新>`；版本相同打印 `Already up to date`，加 `--force` 可重装；已装版本比包里新则拒绝降级，需加 `--force`。安装成功后打印三行摘要：装到哪里 / 装的技能版本与安装器版本 / 下一步。
 
 ## 仓库结构
 

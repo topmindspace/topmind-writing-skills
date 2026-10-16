@@ -3,7 +3,7 @@
  * topmind-writing-skills 安装器 CLI 负向测试（零依赖：node 直接可跑）。
  *
  * 覆盖 install/uninstall 新行为的负向分支 + 成功路径回归：
- *   1. install 到已存在的技能目录（无 --force）→ 拒绝，报错含已装版本/--force/卸载提示
+ *   1. 已装：打包更新 → 升级（Upgraded a -> b，不备份）；同版本 → Already up to date；已装更新 → 拒绝需 --force；版本缺失/解析不了 → 升级
  *   2. install --force 到已存在目录 → 成功，摘要含 to:/version:/next: 三行
  *   3. uninstall 缺 skill id → 失败并打印用法
  *   4. uninstall 非法 skill id（路径穿越）→ 拒绝
@@ -77,26 +77,56 @@ function main() {
     process.exit(1);
   }
 
-  // 1. install 到已存在目录（无 --force）→ 拒绝：报已装版本，要求 --force
+  // 1. 已装版本 → 默认升级 / 已是最新 / 已装更新需 --force / 版本缺失视为升级
+  const seed = (env, ver) => {
+    const destRoot = path.join(env.tmp, 'out');
+    const destSkill = path.join(destRoot, 'testskill');
+    fs.mkdirSync(destSkill, { recursive: true });
+    fs.writeFileSync(path.join(destSkill, 'SKILL.md'), '---\nname: testskill\n' + (ver ? `version: ${ver}\n` : '') + '---\n# old copy\n');
+    fs.writeFileSync(path.join(destSkill, 'stale.txt'), 'stale');
+    return { destRoot, destSkill };
+  };
+  for (const [label, ver] of [['upgrade', '1.0.0'], ['missing', null], ['garbage', 'abc']]) {
+    const env = makeEnv();
+    try {
+      const { destRoot, destSkill } = seed(env, ver);
+      const r = runCli(env, ['install', 'testskill', '--to', destRoot]);
+      const o = out(r);
+      ok(r.status === 0, `case1-${label}: 打包版本更新 → 默认升级 exit 0`);
+      ok(new RegExp(`Upgraded testskill ${ver && ver !== 'abc' ? ver.replace(/\./g, '\\.') : ver === 'abc' ? 'abc' : 'unknown'} -> 9\\.9\\.9`).test(o), `case1-${label}: 输出 Upgraded … -> 9.9.9`);
+      ok(!fs.existsSync(path.join(destSkill, 'stale.txt')), `case1-${label}: 直接覆盖（旧文件清空）`);
+      ok(!fs.readdirSync(destRoot).some((n) => /bak|backup/i.test(n)), `case1-${label}: 不留备份目录`);
+      ok(noTraceback(o), `case1-${label}: 无堆栈`);
+    } finally {
+      destroy(env);
+    }
+  }
   {
     const env = makeEnv();
     try {
-      const destRoot = path.join(env.tmp, 'out');
-      const destSkill = path.join(destRoot, 'testskill');
-      fs.mkdirSync(destSkill, { recursive: true });
-      fs.writeFileSync(
-        path.join(destSkill, 'SKILL.md'),
-        '---\nname: testskill\nversion: 1.0.0\n---\n# stale copy\n'
-      );
-      fs.writeFileSync(path.join(destSkill, 'stale.txt'), 'stale');
+      const { destRoot, destSkill } = seed(env, '9.9.9');
       const r = runCli(env, ['install', 'testskill', '--to', destRoot]);
       const o = out(r);
-      ok(r.status !== 0, 'case1: 已存在目录无 --force 被拒绝（exit 非 0）');
-      ok(/installed version:\s*1\.0\.0/.test(o), 'case1: 报错含已装版本号 1.0.0');
-      ok(/--force/.test(o), 'case1: 报错提示 --force');
-      ok(/uninstall/.test(o), 'case1: 报错提示可先 uninstall');
-      ok(noTraceback(o), 'case1: 无 Traceback/堆栈');
-      ok(fs.existsSync(path.join(destSkill, 'stale.txt')), 'case1: 旧目录未被改动');
+      ok(r.status === 0, 'case1-equal: 同版本 exit 0');
+      ok(/Already up to date: testskill 9\.9\.9/.test(o), 'case1-equal: 提示已是最新');
+      ok(fs.existsSync(path.join(destSkill, 'stale.txt')), 'case1-equal: 不改动');
+      const r2 = runCli(env, ['install', 'testskill', '--to', destRoot, '--force']);
+      ok(r2.status === 0 && !fs.existsSync(path.join(destSkill, 'stale.txt')), 'case1-equal: --force 重装');
+    } finally {
+      destroy(env);
+    }
+  }
+  {
+    const env = makeEnv();
+    try {
+      const { destRoot, destSkill } = seed(env, '10.0.0');
+      const r = runCli(env, ['install', 'testskill', '--to', destRoot]);
+      const o = out(r);
+      ok(r.status !== 0, 'case1-newer: 已装更新 → 拒绝');
+      ok(/newer than packaged 9\.9\.9.*--force/.test(o), 'case1-newer: 一行提示含 --force');
+      ok(fs.existsSync(path.join(destSkill, 'stale.txt')), 'case1-newer: 未改动');
+      const r2 = runCli(env, ['install', 'testskill', '--to', destRoot, '--force']);
+      ok(r2.status === 0 && !fs.existsSync(path.join(destSkill, 'stale.txt')), 'case1-newer: --force 降级覆盖');
     } finally {
       destroy(env);
     }

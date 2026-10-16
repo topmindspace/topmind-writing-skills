@@ -128,7 +128,7 @@ Every skill ships sample outputs written by us (fictional or neutral topics; no 
 | [`topmind-format`](./topmind-format/) | **0.1.6** | X plain-text formatter: to duanzi (blank lines, no emoji) / to short post (paragraphing + sensible lists, emoji optional); layout only, words unchanged, with a fidelity check; one copy-ready plain-text body, links / images sent separately |
 | [`topmind-poster`](./topmind-poster/) | **0.1.6** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
 
-Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.40** (whole-repo same-tag releases).
+Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.41** (whole-repo same-tag releases).
 
 ### Which skill, and how they combine
 
@@ -162,7 +162,7 @@ npx github:topmindspace/topmind-writing-skills install topmind-briefs
 
 Default probe order: `./.agents` → `./.claude` → `./.cursor` → `./.codex` → `./.mimocode`, then user-level `~/.claude`, etc. Or pass `--to`. When `--to` is omitted, the install summary explicitly prints the auto-detected target directory. Do not `npm install topmind-briefs` (skill id is not a standalone package).
 
-`install` details: if a same-named skill already exists, the installed version is reported and overwriting is refused — pass `--force` to replace (or `uninstall` first). On success, a three-line summary is printed: where it was installed / installed skill version and installer version / next steps.
+`install` details: upgrades by default: if the installed version is older (or unreadable), it is overwritten in place (no backup) and `Upgraded <skill> <old> -> <new>` is printed; the same version prints `Already up to date` (`--force` reinstalls); an installed version newer than the package is refused unless `--force`. On success, a three-line summary is printed: where it was installed / installed skill version and installer version / next steps.
 
 ## Repo layout
 

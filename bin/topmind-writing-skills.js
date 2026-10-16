@@ -193,6 +193,20 @@ function assertDestOutsideSource(src, dest) {
   }
 }
 
+/** 比较版本 a 与 b：a>b 返回 1，相等 0，a<b -1。b 缺失或解析不了视为最旧（返回 1）。 */
+function parseVer(v) {
+  const m = String(v || '').trim().replace(/^["']|["']$/g, '').replace(/^v/, '').match(/^(\d+)\.(\d+)\.(\d+)/);
+  return m ? m.slice(1, 4).map(Number) : null;
+}
+function compareVersions(a, b) {
+  const pa = parseVer(a);
+  const pb = parseVer(b);
+  if (!pb) return 1;
+  if (!pa) return -1;
+  for (let i = 0; i < 3; i++) if (pa[i] !== pb[i]) return pa[i] > pb[i] ? 1 : -1;
+  return 0;
+}
+
 function install(skillId, targetRoot, { force = false, defaultTarget = false } = {}) {
   assertSkillId(skillId);
   const src = skillDir(skillId);
@@ -210,25 +224,32 @@ function install(skillId, targetRoot, { force = false, defaultTarget = false } =
         'Choose a --to directory that can be created (not a file, not unwritable).'
     );
   }
+  let upgradedFrom = null;
   if (fs.existsSync(dest)) {
-    if (!force) {
-      // 已装过：报出已装版本，要求 --force 才覆盖（不静默覆盖）。
-      const installedVer = readSkillVersion(dest) || 'unknown';
-      const packageVer = readSkillVersion(src) || 'unknown';
+    // 已装过：默认升级。打包版本更新 → 直接覆盖（不备份）；相同 → 已是最新；已装版本更新 → 需 --force。
+    const installedVer = readSkillVersion(dest);
+    const packageVer = readSkillVersion(src) || 'unknown';
+    const cmp = compareVersions(packageVer, installedVer);
+    if (!force && cmp === 0) {
+      console.log(`Already up to date: ${skillId} ${installedVer} (use --force to reinstall)`);
+      console.log(`  at:      ${dest}`);
+      return;
+    }
+    if (!force && cmp < 0) {
       die(
-        `Already installed: ${dest}\n` +
-          `  installed version: ${installedVer} (this package ships ${packageVer})\n` +
-          'Refusing to overwrite. Pass --force (or -f) to replace, or remove it first:\n' +
-          `  topmind-writing-skills uninstall ${skillId} --to ${targetRoot}`
+        `Installed ${skillId} ${installedVer} is newer than packaged ${packageVer}; not downgrading. ` +
+          'Pass --force (or -f) to downgrade.'
       );
     }
+    upgradedFrom = cmp > 0 ? installedVer || 'unknown' : null;
     fs.rmSync(dest, { recursive: true, force: true });
   }
   copyDir(src, dest);
   // 安装摘要三行：装到哪里 / 装了什么版本 / 下一步。
   const toNote = defaultTarget ? '  (default, auto-detected — no --to given)' : '';
   const skillVer = readSkillVersion(dest) || 'unknown';
-  console.log(`Installed ${skillId}`);
+  if (upgradedFrom) console.log(`Upgraded ${skillId} ${upgradedFrom} -> ${skillVer}`);
+  else console.log(`Installed ${skillId}`);
   console.log(`  to:      ${dest}${toNote}`);
   console.log(`  version: skill ${skillVer} (installer ${installerVersion()})`);
   console.log(`  next:    ${nextStep(skillId, dest)}`);
@@ -290,8 +311,12 @@ Usage:
 
 Behavior:
   install    copies <skill-id>/ into <dir>/<skill-id>/. If the skill is already
-             installed, the installed version is reported and --force is required
-             to overwrite. Prints where/what-version/next-steps when done.
+             installed: a newer packaged version upgrades it in place (no backup,
+             prints "Upgraded <id> <old> -> <new>"); the same version prints
+             "Already up to date" (--force reinstalls); an installed version newer
+             than the package is refused unless --force. A missing/unparseable
+             installed version counts as an upgrade. Prints where/what-version/
+             next-steps when done.
   uninstall  removes <dir>/<skill-id>/ (refuses: not installed, not a skill
              directory, or the package's own skill source).
   No --to: the target directory is auto-detected (probe order below) and
