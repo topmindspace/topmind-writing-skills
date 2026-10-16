@@ -1,0 +1,66 @@
+{
+ "pattern": "P3 IP 对话贴纸标题",
+ "layers": [
+  {
+   "type": "text",
+   "role": "main",
+   "text": "读书打卡",
+   "font": "kuaile",
+   "size": 0.25,
+   "fill": "#FFFFFF",
+   "strokes": [
+    [
+     0.016,
+     "#5A2A0A"
+    ]
+   ],
+   "sticker": {
+    "border": 0.07,
+    "color": "#5A2A0A",
+    "shadow": false
+   },
+   "arc": {
+    "radius": 7
+   },
+   "reason": "字顺着刺猬摊开的书页微微上弯，把视线引向 IP",
+   "x": 0.07,
+   "y": 0.33,
+   "anchor": "lm"
+  },
+  {
+   "type": "text",
+   "role": "sub",
+   "text": "30 天计划",
+   "font": "hei-black",
+   "size": 0.12,
+   "fill": "#5A2A0A",
+   "plate": {
+    "color": "#FFE14D",
+    "pad": 0.22,
+    "radius": 0.25
+   },
+   "x": 0.085,
+   "y": 0.62,
+   "anchor": "lm"
+  },
+  {
+   "type": "text",
+   "role": "label",
+   "text": "每天 20 分钟，读完 12 本",
+   "font": "hei-medium",
+   "size": 0.065,
+   "fill": "#3A1A05",
+   "x": 0.075,
+   "y": 0.82,
+   "anchor": "lm"
+  },
+  {
+   "type": "deco",
+   "kind": "sparkle",
+   "x": 0.43,
+   "y": 0.2,
+   "size": 0.05,
+   "color": "#FFF4C2"
+  }
+ ]
+}

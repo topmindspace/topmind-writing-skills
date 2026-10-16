@@ -147,3 +147,70 @@
 | 教程 / 方法论 | 中粗黑体，清晰稳重 | 手写批注体 |
 | 学术 / 论文 | 高对比衬线宋体 | 细体英文 |
 | 写作 / 手作 | 粗黑体 + 局部手写替换 | 钢笔手写体 |
+
+## 十二、多层字效引擎（`scripts/title-engine.py`）
+
+`overlay-title.py` 只能叠水平的单一字体标题，适合快速出稿。要做有设计感的标题时用 `title-engine.py`。先读 `design-system.md`：下面的字效是工具箱，不是清单，一张图里只挑一处重点处理。用法是一份 JSON spec 写多层，每个字块单独定字体、字号、颜色、角度、透视和特效，装饰元件和主体压字也写在同一份 spec 里。每个文字块要写 `role`（main / sub / label / ornament），做非水平处理时写 `reason`。
+
+```bash
+python3 scripts/title-engine.py 场景.jpg spec.json --out 封面.png --size 2480x992
+python3 scripts/title-engine.py --check spec.json     # 静态检查层级、字号下限、克制原则，不出图
+python3 scripts/title-engine.py 场景.jpg spec.json --out 封面.png --strict   # 出图并检查对比度、安全区，不达标退出码 2
+python3 scripts/title-engine.py --list-fonts          # 看本机字体是否齐全
+```
+
+坐标、字号、描边宽度写 0–1 小数时按画面比例换算（字号相对画面高），写整数时按像素。`anchor` 由两个字母组成：第一个是水平方向 l/m/r，第二个是垂直方向 t/m/b。完整 spec 示例见 `assets/title-specs/`（brand-launch、ip-fun、hard-core-type、white-clean 各一份）。
+
+### 12.1 字体（全部简体中文，均可商用）
+
+| 别名 | 字体 | 气质 | 许可 |
+|---|---|---|---|
+| hei / hei-black / hei-medium / hei-light | 思源黑体 Noto Sans SC 可变字重 | 主标题、科技、干货 | SIL OFL 1.1 |
+| song / song-black / song-regular | 思源宋体 Noto Serif SC 可变字重 | 人文、学术、杂志 | SIL OFL 1.1 |
+| kuaile | 站酷快乐体 ZCOOL KuaiLe | 萌系、IP、亲子 | SIL OFL 1.1 |
+| huangyou | 站酷庆科黄油体 ZCOOL QingKe HuangYou | 爆款、促销、贴纸 | SIL OFL 1.1 |
+| xiaowei | 站酷小薇 LOGO 体 ZCOOL XiaoWei | 文艺、品牌 | SIL OFL 1.1 |
+| maobi | 马善政毛笔 Ma Shan Zheng | 书法、国风、印章 | SIL OFL 1.1 |
+| wenkai | 霞鹜文楷 LXGW WenKai | 手写感副标题、温和 | SIL OFL 1.1 |
+
+安装：前五种来自 google/fonts（`ofl/zcoolkuaile`、`ofl/zcoolqingkehuangyou`、`ofl/zcoolxiaowei`、`ofl/mashanzheng`、`ofl/notosanssc`、`ofl/notoserifsc`），文楷来自 lxgw/LxgwWenKai Release，放进 `~/.fonts/tm/`。缺字体时脚本会报出缺的是哪一个。站酷高端黑没有 OFL 发行版，不收录；要粗黑体时用 `hei-black`。
+
+### 12.2 字效清单与 spec 片段
+
+| 花式 | spec 写法 | 用在哪 |
+|---|---|---|
+| 字号跳跃 | `"sizes":[0.26,0.21,0.26,0.21]` | 萌系、口号 |
+| 逐字变色 | `"char_colors":["#FFF","#FFE14D",null]` | 强调关键字 |
+| 渐变填充 | `"fill":{"gradient":["#FF7A1F","#FF3D5A"],"angle":0}` | 主关键词 |
+| 纹理填充 | `"fill":{"texture":"concrete"}`，可选 `metal` / `gold` / `scene` / 图片路径 | 硬核、奢华 |
+| 多重描边 | `"strokes":[[0.022,"#5A2A0A"],[0.01,"#FFFFFF"]]`（由外到内） | 贴纸、爆款 |
+| 3D 挤出 | `"extrude":{"depth":0.12,"dx":0.15,"dy":-1,"color":"#8E8B86","color_end":"#3A3836"}` | 立体字、纪念碑 |
+| 长投影 | `"long_shadow":{"length":0.06,"angle":45,"color":"#1E1E1E"}` | 扁平、白色清新 |
+| 霓虹外发光 / 内发光 | `"glow":{"color":"#39FF88","radius":0.1,"strength":2.4}`、`"inner_glow":{"color":"#39FF88"}` | 发布、赛博 |
+| 故障错位 | `"glitch":{"offset":0.04,"colors":["#FF2BD6","#00F0FF"],"slices":6}` | 赛博、AI |
+| 贴纸白边 + 投影 | `"sticker":{"border":0.12,"color":"#FFFFFF"}` | IP、手账 |
+| 斜面高光 | `"bevel":true` | 石材、金属 |
+| 色块底板 | `"plate":{"color":"#FFE14D","pad":0.12,"radius":0.2}` | 副标题、标签 |
+| 高亮笔 / 下划线 | `"highlight":{"color":"#FFE14DCC","height":0.15}`、`"underline":{"color":"#FF3D5A"}` | 干货、教程 |
+| 旋转 / 斜切 | `"rotate":-7`、`"shear":-0.18` | 让组合不呆板 |
+| 四点透视 | `"perspective":[[0.13,0.22],[0.87,0.22],[1,1],[0,1]]`（左上 右上 右下 左下，相对字块宽高） | 字立在地面、字贴墙 |
+| 弧形 / 波浪 | `"arc":{"radius":5.5}`（负值向下弯）、`"wave":{"amp":0.15,"period":4,"tilt":8}` | 环绕主体、活泼 |
+| 竖排 | `"vertical":true` | 国风、杂志、错位组合 |
+| 手抖 | `"jitter":5`（逐字随机小角度） | 手作、萌系 |
+| 英文装饰行 | 小字号 `hei-medium` 加 `"tracking":0.35` | 所有风格的顶部或底部点缀 |
+
+装饰元件写成 `{"type":"deco","kind":...}`，kind 可选 `star`、`sparkle`、`burst`（爆炸框，可带 `text`）、`circle`（手绘圈）、`arrow`（`points` 三点手绘弧线箭头）、`stamp`（印章，可带 1–4 字）、`tape`（胶带）、`dots`（点阵）、`lines`（速度线）。
+
+主体压字写成 `{"type":"occlude","mask":"rembg","region":[x0,y0,x1,y1]}`：在 region 范围内把场景主体抠出来，贴回最上层，让主体压在字上。rembg 需要先 `pip install rembg onnxruntime`。不装 rembg 时，可以用 `"mask":"luma>200"`、`"sat>80"` 这类阈值，或用 `"polygon":[[x,y],...]` 手画。
+
+### 12.3 组合示例（旧版，仅演示写法；成品请用 `assets/title-specs/` 的 P1–P4）
+
+```json
+{"type":"text","text":"晨光","font":"hei-black","size":0.36,
+ "fill":{"gradient":["#FFFFFF","#C9FFE0","#39FF88"],"angle":90},
+ "extrude":{"depth":0.07,"dx":0.5,"dy":0.9,"color":"#0E5A3A","color_end":"#031A12"},
+ "glow":{"color":"#39FF88","radius":0.12,"strength":1.4},
+ "perspective":[[0,0.08],[1,0],[0.96,1],[0.03,0.9]],"x":0.06,"y":0.48}
+```
+
+"3.0" 另起一层，用镂空霓虹（深色填充 + 荧光描边 + 外发光 + 内发光），再加 `shear` 和 `rotate`，和主词的透视方向形成反差。顶部放英文小字行，底部放宋体副标题加半透明底板，最后点两颗 sparkle。

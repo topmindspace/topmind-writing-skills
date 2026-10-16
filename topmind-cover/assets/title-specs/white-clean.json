@@ -1,0 +1,56 @@
+{
+ "pattern": "P2 左文右图关键词高亮",
+ "layers": [
+  {
+   "type": "text",
+   "role": "sub",
+   "text": "远程工作",
+   "font": "hei-black",
+   "size": 0.12,
+   "fill": "#1E1E1E",
+   "tracking": 0.03,
+   "x": 0.07,
+   "y": 0.27,
+   "anchor": "lm"
+  },
+  {
+   "type": "text",
+   "role": "main",
+   "text": "效率手册",
+   "font": "hei-black",
+   "size": 0.21,
+   "fill": "#1E1E1E",
+   "char_colors": [
+    "#C93508",
+    "#C93508",
+    null,
+    null
+   ],
+   "tracking": 0.03,
+   "highlight": {
+    "color": "#FFE14D",
+    "height": 0.16,
+    "offset": 0.0
+   },
+   "x": 0.067,
+   "y": 0.5,
+   "anchor": "lm"
+  },
+  {
+   "type": "text",
+   "role": "sub",
+   "text": "7 个习惯，每天省 2 小时",
+   "font": "hei-medium",
+   "size": 0.09,
+   "fill": "#FFFFFF",
+   "plate": {
+    "color": "#2E6BFF",
+    "pad": 0.28,
+    "radius": 0.5
+   },
+   "x": 0.085,
+   "y": 0.8,
+   "anchor": "lm"
+  }
+ ]
+}

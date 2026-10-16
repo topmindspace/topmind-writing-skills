@@ -1,0 +1,88 @@
+{
+ "pattern": "P4 纪念碑居中巨字",
+ "layers": [
+  {
+   "type": "text",
+   "role": "sub",
+   "text": "硬核架构指南",
+   "font": "song-black",
+   "size": 0.1,
+   "fill": "#1F1F1F",
+   "tracking": 0.12,
+   "x": 0.5,
+   "y": 0.17,
+   "anchor": "mm"
+  },
+  {
+   "type": "text",
+   "role": "label",
+   "text": "从单体到分布式的 12 个决策",
+   "font": "hei-medium",
+   "size": 0.065,
+   "fill": "#2E2E2E",
+   "tracking": 0.06,
+   "x": 0.5,
+   "y": 0.3,
+   "anchor": "mm"
+  },
+  {
+   "type": "text",
+   "role": "main",
+   "text": "大于一切",
+   "font": "hei-black",
+   "size": 0.36,
+   "tracking": 0.06,
+   "fill": {
+    "texture": "concrete",
+    "tint": "#D8D4CC",
+    "tint_amount": 0.3
+   },
+   "bevel": true,
+   "extrude": {
+    "depth": 0.06,
+    "dx": 0.3,
+    "dy": 1.0,
+    "color": "#4A4743",
+    "color_end": "#1C1B19"
+   },
+   "perspective": [
+    [
+     0.035,
+     0
+    ],
+    [
+     0.965,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     0,
+     1
+    ]
+   ],
+   "reason": "巨字立在广场上，与两侧建筑共用一点透视，人物站在字前给出尺度",
+   "x": 0.5,
+   "y": 0.9,
+   "anchor": "mb",
+   "strokes": [
+    [
+     0.008,
+     "#1C1B19"
+    ]
+   ]
+  },
+  {
+   "type": "occlude",
+   "mask": "rembg",
+   "region": [
+    0.45,
+    0.8,
+    0.55,
+    0.95
+   ]
+  }
+ ]
+}

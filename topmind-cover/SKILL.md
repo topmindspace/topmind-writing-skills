@@ -1,9 +1,9 @@
 ---
 name: topmind-cover
-description: "文章封面配图生成：X 长文与公众号共用，也为 X 短文 / 短帖在没有原图时出 16:9 首图，并供 topmind-briefs、topmind-viral-posts 的配图环节调用。震撼、醒目、主题突出；平台尺寸规范、22 种风格模板与风格组合、七层场景配方与中英提示词模板、默认 2–3 个方案、24 种标题花式与副信息组件、分层背景库、10 种构图骨架、TopMind IP 主角、六维评分重做门槛、生图 + 脚本叠字双路径、命名落盘全流程覆盖。Use when 文章封面、封面图、X 短文封面、短帖封面、头图、题图、首图、X 长文头图、公众号封面、公众号头图、封面风格、banner、cover、thumbnail。Do NOT use for 正文插图、长图、海报与信息图（→ topmind-poster）、短文与段子写稿（→ topmind-briefs / topmind-viral-posts）、PPT/报告封面与多页演示（→ topmind-presentation）。"
+description: "文章封面配图生成：X 长文与公众号共用，也为 X 短文 / 短帖在没有原图时出 16:9 首图，并供 topmind-briefs、topmind-viral-posts 的配图环节调用。震撼、醒目、主题突出；平台尺寸规范、22 种风格模板与风格组合、七层场景配方与中英提示词模板、默认 2–3 个方案、24 种标题花式与副信息组件、分层背景库、10 种构图骨架、TopMind IP 主角、七项评分重做门槛、生图 + 脚本叠字双路径、命名落盘全流程覆盖。Use when 文章封面、封面图、X 短文封面、短帖封面、头图、题图、首图、X 长文头图、公众号封面、公众号头图、封面风格、banner、cover、thumbnail。Do NOT use for 正文插图、长图、海报与信息图（→ topmind-poster）、短文与段子写稿（→ topmind-briefs / topmind-viral-posts）、PPT/报告封面与多页演示（→ topmind-presentation）。"
 license: MIT
 metadata:
-  version: "0.4.9"
+  version: "0.4.10"
   action_category: "write"
   triggers: "封面, 封面图, X 短文封面, 短帖封面, 头图, 题图, 首图, 封面配图, 缩略图, banner, cover, thumbnail, 公众号封面, 公众号题图, 公众号头图, X 封面, X 首图, X 长文头图, 文章封面, 封面风格"
   author: "TopMindSpace"
@@ -20,7 +20,7 @@ metadata:
 再叠加 22 种风格的设计手法。详见 [`references/md3-foundation.md`](references/md3-foundation.md)。
 
 ```
-标题提炼 → 七层场景配方 → 2–3 个方案（风格组合 + 骨架 + 配色）→ 分层 prompt → 生成（或场景图 + 脚本叠字）→ 六维评分 + 冲击力自检 → 裁剪双尺寸 → 落盘命名
+标题提炼 → 七层场景配方 → 2–3 个方案（风格组合 + 骨架 + 配色）→ 分层 prompt → 整张生成 → 逐字核对 → 局部修正（兜底：场景图 + 脚本叠字）→ 七项评分 + 冲击力自检 → 裁剪双尺寸 → 落盘命名
 ```
 
 ## 风格索引（22 种，浅色优先）
@@ -54,7 +54,7 @@ metadata:
 
 适用场景细则、配色故事、prompt 配方见 `references/cover-styles.md`；单风格大图 `assets/examples/<style>.png`（git clone / Release zip 安装才有；npm 包为瘦身不含单风格样张，本地没有时看 overview.png 加 `cover-styles.md` 文字配方即可，或打开 GitHub 仓库同路径）。
 构图骨架（10 种）与文案排版密码见 `references/cover-styles.md` 末尾章节；24 种标题花式、副信息组件、字体气质与背景库见 `references/typography-system.md`；
-场景配方、风格组合、主题 → 隐喻速查、IP 主角规则、六维评分与双路径见 `references/scene-builder.md`；
+场景配方、风格组合、主题 → 隐喻速查、IP 主角规则、七项设计评分与双路径见 `references/scene-builder.md`；标题层级、网格、安全区、配色比例、字体搭配、设计模式、克制原则与中文字生图规约见 `references/design-system.md`；整张生成的 16 个范式与英文 prompt 模板见 `references/cover-patterns.md`；22 个命名组合（范式 × 风格 × 标题字 × 场景层 × 配色）与优雅克制规则见 `references/cover-combos.md`；
 可直接粘贴的完整提示词（22 种风格 + X 短文封面 + 场景示例 + 场景配方多方案示例）见 `references/cover-prompts.md`。
 
 ## 场景 → 风格 → 标题花式（选型速查）
@@ -131,9 +131,9 @@ X 短文、X 短帖**原图优先**：有官方截图、基准图、后台截图
 3. **出 2–3 个方案（默认）**：每个方案一张方案卡 `方案 A｜隐喻｜风格：主 + 辅｜骨架：L?｜配色`，四项里至少换三项；用户说「直接出」就各出一张。相邻封面不重复主风格。
 4. **组 prompt**：用 `scene-builder.md` 第三节的中文 / 英文分层模板，槽位全部填满；标题逐字写明（防 AI 自造错别字），再加 `cover-prompts.md` 第五章的负面词。平台（`x` / `wechat` / `both`，默认 both）只影响画幅与安全区。
 5. **生成**：`media.generate_image`，`name` 用 `<slug>-cover`。
-   **双路径**：A 让模型直接出字；标题长、有生僻字、要精确多行花式，或 A 路径错字 2 次时走 B：prompt 里留干净标题区、禁止生成文字，出图后用 `scripts/overlay-title.py <底图> <spec.json> --out <成图>` 叠字（支持多行字号、关键词变色、描边、投影、手绘底线、胶囊标签）。
+   **出字路径**：默认**整张生成**，让生图模型把字和场景一起设计。从 `references/cover-patterns.md` 选范式（X1–X16），在英文 prompt 里写死标题原文（`Simplified Chinese characters exactly as given`）、字的材质与立体方式、与场景一致的光照和透视、层级（主标题、副标题、胶囊标签）、对齐线和留白，并接上通用排版尾句。生成前跑 `scripts/check-title.py "主标题" "副标题"`：主标题 ≤ 8 字最稳，避开生僻字、繁体和形近字（如「于」常被写成「干」）。出图后按 `references/design-system.md` 第九节**逐字核对**：错 1–2 个字就局部修正，错得多就改 prompt 整张重出，最多 3 次；仍不对才走兜底，也就是场景图加 `scripts/title-engine.py` 叠字（多层标题，`--check` 和 `--strict` 自动查字号下限、对比度、安全区；`overlay-title.py` 只用于快速单层）。标题设计都按 `references/design-system.md`：三级层级与字号下限（主占画面高 25–45%、副 ≥ 9%、标签 ≥ 6%）、一条对齐线、60-30-10 配色、一主一辅字体、强调色只落 1–3 个字、字与场景同光同透视、文字留在中部水平带（适配 5:2 裁切）。
    **多样性**：同一系列或同一天连发的封面，相邻两张至少在「风格 / 标题花式 / 背景」三项中换两项；同一风格内也要换主体和构图骨架。
-6. **评分与自检**（必做）：先按 `scene-builder.md` 第八节六维评分（丰富度 / 主题贴合 / 标题花式 / 层次 / 可读性 / 质感，各 1–5）：**总分 ≥20 且没有一项 ≤2 才交付**；再过下方冲击力自检 11 项。不通过→按低分项改 prompt 重生成，最多 3 次；3 次仍不过→换方案，或回步骤 1 重写标题。
+6. **评分与自检**（必做）：先按 `scene-builder.md` 第八节七项设计评分（层级清晰 / 可读性 / 对齐统一 / 色彩和谐 / 主题契合 / 焦点单一 / 细节品质，各 1–5）：**总分 ≥26 且没有一项 ≤2 才交付**；再过下方冲击力自检 11 项。不通过→按低分项改 prompt 重生成，最多 3 次；3 次仍不过→换方案，或回步骤 1 重写标题。
 7. **裁剪落盘**：
    ```bash
    python3 scripts/crop-cover.py <主图> --out-dir <包>/images/

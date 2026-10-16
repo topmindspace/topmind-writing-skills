@@ -1,3 +1,15 @@
+## [0.8.38] - 2026-10-16
+
+> 根包 0.8.37 → **0.8.38**（patch）；技能版本：topmind-cover 0.4.9 → 0.4.10；其余技能不变。
+
+### 变更（topmind-cover 整张生成 + 组合玩法 + 示例图全量重做）
+
+- 新增 `references/cover-patterns.md`（16 个整张生成范式 X1–X16）、`references/cover-combos.md`（22 个命名组合 + 优雅克制规则）、`references/design-system.md`（层级、网格、配色、字体搭配、中文字生图规约）。
+- 新增 `scripts/check-title.py`（标题字数、繁体、形近字检查）与 `scripts/title-engine.py`（兜底多层叠字，`assets/title-specs/` 为示例 spec）。
+- 默认出字路径改为整张生成：主标题占画面高 25–45%、强调色只落 1–3 字、字与场景同光同透视、文字留在中部水平带以适配 5:2 裁切、逐字核对、最多重出 3 次。
+- `assets/examples/` 全部示例与 `overview.png` 按新组合整张重画；主图统一为文档所述的 1500×600，目录从 59M 压到约 19M。`docs/assets/writing-cover.png` 同步刷新。
+- negative_tests 新增标题检查、范式库、组合库校验；evals 新增 cover-10、cover-11。
+
 ## [0.8.37] - 2026-10-16
 
 > 根包 0.8.36 → **0.8.37**（patch）；技能版本：topmind-cover 0.4.8 → 0.4.9；其余技能不变。

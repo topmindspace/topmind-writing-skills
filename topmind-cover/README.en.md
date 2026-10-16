@@ -4,7 +4,7 @@
 
 A reusable skill for generating cover art for X long-form posts and WeChat articles. Goal: **striking, eye-catching, theme-focused**.
 
-- Version: **v0.4.9** (ships with `@topmindspace/topmind-writing-skills@0.8.37`)
+- Version: **v0.4.10** (ships with `@topmindspace/topmind-writing-skills@0.8.38`)
 
 ## Style gallery
 
@@ -23,11 +23,11 @@ npx @topmindspace/topmind-writing-skills install topmind-cover
 ## Usage
 
 0. **Pick a style combo**: choose a main style (1 of 22, light-first) from `references/cover-styles.md`, then a secondary style from section 4 of [`references/scene-builder.md`](./references/scene-builder.md); check the example image.
-1. **Refine the title**: lock the title copy first (usually ≤ 10 chars, split into 2–3 lines with size contrast) using that style's title rules; no drawing yet.
+1. **Refine the title**: lock the title copy first (main title ≤ 8 Chinese characters is safest, plus one subtitle line) and run `scripts/check-title.py` to rule out rare, traditional and look-alike characters using that style's title rules; no drawing yet.
 2. **Seven-layer scene recipe**: theme → metaphor / conflict → hero (optionally the TopMind chick / cat / plant IP) → an action that interacts with the title → 2–4 props → ≥3 background layers → light. No recognizable real people.
 3. **2–3 options by default**: option card `Option A | metaphor | style: main + secondary | layout: L1–L10 | palette`, differing in at least three of the four; never repeat the main style on consecutive covers.
-4. **Compose and generate**: fill every slot of the layered CN/EN template in `scene-builder.md`; pick 1 main + 1 secondary title treatment from the 24 in `typography-system.md`, plus chips / buttons / corner badges. For long titles or misrendered text use path B: generate the scene with a clean title area, then overlay the title with `scripts/overlay-title.py`.
-5. **Score and self-check** (required): six-dimension score (richness / topic fit / title treatment / depth / readability / texture) must total ≥ 20 with no item ≤ 2, then pass the [impact self-check list](./SKILL.md#冲击力自检清单); otherwise revise and regenerate (max 3), then switch options.
+4. **Whole-image generation**: pick a pattern (X1–X16) from [`references/cover-patterns.md`](./references/cover-patterns.md) or one of the 22 named combos in [`references/cover-combos.md`](./references/cover-combos.md), and write the exact title, letter material and 3D treatment, scene-matched lighting, hierarchy, alignment and negative space into one English prompt so the model designs text and scene together. Then proof every character per section 9 of [`design-system.md`](./references/design-system.md): fix 1–2 wrong characters locally, regenerate otherwise (max 3 times), and only then fall back to a clean scene plus `scripts/title-engine.py` overlay.
+5. **Score and self-check** (required): seven-item design score (clear hierarchy / readability / alignment / color harmony / topic fit / single focus / finish quality) must total ≥ 26 with no item ≤ 2, then pass the [impact self-check list](./SKILL.md#冲击力自检清单); otherwise revise and regenerate (max 3), then switch options.
 6. Crop and save:
 
 ```bash
@@ -38,7 +38,12 @@ python3 scripts/crop-cover.py <main-image> --out-dir <package>/images/
 python3 scripts/crop-cover.py <16:9-image> --preset x-post --out-dir <dir>
 # produces 00-封面-X短文.png (1200x675)
 
-# Path B: scene background + scripted title overlay (line sizes, keyword color, stroke, shadow, marker underline, chips)
+# Before whole-image generation: title risk check (length, rare / traditional / look-alike characters)
+python3 scripts/check-title.py "main title" "subtitle"
+
+# Fallback: scene background + multi-layer overlay (--check static rules, --strict contrast & safe area)
+python3 scripts/title-engine.py <scene> <spec.json> --out <cover> --strict
+# Quick single-layer overlay
 python3 scripts/overlay-title.py <background> <spec.json> --out <cover> [--font <font>]
 ```
 

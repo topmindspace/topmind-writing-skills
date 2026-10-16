@@ -4,7 +4,7 @@
 
 Short, real, hooked — read in 3 seconds, impossible not to like/comment/follow. 18 post types plus hook × body × closer combinations, summarised from common high-engagement writing patterns in the Chinese X community (all examples are original). Posts default to "duanzi" layout (one sentence per line, a blank line between lines), original images first, plus a hashtag set and classification tags. Existing text → `topmind-format`.
 
-- Version: **v0.3.11** (ships with `@topmindspace/topmind-writing-skills@0.8.37`)
+- Version: **v0.3.11** (ships with `@topmindspace/topmind-writing-skills@0.8.38`)
 
 ## Install
 

@@ -72,7 +72,7 @@ npx @topmindspace/topmind-writing-skills install topmind-format
 
 ### topmind-cover · 封面配图生成
 
-X 长文与公众号共用的封面图：震撼、醒目、主题突出。**主题 → 七层场景配方 → 2–3 个风格组合方案 → 分层 prompt → 六维评分** 出图（标题长时场景图 + `overlay-title.py` 叠字），`crop-cover.py` 一键裁出双平台尺寸（X 1500×600、公众号 900×383），`--preset x-post` 落盘 X 短文封面（1200×675）。22 种风格索引与配方见 [`references/cover-styles.md`](./topmind-cover/references/cover-styles.md)。
+X 长文与公众号共用的封面图：震撼、醒目、主题突出。**主题 → 七层场景配方 → 2–3 个风格组合方案 → 分层 prompt → 七项评分** 出图（默认整张生成：16 个范式的英文 prompt 模板 + 逐字核对与局部修正；兜底才用场景图 + `title-engine.py` 叠字），`crop-cover.py` 一键裁出双平台尺寸（X 1500×600、公众号 900×383），`--preset x-post` 落盘 X 短文封面（1200×675）。22 种风格索引与配方见 [`references/cover-styles.md`](./topmind-cover/references/cover-styles.md)。
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-cover
@@ -104,13 +104,13 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 |------|------|--------|
 | [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.11** | 公众号文章全生命周期：交付包、审校改写、质量三关、微信内联排版与发布清单 |
 | [`topmind-x-article`](./topmind-x-article/) | **0.4.17** | X 长文一键发布：Markdown 原稿 → 一键复制 HTML（含配图/提示词复制、图片点击放大）/ 纯文本兜底 + 封面图 + 发布清单 |
-| [`topmind-cover`](./topmind-cover/) | **0.4.9** | 文章封面配图（X / 公众号共用，X 主尺寸 1500×600 / 5:2）：震撼醒目主题突出；22 种封面风格库 + X 短文 16:9 封面场景 + 24 种标题花式 + 七层场景配方 + 55 张示例图（22 种风格 × 2 尺寸 + 11 张变体样张） + 1 张风格总览图 |
+| [`topmind-cover`](./topmind-cover/) | **0.4.10** | 文章封面配图（X / 公众号共用，X 主尺寸 1500×600 / 5:2）：震撼醒目主题突出；22 种封面风格库 + X 短文 16:9 封面场景 + 24 种标题花式 + 七层场景配方 + 55 张示例图（22 种风格 × 2 尺寸 + 11 张变体样张） + 1 张风格总览图 |
 | [`topmind-briefs`](./topmind-briefs/) | **0.2.19** | 干货短文（公众号 + X 双平台）：一件事讲透，数据榜单/论文解读/新品速递；信源 → 原图 → 内容 → 排版；X 版交付一段可复制纯文本（默认不出 HTML，emoji 可选，去 AI 味），链接 / 原图 / 配图另发，无原图先询问配图 |
 | [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.11** | X 引流段子/爆款短篇：18 大类型模板 + 组合玩法，段子体（行间空行，零 emoji，分点不加符号）、每条一段可复制纯文本、话题标签在末行，链接 / 原图另发、分类标签另列；无原图先询问再走 topmind-cover |
 | [`topmind-format`](./topmind-format/) | **0.1.4** | X 纯文本格式化：转段子（行间空行，零 emoji）/ 格式化成短文（分段 + 合理列表，emoji 可选），只动排版不改字，带原文保真校验；交付一段可复制纯文本，链接 / 原图另发 |
 | [`topmind-poster`](./topmind-poster/) | **0.1.5** | HTML+CSS → 高清长图 / 海报 / 信息图 PNG：无头 Chrome 2× 截图 + 自动裁白；「一段一图」分段图批量出图（生成器 + 渲染器） |
 
-安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.37**（整仓同 tag 发版）。
+安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.38**（整仓同 tag 发版）。
 
 ### 怎么选、怎么组合
 

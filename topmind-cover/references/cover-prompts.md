@@ -1,5 +1,6 @@
 # 封面生成提示词大全（可直接拷贝给 AI 生图）
 
+> **2026-10 起主流程改为整张生成**：先看 `cover-patterns.md`（16 个范式，含英文 prompt 模板和通用排版尾句），出图后按 `design-system.md` 第九节「中文字生图规约」逐字核对。本文的提示词可以继续用，但要补上标题原文、`Simplified Chinese characters exactly as given`、字的材质、光照一致、层级与对齐这几句。
 > **这份文档给谁用**：你想自己写提示词、直接丢给 AI 生图工具（即梦、Midjourney、GPT-4o、Flux 等），
 > 不走 topmind-cover 技能流程时，从这里拷贝。
 > **和 `cover-styles.md` 的区别**：那份是技能内部配方（含 `{PLACEHOLDER}` 与优选组合，供 AI agent 调用）；
