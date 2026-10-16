@@ -4,7 +4,7 @@
 
 Rankings, infographics, monthly-report long images, posters — plus the "one image per section" workflow for splitting a long article into N shareable images. Text is 100% controllable, diffable, and iterable.
 
-- Version: **v0.1.5** (ships with `@topmindspace/topmind-writing-skills@0.8.38`)
+- Version: **v0.1.6** (ships with `@topmindspace/topmind-writing-skills@0.8.39`)
 
 ## Install
 
@@ -54,3 +54,7 @@ Manual workflow, parameter semantics and 7 battle-tested pitfalls (sandbox flags
 - **Not** article body layout → `topmind-wechat-post` / `topmind-x-article`
 
 This skill owns the rendering step: they write the article, this skill turns a section of it into a standalone shareable image.
+
+## Original examples
+
+Sample outputs written by us (fictional or neutral topics, no third-party text) are in [`examples/`](./examples/).

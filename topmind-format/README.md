@@ -4,7 +4,7 @@
 
 把现成的文字排成 X 上好读的样子：**转段子**（每句一行、行间空一行，完全不用 emoji，分点不加符号）或**格式化成短文**（合理分段换行、列表改「·」「1）」或 emoji，标题 emoji 与人设点缀可选）。只动排版，不改字，自带原文保真校验；正文里的链接、来源行、配图行会拿出来另列，交付一段可直接复制的纯文本，链接和图片另发。
 
-- 版本：**v0.1.4**（随 `@topmindspace/topmind-writing-skills@0.8.38` 发布）
+- 版本：**v0.1.5**（随 `@topmindspace/topmind-writing-skills@0.8.39` 发布）
 
 ## 安装
 
@@ -39,3 +39,7 @@ python3 scripts/audit_skill.py
 python3 scripts/package_skill.py --check
 python3 scripts/negative_tests.py
 ```
+
+## 原创示例
+
+我们自己写的示例输出见 [`examples/`](./examples/)（虚构或中性题材，不收录任何第三方原文）。

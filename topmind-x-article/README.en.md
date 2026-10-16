@@ -4,7 +4,7 @@
 
 Turn a Markdown draft into a "copy → paste → publish" X long-form (Article) package.
 
-- Version: **v0.4.17** (ships with `@topmindspace/topmind-writing-skills@0.8.38`)
+- Version: **v0.4.18** (ships with `@topmindspace/topmind-writing-skills@0.8.39`)
 
 ## Install
 
@@ -61,31 +61,31 @@ Read the result through once by hand after converting.
 Input (10 lines of markdown):
 
 ```markdown
-# Manus 2.0 发布了
+# 晨光 3.0 发布了
 
-**从零重建**的 Agent，新增了 Cue 个人助手。
+**全新设计**的写作助手，新增了离线模式。
 
 ![发布会现场](cover.png)
 
-| Token 消耗 | -23.2% |
-| 耗时 | -28.2% |
+| Token 消耗 | -20% |
+| 耗时 | -30% |
 
-详见[官方博客](https://manus.im/blog)。
+详见[官方博客](https://example.com/blog)。
 ```
 
 `python3 scripts/md2x.py draft.md --out X发布稿.txt` produces:
 
 ```
-Manus 2.0 发布了
+晨光 3.0 发布了
 
-从零重建的 Agent，新增了 Cue 个人助手。
+全新设计的写作助手，新增了离线模式。
 
 [图1]
 
-Token 消耗：-23.2%
-耗时：-28.2%
+Token 消耗：-20%
+耗时：-30%
 
-详见官方博客（https://manus.im/blog）。
+详见官方博客（https://example.com/blog）。
 
 —— 配图清单 ——
 [图1] 发布会现场
@@ -110,3 +110,7 @@ The following skills are **not in this repo** (provided separately by the host a
 python3 scripts/package_skill.py --check   # pre-publish check
 python3 scripts/negative_tests.py          # bad-input tests
 ```
+
+## Original examples
+
+Sample outputs written by us (fictional or neutral topics, no third-party text) are in [`examples/`](./examples/).

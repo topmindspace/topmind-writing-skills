@@ -170,12 +170,3 @@ L1 左轴版式（12 栏）                   居中纪念碑版式
 3. **上限**：同一个方案整张重出不超过 3 次。3 次还不对，就改走「场景图 + `title-engine.py` 叠字」兜底；兜底版同样要过第二到第六节的规范。
 4. 修完再走一遍核对清单。交付时告诉用户：这张图是整张生成的还是叠字兜底的，修过哪些字。
 
-## 来源
-
-- Robin Williams《The Non-Designer's Design Book》（CRAP）：https://ptgmedia.pearsoncmg.com/images/9780133966152/samplepages/9780133966152.pdf ；UW–Madison DesignLab：https://designlab.wisc.edu/resources/design-tips-and-tricks/crap-principles/
-- 视觉层级：https://ixdf.org/literature/topics/visual-hierarchy ；NN/g 视觉设计五原则：https://www.nngroup.com/articles/principles-visual-design/ ；NN/g 图上文字对比：https://www.nngroup.com/articles/text-over-images/
-- 缩略图可读性：https://yt-thumbnail-preview.app/guides/thumbnail-text-size/ ；https://ctrpilot.com/blog/youtube-thumbnail-legibility-guide ；https://www.typographymaster.com/guide/typography-for-youtube-video ；https://help.tubics.com/faq/wdr46phJFbieEbbysAUSBj/elements-of-high-performing-thumbnails/791wMBULA8wJ1AfUoeB9C1
-- WCAG 2.2 对比度：https://www.w3.org/TR/WCAG22/ ；https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum ；G18 描边法：https://www.w3.org/WAI/WCAG22/Techniques/general/G18
-- 配色与字号比例：https://colorsfonts.com/guide.html ；模块化比例：https://www.oreilly.com/library/view/mastering-responsive-web/9781783550234/ch07s03.html
-- 字体搭配：https://www.nngroup.com/articles/pairing-typefaces/
-- 中文标题字设计：https://www.uisdc.com/36-font-design-methods ；https://www.fonts.net.cn/article-149409796.html ；https://www.maoken.com/knowledge/other-course/22102.html

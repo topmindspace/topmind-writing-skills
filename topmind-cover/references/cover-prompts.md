@@ -508,14 +508,14 @@ Avoid: recognizable real people, fake UI, cluttered layout with no focal point, 
  "chips": ["写作", "去 AI 味", "实操"]}
 ```
 
-## 3. 外部调研：全平台爆款封面流派
+## 3. 全平台爆款封面流派
 
-> 2026-09 调研总结。核心结论：**所有平台的爆款封面都在做同一件事——3 秒内让标题被读懂**。
+> 总结。核心结论：**所有平台的爆款封面都在做同一件事——3 秒内让标题被读懂**。
 > 手段各不相同，下面按平台给出可直接拷贝的提示词。
 
 ### 3.1 小红书：六大高互动封面类型
 
-调研结论（来源见文末）：小红书封面首选 3:4 竖版（1080×1440，信息流占屏比横版大 40%）；
+要点：小红书封面首选 3:4 竖版（1080×1440，信息流占屏比横版大 40%）；
 六大高互动类型：**纯文字大字报 / 数据截图+文字 / 人物+文字 / 清单列表 / 对比图 / 信息图**；
 黄金法则：3 秒法则、缩略图测试（170×227px 下标题可读）、信息前置（核心信息放上半部，
 下部会被标题栏遮挡）、对比反差、避免模板感；
@@ -570,7 +570,7 @@ AFTER 标签用浅黄 #FDFFA7 底 + 粗黑字。
 
 ### 3.2 YouTube / B站：高 CTR 范式
 
-调研结论：文字 **3~5 个词**（中文 4~8 字）、粗黑无衬线占画面 20~30%；
+要点：文字 **3~5 个词**（中文 4~8 字）、粗黑无衬线占画面 20~30%；
 人脸 + 真实情绪 = CTR +20~30%；好奇心缺口（给悬念不给答案）；
 对比度 7:1 以上；中央构图（主体占中央 60%）优于三分法；40~60% 留白；
 公式：1 个承诺 + 1 张脸 + 1 个道具 + 2 个主色 + ≤5 个词。
@@ -594,17 +594,6 @@ YouTube 16:9 封面（1280×720）。中央构图：占据中央 60% 画面，�
 - **公众号**：900×383 是从 5:2 横图**中央裁剪**的（左右各裁约 3%）——标题和关键元素避开左右各 5% 边缘，
 否则会被裁掉。生成时用 5:2 出图，标题居中。
 - **X**：1500×600（5:2）全显示，但信息流缩略图很小——标题字高 ≥1/4 是底线，冲击 1/3 最佳。
-
-### 调研来源
-
-- 小红书平台设计规范（2025-2026 调研，huashu-skills 仓库）：https://github.com/alchaincyf/huashu-skills
-- 小红书封面风格模板（黑底爆款风）：https://github.com/jackidxu/myclaw/blob/HEAD/SKILLs/black-xhs-cover/SKILL.md
-- 小红书图文爆款指导（sage 仓库 social-push 技能）：https://github.com/zhangzhengeric/sage
-- 2025 YouTube Thumbnail Design Playbook：https://ventress.app/blog/2025-youtube-thumbnail-design-playbook/
-- YouTube 缩略图优化指南：https://resizehelper.com/blog/youtube-thumbnail-optimization
-- YouTube Thumbnail Design Tips (2026)：https://www.unkoa.com/youtube-thumbnail-design-tips/
-- Thumbnail CTR Guide（claude-youtube 技能）：https://github.com/agricidaniel/claude-youtube
-- CTR Trends in YouTube Thumbnails 2026：https://www.thumbnailcreator.com/blog/ctr-trends-youtube-thumbnails-2026
 
 ---
 

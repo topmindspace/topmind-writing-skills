@@ -66,7 +66,7 @@ npx @topmindspace/topmind-writing-skills install topmind-format
 | `x-delivery-contract.md`（必读必守） | 短文工作流：信源 → 原帖原图 → 内容 → 排版；短文 emoji 不强制（分点可用 emoji 或「1）」「·」【小标题】），段子完全不用 emoji，都禁用 `- ` `1. `；X 短文 / 段子的正文是一段可直接复制的纯文本（话题标签在末行），**链接（含来源）、原图、配图另发**；X 长文与公众号长文可保留文内链接 |
 | `x-post-format.md` | 不用 Markdown、列表符号、留白、来源、骨架、配图、公众号稿→X 稿 |
 | `emoji-system.md` | TopMind emoji 体系唯一出处（只用于短文体，且不强制）：人设点缀 🐔 🐱 🌱 0–2 个只放首尾；标题 emoji 0–1 个对上关键词；列表符号一帖一套 |
-| `x-layout-patterns.md` | 参考帖拆出的版式规律（首行给结论、列表引导语、【小标题】分节等） |
+| `x-layout-patterns.md` | 我们总结的版式规律（首行给结论、列表引导语、【小标题】分节等） |
 
 检查：`lint_x_post.py`（E1–E9 Markdown 残留；E10–E12 正文有 URL / 来源行 / 配图说明；W9 AI 套话、W10 首行太长不像钩子、W12 混入说明 / 内部标签；`--duanzi` 时 W13 段子里出现 emoji；`--long` 长文不查 E10–E12）。去 AI 味与吸引力清单在 `writing-principles.md` 第五点五节。
 
@@ -98,19 +98,34 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 > npm 包为 `@topmindspace/topmind-writing-skills`，旧包不再更新。
 > 也不要安装旧包的 `^2`（2.0.0–2.1.1 已弃用）。
 
+
+## 原创示例
+
+每个技能都附了我们自己写的示例输出（虚构或中性题材，不收录任何第三方原文、原图）：
+
+| 技能 | 示例 |
+|---|---|
+| topmind-viral-posts（段子） | [`topmind-viral-posts/examples/`](./topmind-viral-posts/examples/) |
+| topmind-briefs（短文） | [`topmind-briefs/examples/`](./topmind-briefs/examples/) |
+| topmind-format（排版） | [`topmind-format/examples/`](./topmind-format/examples/) |
+| topmind-x-article（X 长文） | [`topmind-x-article/examples/`](./topmind-x-article/examples/) |
+| topmind-wechat-post（公众号） | [`topmind-wechat-post/examples/`](./topmind-wechat-post/examples/) |
+| topmind-poster（长图海报） | [`topmind-poster/examples/`](./topmind-poster/examples/) |
+| topmind-cover（封面） | [`topmind-cover/assets/examples/`](./topmind-cover/assets/examples/) |
+
 ## 技能一览
 
 | 技能 | 版本 | 做什么 |
 |------|------|--------|
-| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.11** | 公众号文章全生命周期：交付包、审校改写、质量三关、微信内联排版与发布清单 |
-| [`topmind-x-article`](./topmind-x-article/) | **0.4.17** | X 长文一键发布：Markdown 原稿 → 一键复制 HTML（含配图/提示词复制、图片点击放大）/ 纯文本兜底 + 封面图 + 发布清单 |
-| [`topmind-cover`](./topmind-cover/) | **0.4.10** | 文章封面配图（X / 公众号共用，X 主尺寸 1500×600 / 5:2）：震撼醒目主题突出；22 种封面风格库 + X 短文 16:9 封面场景 + 24 种标题花式 + 七层场景配方 + 55 张示例图（22 种风格 × 2 尺寸 + 11 张变体样张） + 1 张风格总览图 |
-| [`topmind-briefs`](./topmind-briefs/) | **0.2.19** | 干货短文（公众号 + X 双平台）：一件事讲透，数据榜单/论文解读/新品速递；信源 → 原图 → 内容 → 排版；X 版交付一段可复制纯文本（默认不出 HTML，emoji 可选，去 AI 味），链接 / 原图 / 配图另发，无原图先询问配图 |
-| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.11** | X 引流段子/爆款短篇：18 大类型模板 + 组合玩法，段子体（行间空行，零 emoji，分点不加符号）、每条一段可复制纯文本、话题标签在末行，链接 / 原图另发、分类标签另列；无原图先询问再走 topmind-cover |
-| [`topmind-format`](./topmind-format/) | **0.1.4** | X 纯文本格式化：转段子（行间空行，零 emoji）/ 格式化成短文（分段 + 合理列表，emoji 可选），只动排版不改字，带原文保真校验；交付一段可复制纯文本，链接 / 原图另发 |
-| [`topmind-poster`](./topmind-poster/) | **0.1.5** | HTML+CSS → 高清长图 / 海报 / 信息图 PNG：无头 Chrome 2× 截图 + 自动裁白；「一段一图」分段图批量出图（生成器 + 渲染器） |
+| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.12** | 公众号文章全生命周期：交付包、审校改写、质量三关、微信内联排版与发布清单 |
+| [`topmind-x-article`](./topmind-x-article/) | **0.4.18** | X 长文一键发布：Markdown 原稿 → 一键复制 HTML（含配图/提示词复制、图片点击放大）/ 纯文本兜底 + 封面图 + 发布清单 |
+| [`topmind-cover`](./topmind-cover/) | **0.4.11** | 文章封面配图（X / 公众号共用，X 主尺寸 1500×600 / 5:2）：震撼醒目主题突出；22 种封面风格库 + X 短文 16:9 封面场景 + 24 种标题花式 + 七层场景配方 + 55 张示例图（22 种风格 × 2 尺寸 + 11 张变体样张） + 1 张风格总览图 |
+| [`topmind-briefs`](./topmind-briefs/) | **0.2.20** | 干货短文（公众号 + X 双平台）：一件事讲透，数据榜单/论文解读/新品速递；信源 → 原图 → 内容 → 排版；X 版交付一段可复制纯文本（默认不出 HTML，emoji 可选，去 AI 味），链接 / 原图 / 配图另发，无原图先询问配图 |
+| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.12** | X 引流段子/爆款短篇：18 大类型模板 + 组合玩法，段子体（行间空行，零 emoji，分点不加符号）、每条一段可复制纯文本、话题标签在末行，链接 / 原图另发、分类标签另列；无原图先询问再走 topmind-cover |
+| [`topmind-format`](./topmind-format/) | **0.1.5** | X 纯文本格式化：转段子（行间空行，零 emoji）/ 格式化成短文（分段 + 合理列表，emoji 可选），只动排版不改字，带原文保真校验；交付一段可复制纯文本，链接 / 原图另发 |
+| [`topmind-poster`](./topmind-poster/) | **0.1.6** | HTML+CSS → 高清长图 / 海报 / 信息图 PNG：无头 Chrome 2× 截图 + 自动裁白；「一段一图」分段图批量出图（生成器 + 渲染器） |
 
-安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.38**（整仓同 tag 发版）。
+安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.39**（整仓同 tag 发版）。
 
 ### 怎么选、怎么组合
 

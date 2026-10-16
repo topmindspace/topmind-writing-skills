@@ -48,7 +48,7 @@ def main() -> None:
             outside.append(md.relative_to(ROOT).as_posix())
     check("不引用技能目录外的相对路径", not outside, "、".join(outside))
 
-    # 1b. 共享版式文档随包自带（emoji 体系唯一真源 + 参考帖版式规律）
+    # 1b. 共享版式文档随包自带（emoji 体系唯一真源 + 版式规律）
     for ref in ("emoji-system.md", "x-post-format.md", "x-layout-patterns.md", "x-delivery-contract.md"):
         check(f"共享文档随包自带: references/{ref}", (ROOT / "references" / ref).is_file())
 

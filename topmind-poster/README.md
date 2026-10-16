@@ -4,7 +4,7 @@
 
 榜单、信息图、月报长图、海报，以及「一段一图」的分段图批量出图。文本 100% 可控、可 diff、可迭代。
 
-- 版本：**v0.1.5**（随 `@topmindspace/topmind-writing-skills@0.8.38` 发布）
+- 版本：**v0.1.6**（随 `@topmindspace/topmind-writing-skills@0.8.39` 发布）
 
 ## 安装
 
@@ -54,3 +54,7 @@ python3 scripts/render_poster.py build/*.html --out-dir images/ --width 1180
 - **不做**文章正文排版 → `topmind-wechat-post` / `topmind-x-article`
 
 本技能负责出图那一环：它们写好文章，本技能把其中一段做成能单独转发的图。
+
+## 原创示例
+
+我们自己写的示例输出见 [`examples/`](./examples/)（虚构或中性题材，不收录任何第三方原文）。

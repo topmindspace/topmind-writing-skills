@@ -4,7 +4,7 @@
 
 把 Markdown 原稿变成"复制 → 粘贴 → 发"的 X 长文（Article）发布包。
 
-- 版本：**v0.4.17**（随 `@topmindspace/topmind-writing-skills@0.8.38` 发布）
+- 版本：**v0.4.18**（随 `@topmindspace/topmind-writing-skills@0.8.39` 发布）
 
 ## 安装
 
@@ -53,31 +53,31 @@ native copy button，粘贴 `<pre>` 会被 X 丢弃，走不过去）。
 输入（10 行 markdown）：
 
 ```markdown
-# Manus 2.0 发布了
+# 晨光 3.0 发布了
 
-**从零重建**的 Agent，新增了 Cue 个人助手。
+**全新设计**的写作助手，新增了离线模式。
 
 ![发布会现场](cover.png)
 
-| Token 消耗 | -23.2% |
-| 耗时 | -28.2% |
+| Token 消耗 | -20% |
+| 耗时 | -30% |
 
-详见[官方博客](https://manus.im/blog)。
+详见[官方博客](https://example.com/blog)。
 ```
 
 `python3 scripts/md2x.py 原稿.md --out X发布稿.txt` 得到：
 
 ```
-Manus 2.0 发布了
+晨光 3.0 发布了
 
-从零重建的 Agent，新增了 Cue 个人助手。
+全新设计的写作助手，新增了离线模式。
 
 [图1]
 
-Token 消耗：-23.2%
-耗时：-28.2%
+Token 消耗：-20%
+耗时：-30%
 
-详见官方博客（https://manus.im/blog）。
+详见官方博客（https://example.com/blog）。
 
 —— 配图清单 ——
 [图1] 发布会现场
@@ -104,3 +104,7 @@ X 长文目前走人工粘贴发布（X Article 编辑器），API 不发长文�
 python3 scripts/package_skill.py --check   # 发布前校验
 python3 scripts/negative_tests.py          # 异常输入测试
 ```
+
+## 原创示例
+
+我们自己写的示例输出见 [`examples/`](./examples/)（虚构或中性题材，不收录任何第三方原文）。

@@ -4,7 +4,7 @@
 
 Full lifecycle for WeChat articles: delivery package, review & rewrite, three quality gates, status sync, WeChat inline typography, and publish checklist.
 
-- Version: **v0.3.11** (ships with `@topmindspace/topmind-writing-skills@0.8.38`)
+- Version: **v0.3.12** (ships with `@topmindspace/topmind-writing-skills@0.8.39`)
 
 ## Install
 
@@ -109,3 +109,7 @@ The following skills live **outside this repo** (provided separately by the host
 python3 scripts/package_skill.py --check
 python3 scripts/negative_tests.py
 ```
+
+## Original examples
+
+Sample outputs written by us (fictional or neutral topics, no third-party text) are in [`examples/`](./examples/).

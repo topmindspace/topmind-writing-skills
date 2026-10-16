@@ -4,7 +4,7 @@
 
 短、真、钩子——3 秒看完，忍不住点赞/评论/关注。基于对 X 中文区常见高互动写法的归纳，提供 18 类型模板 + 钩子×主体×收尾组合玩法（示例均为自编），默认段子体排版（一句一行、行间空一行），配图原图优先，并附话题标签与分类标签。
 
-- 版本：**v0.3.11**（随 `@topmindspace/topmind-writing-skills@0.8.38` 发布）
+- 版本：**v0.3.12**（随 `@topmindspace/topmind-writing-skills@0.8.39` 发布）
 
 ## 安装
 
@@ -64,3 +64,7 @@ python3 scripts/lint_x_post.py X稿.txt --duanzi   # 段子出现 emoji 报 W13�
 ## 用法
 
 工作流细节见 [SKILL.md](./SKILL.md)，示例拆解见 [references/patterns.md](./references/patterns.md)。
+
+## 原创示例
+
+我们自己写的示例输出见 [`examples/`](./examples/)（虚构或中性题材，不收录任何第三方原文）。

@@ -4,7 +4,7 @@
 
 公众号文章全生命周期：交付包、审校改写、质量三关、状态同步、微信内联排版与发布清单。
 
-- 版本：**v0.3.11**（随 `@topmindspace/topmind-writing-skills@0.8.38` 发布）
+- 版本：**v0.3.12**（随 `@topmindspace/topmind-writing-skills@0.8.39` 发布）
 
 ## 安装
 
@@ -111,3 +111,7 @@ python3 scripts/md2wechat.py --input demo.md --out-dir demo --slug demo --embed-
 python3 scripts/package_skill.py --check
 python3 scripts/negative_tests.py
 ```
+
+## 原创示例
+
+我们自己写的示例输出见 [`examples/`](./examples/)（虚构或中性题材，不收录任何第三方原文）。

@@ -7,7 +7,7 @@ A brief is not a long-form article — **no HTML by default**: the workflow is v
 The X version is one copy-ready plain-text block (emoji optional); **links (including sources), original images and any generated images are sent separately**, never mixed into the body.
 The WeChat version is ~300–800 Chinese characters of Markdown. With no original image it asks before generating one.
 
-- Version: **v0.2.19** (ships with `@topmindspace/topmind-writing-skills@0.8.38`)
+- Version: **v0.2.20** (ships with `@topmindspace/topmind-writing-skills@0.8.39`)
 
 ## Install
 
@@ -56,3 +56,7 @@ python3 scripts/lint_x_post.py brief-x.md
 Formatting existing text / converting to duanzi → `topmind-format`; X long-form → `topmind-x-article`; WeChat long-form → `topmind-wechat-post`;
 engagement-style short posts and jokes → `topmind-viral-posts`; standalone long images/posters → `topmind-poster`;
 covers and header images → `topmind-cover`; posting → `topmind-x` (only after the user confirms).
+
+## Original examples
+
+Sample outputs written by us (fictional or neutral topics, no third-party text) are in [`examples/`](./examples/).

@@ -7,7 +7,7 @@
 X 版交付一段可直接复制的纯文本（emoji 可选），**链接（含来源）、原图、配图另发**，不和正文混在一起；公众号版约 300–800 字 Markdown。
 没有原图时先问要不要配图（`topmind-cover`）；链接那一条写明来源名称、发布时间与 URL。
 
-- 版本：**v0.2.19**（随 `@topmindspace/topmind-writing-skills@0.8.38` 发布）
+- 版本：**v0.2.20**（随 `@topmindspace/topmind-writing-skills@0.8.39` 发布）
 
 ## 安装
 
@@ -57,3 +57,7 @@ python3 scripts/lint_x_post.py X短文.md
 现成文字格式化 / 转段子 → `topmind-format`；X 长文 → `topmind-x-article`；公众号长文 → `topmind-wechat-post`；
 引流互动型短帖与段子 → `topmind-viral-posts`；单独出长图/海报 → `topmind-poster`；
 封面/头图 → `topmind-cover`；发帖 → `topmind-x`（须用户确认）。
+
+## 原创示例
+
+我们自己写的示例输出见 [`examples/`](./examples/)（虚构或中性题材，不收录任何第三方原文）。

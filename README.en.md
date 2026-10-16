@@ -66,7 +66,7 @@ Single source in `shared/references/`, distributed to each skill's `references/`
 | `x-delivery-contract.md` (must read) | Short-post workflow: sources → original post/images → content → layout; emoji optional for short posts (emoji or 「1）」/「·」/【headings】 bullets), none at all in duanzi; never `- ` / `1. `; the X short-post / duanzi body is one copy-ready plain-text block (hashtags last); **links (including sources), original images and generated images are sent separately**; X long-form and WeChat articles may keep in-text links |
 | `x-post-format.md` | No Markdown, bullet sets, spacing, sources, skeletons, images, WeChat → X |
 | `emoji-system.md` | The TopMind emoji system (short posts only, optional): 0–2 persona motifs (🐔 🐱 🌱) at start/end; 0–1 keyword-matched title emoji; one bullet set per post |
-| `x-layout-patterns.md` | Layout patterns distilled from reference posts |
+| `x-layout-patterns.md` | Layout patterns in our own words |
 
 Checks: `lint_x_post.py` (E1–E9 Markdown leftovers; E10–E12 URLs / source lines / image notes in the body; W9 AI-sounding phrases, W10 first line too long for a hook, W12 notes / internal tags in the body; W13 any emoji in a duanzi post with `--duanzi`; `--long` skips E10–E12 for long-form). The de-AI and hook checklist lives in section 5.5 of `writing-principles.md`.
 
@@ -98,19 +98,34 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 > the npm package is `@topmindspace/topmind-writing-skills` and the old package is no longer updated.
 > Also do not install the old package's `^2` (2.0.0–2.1.1 deprecated).
 
+
+## Original examples
+
+Every skill ships sample outputs written by us (fictional or neutral topics; no third-party text or images):
+
+| Skill | Examples |
+|---|---|
+| topmind-viral-posts (one-liners) | [`topmind-viral-posts/examples/`](./topmind-viral-posts/examples/) |
+| topmind-briefs (short posts) | [`topmind-briefs/examples/`](./topmind-briefs/examples/) |
+| topmind-format (formatting) | [`topmind-format/examples/`](./topmind-format/examples/) |
+| topmind-x-article (X long-form) | [`topmind-x-article/examples/`](./topmind-x-article/examples/) |
+| topmind-wechat-post (WeChat) | [`topmind-wechat-post/examples/`](./topmind-wechat-post/examples/) |
+| topmind-poster (posters) | [`topmind-poster/examples/`](./topmind-poster/examples/) |
+| topmind-cover (covers) | [`topmind-cover/assets/examples/`](./topmind-cover/assets/examples/) |
+
 ## Skills
 
 | Skill | Version | What it does |
 |-------|---------|--------------|
-| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.11** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
-| [`topmind-x-article`](./topmind-x-article/) | **0.4.17** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
-| [`topmind-cover`](./topmind-cover/) | **0.4.10** | Cover art for X / WeChat (X master 1500×600 / 5:2): striking, theme-focused; 22-style cover style library + 16:9 X short-post cover scene + 24 title treatments + 7-layer scene recipe + 55 example images (22 styles × 2 sizes + 11 variant samples) + 1 style overview |
-| [`topmind-briefs`](./topmind-briefs/) | **0.2.19** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper explainers / product alerts / mechanism explainers; sources → images → content → layout; one copy-ready plain-text X block (no HTML by default, emoji optional, no AI tone), links / images sent separately; asks before generating any image |
-| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.11** | X viral short posts: 18 template types + combinations, duanzi layout (blank lines, no emoji, plain bullet lines), one copy-ready plain-text block per post with hashtags last, links / images sent separately, classification tags listed separately; asks before generating an image |
-| [`topmind-format`](./topmind-format/) | **0.1.4** | X plain-text formatter: to duanzi (blank lines, no emoji) / to short post (paragraphing + sensible lists, emoji optional); layout only, words unchanged, with a fidelity check; one copy-ready plain-text body, links / images sent separately |
-| [`topmind-poster`](./topmind-poster/) | **0.1.5** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
+| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.12** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
+| [`topmind-x-article`](./topmind-x-article/) | **0.4.18** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
+| [`topmind-cover`](./topmind-cover/) | **0.4.11** | Cover art for X / WeChat (X master 1500×600 / 5:2): striking, theme-focused; 22-style cover style library + 16:9 X short-post cover scene + 24 title treatments + 7-layer scene recipe + 55 example images (22 styles × 2 sizes + 11 variant samples) + 1 style overview |
+| [`topmind-briefs`](./topmind-briefs/) | **0.2.20** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper explainers / product alerts / mechanism explainers; sources → images → content → layout; one copy-ready plain-text X block (no HTML by default, emoji optional, no AI tone), links / images sent separately; asks before generating any image |
+| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.12** | X viral short posts: 18 template types + combinations, duanzi layout (blank lines, no emoji, plain bullet lines), one copy-ready plain-text block per post with hashtags last, links / images sent separately, classification tags listed separately; asks before generating an image |
+| [`topmind-format`](./topmind-format/) | **0.1.5** | X plain-text formatter: to duanzi (blank lines, no emoji) / to short post (paragraphing + sensible lists, emoji optional); layout only, words unchanged, with a fidelity check; one copy-ready plain-text body, links / images sent separately |
+| [`topmind-poster`](./topmind-poster/) | **0.1.6** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
 
-Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.38** (whole-repo same-tag releases).
+Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.39** (whole-repo same-tag releases).
 
 ### Which skill, and how they combine
 

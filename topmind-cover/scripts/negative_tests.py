@@ -149,6 +149,18 @@ def main() -> None:
     check("组合库：每个组合都有英文模板", cb.count("```text") >= nc and "central horizontal band" in cb)
     check("组合库：不含第三方网址", "http" not in cb)
 
+    # 9. 不得出现参考来源：第三方站点名、创作者账号、来源 / 灵感致谢、资料网址清单
+    import re as _re2
+    base = ROOT.parent if (ROOT.parent / "shared").is_dir() else ROOT
+    bad = _re2.compile(r"xarticles|x\.com/(?!i/)[A-Za-z0-9_]+/(?:status|article)|inspired by|learned from|灵感来自|参考帖|参考了|借鉴自|调研来源|^## 来源\s*$|^出处：|公开封面合集|uisdc|nngroup|huashu|alchaincyf|noahduck", _re2.I | _re2.M)
+    hits = []
+    for f in base.rglob("*"):
+        if f.suffix not in (".md", ".json", ".txt") or "node_modules" in f.parts or f.name == "CHANGELOG.md" or f.name.startswith("LICENSE"):
+            continue
+        for m in bad.finditer(f.read_text(encoding="utf-8", errors="ignore")):
+            hits.append(f"{f.relative_to(base)}: {m.group(0)}")
+    check("全仓：不出现参考来源、站点名、账号或致谢语", not hits, "; ".join(hits[:5]))
+
     if fails:
         print(f"\n[negative_tests] {len(fails)} 项失败")
         sys.exit(1)
