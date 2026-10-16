@@ -128,7 +128,7 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 | [`topmind-format`](./topmind-format/) | **0.1.6** | X 纯文本格式化：转段子（行间空行，零 emoji）/ 格式化成短文（分段 + 合理列表，emoji 可选），只动排版不改字，带原文保真校验；交付一段可复制纯文本，链接 / 原图另发 |
 | [`topmind-poster`](./topmind-poster/) | **0.1.6** | HTML+CSS → 高清长图 / 海报 / 信息图 PNG：无头 Chrome 2× 截图 + 自动裁白；「一段一图」分段图批量出图（生成器 + 渲染器） |
 
-安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.41**（整仓同 tag 发版）。
+安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.42**（整仓同 tag 发版）。
 
 ### 怎么选、怎么组合
 
@@ -155,7 +155,9 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 npx @topmindspace/topmind-writing-skills list
 npx @topmindspace/topmind-writing-skills install topmind-briefs
 npx @topmindspace/topmind-writing-skills install topmind-briefs --to ./.claude/skills
-npx @topmindspace/topmind-writing-skills@0.8.4 install topmind-briefs   # 钉版本
+npx @topmindspace/topmind-writing-skills@latest install topmind-briefs   # 升级：已装旧版直接覆盖，无需 --force
+npx @topmindspace/topmind-writing-skills install topmind-briefs --force   # 同版本重装 / 降级
+npx @topmindspace/topmind-writing-skills@0.8.4 install topmind-briefs   # 钉版本（已装更新的版本时需 --force）
 npx @topmindspace/topmind-writing-skills uninstall topmind-briefs --to ./.claude/skills
 ```
 

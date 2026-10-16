@@ -128,7 +128,7 @@ Every skill ships sample outputs written by us (fictional or neutral topics; no 
 | [`topmind-format`](./topmind-format/) | **0.1.6** | X plain-text formatter: to duanzi (blank lines, no emoji) / to short post (paragraphing + sensible lists, emoji optional); layout only, words unchanged, with a fidelity check; one copy-ready plain-text body, links / images sent separately |
 | [`topmind-poster`](./topmind-poster/) | **0.1.6** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
 
-Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.41** (whole-repo same-tag releases).
+Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.42** (whole-repo same-tag releases).
 
 ### Which skill, and how they combine
 
@@ -151,7 +151,9 @@ Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package
 npx @topmindspace/topmind-writing-skills list
 npx @topmindspace/topmind-writing-skills install topmind-briefs
 npx @topmindspace/topmind-writing-skills install topmind-briefs --to ./.claude/skills
-npx @topmindspace/topmind-writing-skills@0.8.4 install topmind-briefs   # pin
+npx @topmindspace/topmind-writing-skills@latest install topmind-briefs   # upgrade: older install is overwritten, no --force needed
+npx @topmindspace/topmind-writing-skills install topmind-briefs --force   # reinstall same version / downgrade
+npx @topmindspace/topmind-writing-skills@0.8.4 install topmind-briefs   # pin (needs --force if a newer version is installed)
 npx @topmindspace/topmind-writing-skills uninstall topmind-briefs --to ./.claude/skills
 ```
 

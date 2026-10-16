@@ -46,14 +46,14 @@ jobs:
             node bin/topmind-writing-skills.js install "$skill" --to "$OUT"
             test -f "$OUT/$skill/SKILL.md"
           done
-          # Refuse overwrite without --force
-          if node bin/topmind-writing-skills.js install "${SKILLS[0]}" --to "$OUT"; then
-            echo "expected install onto existing dir to fail without --force" >&2
-            exit 1
-          fi
+          # Same version again -> "Already up to date", exit 0
+          node bin/topmind-writing-skills.js install "${SKILLS[0]}" --to "$OUT" | grep -q "Already up to date"
+          # Older installed version -> upgraded in place
+          sed -i 's/version: "[0-9.]*"/version: "0.0.1"/' "$OUT/${SKILLS[0]}/SKILL.md"
+          node bin/topmind-writing-skills.js install "${SKILLS[0]}" --to "$OUT" | grep -q "^Upgraded ${SKILLS[0]} 0.0.1 -> "
           node bin/topmind-writing-skills.js install "${SKILLS[0]}" --to "$OUT" --force
           test -f "$OUT/${SKILLS[0]}/SKILL.md"
-      - name: Installer negative tests (--force guards)
+      - name: Installer negative tests (path guards)
         run: node scripts/test_install_guards.js
       - name: Installer CLI tests (install/uninstall)
         run: node scripts/test_installer_cli.js
