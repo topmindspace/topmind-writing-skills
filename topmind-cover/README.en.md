@@ -4,7 +4,7 @@
 
 A reusable skill for generating cover art for X long-form posts and WeChat articles. Goal: **striking, eye-catching, theme-focused**.
 
-- Version: **v0.4.8** (ships with `@topmindspace/topmind-writing-skills@0.8.36`)
+- Version: **v0.4.9** (ships with `@topmindspace/topmind-writing-skills@0.8.37`)
 
 ## Style gallery
 
@@ -22,12 +22,12 @@ npx @topmindspace/topmind-writing-skills install topmind-cover
 
 ## Usage
 
-0. **Pick a style**: choose 1 of 22 styles from `references/cover-styles.md` by topic (light-first) → check the example image to confirm the visual language.
-1. **Refine the title**: lock the title copy first (usually ≤ 10 chars) using that style's title rules; rewrite until it lands — no drawing yet.
-2. **Composition brief**: one-sentence brief (theme / audience / mood / visual metaphor / palette direction) before composing the prompt.
-3. Input: article title + 3 theme keywords + platform (x / wechat / both, default both).
-4. Generate with the agent's image-generation capability (landscape 5:2, 8% margin on all sides).
-5. **Impact self-check** (required): pass every item in the [impact self-check list](./SKILL.md#冲击力自检清单); on failure, tweak the prompt and regenerate, max 3 attempts.
+0. **Pick a style combo**: choose a main style (1 of 22, light-first) from `references/cover-styles.md`, then a secondary style from section 4 of [`references/scene-builder.md`](./references/scene-builder.md); check the example image.
+1. **Refine the title**: lock the title copy first (usually ≤ 10 chars, split into 2–3 lines with size contrast) using that style's title rules; no drawing yet.
+2. **Seven-layer scene recipe**: theme → metaphor / conflict → hero (optionally the TopMind chick / cat / plant IP) → an action that interacts with the title → 2–4 props → ≥3 background layers → light. No recognizable real people.
+3. **2–3 options by default**: option card `Option A | metaphor | style: main + secondary | layout: L1–L10 | palette`, differing in at least three of the four; never repeat the main style on consecutive covers.
+4. **Compose and generate**: fill every slot of the layered CN/EN template in `scene-builder.md`; pick 1 main + 1 secondary title treatment from the 24 in `typography-system.md`, plus chips / buttons / corner badges. For long titles or misrendered text use path B: generate the scene with a clean title area, then overlay the title with `scripts/overlay-title.py`.
+5. **Score and self-check** (required): six-dimension score (richness / topic fit / title treatment / depth / readability / texture) must total ≥ 20 with no item ≤ 2, then pass the [impact self-check list](./SKILL.md#冲击力自检清单); otherwise revise and regenerate (max 3), then switch options.
 6. Crop and save:
 
 ```bash
@@ -37,6 +37,9 @@ python3 scripts/crop-cover.py <main-image> --out-dir <package>/images/
 # X short-post cover: generate a separate 16:9 master
 python3 scripts/crop-cover.py <16:9-image> --preset x-post --out-dir <dir>
 # produces 00-封面-X短文.png (1200x675)
+
+# Path B: scene background + scripted title overlay (line sizes, keyword color, stroke, shadow, marker underline, chips)
+python3 scripts/overlay-title.py <background> <spec.json> --out <cover> [--font <font>]
 ```
 
 ## Sizes

@@ -6,13 +6,13 @@
 > 这份是**完整、可直接粘贴**的提示词，变量用【】标出，选好、填好、粘贴、生成。
 >
 > 配套：`cover-styles.md`（22 风格技能配方）· `impact-language.md`（20 条冲击力设计语言）·
-> `typography-system.md`（12 种标题花式 + 背景库）· `assets/examples/`（55 张原创样张）
+> `typography-system.md`（24 种标题花式 + 副信息组件 + 背景库）· `scene-builder.md`（七层场景配方 + 风格组合 + 评分）· `assets/examples/`（55 张原创样张）
 
 ---
 
 ## 0. 使用说明：三步替换法
 
-1. **选一条**：第 1 章按风格选；X 短文 / 短帖封面看第 2 章；不确定就按第 4 章的内容类型查推荐。
+1. **选一条**：第 1 章按风格选；X 短文 / 短帖封面看第 2 章；想要场景更丰富、一次出 2–3 个方案，照 2.8 的写法；不确定就按第 4 章的内容类型查推荐。
 2. **填**：把【标题】等变量换成你的真实文案（**必须是真实的**，不要编造数据）。
 3. **粘贴生成**：全文（含"绝不"段）一起粘贴。尺寸见下表。
 
@@ -441,6 +441,72 @@ IP 趣味风中文封面。纯色柠檬黄 #FFE14D 底，带细噪点，画面�
 | 观点评论 | 2.5 | 标题「慢一点 / 反而快」；小物件「一只半埋在字后的沙漏」 |
 | 运营段子 | 2.6 | 标题「今日打卡」；橘猫「戴着小耳机敲键盘」 |
 
+### 2.8 场景配方多方案示例（虚构主题，演示写法）
+
+> 按 `scene-builder.md` 七层配方写，每个主题出 3 张方案卡，四项（隐喻 / 风格组合 / 骨架 / 配色）至少换三项。
+> 完整 prompt 只示范每个主题的方案 A；B、C 照同一模板替换槽位即可。
+
+**主题一：本地部署开源大模型**（标题「把大模型 / 搬回家」）
+
+| 方案 | 隐喻 | 风格：主 + 辅 | 骨架 | 配色 |
+|---|---|---|---|---|
+| A | 小鸡工程师把一朵云塞进桌面机箱 | 3D IP + 暗色 SaaS | L5 左字右角色互动 | 深灰 + 机箱冷蓝光 + 暖台灯橙 |
+| B | 云端与家里之间的网线被剪断，另一端接进书架上的小服务器 | 硬核立体字 + 微缩场景 | L6 中字两侧道具 | 牛皮纸米白 + 墨黑 + 信号绿 |
+| C | 终端窗口里一行命令变成一座小房子的地基 | 手绘插画 + 流程卡片 | L8 流程卡片铺陈（下载 → 配置 → 运行） | 浅暖白 + 品牌蓝 + 荧光黄底线 |
+
+方案 A 中文 prompt：
+
+```
+横构图 16:9（1200×675），X 短文封面。
+主题：本地部署开源大模型；隐喻：把云端的大模型搬回自己家。
+主角：一只 3D 黏土质感的小鸡工程师，戴黄色安全帽和护目镜，表情专注。
+动作：小鸡双手把一朵发光的蓝白色云朵往一台打开侧板的桌面机箱里推，身体前倾，一只脚蹬地；云朵的一角压到标题第二行边缘。
+道具：打开侧板的机箱（内部显卡亮冷蓝光）、桌上一块显示终端绿色光标的小屏幕、一卷网线、一盏暖橙台灯。
+装饰：几颗从云朵飘出的小光点；标题下一道手绘荧光黄底线。
+背景：远景是虚化的书房书架；承载面是木纹桌面；深灰墙面带细噪点；前景一角虚化的键盘。
+光线：台灯暖橙主光从右上打下，机箱冷蓝光作轮廓光，温暖而有科技感。
+配色：主色深灰，辅色冷蓝，文字色白，强调色暖橙（共 4 种）。
+标题（逐字准确，单独成行）：
+「把大模型」
+「搬回家」
+标题排版：L5，标题在左 50%；T13 大小行对比（第二行字号是第一行 1.6 倍）+ T14「搬回家」暖橙描边变色；辅手法 T17 手绘底线。
+副信息：左上胶囊「开源 · 离线 · 免费」。
+除标题与副信息外画面无其他可读文字；标题与主角在中央 80% 宽、上下各留 10% 的安全区内。
+绝不：错别字或多字少字；可识别的真实人物长相；假 logo、假截图、假数据；元素堆满没有焦点；塑料感油腻高光；标题被道具遮挡笔画。
+```
+
+**主题二：AI 写作去 AI 味**（标题「删掉 / AI 腔」）
+
+| 方案 | 隐喻 | 风格：主 + 辅 | 骨架 | 配色 |
+|---|---|---|---|---|
+| A | 小猫编辑举着红笔，把稿纸上一串套话圈掉划掉 | 3D IP + 纸张拼贴 | L10 掀纸破框 | 米白稿纸 + 墨黑 + 批改红 |
+| B | 一块大橡皮把机器人形状的墨迹擦成一行手写字 | 卡通素描 + 资讯快报 | L7 上字下场景 | 牛皮纸 + 铅笔灰 + 番茄红 |
+| C | 「AI 腔 ≠ 好文章」，天平一端是一堆金属零件，一端是一张手写便签 | 资讯快报 + 硬核立体字 | L6 中字两侧道具 | 米白 + 墨蓝 + 红色 ≠ 符号 |
+
+方案 A 英文 prompt（标题走 B 路径：留白后用 `scripts/overlay-title.py` 叠中文）：
+
+```
+Wide 16:9 cover (1200x675) for an article about removing robotic AI tone from writing.
+Metaphor: an editor cat peeling back a sheet of manuscript and crossing out stiff boilerplate.
+Hero: an original 3D clay-style ginger cat editor with round glasses, confident expression.
+Action: the cat lifts the top-right corner of a large cream paper sheet with one paw and holds a red pen in the other, mid-stroke circling a scribbled line.
+Props: a stack of manuscript pages with red correction marks (no readable text), a rubber eraser with crumbs, a vintage typewriter partly in frame.
+Decoration: two small red hand-drawn check marks, a strip of washi tape at the paper corner.
+Background: soft-focus desk with warm wood grain; subtle paper fiber texture; a blurred potted plant in the far corner.
+Light: warm window light from the upper left, soft shadow under the lifted paper, cozy and crisp.
+Palette: cream, ink black, correction red (3 colors).
+Leave a clean, flat cream area on the left 50% of the frame for the title overlay. Do not render any text, letters or logos.
+Avoid: recognizable real people, fake UI, cluttered layout with no focal point, plastic glossy highlights, deformed paws.
+```
+
+叠字 spec 示例（`overlay-title.py` 读取）：
+
+```json
+{"lines": [{"text": "删掉", "size": 120}, {"text": "AI 腔", "size": 190, "color": "#D83A2E", "underline": "#F2C230"}],
+ "x": 80, "y": 150, "color": "#1E1E1E", "stroke": 8, "stroke_color": "#FFFFFF", "shadow": true,
+ "chips": ["写作", "去 AI 味", "实操"]}
+```
+
 ## 3. 外部调研：全平台爆款封面流派
 
 > 2026-09 调研总结。核心结论：**所有平台的爆款封面都在做同一件事——3 秒内让标题被读懂**。
@@ -607,4 +673,4 @@ film grain, or a light halo).
 ---
 
 *文档版本：2026-10-14 · 与 topmind-cover 的 22 种风格同步：第 1 章 23 条提示词覆盖全部 22 种风格（白色清新有干货、人物两版），
-第 2 章为 X 短文 16:9 封面的 6 条场景提示词。新增风格或示例时，请同步更新第 1、2、4 章。*
+第 2 章为 X 短文 16:9 封面的 6 条场景提示词，2.8 为场景配方多方案示例。新增风格或示例时，请同步更新第 1、2、4 章。*

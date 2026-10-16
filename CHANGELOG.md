@@ -1,3 +1,15 @@
+## [0.8.37] - 2026-10-16
+
+> 根包 0.8.36 → **0.8.37**（patch）；技能版本：topmind-cover 0.4.8 → 0.4.9；其余技能不变。
+
+### 变更（topmind-cover 深度优化 + 示例图全量刷新）
+
+- 新增 `references/scene-builder.md`：七层场景配方、风格组合、六维评分与重做门槛。
+- 新增 `scripts/overlay-title.py`：场景图生成后脚本叠中文标题（简体 CJK 字体，描边 / 阴影 / 胶囊副标签），避免生图模型写错字。
+- `typography-system.md` 扩到 24 种标题花式（T13–T24）；`cover-styles.md` 构图骨架扩到 10 种（L5–L10）；`cover-prompts.md` 新增 2.8；`impact-language.md`、negative_tests、evals（cover-5～7）同步。
+- `assets/examples/` 55 张示例图 + `overview.png` 按新配方全部重画：先出无字场景，再用 `overlay-title.py` 叠字；尺寸、文件名不变。`docs/assets/writing-cover.png` 同步刷新。
+- 文档口径修正：标题花式 24 种、示例图 55 张。
+
 ## [0.8.36] - 2026-10-14
 
 > 根包 0.8.35 → **0.8.36**（patch）；技能版本：topmind-briefs 0.2.18 → 0.2.19、topmind-format 0.1.3 → 0.1.4、topmind-viral-posts 0.3.10 → 0.3.11、

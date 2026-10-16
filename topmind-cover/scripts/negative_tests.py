@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""topmind-cover 异常输入测试：crop-cover.py 错误路径干净（任一失败 → 退出码 1）。"""
+"""topmind-cover 异常输入测试：crop-cover.py 与 overlay-title.py 错误路径干净、正常路径出图（任一失败 → 退出码 1）。"""
 from __future__ import annotations
 
 import subprocess
@@ -15,12 +15,17 @@ except Exception:
 
 ROOT = Path(__file__).resolve().parent.parent
 CROP = ROOT / "scripts" / "crop-cover.py"
+OVERLAY = ROOT / "scripts" / "overlay-title.py"
 PY = sys.executable
 fails: list[str] = []
 
 
 def run(args: list[str]) -> subprocess.CompletedProcess:
     return subprocess.run([PY, str(CROP), *args], capture_output=True, text=True, timeout=60)
+
+
+def run_overlay(args: list[str]) -> subprocess.CompletedProcess:
+    return subprocess.run([PY, str(OVERLAY), *args], capture_output=True, text=True, timeout=60)
 
 
 def check(name: str, cond: bool, detail: str = "") -> None:
@@ -60,6 +65,34 @@ def main() -> None:
                 check("公众号图 900×383", (w, h) == (900, 383), f"实 {w}×{h}")
         except ImportError:
             print("  - 跳过图片生成测试（无 Pillow）")
+
+        # 4. overlay-title：缺失底图 / 坏 spec → 干净报错
+        (td / "spec_bad.json").write_text("{not json", encoding="utf-8")
+        r = run_overlay([str(td / "nope.png"), str(td / "spec_bad.json"), "--out", str(td / "x.png")])
+        check("叠字：缺失底图干净报错", r.returncode != 0 and "Traceback" not in r.stderr, r.stderr[:100])
+        try:
+            from PIL import Image
+            Image.new("RGB", (1200, 675), (245, 240, 230)).save(td / "bg.png")
+            r = run_overlay([str(td / "bg.png"), str(td / "spec_bad.json"), "--out", str(td / "x.png")])
+            check("叠字：坏 JSON 干净报错", r.returncode != 0 and "Traceback" not in r.stderr, r.stderr[:100])
+            (td / "spec_empty.json").write_text('{"lines": []}', encoding="utf-8")
+            r = run_overlay([str(td / "bg.png"), str(td / "spec_empty.json"), "--out", str(td / "x.png")])
+            check("叠字：空 lines 干净报错", r.returncode != 0 and "Traceback" not in r.stderr, r.stderr[:100])
+            (td / "spec_ok.json").write_text(
+                '{"lines": [{"text": "Local LLM", "size": 90}, {"text": "AT HOME", "size": 140, '
+                '"color": "#D83A2E", "underline": "#F2C230"}], "stroke": 6, "shadow": true, "chips": ["a", "b"]}',
+                encoding="utf-8")
+            r = run_overlay([str(td / "bg.png"), str(td / "spec_ok.json"), "--out", str(td / "ok_overlay.png")])
+            if r.returncode != 0 and "字体" in r.stderr:
+                print("  - 跳过叠字出图测试（本机无可用字体）")
+            else:
+                ok = r.returncode == 0 and (td / "ok_overlay.png").exists()
+                check("叠字：正常出图", ok, r.stderr[:100])
+                if ok:
+                    size = Image.open(td / "ok_overlay.png").size
+                    check("叠字：尺寸与底图一致", size == (1200, 675), f"实 {size}")
+        except ImportError:
+            print("  - 跳过叠字测试（无 Pillow）")
 
     if fails:
         print(f"\n[negative_tests] {len(fails)} 项失败")

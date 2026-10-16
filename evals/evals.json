@@ -72,6 +72,9 @@
     {"id": "briefs-workflow-1", "target_skill": "topmind-briefs", "prompt": "有个传言说某厂下周发新模型，帮我写条 X 短文。", "expected_skill": "topmind-briefs", "expected_behavior": "先找一手来源（官方公告 / 当事人原帖）；只有二手爆料时标「据传 / 未证实」或建议暂缓；再找原帖原图，然后写内容、最后排版；正文不含 URL，链接与图另发。"},
     {"id": "briefs-noemoji-1", "target_skill": "topmind-briefs", "prompt": "写条 X 短文讲这次更新，别加 emoji。", "expected_skill": "topmind-briefs", "expected_behavior": "短文 emoji 不强制：零 emoji 照样合格，分点用「1）」「·」或【小标题】，不用 - / 1.；首行钩子、具体数字、有观点收尾；lint_x_post.py 无错误、无 W9。"},
     {"id": "briefs-deai-1", "target_skill": "topmind-briefs", "prompt": "这条 X 短文 AI 味太重了，帮我改得有吸引力点。", "expected_skill": "topmind-briefs", "expected_behavior": "按 writing-principles.md 第五点五节去 AI 味（删「值得注意的是」「总的来说」「不仅…更…」、三连排比、过度对称、空泛形容、升华结尾），补首行钩子、具体数字和场景、有观点的收尾；事实不变；lint W9 / W10 清零。"},
-    {"id": "format-links-1", "target_skill": "topmind-format", "prompt": "把这段带链接的文字格式化成短文，链接留着。", "expected_skill": "topmind-format", "expected_behavior": "格式化后正文不含 URL 和来源行：format_text.py 把链接 / 来源行拿出来，链接单独一条另发（不丢）；正文一段可复制纯文本，保真校验通过；说明里写明挪出了哪些链接。"}
+    {"id": "format-links-1", "target_skill": "topmind-format", "prompt": "把这段带链接的文字格式化成短文，链接留着。", "expected_skill": "topmind-format", "expected_behavior": "格式化后正文不含 URL 和来源行：format_text.py 把链接 / 来源行拿出来，链接单独一条另发（不丢）；正文一段可复制纯文本，保真校验通过；说明里写明挪出了哪些链接。"},
+    {"id": "cover-5", "target_skill": "topmind-cover", "prompt": "给「本地部署开源大模型」这篇长文做封面，之前的封面太单调了，要场景丰富一点。", "expected_skill": "topmind-cover", "expected_behavior": "按 scene-builder 七层配方（隐喻 / 主角 / 与标题互动的动作 / 2–4 道具 / ≥3 层背景 / 光线）写场景，默认给 2–3 张方案卡（风格组合 + L1–L10 骨架 + 配色，四项至少换三项），标题 2–3 行大小对比 + 关键词强调；六维评分 ≥20 且无项 ≤2 才交付。"},
+    {"id": "cover-6", "target_skill": "topmind-cover", "prompt": "X 短文封面，标题有 12 个字还带生僻字，上次生图标题全是错字。", "expected_skill": "topmind-cover", "expected_behavior": "走双路径 B：16:9 场景图留干净标题区并禁止生成文字，再用 scripts/overlay-title.py 按 spec 叠多行标题（字号对比、变色、描边、胶囊）；或建议先把标题缩到 ≤10 字。"},
+    {"id": "cover-7", "target_skill": "topmind-cover", "prompt": "帮我做个头图，想放某位科技公司 CEO 的脸，主题是他的新品发布会。", "expected_skill": "topmind-cover", "expected_behavior": "不画可识别的真实人物长相；新闻事实类优先用官方原图，否则用 TopMind IP 或无人物的产品 / 场景隐喻；说明原因。"}
   ]
 }
