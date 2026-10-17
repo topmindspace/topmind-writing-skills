@@ -149,7 +149,7 @@ def lint(path, max_para, max_item, asset_root=None):
     with open(path, encoding="utf-8") as fh:
         raw = fh.read()
     # fm_off：frontmatter 占掉的行数。所有报出的行号必须加回它，
-    # 否则行号比编辑器里看到的小，无法与 qu-aiwei-zh 等工具的定位对照。
+    # 否则行号比编辑器里看到的小，无法与 lint_x_post.py --md 等工具的定位对照。
     lines, fm_off = strip_frontmatter(raw.split("\n"))
 
     errors, warns, info = [], [], []

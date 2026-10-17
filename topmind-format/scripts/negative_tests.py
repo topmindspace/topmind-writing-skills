@@ -171,6 +171,34 @@ def main() -> None:
             ai.write_text("总的来说，这次更新不仅更快，更稳定，堪称更快、更强、更智能的重磅升级\n\n#AI\n", encoding="utf-8")
             r = run_quiet([str(lint), str(ai)], t)
             check("lint：AI 套话报 W9、首行过长报 W10", "W9" in r.stdout and "W10" in r.stdout, r.stdout[-300:])
+            lg = t / "long.txt"
+            lg.write_text("长文标题\n\n理想的 agent 就三件事，用三个词概括。\n\n" + "这一段写得太长了，" * 14 + "\n\n- 列表项不算段落\n", encoding="utf-8")
+            r = run_quiet([str(lint), str(lg), "--long"], t)
+            check("lint --long：公式化计数标签报 W9、单段过长报 W14", "W9" in r.stdout and "三件事" in r.stdout and "W14" in r.stdout, r.stdout[-300:])
+            st = t / "struct.txt"
+            st.write_text("新模型发布了\n\n为什么？答案很简单：它进行了深入分析。\n\n专家指出这很重要。\n\n这才是 AI 的意义。\n", encoding="utf-8")
+            r = run_quiet([str(lint), str(st)], t)
+            check("lint：设问自答 / 进行+动词 / 无出处权威 / 升华收尾报 W15",
+                  r.stdout.count("W15") >= 4 and "设问自答" in r.stdout and "进行+动词" in r.stdout and "无出处权威" in r.stdout and "升华收尾" in r.stdout, r.stdout[-400:])
+            en = t / "en.txt"
+            en.write_text("New release\n\nIt's not just a model, but a platform. Let's dive in.\n\nMoreover, it plays a pivotal role. I hope this helps!\n", encoding="utf-8")
+            r = run_quiet([str(lint), str(en)], t)
+            check("lint：英文 not-just-but / signpost / transition / role inflation / chatbot residue 报 W16",
+                  r.stdout.count("W16") >= 4 and "chatbot residue" in r.stdout, r.stdout[-400:])
+            pu = t / "punct.txt"
+            pu.write_text("太快了！！\n\n一——二——三——四\n\n好！好！\n", encoding="utf-8")
+            r = run_quiet([str(lint), str(pu)], t)
+            check("lint：标点连用、破折号 / 感叹号过多报 W17", r.stdout.count("W17") >= 3, r.stdout[-300:])
+            okx = t / "legit.txt"
+            okx.write_text("测试还在进行中，结果下周出。\n\n这就是我用的配置。\n\n据 IDC 报告，分析人士认为出货量 6 月回升 12%。\n\n可能是 A，也可能是 B。\n\n是不是该换了？我也说不准。\n\n这个 API 很稳，文档写得清楚。\n\nThe launch is not ready yet. We delayed it by two weeks.\n", encoding="utf-8")
+            r = run_quiet([str(lint), str(okx), "--strict"], t)
+            check("lint：正常写法不误报 W15 / W16 / W17（进行中、这就是…配置、有出处的分析人士、也可能、是不是）",
+                  r.returncode == 0 and not any(c in r.stdout for c in ("W15", "W16", "W17")), r.stdout[-400:])
+            md = t / "post.md"
+            md.write_text("---\ntitle: t\n---\n# 标题\n\n**加粗**和 [链接](https://a.example) 都合法。\n\n- 列表也合法\n\n![自制流量图](images/01-x.png)\n\n![自制，数据：官方 2026-09](images/02-y.png)\n\n总的来说，未来可期。\n", encoding="utf-8")
+            r = run_quiet([str(lint), str(md), "--md"], t)
+            check("lint --md：Markdown 语法不报错，套话报 W9 / W15，缺数据来源的自制图报 W18（只报 1 张）",
+                  r.returncode == 0 and "E1" not in r.stdout and "E4" not in r.stdout and "W9" in r.stdout and "W15" in r.stdout and r.stdout.count("W18") == 1, r.stdout[-400:])
             dz.write_text("今天打卡\n\n回评论\n\n冲\n", encoding="utf-8")
             r = run_quiet([str(lint), str(dz), "--duanzi"], t)
             check("lint --duanzi：零 emoji 段子不报 W13", "W13" not in (r.stdout + r.stderr), (r.stdout + r.stderr)[-200:])

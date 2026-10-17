@@ -3,7 +3,7 @@ name: topmind-format
 description: "X 纯文本格式化：用户贴一段现成文字，只改排版、不改字。转段子 → 每句一行、行与行之间空一行，完全不用 emoji（去掉点缀与列表符号，分点一条一行）；格式化成短文 → 合理分段换行、合理列表（「·」「1）」或 emoji，emoji 不强制，用就按 TopMind 体系）。保留原文事实与措辞，自带保真校验脚本；交付一段可直接复制的纯文本，原文里的链接（含来源）、原图、配图拿出来另发，不混进正文；没有原图时询问是否配图。只交付不代发。Use when 转段子、改成段子格式、段子格式、格式化、格式化一下、格式化成短文、排一下版、整理格式、加空行、分行、加 emoji、X 排版、format。Do NOT use for 从零写段子、涨粉帖（→ topmind-viral-posts）、从零写干货短文、快讯（→ topmind-briefs）、X 长文（→ topmind-x-article）、公众号排版与公众号 HTML（→ topmind-wechat-post）、封面（→ topmind-cover）、把帖子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.1.6"
+  version: "0.1.7"
   action_category: "write"
   triggers: "转段子, 改成段子, 段子格式, 格式化, 格式化一下, 格式化成短文, 排一下版, 整理格式, 加空行, 分行, 加 emoji, X 排版, format"
   author: "TopMindSpace"
@@ -59,7 +59,8 @@ metadata:
 
    `format_text.py` 先把 URL、来源行、配图行拿出正文（打印到标准错误的「另发」清单，`--links-out` 另存），再做原文保真校验（去掉空白、列表符号与 emoji 后逐字比对），改动了字就报错；
    短文体把 Markdown 列表改成「·」「1）」（`--bullets emoji` 改 🔹 / 1️⃣）；段子体去掉所有 emoji 与列表符号（条目间空一行，`--split` 不拆列表条目），并拒绝 `--open` / `--close` / `--title-emoji`。
-   `lint_x_post.py` 检查 Markdown 残留、符号混用、表情数量、正文里的 URL / 来源行 / 配图说明（E10–E12）、混入的说明（W12）、AI 套话（W9）、段子里的 emoji（`--duanzi`，W13）；段子体的单个行间空行不报错。
+   `lint_x_post.py` 检查 Markdown 残留、符号混用、表情数量、正文里的 URL / 来源行 / 配图说明（E10–E12）、混入的说明（W12）、AI 套话（W9）、中英文结构套话（W15 / W16）、标点腔（W17）、段子里的 emoji（`--duanzi`，W13）；段子体的单个行间空行不报错。
+   **去 AI 味检查必跑，但本技能不改字**：W9 / W15–W17 的命中按 [references/de-ai-rules.md](references/de-ai-rules.md) 写进改动说明，交给用户决定；用户明确要求改写时，才按规则表改（只改表达，不改事实）。
 5. **交付**（按 [references/x-delivery-contract.md](references/x-delivery-contract.md)）：正文一条（格式化结果，一个独立 `text` 块）→ 链接一条（原文里拿出来的 URL / 来源行，没有就写「用户提供，未附来源」）→ 图片一条（用户给了就列 1–2 张，没有就写「未找到原图」并问要不要配图）→ 改动说明（排版改动、加了哪些 emoji、挪出了哪些链接、发现的疑似错字）。多条帖子每条一块。
 
 ## 铁律

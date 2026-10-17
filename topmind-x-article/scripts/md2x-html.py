@@ -22,8 +22,11 @@
 
 设计目标（对标 md2wechat 的公众号体验）：
 - 文本+格式：页顶「一键复制全文」按钮 → 剪贴板富文本 → 粘贴进 X 文章编辑器。
-  复制前自动剔除按钮/UI 与 .no-paste 块（标题、封面预览），只剩 X 可识别的
-  语义标签：h2/h3/p/ul/ol/blockquote/a/hr/img
+  复制前自动剔除按钮/UI 与 .no-paste 块（标题、封面预览），配图换成 [图N] 占位段，
+  只剩 X 可识别的语义标签：h2/h3/p/ul/ol/blockquote/a/hr
+- 复制链路（按顺序降级）：① copy 事件 + execCommand('copy')，同步、在 file:// 和
+  iframe 预览里也能用；② navigator.clipboard.write(ClipboardItem text/html+text/plain)，
+  再退 writeText；③ 都不行就自动全选正文，提示按 Cmd/Ctrl+C。每步都有 toast
 - 图片：data-URI 内嵌（X 若支持则随粘贴带入）；每张图带 [图N] 编号 + 「下载图片」
   按钮保底，图片没跟过去时按编号下载再上传，不用找文件、不用对顺序；
   点击图片 lightbox 放大看原图，方便核对、截图或右键另存
@@ -103,34 +106,103 @@ figure.ximg figcaption { display: flex; justify-content: space-between; align-it
 
 JS = """
 var lbFname = '';
-function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg;
-  t.style.opacity=1; setTimeout(function(){ t.style.opacity=0; }, 1800); }
+var toastTimer = null;
+function toast(msg, ms){ var t=document.getElementById('toast'); t.textContent=msg;
+  t.style.opacity=1; if(toastTimer){ clearTimeout(toastTimer); }
+  toastTimer=setTimeout(function(){ t.style.opacity=0; }, ms||2200); }
+/* 复制用的干净副本：去掉按钮/UI 与 .no-paste（标题、封面预览）；
+   配图换成独占一段的 [图N] 占位——X 编辑器不认 data-URI 随文粘贴，
+   带着几 MB base64 反而容易让写剪贴板/粘贴失败。图片用每张图下的「复制图片」单独粘。 */
 function cleanClone(){
   var el=document.getElementById('article');
   var c=el.cloneNode(true);
-  var kill=c.querySelectorAll('button, .no-paste');
-  for(var i=0;i<kill.length;i++){ kill[i].parentNode.removeChild(kill[i]); }
+  var figs=c.querySelectorAll('figure.ximg');
+  for(var i=0;i<figs.length;i++){
+    var cap=figs[i].querySelector('.cap');
+    var p=document.createElement('p');
+    p.textContent=cap ? cap.textContent : '[图]';
+    figs[i].parentNode.replaceChild(p, figs[i]);
+  }
+  var kill=c.querySelectorAll('button, .no-paste, script, style');
+  for(var j=0;j<kill.length;j++){ if(kill[j].parentNode){ kill[j].parentNode.removeChild(kill[j]); } }
   return c;
 }
-async function copyArticle(){
-  var c=cleanClone();
-  var htm='<meta charset="utf-8">'+c.innerHTML;
-  try{
-    var item=new ClipboardItem({
-      'text/html': new Blob([htm],{type:'text/html'}),
-      'text/plain': new Blob([c.innerText],{type:'text/plain'})
-    });
-    await navigator.clipboard.write([item]);
-    toast('已复制全文（含格式），去 X 粘贴吧');
-  }catch(e){
-    try{ await navigator.clipboard.writeText(c.innerText); toast('已复制纯文本（富文本复制失败）'); }
-    catch(e2){ toast('复制失败，请手动全选复制'); }
+function plainText(node){
+  /* innerText 依赖布局，离屏节点可能拿不到换行，按块级元素手动拼 */
+  var out=[], blocks=node.querySelectorAll('h1,h2,h3,p,li,blockquote,hr');
+  for(var i=0;i<blocks.length;i++){
+    var b=blocks[i];
+    if(b.tagName==='LI' && b.parentNode && b.parentNode.closest && b.parentNode.closest('li')){ continue; }
+    if(b.tagName==='P' && b.closest('li,blockquote')){ continue; }
+    if(b.tagName==='HR'){ out.push('---'); continue; }
+    var t=(b.textContent||'').replace(/\\s+\\n/g,'\\n').trim();
+    if(!t){ continue; }
+    if(b.tagName==='LI'){ t=(b.parentNode.tagName==='OL' ? (Array.prototype.indexOf.call(b.parentNode.children,b)+1)+'. ' : '- ')+t; }
+    out.push(t);
   }
+  return out.join('\\n\\n');
 }
-async function copyPrompt(btn){
+/* 同步路径：copy 事件里直接塞 text/html + text/plain。
+   file://、非安全上下文、没给 clipboard-write 的 iframe 预览里 navigator.clipboard 不可用，
+   execCommand('copy') 仍能用；必须在点击的同步调用栈里执行（Safari 尤其严格），所以放第一步。 */
+function copyViaEvent(html, text){
+  var done=false;
+  function onCopy(e){
+    try{ e.clipboardData.setData('text/html', html); e.clipboardData.setData('text/plain', text);
+         e.preventDefault(); done=true; }catch(err){}
+  }
+  var box=document.createElement('div');
+  box.setAttribute('aria-hidden','true');
+  box.style.cssText='position:fixed;left:-99999px;top:0;width:1px;height:1px;overflow:hidden;';
+  box.textContent='.';
+  document.body.appendChild(box);
+  var sel=window.getSelection(), saved=[];
+  for(var i=0;i<sel.rangeCount;i++){ saved.push(sel.getRangeAt(i)); }
+  var r=document.createRange(); r.selectNodeContents(box); sel.removeAllRanges(); sel.addRange(r);
+  document.addEventListener('copy', onCopy, true);
+  var ok=false;
+  try{ ok=document.execCommand('copy'); }catch(e){ ok=false; }
+  document.removeEventListener('copy', onCopy, true);
+  sel.removeAllRanges(); for(var k=0;k<saved.length;k++){ sel.addRange(saved[k]); }
+  box.remove();
+  return ok && done;
+}
+function selectArticle(){
+  var el=document.getElementById('article');
+  var sel=window.getSelection(); var r=document.createRange();
+  r.selectNodeContents(el); sel.removeAllRanges(); sel.addRange(r);
+  el.scrollIntoView({block:'start'});
+}
+function copyArticle(){
+  var c=cleanClone();
+  var html='<meta charset="utf-8">'+c.innerHTML;
+  var text=plainText(c);
+  if(copyViaEvent(html, text)){ window.__lastCopy='event'; toast('已复制全文（含格式）。到 X 正文粘贴，图片按 [图N] 逐张补'); return; }
+  if(navigator.clipboard && window.ClipboardItem && window.isSecureContext){
+    var item;
+    try{ item=new ClipboardItem({'text/html': new Blob([html],{type:'text/html'}),
+                                 'text/plain': new Blob([text],{type:'text/plain'})}); }catch(e){ item=null; }
+    var p=item ? navigator.clipboard.write([item]) : Promise.reject(new Error('no ClipboardItem'));
+    p.then(function(){ window.__lastCopy='async'; toast('已复制全文（含格式）。到 X 正文粘贴，图片按 [图N] 逐张补'); })
+     .catch(function(){
+       return navigator.clipboard.writeText(text).then(function(){
+         window.__lastCopy='text'; toast('只复制到了纯文本（浏览器拒绝富文本）。建议改用 Chrome/Safari 直接打开本文件再点一次', 4000);
+       });
+     })
+     .catch(function(){ window.__lastCopy='select'; selectArticle(); toast('浏览器不允许自动复制，已帮你全选正文：按 Cmd+C（Windows 用 Ctrl+C）', 6000); });
+    return;
+  }
+  window.__lastCopy='select'; selectArticle();
+  toast('浏览器不允许自动复制，已帮你全选正文：按 Cmd+C（Windows 用 Ctrl+C）', 6000);
+}
+function copyPrompt(btn){
   var code=btn.parentElement.querySelector('code').innerText;
-  try{ await navigator.clipboard.writeText(code); toast('提示词已复制，去 AI 生图工具粘贴'); }
-  catch(e){ toast('复制失败，请手动复制'); }
+  if(copyViaEvent(code.replace(/[&<>]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[ch];}).replace(/\\n/g,'<br>'), code)){
+    toast('提示词已复制，去 AI 生图工具粘贴'); return; }
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(code).then(function(){ toast('提示词已复制，去 AI 生图工具粘贴'); })
+      .catch(function(){ toast('复制失败，请手动选中复制', 4000); });
+  }else{ toast('复制失败，请手动选中复制', 4000); }
 }
 function dlImg(btn){
   var fig=btn.closest('figure');
@@ -141,18 +213,36 @@ function dlImg(btn){
   document.body.appendChild(a); a.click(); a.remove();
   toast('开始下载 '+(btn.getAttribute('data-fname')||'图片'));
 }
-/* 复制图片：把 PNG 以 image/png 写进剪贴板，X 编辑器支持直接粘贴图片（不认 data-URI 随文粘贴）。
-   流程：点某张图下的「复制图片」→ 去 X 编辑器对应位置 Ctrl/Cmd+V。 */
-async function copyImg(btn){
+/* 图片转 PNG Blob：剪贴板只稳定支持 image/png，JPEG 先过 canvas 转一次。 */
+function pngBlob(img){
+  return new Promise(function(resolve, reject){
+    var src=img.src;
+    if(/^data:image\\/png;base64,/.test(src)){
+      try{ var bin=atob(src.split(',')[1]), arr=new Uint8Array(bin.length);
+           for(var i=0;i<bin.length;i++){ arr[i]=bin.charCodeAt(i); }
+           resolve(new Blob([arr],{type:'image/png'})); }catch(e){ reject(e); }
+      return;
+    }
+    var cv=document.createElement('canvas'); cv.width=img.naturalWidth; cv.height=img.naturalHeight;
+    cv.getContext('2d').drawImage(img,0,0);
+    cv.toBlob(function(b){ b ? resolve(b) : reject(new Error('toBlob')); }, 'image/png');
+  });
+}
+/* 复制图片：image/png 写进剪贴板，到 X 编辑器对应 [图N] 处 Cmd/Ctrl+V。
+   ClipboardItem 直接收 Promise，write() 在点击的同步栈里发起（Safari 要求），不要先 await 再 write。
+   file:// 或 iframe 预览里异步剪贴板常被禁，失败时提示改用「下载图片」。 */
+function copyImg(btn){
   var fig=btn.closest('figure');
   var img=fig ? fig.querySelector('img') : document.querySelector('#coverbox img');
   if(!img){ toast('找不到图片'); return; }
-  try{
-    var res=await fetch(img.src);
-    var blob=await res.blob();
-    await navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
-    toast('图片已复制，去 X 编辑器对应位置粘贴');
-  }catch(e){ toast('复制失败，改用「下载图片」按钮'); }
+  var name=btn.getAttribute('data-fname') || (fig && fig.querySelector('.cap') ? fig.querySelector('.cap').textContent : '图片');
+  if(!(navigator.clipboard && window.ClipboardItem && window.isSecureContext)){
+    toast('当前打开方式不允许复制图片：点「下载图片」再上传，或用 Chrome/Safari 直接打开本文件', 5000); return; }
+  var p;
+  try{ p=navigator.clipboard.write([new ClipboardItem({'image/png': pngBlob(img)})]); }
+  catch(e){ p=pngBlob(img).then(function(b){ return navigator.clipboard.write([new ClipboardItem({'image/png': b})]); }); }
+  p.then(function(){ window.__lastImgCopy='ok'; toast(name+' 已复制，到 X 编辑器对应位置粘贴'); })
+   .catch(function(){ window.__lastImgCopy='fail'; toast('复制图片失败：点「下载图片」再上传', 5000); });
 }
 /* lightbox：点击图片放大看原图。刻意不拦截右键，放大后可右键另存 / 直接截图。 */
 function openLightbox(img){
@@ -202,7 +292,7 @@ HTML_TMPL = """<!DOCTYPE html>
 <div class="toolbar">
   <span class="steps">1. 标题填入 X 标题栏 → 2. 一键复制全文 → 3. 粘贴到 X 正文</span>
   <button class="btn primary" onclick="copyArticle()">一键复制全文</button>
-  <span class="hint">图片随粘贴带入则直接用；没带入就点每张图下的「复制图片」到 X 对应位置粘贴（或「下载图片」后上传）。封面始终单独上传。点击图片可放大查看原图。</span>
+  <span class="hint">全文复制只带文字和格式，配图位置留 [图N]；到 X 里在每个 [图N] 处点该图下的「复制图片」粘贴（或「下载图片」后上传），再删掉 [图N]。封面单独上传。若提示已全选，按 Cmd+C。</span>
 </div>
 <article class="article" id="article">
 @@BODY@@

@@ -68,7 +68,7 @@ npx @topmindspace/topmind-writing-skills install topmind-format
 | `emoji-system.md` | TopMind emoji 体系唯一出处（只用于短文体，且不强制）：人设点缀 🐔 🐱 🌱 0–2 个只放首尾；标题 emoji 0–1 个对上关键词；列表符号一帖一套 |
 | `x-layout-patterns.md` | 我们总结的版式规律（首行给结论、列表引导语、【小标题】分节等） |
 
-检查：`lint_x_post.py`（E1–E9 Markdown 残留；E10–E12 正文有 URL / 来源行 / 配图说明；W9 AI 套话、W10 首行太长不像钩子、W12 混入说明 / 内部标签；`--duanzi` 时 W13 段子里出现 emoji；`--long` 长文不查 E10–E12）。去 AI 味与吸引力清单在 `writing-principles.md` 第五点五节。
+检查：`lint_x_post.py`（E1–E9 Markdown 残留；E10–E12 正文有 URL / 来源行 / 配图说明；W9 AI 套话、W10 首行太长不像钩子、W12 混入说明 / 内部标签；W14 长文单段过长、W15 / W16 中英文结构套话、W17 标点腔、W18 自制图没标数据来源；`--duanzi` 时 W13 段子里出现 emoji；`--long` 长文不查 E10–E12；`--md` 查 Markdown 稿的内容类警告）。去 AI 味规则表在 `de-ai-rules.md`，吸引力清单在 `writing-principles.md` 第五点五节。
 
 ### topmind-cover · 封面配图生成
 
@@ -99,6 +99,14 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 > 也不要安装旧包的 `^2`（2.0.0–2.1.1 已弃用）。
 
 
+## 共用写作流程（0.8.43 起）
+
+briefs、viral-posts、x-article、wechat-post 共用三份规约（`shared/references/`，各技能自带副本）：
+
+- **原图优先**（`image-sourcing.md`）：写字之前先找官方 / 原帖 / 第三方原图，来源记进交付包里的私有信源清单；自制图只作兜底，标「自制」和数据来源。
+- **去 AI 味必过**（`de-ai-rules.md`）：中英文结构模式规则表 + 改写边界（只改表达，不改事实和确定性）。`lint_x_post.py` 自动查能脚本化的部分：W9 套话词、W15 中文结构套话、W16 英文结构套话、W17 标点腔、W18 自制图标注；公众号稿用 `--md`。topmind-format 只报告命中、不改字。
+- **固定改稿流程**（`revision-workflow.md`）：逻辑与事实 → 删冗余 → 去 AI 味 → 排版；每轮先备份，报改前 / 改后字数。
+
 ## 原创示例
 
 每个技能都附了我们自己写的示例输出（虚构或中性题材，不收录任何第三方原文、原图）：
@@ -120,15 +128,15 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 
 | 技能 | 版本 | 做什么 |
 |------|------|--------|
-| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.13** | 公众号文章全生命周期：交付包、审校改写、质量三关、微信内联排版与发布清单 |
-| [`topmind-x-article`](./topmind-x-article/) | **0.4.19** | X 长文一键发布：Markdown 原稿 → 一键复制 HTML（含配图/提示词复制、图片点击放大）/ 纯文本兜底 + 封面图 + 发布清单 |
+| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.14** | 公众号文章全生命周期：交付包、审校改写、质量三关、微信内联排版与发布清单 |
+| [`topmind-x-article`](./topmind-x-article/) | **0.4.20** | X 长文一键发布：Markdown 原稿 → 一键复制 HTML（含配图/提示词复制、图片点击放大）/ 纯文本兜底 + 封面图 + 发布清单 |
 | [`topmind-cover`](./topmind-cover/) | **0.4.11** | 文章封面配图（X / 公众号共用，X 主尺寸 1500×600 / 5:2）：震撼醒目主题突出；22 种封面风格库 + X 短文 16:9 封面场景 + 24 种标题花式 + 七层场景配方 + 55 张示例图（22 种风格 × 2 尺寸 + 11 张变体样张） + 1 张风格总览图 |
-| [`topmind-briefs`](./topmind-briefs/) | **0.2.21** | 干货短文（公众号 + X 双平台）：一件事讲透，数据榜单/论文解读/新品速递；信源 → 原图 → 内容 → 排版；X 版交付一段可复制纯文本（默认不出 HTML，emoji 可选，去 AI 味），链接 / 原图 / 配图另发，无原图先询问配图 |
-| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.13** | X 引流段子/爆款短篇：18 大类型模板 + 组合玩法，段子体（行间空行，零 emoji，分点不加符号）、每条一段可复制纯文本、话题标签在末行，链接 / 原图另发、分类标签另列；无原图先询问再走 topmind-cover |
-| [`topmind-format`](./topmind-format/) | **0.1.6** | X 纯文本格式化：转段子（行间空行，零 emoji）/ 格式化成短文（分段 + 合理列表，emoji 可选），只动排版不改字，带原文保真校验；交付一段可复制纯文本，链接 / 原图另发 |
+| [`topmind-briefs`](./topmind-briefs/) | **0.2.22** | 干货短文（公众号 + X 双平台）：一件事讲透，数据榜单/论文解读/新品速递；信源 → 原图 → 内容 → 排版；X 版交付一段可复制纯文本（默认不出 HTML，emoji 可选，去 AI 味），链接 / 原图 / 配图另发，无原图先询问配图 |
+| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.14** | X 引流段子/爆款短篇：18 大类型模板 + 组合玩法，段子体（行间空行，零 emoji，分点不加符号）、每条一段可复制纯文本、话题标签在末行，链接 / 原图另发、分类标签另列；无原图先询问再走 topmind-cover |
+| [`topmind-format`](./topmind-format/) | **0.1.7** | X 纯文本格式化：转段子（行间空行，零 emoji）/ 格式化成短文（分段 + 合理列表，emoji 可选），只动排版不改字，带原文保真校验；交付一段可复制纯文本，链接 / 原图另发 |
 | [`topmind-poster`](./topmind-poster/) | **0.1.6** | HTML+CSS → 高清长图 / 海报 / 信息图 PNG：无头 Chrome 2× 截图 + 自动裁白；「一段一图」分段图批量出图（生成器 + 渲染器） |
 
-安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.42**（整仓同 tag 发版）。
+安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.43**（整仓同 tag 发版）。
 
 ### 怎么选、怎么组合
 

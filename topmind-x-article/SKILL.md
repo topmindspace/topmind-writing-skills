@@ -3,7 +3,7 @@ name: topmind-x-article
 description: "X 长文（Article）一键发布包：Markdown 原稿 → 可直接复制的 X长文.html（富文本一键复制+配图内嵌）/ X发布稿.txt（纯文本兜底，列表自动转 emoji 项目符号；长文可保留文内链接，派生 X 短帖时链接、原图另发）+ 封面图 + 发布清单，由用户人工点发布。Use when X 长文、发 X 文章、写 X 文章、X article、长文发 X、写 X 长文、X 文章排版、推特长文、twitter 长文、Twitter Article。Do NOT use for 短推文、短帖、快讯与段子写稿（→ topmind-viral-posts 或 topmind-briefs）、现成文字格式化与转段子（→ topmind-format）、把短帖发出去（→ topmind-x，须用户确认）、公众号文章（→ topmind-wechat-post）、只要封面或头图（→ topmind-cover）。"
 license: MIT
 metadata:
-  version: "0.4.19"
+  version: "0.4.20"
   action_category: "write"
   triggers: "X 长文, 发 X 文章, 写 X 文章, X article, 长文发 X, X 发长文, X 文章排版, 转纯文本, X 纯文本, X发布稿, 发 article, 一键复制, 写 X 长文, X 长文发布, 推特长文, twitter 长文, Twitter Article"
   author: "TopMindSpace"
@@ -30,6 +30,10 @@ metadata:
 
 ## 工作流
 
+0. **写稿与改稿（必过，先于转换）**：
+   - **先找图再写字**：按 `references/image-sourcing.md` 找官方 / 原帖 / 第三方原图，来源记进发布包里的私有 `素材来源.md`（不进本仓库）；自制图只作兜底，图注写「自制」和数据来源（W18）。
+   - **去 AI 味**：成稿按 `references/de-ai-rules.md` 逐条过（只改表达，不改事实和确定性）；`python3 scripts/lint_x_post.py 公众号稿.md --md` 的 W9 / W14–W18 清零。
+   - **改稿**：按 `references/revision-workflow.md` 四步走：逻辑与事实 → 删冗余 → 去 AI 味 → 排版；每轮先备份到新时间戳目录，交付时报改前 / 改后字数。
 1. **转 HTML**（一键复制的核心，首选）：
    ```bash
    python3 scripts/md2x-html.py <原稿>.md --out <包>/X长文.html \
@@ -44,8 +48,12 @@ metadata:
    「一键复制全文」，富文本（含格式）进剪贴板，去 X 文章编辑器粘贴。
    转换规则见 `references/x-html-format.md`。
    - `#` 首个标题**不进剪贴板**：手动填入 X 标题栏（工具栏有三步话术提示）。
-   - 每张配图自动编号 `[图N]`；图片 data-URI 内嵌，能随粘贴带入编辑器最好，
-     带不进去时用图下「下载图片」按钮按编号下载再上传——不用找文件、不用对顺序。
+   - 每张配图自动编号 `[图N]`。「一键复制全文」只带文字和格式，配图位置换成 `[图N]` 占位段
+     （X 不认 data-URI 随文粘贴，几 MB base64 还会拖垮剪贴板）；粘贴后在每个 `[图N]` 处
+     点该图下「复制图片」→ Cmd/Ctrl+V，或「下载图片」后上传，再删掉占位。
+   - 复制按顺序降级：copy 事件 + `execCommand('copy')`（同步，file:// 与聊天附件预览等
+     iframe 里也能用）→ `navigator.clipboard.write(ClipboardItem)` → `writeText` →
+     自动全选正文并提示按 Cmd/Ctrl+C。每一步都有 toast，不会静默失败。
      点击图片弹出 lightbox 放大看原图（右键可另存/截图，不拦截右键菜单）。
    - 每个 ``` 提示词块渲染为引用块（X 可识别）+ 右上角「复制提示词」按钮，
      一键复制该块纯文本。**复制分双通道**：作者侧用 HTML 里的按钮（发布前取用文本）；
@@ -89,14 +97,23 @@ metadata:
 - **文字铁律**：去 AI 味、精炼、不编造；看图即得的简单事实不再展开复述；
   多用第三方客观素材，观点可以撞、表达必须原创。
 - **交付铁律**：发布/分享时直接用交付的 HTML 原文件原样呈现，不临时重新生成版本。
+- **长文改稿铁律**：用户嫌稿子长、AI 味重时，按 `references/writing-principles.md` 第五点六节整改：
+  公式化标签改平实说法（「三个词」→「简单总结」、「五个分支」→「主要 5 个方向」、「三件事」→「有三大特征」）；
+  过去简单串、现在汇总加分析、未来写显式判断；原图（官方截图、原始 X 帖、官方文书、第三方数据图）先于文字，
+  自制图只用于有出处的数据；单段不超过约 110 字。改完跑 `lint_x_post.py --long`，W9 / W14–W17 清零，
+  并对比改稿前后字数。每张图的来源 URL 记在本地私有信源清单，不进公开仓库。
 - 补充信息（邀请码、链接、勘误）**不挤正文**，发在发布后首条评论并置顶
 - 标题 ≤140 字符，首段 3 行内出钩子；配图逐张按 `[图N]` 顺序上传，传完对照清单点一遍
 - 事实修正只改发布包，不回头改已发原文（除非勘误）
 - 提示词密集型文章（如 N 条直出提示词），发布时建议把提示词引用块逐块转为
   X 原生代码块（Insert → Code → 粘贴 → 删原块，每块约 10 秒）：这是 X 平台唯一可靠的
   读者侧一键复制链路（原生代码块带 native copy button，已实测确认）
-- X 编辑器对剪贴板 data-URI 图片的处理不稳定：**文本格式一键复制可靠，
-  图片按"能带入则带入，带不入则手动补"处理**，不要承诺用户图片 100% 一键带图
+- X 编辑器不认剪贴板里的 data-URI 图片：**全文复制只带文字和格式，图片一律按 `[图N]` 手动补**，
+  不要承诺一键带图
+- **复制按钮失效（2026-10-17 实踩）**：旧版只用 `navigator.clipboard.write`，在 file:// 未授权、
+  聊天附件预览（沙箱 iframe、无 clipboard-write）里被拒，`writeText` 降级同样被拒 → 只弹"复制失败"；
+  旧版还把 6.4MB base64 塞进 text/html。现已改为 execCommand 同步优先 + 图片占位，
+  改动后用无头 Chrome 在 file://、http、两种沙箱 iframe 下回读剪贴板验证
 - **图片手动补位（2026-10-02 新增）**：每张图下有「复制图片」按钮，
   把 PNG 以 `image/png` 写进剪贴板，X 编辑器支持直接粘贴图片
   （X 认图片粘贴，不认 data-URI 随文粘贴）。流程：点「复制图片」→

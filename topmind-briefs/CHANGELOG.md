@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.22 (2026-10-17)
+
+- 去 AI 味改为必过步骤（`de-ai-rules.md`，lint 新增 W15–W18 与 `--md`）；写字前先找原图（`image-sourcing.md`）；改稿按固定四步（`revision-workflow.md`）
+
 ## 0.2.21 (2026-10-16)
 
 - 短文去掉 280 字限制：X 版一条纯文本帖，约 1000 字内；更长的写成长文（X Article）

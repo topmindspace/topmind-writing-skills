@@ -3,7 +3,7 @@ name: topmind-wechat-post
 description: "管一篇公众号文章从选题/底稿到发布清单的完整生命周期：交付包搭建、审校改写、质量三关（事实/逻辑/去AI味，含改稿保真溯源审计）、状态同步、微信内联排版与发布清单。只出 HTML 与清单，不代发。Use when 写公众号、写公众号文章、公众号长文、公众号排版、微信排版、公众号定稿、发公众号、公众号交付包、公众号发布清单、wechat、mp format。Do NOT use for 公众号短文与快讯（300–800 字，→ topmind-briefs）、X 帖子与段子（→ topmind-viral-posts；派生的 X 短帖交付一段可复制纯文本，链接、原图另发）、X 纯文本格式化与转段子（→ topmind-format）、X 长文（→ topmind-x-article）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、只改错别字、小红书/知乎、纯网页发布、通用长文润色（→ topmind-write）。"
 license: MIT
 metadata:
-  version: "0.3.13"
+  version: "0.3.14"
   action_category: "write"
   triggers: "公众号, 写公众号, 微信排版, 公众号排版, 公众号稿, 公众号长文, 排版这篇文章, 定稿, 发公众号, 公众号交付, wechat, mp format, 写公众号文章, 公众号排版定稿, 公众号发布清单"
   author: "TopMindSpace"
@@ -44,8 +44,8 @@ metadata:
 | `scripts/push-to-topstream.py` | 可选回推：公众号稿降级为纯 Markdown notes |
 | `scripts/lint-wechat.py` | 排版体检 + 自动修复（中英文间距、段长、AI 腔…） |
 | `scripts/md2wechat.py` | Markdown → 全内联 HTML；**必加 `--embed-images`** |
-| `scripts/lint_x_post.py` | 派生 X 版时的 X 稿检查：无 Markdown 列表/标题/加粗，正文无 URL / 来源行 / 配图说明（公众号稿本身不检查；与 briefs、viral-posts、x-article 同一份） |
-| `scripts/scan_ai_flavor.py` | 中文去 AI 味扫描**转发器**：装了 `qu-aiwei-zh` 就调 canonical（含作者姿态分），没装回落内置 `scan_ai_flavor_builtin.py` 并提示缺姿态维度；`--which` 查实际执行哪份 |
+| `scripts/lint_x_post.py` | 派生 X 版时的 X 稿检查：无 Markdown 列表/标题/加粗，正文无 URL / 来源行 / 配图说明；公众号稿用 `--md` 只查去 AI 味（W9、W15–W17）、长段落（W14）、自制图标注（W18）（与 briefs、viral-posts、x-article 同一份） |
+| `scripts/scan_ai_flavor.py` | 中文去 AI 味打分入口：默认跑随包 `scan_ai_flavor_builtin.py`（词面分）；`$TOPMIND_AI_SCAN` 指向外部扫描脚本时转发过去；`--which` 查实际执行哪份 |
 | `scripts/audit-provenance.py` | **改稿保真审计**：双向逐段溯源（本稿→源稿 / 源稿→本稿），抓悄悄扩写与被落下的段。有源稿时定稿必跑 |
 | `scripts/wechat_paths.py` | 路径解析模块（被上面脚本导入）：不写死个人路径、类别编号与年份 |
 
@@ -54,7 +54,7 @@ metadata:
 export TOPMIND_WORKSPACE=/path/to/workspace   # 推荐
 python3 scripts/new-article.py --slug demo --title "标题" --direction reverse
 python3 scripts/lint-wechat.py --input <包>/公众号稿.md --fix
-python3 scripts/scan_ai_flavor.py <包>/公众号稿.md          # 总分 ≥85（有 canonical 时姿态分也 ≥85）
+python3 scripts/scan_ai_flavor.py <包>/公众号稿.md          # 总分 ≥85；先跑 lint_x_post.py --md 逐句定位
 python3 scripts/md2wechat.py --input <包>/公众号稿.md --out-dir <包> --slug demo \
   --asset-root <素材根> --embed-images
 python3 scripts/sync-status.py --set 定稿 <包> --apply
@@ -137,6 +137,8 @@ python3 scripts/sync-status.py --set 定稿 <包> --apply
 
 ## 质量三关（定稿前必过）
 
+写稿前先找图、记来源（[`references/image-sourcing.md`](references/image-sourcing.md)，信源清单放交付包，不进本仓库）；改稿按 [`references/revision-workflow.md`](references/revision-workflow.md) 四步：逻辑与事实 → 删冗余 → 去 AI 味 → 排版，每轮先备份、报改前 / 改后字数。
+
 ### 关 1 · 事实
 
 - 承重数字回**一手来源**；厂商口径 / 据报道 分开写  
@@ -161,12 +163,15 @@ python3 scripts/sync-status.py --set 定稿 <包> --apply
 
 ### 关 3 · 文字（去 AI 味）
 
+**必过**：按 [`references/de-ai-rules.md`](references/de-ai-rules.md) 逐条过，先守改写边界（只改表达，不改事实和确定性）。
+
 ```bash
-python3 scripts/scan_ai_flavor.py <包>/公众号稿.md   # 总分 ≥85（人话）
+python3 scripts/lint_x_post.py <包>/公众号稿.md --md   # W9 / W14–W18 清零或说明保留理由
+python3 scripts/scan_ai_flavor.py <包>/公众号稿.md      # 总分 ≥85（人话）
 ```
 
-- 装了 canonical `qu-aiwei-zh` 时**同时看「作者姿态分」（E 类）**，目标同样 ≥85；两者会严重背离，只看总分会误判。输出里没有「作者姿态层」一节 = 用的是内置兜底，`--which` 确认；定稿门禁要姿态分时加 `--require-canonical`
-- 姿态分只对文章有效：清单 / 词表 / 说明书会被误判，脚本提示「疑似清单文档」时先确认文体
+- 配了外部扫描器（`$TOPMIND_AI_SCAN`）且它输出「作者姿态分」时，姿态分同样 ≥85；`--which` 确认实际执行哪份，定稿门禁要外部扫描器时加 `--require-external`
+- 清单 / 词表 / 说明书类文体容易误判，脚本提示「疑似清单文档」时先确认文体
 
 - 删套话/黑话/工程圈行话；降调段末加粗金句  
 - **满分 ≠ 有人味**：再查「段末金句癖 / 节奏过分整齐 / 没有场景与我 / 报告体标注」  
@@ -230,13 +235,8 @@ topmind Desktop 的「公众号创作」插件是本技能的可视化工作流�
 
 ## 外部依赖
 
-以下技能**不在本仓库**（由宿主智能体环境另行提供）；缺失时对应路由能力不可用，
-本仓库脚本（交付包、排版、发布清单等）功能不受影响：
-
-- `humanizer-zh`：中文去 AI 味的保真边界（「只去 AI 味不排版」路径用）。
-- `qu-aiwei-zh`：中文去 AI 味扫描定位（canonical，含作者姿态层）。`scripts/scan_ai_flavor.py`
-  会按 `$QU_AIWEI_SCAN` → 同级已装技能 → `$QU_AIWEI_SKILLS_DIRS` → 常见宿主技能目录查找；
-  缺失时回落内置实现，只有词面分。
+无必需的外部技能。去 AI 味规则与检查随包自带（`references/de-ai-rules.md`、`scripts/lint_x_post.py --md`、`scripts/scan_ai_flavor.py`）；
+想接入自己的扫描脚本时设 `$TOPMIND_AI_SCAN=/path/to/script.py`，参数与退出码原样转发。
 
 ## When NOT to use
 
@@ -247,7 +247,7 @@ topmind Desktop 的「公众号创作」插件是本技能的可视化工作流�
 - 单独出长图、海报、信息图 → `topmind-poster`  
 - 通用长文写作与交付 → `topmind-write`（topmind-skills 包）
 - 封面配图、头图 → `topmind-cover`
-- 只去 AI 味不排版 → 中文走 `humanizer-zh`（先立保真边界）+ `qu-aiwei-zh`（再扫描定位）；英文走 `humanizer`
+- 只去 AI 味不排版 → 按 `references/de-ai-rules.md` 改写（中英文都适用），跑 `lint_x_post.py --md` 核对，不走排版导出
 
 ## 历史案例
 

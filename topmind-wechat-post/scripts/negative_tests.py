@@ -161,25 +161,37 @@ def main() -> None:
               r.returncode == 0 and "````markdown" not in body
               and body.count("MARKDOWN</section>") == 1, r.stderr[:100])
 
-        # 15. scan 转发器：找不到 canonical 时回落内置实现并提示缺姿态分
+        # 15. scan 入口：没配外部扫描脚本时用内置实现并提示缺姿态分
         import os as _os
-        env = {k: v for k, v in _os.environ.items()
-               if k not in ("QU_AIWEI_SCAN", "QU_AIWEI_SKILLS_DIRS")}
+        env = {k: v for k, v in _os.environ.items() if k != "TOPMIND_AI_SCAN"}
         env["HOME"] = str(td)  # 隔离用户级技能目录
         (td / "s.md").write_text("这是一段测试文字。\n", encoding="utf-8")
         r = subprocess.run([PY, str(SCRIPTS / "scan_ai_flavor.py"), str(td / "s.md")],
                            capture_output=True, text=True, timeout=60, env=env, cwd=str(td))
-        check("scan 转发器回落内置实现且提示缺姿态分",
+        check("scan 入口用内置实现且提示缺姿态分",
               r.returncode == 0 and "作者姿态分" in r.stderr and "Traceback" not in r.stderr,
               r.stderr[:200])
-        r = subprocess.run([PY, str(SCRIPTS / "scan_ai_flavor.py"), "--require-canonical", str(td / "s.md")],
+        r = subprocess.run([PY, str(SCRIPTS / "scan_ai_flavor.py"), "--require-external", str(td / "s.md")],
                            capture_output=True, text=True, timeout=60, env=env, cwd=str(td))
-        check("scan --require-canonical 找不到 canonical 退出 3", r.returncode == 3, r.stderr[:200])
+        check("scan --require-external 没配外部扫描脚本退出 3", r.returncode == 3, r.stderr[:200])
+        # 15b. 内置实现：套话稿扣分、干净稿满分，--json 可解析
+        (td / "ai.md").write_text("# t\n\n综上所述，这不仅是升级，更是革命性的里程碑。\n\n为什么？答案很简单：专家指出它进行了深入分析。\n\n未来可期！！\n", encoding="utf-8")
+        (td / "ok.md").write_text("# t\n\n6 月发布，月活 3.82 亿。\n\n我用了两周，导出很方便。\n", encoding="utf-8")
+        import json as _json
+        ra = subprocess.run([PY, str(SCRIPTS / "scan_ai_flavor.py"), "--json", str(td / "ai.md")],
+                            capture_output=True, text=True, timeout=60, env=env, cwd=str(td))
+        ro = subprocess.run([PY, str(SCRIPTS / "scan_ai_flavor.py"), "--json", str(td / "ok.md")],
+                            capture_output=True, text=True, timeout=60, env=env, cwd=str(td))
+        try:
+            sa, so = _json.loads(ra.stdout)["score"], _json.loads(ro.stdout)["score"]
+        except Exception:
+            sa, so = None, None
+        check("scan 内置实现：套话稿 <85、干净稿 =100", sa is not None and sa < 85 and so == 100, (ra.stdout + ra.stderr)[:200])
 
-        # 16. scan 转发器：QU_AIWEI_SCAN 指向 canonical 时原样转发参数与退出码
+        # 16. scan 入口：TOPMIND_AI_SCAN 指向外部脚本时原样转发参数与退出码
         fake = td / "fake_scan.py"
         fake.write_text("import sys\nprint('FAKE', *sys.argv[1:])\nsys.exit(7)\n", encoding="utf-8")
-        env2 = dict(env, QU_AIWEI_SCAN=str(fake))
+        env2 = dict(env, TOPMIND_AI_SCAN=str(fake))
         r = subprocess.run([PY, str(SCRIPTS / "scan_ai_flavor.py"), "--json", "x.md"],
                            capture_output=True, text=True, timeout=60, env=env2, cwd=str(td))
         check("scan 转发器透传参数与退出码", r.returncode == 7 and "FAKE --json x.md" in r.stdout,

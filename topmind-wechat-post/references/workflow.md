@@ -69,7 +69,8 @@ python3 scripts/sync-status.py --set 定稿 <包> --apply
 ## 定稿验收命令串
 
 ```bash
-python3 scripts/scan_ai_flavor.py <包>/公众号稿.md    # 总分 ≥85；装了 qu-aiwei-zh 时「作者姿态分」也 ≥85
+python3 scripts/lint_x_post.py <包>/公众号稿.md --md   # 去 AI 味逐句检查：W9 / W14–W18 清零
+python3 scripts/scan_ai_flavor.py <包>/公众号稿.md    # 总分 ≥85；配了 $TOPMIND_AI_SCAN 且给姿态分时也 ≥85
 python3 scripts/lint-wechat.py --input <包>/公众号稿.md
 python3 scripts/sync-mapping.py --no-topstream
 python3 scripts/sync-status.py

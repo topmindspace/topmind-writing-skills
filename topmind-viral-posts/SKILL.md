@@ -3,7 +3,7 @@ name: topmind-viral-posts
 description: "X 引流段子/爆款短篇：18 类型模板（含热点资讯、冷知识、差额冲刺）+ 钩子×主体×收尾组合玩法；段子体排版（一句一行、行间空一行、完全不用 emoji，分点不加符号）、口语化、带互动钩子；每条帖子附话题标签（1–3 个 hashtag）与内部分类标签，每条交付一段可直接复制的纯文本（X 不渲染 Markdown；话题标签在末行），链接（含来源）、原图、配图另发，绝不混进正文；配图原图优先（官方/第三方/自己的后台截图）；没有原图时先问用户是否配图，同意后才走 topmind-cover 出 16:9 图。只起草不代发。Use when 引流段子、段子、爆款短篇、爆款短文、涨粉帖、涨粉段子、互关帖、互关求粉、X 短帖、热点段子、蹭热点、新人报到、打卡帖、话题标签、hashtag、X 引流、traffic post、viral post；引流互动型（段子、钩子、涨粉）走本技能。Do NOT use for 把现成文字转段子、格式化、排版（→ topmind-format）、X 长文与发 X 文章（→ topmind-x-article）、公众号文章与公众号短文（→ topmind-wechat-post / topmind-briefs）、信息密度型干货短文、快讯与数据榜单（→ topmind-briefs）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、把帖子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.3.13"
+  version: "0.3.14"
   action_category: "write"
   triggers: "引流段子, 段子, 写段子, 冷知识段子, 冲粉帖, 破千, 爆款短篇, 爆款短文, 涨粉帖, 涨粉短帖, 涨粉段子, 互关帖, 互关求粉, X 短帖, 热点段子, 蹭热点, 新人报到, 打卡帖, 话题标签, hashtag, traffic post, viral post, 写引流段子, 涨粉内容, 互关内容, X 引流"
   author: "TopMindSpace"
@@ -94,8 +94,8 @@ metadata:
    - 无法核实的承重事实直接删除
 3. **段子化**：把资讯压缩成 3-8 行短句，保留核心事实 + 一个钩子（反差/提问/神评论）。
    事实部分不许为了效果篡改；幽默只加在评论/解读层。
-4. **配图**：**官方原图 / 资讯截图优先**，可多图（2-4 张）；
-   图能说清的不再用文字复述；每张图注明来源。
+4. **配图**：**官方原图 / 资讯截图优先**，可多图（2-4 张）；在段子化之前就找，流程见 [references/image-sourcing.md](references/image-sourcing.md)；
+   图能说清的不再用文字复述；每张图注明来源（来源另发，不进正文）。
 
 ### 选题标准
 
@@ -135,7 +135,7 @@ metadata:
 6. **Hashtag**：每条 1–3 个，放最后一行；互关类必带 `#蓝V互关 #follow`；干货类带 `#新手指南`、`#运营技巧` 这类读者会搜的词；日常类可带 `#日拱一卒`。数量、位置与敏感词规则见 [references/tags-and-topics.md](references/tags-and-topics.md)。
 7. **不用 emoji**：段子里没有人设点缀、情绪表情和列表符号，语气全靠文字本身。
 8. **去 AI 味**：不用"首先其次最后""综上所述""总的来说""值得注意的是""不仅…更…"，不写"不是 A 而是 B"式反转和三连排比，不用感叹号堆砌，结尾不升华。
-   完整清单（含吸引力要求）见 [references/writing-principles.md](references/writing-principles.md) 第五点五节；lint 的 W9 / W10 警告要清掉。
+   **必过**：按 [references/de-ai-rules.md](references/de-ai-rules.md) 逐条过（只改表达，不改事实）；吸引力要求见 [references/writing-principles.md](references/writing-principles.md) 第五点五节；lint 的 W9 / W10 / W15–W17 警告要清掉。
 9. **不用 Markdown**：分点不加符号，见上节与交付规约。
 
 ## 配图铁律
@@ -191,7 +191,7 @@ clean uncluttered background, vertical 9:16
 1. **选类型**：看用户要什么效果（涨粉→互关型/新人型；互动→提问型/自嘲型；立人设→干货型/打卡型；追热点→热点资讯型）。
 2. **套公式**：从 `references/patterns.md` 取对应公式，填内容。
 3. **配图**：先找原图（官方 > 第三方 / 原帖图，注明来源），给 1–2 张图片地址；没有原图时**先问用户要不要配图**，用户同意才走 topmind-cover 生图（清新优雅/MD3商务风），可先附一个出图 prompt 供用户决定；不擅自生图。
-4. **自检**：删掉"正确的废话"；确认有钩子、段子体行间空行、话题标签 1–3 个在末行、事实类的来源链接已整理到另发的链接里；`scripts/lint_x_post.py --duanzi` E 类清零（含 E10 URL、E11 来源行、E12 配图说明）、W12（正文混入标签 / 说明）清零；加 `--duanzi` 时 W13（出现 emoji）清零。
+4. **自检**：删掉"正确的废话"；去 AI 味按 `references/de-ai-rules.md` 过完；用户要改稿时按 `references/revision-workflow.md`（备份 → 逻辑与事实 → 删冗余 → 去 AI 味 → 排版，报改前 / 改后字数）；确认有钩子、段子体行间空行、话题标签 1–3 个在末行、事实类的来源链接已整理到另发的链接里；`scripts/lint_x_post.py --duanzi` E 类清零（含 E10 URL、E11 来源行、E12 配图说明）、W12（正文混入标签 / 说明）清零；加 `--duanzi` 时 W13（出现 emoji）清零。
 5. **交付**：一次 3–5 条让用户挑，严格按 [references/x-delivery-contract.md](references/x-delivery-contract.md)。
 
 ## Output Contract

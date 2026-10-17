@@ -14,6 +14,9 @@
     "references/emoji-system.md": ["topmind-briefs", "topmind-format", "topmind-viral-posts"],
     "references/x-delivery-contract.md": ["topmind-briefs", "topmind-format", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article"],
     "references/x-layout-patterns.md": ["topmind-briefs", "topmind-format", "topmind-viral-posts"],
-    "references/x-post-format.md": ["topmind-briefs", "topmind-format", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article"]
+    "references/x-post-format.md": ["topmind-briefs", "topmind-format", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article"],
+    "references/de-ai-rules.md": ["topmind-briefs", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article", "topmind-format"],
+    "references/image-sourcing.md": ["topmind-briefs", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article"],
+    "references/revision-workflow.md": ["topmind-briefs", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article"]
   }
 }

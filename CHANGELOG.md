@@ -1,3 +1,16 @@
+## [0.8.43] - 2026-10-17
+
+> 根包 0.8.42 → **0.8.43**（patch）；技能版本：topmind-briefs 0.2.21 → 0.2.22、topmind-format 0.1.6 → 0.1.7、topmind-viral-posts 0.3.13 → 0.3.14、topmind-wechat-post 0.3.13 → 0.3.14、topmind-x-article 0.4.19 → 0.4.20。
+
+### 变更（去 AI 味必过 + 原图优先 + 固定改稿流程）
+
+- 新增共享规约 `de-ai-rules.md`：中英文结构模式规则表（Z01–Z23、E01–E12、P01–P06）与改写边界；briefs、viral-posts、x-article、wechat-post 改为必过步骤，format 只报告命中不改字。
+- `lint_x_post.py` 新增 W15 中文结构套话、W16 英文结构套话、W17 标点腔、W18 自制图没标数据来源，新增 `--md`（Markdown 稿只查内容类警告）；W9 增加公式化计数标签，`--long` 增加 W14 单段过长。正则刻意收窄，negative_tests 覆盖命中与正常写法不误报。
+- 新增共享规约 `image-sourcing.md`（写字前先找原图，来源记进交付包里的私有清单，自制图兜底并标注）与 `revision-workflow.md`（逻辑与事实 → 删冗余 → 去 AI 味 → 排版，每轮备份、报改前 / 改后字数）；各技能 SKILL.md 与 x-article 发布清单加入对应步骤；`writing-principles.md` 新增第五点六节「长文改稿」。
+- topmind-wechat-post：去掉对仓库外技能的依赖；`scan_ai_flavor.py` 默认跑重写后的内置打分（与 lint 同一套规则），`$TOPMIND_AI_SCAN` 可接外部脚本，`--require-external` 替代 `--require-canonical`（旧名仍可用）。
+- `md2x-html.py`：「一键复制全文」改为 copy 事件 + `execCommand` 优先，再退 `ClipboardItem` / `writeText`，都失败就全选正文并提示 Cmd/Ctrl+C；file:// 与沙箱 iframe 预览里也能复制。复制内容不再夹带 base64 图片，配图位置留 `[图N]`；「复制图片」改为在点击的同步栈里写剪贴板。
+- 修正 CHANGELOG 0.8.39–0.8.41 缺失的版本标题。
+
 ## [0.8.42] - 2026-10-16
 
 > 根包 0.8.41 → **0.8.42**（patch，仅安装器与文档）；技能版本不变。
@@ -5,7 +18,7 @@
 - 文档对齐默认升级：README 中英文加 `@latest` 升级、`--force` 重装 / 降级示例，钉版本示例注明已装更新时需 `--force`；PUBLISHING 加「升级」一行。
 - CI 安装冒烟改测新行为：同版本 → Already up to date，旧版本 → Upgraded。
 
- - 2026-10-16
+## [0.8.41] - 2026-10-16
 
 > 根包 0.8.40 → **0.8.41**（patch，仅安装器）；技能版本不变。
 
@@ -14,7 +27,7 @@
 - `install` 遇到已装技能时默认升级：包内版本更新（或已装版本缺失 / 解析不了）→ 直接覆盖，不备份，打印 `Upgraded <id> <旧> -> <新>`；版本相同 → `Already up to date`，exit 0，`--force` 重装；已装版本更新 → 拒绝降级，`--force` 才覆盖。
 - 帮助文本、README 中英文同步；`test_installer_cli.js` 新增升级 / 同版本 / 已装更新 / 版本缺失用例。
 
- - 2026-10-16
+## [0.8.40] - 2026-10-16
 
 > 根包 0.8.39 → **0.8.40**（patch）；技能版本：topmind-briefs 0.2.20 → 0.2.21、topmind-format 0.1.5 → 0.1.6、topmind-viral-posts 0.3.12 → 0.3.13、topmind-wechat-post 0.3.12 → 0.3.13、topmind-x-article 0.4.18 → 0.4.19。
 
@@ -24,7 +37,7 @@
 - 删掉所有 280 字 / 加权字数限制和「超了拆 thread / 确认账号支持长帖」的说法；briefs 的 platform-specs、style-guide、examples、SKILL.md，viral-posts 写作铁律，evals 同步。
 - `lint_x_post.py` 的 W7 改为：超过约 1000 字才提示写成长文（X Article）；format negative_tests 新增对应用例。
 
- - 2026-10-16
+## [0.8.39] - 2026-10-16
 
 > 根包 0.8.38 → **0.8.39**（patch）；技能版本：topmind-briefs 0.2.19 → 0.2.20、topmind-cover 0.4.10 → 0.4.11、topmind-format 0.1.4 → 0.1.5、topmind-poster 0.1.5 → 0.1.6、topmind-viral-posts 0.3.11 → 0.3.12、topmind-wechat-post 0.3.11 → 0.3.12、topmind-x-article 0.4.17 → 0.4.18。
 
@@ -314,9 +327,8 @@
 
 > - 特性支持：**公众号技能收为唯一真源**。topmind-skills 里的 `topmind-wechat` 并入 `topmind-wechat-post`（topmind-skills 4.15.2 起删除旧技能）：
 >   - 新增 `scripts/audit-provenance.py`：改稿保真双向逐段溯源（本稿→源稿 / 源稿→本稿），有源稿时定稿必跑
->   - `scripts/scan_ai_flavor.py` 改为转发器：优先调用 qu-aiwei-zh 的 canonical 实现（含作者姿态分），
->     查找顺序 `$QU_AIWEI_SCAN` → 同级已装技能 → `$QU_AIWEI_SKILLS_DIRS` → 常见宿主技能目录，不写死个人路径；
->     找不到时回落内置 `scan_ai_flavor_builtin.py` 并在 stderr 提示缺姿态维度，`--require-canonical` 可强制要求
+>   - `scripts/scan_ai_flavor.py` 改为转发器：可转发到外部扫描脚本，不写死个人路径；
+>     找不到时回落内置 `scan_ai_flavor_builtin.py` 并在 stderr 提示缺姿态维度（0.8.43 起改为环境变量 `$TOPMIND_AI_SCAN` 指定）
 >   - `md2wechat.py` 两版逐段比对：本仓 1801 行版本已包含旧版全部能力，并多出括号 URL、嵌套围栏、行内图片管线、
 >     原子写、坏输入干净报错等处理，保留本仓版本；旧版独有的左衬条样式、自我介绍签名行、minimal-ink 默认主题
 >     是 2026-10-01/02 按用户要求去掉的，不恢复

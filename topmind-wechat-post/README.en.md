@@ -4,7 +4,7 @@
 
 Full lifecycle for WeChat articles: delivery package, review & rewrite, three quality gates, status sync, WeChat inline typography, and publish checklist.
 
-- Version: **v0.3.13** (ships with `@topmindspace/topmind-writing-skills@0.8.42`)
+- Version: **v0.3.14** (ships with `@topmindspace/topmind-writing-skills@0.8.43`)
 
 ## Install
 
@@ -98,10 +98,7 @@ Facts (first-hand sources) / logic (structural consistency) / copy (de-AI-flavor
 
 ## External dependencies
 
-The following skills live **outside this repo** (provided separately by the host agent environment). Missing ones degrade or disable the corresponding capability; all scripts in this repo still work fully:
-
-- `humanizer-zh`: fidelity boundaries for Chinese de-AI-flavor; without it the "de-AI-flavor only, no typesetting" path is unavailable.
-- `qu-aiwei-zh`: Chinese de-AI-flavor scan (canonical, includes the author-stance layer). `scripts/scan_ai_flavor.py` forwards to it when found and falls back to a bundled implementation (wording score only, with a warning) when not.
+None required. De-AI rules and checks ship with the skill (`references/de-ai-rules.md`, `scripts/lint_x_post.py --md`, `scripts/scan_ai_flavor.py`). To plug in your own scanner, set `$TOPMIND_AI_SCAN=/path/to/script.py`; arguments and exit code are forwarded unchanged.
 
 ## Development
 

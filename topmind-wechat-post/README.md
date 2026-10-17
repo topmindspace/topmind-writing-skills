@@ -4,7 +4,7 @@
 
 公众号文章全生命周期：交付包、审校改写、质量三关、状态同步、微信内联排版与发布清单。
 
-- 版本：**v0.3.13**（随 `@topmindspace/topmind-writing-skills@0.8.42` 发布）
+- 版本：**v0.3.14**（随 `@topmindspace/topmind-writing-skills@0.8.43` 发布）
 
 ## 安装
 
@@ -23,7 +23,8 @@ python3 scripts/new-article.py --slug demo --title "标题" --direction reverse
 # 排版体检 + 自动修复
 python3 scripts/lint-wechat.py --input <包>/公众号稿.md --fix
 
-# 去 AI 味扫描（目标 ≥85；装了 qu-aiwei-zh 时同时看作者姿态分）
+# 去 AI 味：逐句检查 + 总分（目标 ≥85；规则表 references/de-ai-rules.md）
+python3 scripts/lint_x_post.py <包>/公众号稿.md --md
 python3 scripts/scan_ai_flavor.py <包>/公众号稿.md
 
 # Markdown → 全内联 HTML（必加 --embed-images，否则粘贴丢图）
@@ -100,10 +101,7 @@ python3 scripts/md2wechat.py --input demo.md --out-dir demo --slug demo --embed-
 
 ## 外部依赖
 
-本技能工作流会路由到以下**仓库外**技能（不含于本仓库，由宿主智能体环境另行提供）。缺失时对应能力降级/不可用，不影响本仓库脚本的全部功能：
-
-- `humanizer-zh`：中文去 AI 味的保真边界；缺失时「只去 AI 味不排版」路径不可用。
-- `qu-aiwei-zh`：中文去 AI 味扫描定位（含作者姿态层）；`scripts/scan_ai_flavor.py` 是转发器，找得到就调它，找不到回落内置实现（只有词面分，会提示）。
+无必需的外部技能。去 AI 味规则与检查随包自带（`references/de-ai-rules.md`、`scripts/lint_x_post.py --md`、`scripts/scan_ai_flavor.py`）。想接入自己的扫描脚本时设 `$TOPMIND_AI_SCAN=/path/to/script.py`，参数与退出码原样转发。
 
 ## 开发
 

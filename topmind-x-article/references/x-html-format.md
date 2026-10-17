@@ -17,11 +17,11 @@
 | ``` 围栏（直出提示词） | `div.prompt > blockquote > code` + 「复制提示词」按钮 | 原生引用块。**粘贴流到此为止**：X 不识别粘贴的 `<pre>` 为代码块；读者侧一键复制只能来自 X 原生代码块（Insert → Code 手动建），见下节「提示词的复制链路（双通道）」 |
 | `---` | `hr` | 可能被丢弃 → 发布时手动 Insert → 分割线 |
 | GFM 表格 | `ul.xtable`（表头加粗首项） | **X 粘贴会丢弃 `<table>`**，转列表保内容；如需原生表格，走 X 的 Insert → 表格手动建 |
-| `[图N]` 独占一行 | `<figure>`：内嵌 data-URI 图片 + `[图N]` 编号 + 「下载图片」按钮 | 图片随粘贴带入不稳定，保底按编号下载上传 |
+| `[图N]` 独占一行 | `<figure>`：内嵌 data-URI 图片 + `[图N]` 编号 + 「复制图片」「下载图片」按钮 | 复制全文时整张 figure 换成 `<p>[图N]</p>` 占位；图片逐张「复制图片」粘贴或下载上传 |
 | 封面 `--cover` | 页顶预览 + 下载（`.no-paste`） | 始终在 X 编辑器独立封面入口单独上传 |
 
 「复制全文」前 JS 自动剔除所有 `<button>` 与 `.no-paste` 块（标题、封面预览），
-剪贴板里只剩 X 可识别的语义标签：`h2/h3/p/ul/ol/blockquote/a/hr/img`。
+并把每个 `figure.ximg` 换成 `[图N]` 占位段，剪贴板里只剩 X 可识别的语义标签：`h2/h3/p/ul/ol/blockquote/a/hr`。
 工具栏三步话术：**① 标题填入 X 标题栏 → ② 一键复制全文 → ③ 粘贴到 X 正文**。
 
 ## 提示词的复制链路（双通道）
@@ -66,17 +66,22 @@
 
 ## 复制行为
 
-- 「一键复制全文」：`ClipboardItem` 同时写 `text/html` + `text/plain`，
-  富文本失败时自动降级纯文本
-- 「复制提示词」：`innerText`（HTML 实体自动解码，拿到的是干净纯文本）
+- 「一键复制全文」按顺序降级，同时写 `text/html` + `text/plain`：
+  ① 在点击的同步调用栈里挂 copy 事件 + `document.execCommand('copy')`（file://、非安全上下文、
+  没给 clipboard-write 的 iframe 预览都能用；Safari 要求同步，所以放第一步）；
+  ② `navigator.clipboard.write([ClipboardItem])`，失败再 `writeText` 纯文本；
+  ③ 全失败 → 自动全选 `#article`，toast 提示按 Cmd/Ctrl+C
+- 「复制提示词」：同样先 execCommand，再 `writeText`
+- 「复制图片」：`ClipboardItem({'image/png': Promise<Blob>})`，write 在同步栈里发起；非 PNG 先过 canvas。
+  需要安全上下文（file:// 本地直接打开可以，部分 iframe 预览不行）；失败提示改用「下载图片」
 - 「下载图片/下载封面」：`a[download]` + data-URI，保底链路
 
 ## 已知限制（写进发布话术，不要过度承诺）
 
 - 文本 + 格式一键复制可靠（富文本剪贴板，多家 X 发文技能同款做法）
-- 图片 data-URI 能否随粘贴带入 X 文章编辑器**不稳定**：
-  有成功案例，但更多实战采用"HTML 粘贴文本 + 图片按编号上传"。
-  话术固定为："能带入则带入，带不入则按编号下载上传"
+- 全文复制不带图片（X 不认 data-URI 随文粘贴）：粘贴后按 `[图N]` 占位逐张「复制图片」粘贴，
+  或下载后上传，再删占位
+- 聊天附件预览里打开时，富文本能复制，但「复制图片」可能被禁：下载 HTML 后用 Chrome/Safari 直接打开
 - 封面始终在 X 编辑器单独上传（X 有独立封面入口），HTML 里只预览
 - 分割线、代码块、表格三类 X 原生块**只能走 Insert 菜单**，粘贴流不承诺还原；
   本链路已做最大兼容（引用块/列表/hr），剩余手动补。

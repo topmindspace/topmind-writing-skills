@@ -1,26 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""scan_ai_flavor.py — 中文去 AI 味扫描入口（转发器）。
+"""scan_ai_flavor.py — 中文去 AI 味打分入口。
 
-优先调用 qu-aiwei-zh 的 canonical 检测脚本（含「E 类 · 作者姿态层」）；
-找不到时回落到随包内置的 `scan_ai_flavor_builtin.py`，并在 stderr 明确提示
-「本次只有词面分、没有作者姿态分」——单独安装本技能也能跑，但不会悄悄给出一个
-少了一个维度的分数。
+默认运行随包的 `scan_ai_flavor_builtin.py`（词面分）。设置了 `$TOPMIND_AI_SCAN`
+（指向你自己的扫描脚本）时，把参数原样转发过去，退出码取被调脚本的退出码；
+外部脚本可以额外给出「作者姿态分」等维度。没有外部脚本时在 stderr 说明
+「本次只有词面分、没有作者姿态分」，不会悄悄少一个维度。
 
-## canonical 查找顺序（命中即用，不写死个人路径）
+规则表见 references/de-ai-rules.md；逐句结构检查用 `lint_x_post.py <稿>.md --md`。
 
-1. `$QU_AIWEI_SCAN`                         显式指定脚本路径
-2. 与本技能同级的已装技能：`<本技能所在 skills 目录>/qu-aiwei-zh/scripts/scan_ai_flavor.py`
-3. `$QU_AIWEI_SKILLS_DIRS` 里的每个 skills 根目录（用系统路径分隔符分隔）
-4. 常见宿主技能目录：`./.agents/skills`、`./.claude/skills`、`~/.agents/skills`、
-   `~/.claude/skills`、`~/.codex/skills`、`~/.cursor/skills`
+## 开关（入口自有，不透传）
 
-## 开关（转发器自有，不透传）
+- `--which`             打印实际执行的脚本路径
+- `--require-external`  没配置外部扫描脚本（或路径不存在）时退出 3，不回落
+                        （`--require-canonical` 为旧名，等价）
 
-- `--which`              打印解析到的脚本路径（找不到时打印内置兜底路径并标注）
-- `--require-canonical`  找不到 canonical 时退出 3，不回落（定稿门禁想要姿态分时用）
-
-其余参数原样透传（`<file>` / `--json` / `-o` / `-` 管道），退出码取被调脚本的退出码。
+其余参数原样透传（`<file>` / `--json` / `-o` / `-` 管道）。
 """
 
 from __future__ import annotations
@@ -30,63 +25,44 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BUILTIN = os.path.join(HERE, "scan_ai_flavor_builtin.py")
-REL = os.path.join("qu-aiwei-zh", "scripts", "scan_ai_flavor.py")
-
-
-def _candidates():
-    out = []
-    env = os.environ.get("QU_AIWEI_SCAN")
-    if env:
-        out.append(env)
-    # 本技能装在 <skills>/topmind-wechat-post/scripts/ 下 → 同级 <skills>/qu-aiwei-zh
-    out.append(os.path.join(os.path.dirname(os.path.dirname(HERE)), REL))
-    for root in (os.environ.get("QU_AIWEI_SKILLS_DIRS") or "").split(os.pathsep):
-        if root.strip():
-            out.append(os.path.join(root.strip(), REL))
-    for root in (os.path.join(".", ".agents", "skills"), os.path.join(".", ".claude", "skills"),
-                 os.path.join("~", ".agents", "skills"), os.path.join("~", ".claude", "skills"),
-                 os.path.join("~", ".codex", "skills"), os.path.join("~", ".cursor", "skills")):
-        out.append(os.path.join(root, REL))
-    return [os.path.abspath(os.path.expanduser(c)) for c in out]
+ENV = "TOPMIND_AI_SCAN"
 
 
 def resolve():
-    """返回 canonical 脚本绝对路径；找不到返回 None。显式 $QU_AIWEI_SCAN 指错时不往下猜。"""
-    env = os.environ.get("QU_AIWEI_SCAN")
-    if env:
-        p = os.path.abspath(os.path.expanduser(env))
-        return p if os.path.isfile(p) else None
-    for p in _candidates():
-        if os.path.isfile(p) and os.path.realpath(p) != os.path.realpath(__file__):
-            return p
-    return None
+    """返回外部扫描脚本绝对路径；没配置或路径不存在返回 None。"""
+    env = os.environ.get(ENV)
+    if not env:
+        return None
+    p = os.path.abspath(os.path.expanduser(env))
+    if not os.path.isfile(p) or os.path.realpath(p) == os.path.realpath(__file__):
+        return None
+    return p
 
 
 FALLBACK_NOTE = (
-    "⚠ 未找到 qu-aiwei-zh 的 canonical 检测脚本，本次用随包内置实现：只有词面分，"
-    "没有「作者姿态分」（E 类）。\n"
-    "  需要姿态分时：安装 qu-aiwei-zh 技能，或 export QU_AIWEI_SCAN=/path/to/scan_ai_flavor.py；"
-    "定稿门禁可加 --require-canonical 强制要求。\n"
-)
+    "⚠ 未配置外部扫描脚本（$%s），本次用随包内置实现：只有词面分，没有「作者姿态分」。\n"
+    "  需要更多维度时：export %s=/path/to/your_scan.py；定稿门禁可加 --require-external 强制要求。\n"
+) % (ENV, ENV)
 
 
 def main():
     args = sys.argv[1:]
-    require = "--require-canonical" in args
-    args = [a for a in args if a != "--require-canonical"]
+    require = any(a in ("--require-external", "--require-canonical") for a in args)
+    args = [a for a in args if a not in ("--require-external", "--require-canonical")]
     target = resolve()
 
     if args and args[0] == "--which":
         if target:
             print(target)
             return 0
-        print("%s（内置兜底，无作者姿态分）" % BUILTIN)
+        print("%s（内置实现，无作者姿态分）" % BUILTIN)
         return 3 if require else 0
 
     if not target:
         if require:
-            sys.stderr.write("✗ --require-canonical：找不到 qu-aiwei-zh canonical 脚本。\n已查找：\n")
-            sys.stderr.write("".join("  %s\n" % p for p in _candidates()))
+            env = os.environ.get(ENV)
+            sys.stderr.write("✗ --require-external：%s\n" % (
+                "$%s 指向的文件不存在：%s" % (ENV, env) if env else "没有设置 $%s" % ENV))
             return 3
         sys.stderr.write(FALLBACK_NOTE)
         target = BUILTIN

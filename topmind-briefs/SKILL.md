@@ -3,7 +3,7 @@ name: topmind-briefs
 description: "干货短文：一件事讲透，X + 公众号双平台。短文不是长文——默认不出 HTML：工作流按「核实一手信源 → 找原帖原图 → 写内容 → 排版」；X 版交付一段可直接复制的纯文本（首行钩子、合理分段与列表、去 AI 味、emoji 可选且只用 TopMind 体系、末行 0–2 个话题标签），链接（含来源）、原图（1–2 张）、配图另发，绝不混进正文；公众号版是 300–800 字 Markdown；没有原图时主动询问是否配图，不擅自生图。尊重原始信息、原图、原文。只交付不代发。Use when 写短文、公众号短文、X 短文、发快讯、简讯、速报、数据榜单、榜单速报、论文解读、新品速递、来篇短的、短平快、brief；信息密度型（数据、榜单、发布）走本技能。Do NOT use for 把现成文字格式化、转段子、排版（→ topmind-format）、X 长文与发 X 文章（→ topmind-x-article）、公众号长文与公众号排版 HTML（→ topmind-wechat-post）、引流互动型短帖、段子、涨粉帖、互关帖、爆款短篇（→ topmind-viral-posts）、单独出长图/海报/信息图 PNG（→ topmind-poster）、封面与头图（→ topmind-cover）、把稿子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.2.21"
+  version: "0.2.22"
   action_category: "write"
   triggers: "写短文, 公众号短文, X 短文, 发快讯, 快讯, 简讯, 速报, 干货短文, 论文解读, 数据榜单, 榜单速报, 新品速递, brief, 来篇短的, 短平快, 发个快讯"
   author: "TopMindSpace"
@@ -49,11 +49,11 @@ metadata:
 顺序固定：**信源 → 原帖原图 → 内容 → 排版**，前一步没做完不进下一步（见交付规约第一节）。
 
 1. **核实信源**：一篇只讲一件事（一个数据、一个榜单变化、一篇论文的核心结论、一个新品的关键参数）。先找一手来源（官方公告、更新日志、论文、仓库、当事人原帖）；厂商数字标「官方称 / 厂商口径」，传言标「据传 / 未证实」。记下每条的**来源名称、发布时间（时区）、URL**——这些另发给用户，不进正文。
-2. **找原帖、原图**：原帖链接、官方图 / 截图 1–2 张。
+2. **找原帖、原图**（写字之前，按 [references/image-sourcing.md](references/image-sourcing.md)）：原帖链接、官方图 / 截图 1–2 张，来源记进交付说明；自制图只作兜底，标「自制」和数据来源。
 3. **写内容**：
    - 首行是钩子：「是什么 + 最扎眼的事实」，约 30 字内，只看首行也拿到信息；
    - 具体数字和场景，说人话，最后一句给判断、建议或具体问题（不复述、不升华）；
-   - 按 [references/writing-principles.md](references/writing-principles.md) 第五点五节「去 AI 味 + 吸引力清单」过一遍；
+   - **去 AI 味（必过）**：按 [references/de-ai-rules.md](references/de-ai-rules.md) 逐条过（先守改写边界：只改表达，不改事实和确定性），再对照 [references/writing-principles.md](references/writing-principles.md) 第五点五节「吸引力清单」；
    - 出处在正文里只用文字点到（「官方称」「据论文」），不贴 URL、不写来源行。
 4. **排版**（目标：方便阅读），按 [references/platform-specs.md](references/platform-specs.md)、[references/x-post-format.md](references/x-post-format.md)、[references/x-layout-patterns.md](references/x-layout-patterns.md)：
    - 一段 1–3 行，段间空一行；3–7 条并列信息才用列表，前一行写「xx：」引导语，2 条就写成两句；
@@ -65,8 +65,9 @@ metadata:
 5. **配图**：原图优先，交付 1–2 张（官方图、原帖配图 / 原帖截图、基准图、榜单实拍），每张写一句图注说明它证明什么；给可直接打开的图片地址，能下载就下载到交付目录。**没有可用原图时，必须主动问用户「要不要配图？可以用 topmind-cover 出一张 16:9 封面」**，用户说要再调用 `topmind-cover` 的「X 短文封面」（16:9，1200×675）；不擅自生图。
 6. **自检**：
    - 每个数字都能在另发的链接里找到出处；图和文字说的是同一件事；推测已标注；
-   - `python3 scripts/lint_x_post.py X短文.txt`：错误清零（Markdown 残留，以及 E10 正文有 URL、E11 有来源行、E12 有配图说明），W9（AI 套话）/ W10（首行太长）/ W8（表情过多）逐条处理；
+   - `python3 scripts/lint_x_post.py X短文.txt`：错误清零（Markdown 残留，以及 E10 正文有 URL、E11 有来源行、E12 有配图说明），W9（AI 套话）/ W15–W16（中英文结构套话）/ W17（标点腔）/ W10（首行太长）/ W8（表情过多）逐条处理；公众号版跑 `lint_x_post.py 公众号短文.md --md`；
    - 需要统一排版时可跑 `python3 scripts/format_text.py X短文.txt --mode short --out X短文.txt`（只动排版不改字；正文里的链接、来源行会被拿出来另列）。
+   - 用户要求改稿时，按 [references/revision-workflow.md](references/revision-workflow.md)：备份 → 逻辑与事实 → 删冗余 → 去 AI 味 → 排版，报改前 / 改后字数。
 7. **交付**（只交付，不发布）：见下节「交付格式」；落盘时 `X短文.txt` 只放正文，链接 / 图片 / 说明写进 `交付说明.md`。
 
 ## 交付格式
