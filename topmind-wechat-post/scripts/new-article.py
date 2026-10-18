@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""new-article.py — 一键创建公众号文章交付包。
+"""new-article.py — 一键创建长文文章文件夹（默认新结构）。
 
-创建 <base>/YYYY-MM-DD-<slug>/ 目录，内含：
-  - 公众号稿.md   带 frontmatter 的文章骨架（含写作提示与容器语法示例）
-  - images/       图片目录（可选，从 --images 拷贝）
-  - diagrams/     mermaid 图表目录
+默认（新结构，单源）：调用 article_scaffold.py，创建 <base>/<文章名>/：
+  - <文章名>.md   唯一源稿（frontmatter：title/date/status/tags/cover，可选 direction/source_file/target_file）
+  - images/ cover/ raw/ out/ 与 素材来源.md
+  公众号 HTML、X 长文 HTML、X 发布稿都从这一份源稿按需派生到 out/。
+
+--legacy（旧结构，兼容老专题）：创建 <base>/YYYY-MM-DD-<slug>/ 交付包，内含公众号稿.md、images/、diagrams/。
 
 Usage:
-    python3 new-article.py --slug gpt-6-review --title "GPT-6 深度评测" \
+    python3 new-article.py --title "GPT-6 深度评测" [--base <专题目录>] [--tags AI,评测] [--images a.png b.png]
+    python3 new-article.py --legacy --slug gpt-6-review --title "GPT-6 深度评测" \
         [--base <专题目录>] [--workspace <工作区>] [--date YYYY-MM-DD] [--images src1 src2 ...]
 
 默认 base 见 wechat_paths.py：--base → TOPMIND_WECHAT_BASE → 工作区里按名称发现的
@@ -22,7 +25,22 @@ import re
 import shutil
 import sys
 
+sys.dont_write_bytecode = True  # 同目录模块互相 import，不在技能目录里留 __pycache__
+
 from wechat_paths import require_base, resolve_topstream  # 同目录模块：路径解析不写死个人路径/编号/年份
+import article_scaffold  # 同目录模块（shared/scripts 副本）：新结构文章文件夹
+
+BODY_HINTS = """
+<!-- 骨架说明（写作时逐条删除）：
+  1. 开头 3 句内给出一个具体事实、数字或场景，别写背景铺垫。
+  2. 小标题用 ##；想要序号就直接写「一、」「二、」，排版脚本原样保留，不再自动编号。
+  3. 正文段落不超过 110 字；重点句才加粗，加粗占比 < 20%。
+  4. 图片写 ![说明](images/01-xxx.png)，按出现顺序编号；出处写在图片下一行「来源：……」。
+  5. 不用 ::: 容器、callout、![[ ]]：源稿要能被任何 Markdown 工具读。
+  6. 外链直接写 [文字](url)，生成公众号版时自动转文末脚注。
+  7. 写完先跑 topmind-revise（三道门），再按需派生公众号 / X 版本到 out/。
+-->
+"""
 
 SKELETON = """---
 title: "{title}"
@@ -85,10 +103,57 @@ note_role: bundle
 SLUG_RE = re.compile(r"^[\u4e00-\u9fffA-Za-z0-9][\u4e00-\u9fffA-Za-z0-9-]*$")
 
 
+def new_layout(args):
+    tags = [t.strip() for t in re.split(r"[,，]", args.tags) if t.strip()]
+    try:
+        root, md = article_scaffold.scaffold(args.title, args.base, args.date, tags)
+    except (FileExistsError, ValueError) as e:
+        print("✗ %s" % e)
+        return 1
+    text = open(md, encoding="utf-8").read()
+    # 对接 topstream 时才写的可选字段，插在 frontmatter 结尾前
+    if args.direction == "forward" or args.source_file:
+        extra = "direction: %s\nsource_file: %s\ntarget_file: %s\n" % (
+            args.direction, args.source_file or '""',
+            '""' if args.direction == "forward" else "pending")
+        head, sep, rest = text.partition("\n---\n")
+        text = head + "\n" + extra.rstrip("\n") + sep + rest
+    text = text.rstrip("\n") + "\n" + BODY_HINTS
+    with open(md, "w", encoding="utf-8") as fh:
+        fh.write(text)
+
+    copied = 0
+    for src in args.images:
+        if os.path.exists(src):
+            shutil.copy2(src, os.path.join(root, "images", os.path.basename(src)))
+            copied += 1
+        else:
+            print("! 跳过不存在的图片：%s" % src)
+
+    here = os.path.dirname(os.path.abspath(__file__))
+    print("✓ 文章文件夹已创建：%s" % root)
+    print("  源稿     : %s" % os.path.basename(md))
+    if copied:
+        print("  图片     : %d 张 → images/（按正文出现顺序改名 01-、02-…）" % copied)
+    print("")
+    print("下一步：")
+    print("  1. 写完先过结构与改稿检查：")
+    print("     python3 %s/check_article.py '%s'" % (here, md))
+    print("     python3 %s/lint-wechat.py --input '%s' --fix" % (here, md))
+    print("  2. 生成公众号 HTML（产物进 out/）：")
+    print("     python3 %s/md2wechat.py --input '%s' --embed-images" % (here, md))
+    print("  3. 定稿时改 frontmatter 的 status（目录名不变）：")
+    print("     python3 %s/sync-status.py --set 定稿 '%s' --apply" % (here, root))
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--slug", required=True,
-                    help="包名关键词（中文短名，可含英文/数字/连字符），如 个人免费基建全景、GrokBot多Agent调度")
+    ap.add_argument("--legacy", action="store_true",
+                    help="用旧结构 YYYY-MM-DD-<slug>/公众号稿.md（老专题兼容）；缺省用新结构 <文章名>/<文章名>.md")
+    ap.add_argument("--slug", default="",
+                    help="仅 --legacy：包名关键词（中文短名，可含英文/数字/连字符）")
+    ap.add_argument("--tags", default="", help="新结构：逗号分隔的标签")
     ap.add_argument("--title", required=True, help="文章标题")
     ap.add_argument("--base", default=None, help="交付包根（专题目录）；缺省按 wechat_paths.py 规则解析")
     ap.add_argument("--workspace", default=None, help="topmind 工作区根（缺省读 TOPMIND_WORKSPACE）")
@@ -102,6 +167,12 @@ def main():
     args = ap.parse_args()
     args.base = require_base(args.base, args.workspace)
 
+    if not args.legacy:
+        return new_layout(args)
+
+    if not args.slug:
+        print("✗ --legacy 需要 --slug")
+        return 1
     if not SLUG_RE.match(args.slug):
         print("✗ 目录名只允许中文、英文字母、数字、连字符：%s" % args.slug)
         return 1
@@ -140,7 +211,7 @@ def main():
             print("! 跳过不存在的图片：%s" % src)
 
     print("✓ 交付包已创建：%s" % pkg)
-    print("  稿件骨架 : 公众号稿.md（含容器语法示例，写作时删掉注释）")
+    print("  稿件骨架 : 公众号稿.md（旧结构，含容器语法示例，写作时删掉注释）")
     if copied:
         print("  图片     : %d 张 → images/" % copied)
     print("")

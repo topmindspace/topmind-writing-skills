@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*-
 """sync-status.py — 同步公众号交付包的「状态 ⇄ 目录名 ⇄ 字数」。
 
-规则（与专题 topic.md 的目录规范一致）：
-  status = 草稿            → 目录名 YYYY-MM-DD-<中文名>
-  status = 定稿 / 已发布    → 目录名 YYYY-MM-DD-<中文名>-released
+两种目录结构：
+  新结构（默认）：<文章名>/<文章名>.md —— 状态只记在 frontmatter，目录名不随状态改
+  旧结构（只读兼容，不自动迁移）：YYYY-MM-DD-<中文名>/公众号稿.md
+    status = 草稿            → 目录名 YYYY-MM-DD-<中文名>
+    status = 定稿 / 已发布    → 目录名 YYYY-MM-DD-<中文名>-released
 
 同时刷新 frontmatter 的 word_count（正文中文字数）。
 
@@ -20,7 +22,8 @@ import os
 import re
 import sys
 
-from wechat_paths import require_base, resolve_topstream  # 同目录模块：路径解析不写死个人路径/编号/年份
+sys.dont_write_bytecode = True  # 同目录模块 import，不留 __pycache__
+from wechat_paths import find_draft, require_base, resolve_topstream  # 同目录模块：路径解析不写死个人路径/编号/年份
 
 FINAL_STATUSES = ("定稿", "已发布")
 VALID_STATUSES = ("草稿",) + FINAL_STATUSES
@@ -55,8 +58,8 @@ def scan(base):
     rows = []
     for name in sorted(os.listdir(base)):
         pkg = os.path.join(base, name)
-        draft = os.path.join(pkg, "公众号稿.md")
-        if not os.path.isdir(pkg) or not os.path.exists(draft):
+        draft, layout = find_draft(pkg)
+        if not draft:
             continue
         text = open(draft, encoding="utf-8").read()
         fm, body, head, sep = split_fm(text)
@@ -66,6 +69,10 @@ def scan(base):
         status = get_field(fm, "status") or "草稿"
         cn = len(re.findall(r"[\u4e00-\u9fff]", body))
 
+        if layout == "article":
+            # 新结构：目录名就是文章名，不随状态改
+            rows.append((name, status, cn, False, name, ""))
+            continue
         want_final = status in FINAL_STATUSES
         stem = name[:-len(RELEASED_SUFFIX)] if name.endswith(RELEASED_SUFFIX) else name
         target = stem + (RELEASED_SUFFIX if want_final else "")
@@ -103,9 +110,9 @@ def main():
         if not args.pkg:
             print("✗ --set 需要指定包目录名")
             return 1
-        draft = os.path.join(args.base, args.pkg, "公众号稿.md")
-        if not os.path.exists(draft):
-            print("✗ 找不到：%s" % draft)
+        draft, layout = find_draft(os.path.join(args.base, args.pkg))
+        if not draft:
+            print("✗ 找不到源稿（<文章名>.md 或 公众号稿.md）：%s" % os.path.join(args.base, args.pkg))
             return 1
         text = open(draft, encoding="utf-8").read()
         fm, body, head, sep = split_fm(text)
@@ -119,6 +126,8 @@ def main():
         want_final = args.set in FINAL_STATUSES
         stem = args.pkg[:-len(RELEASED_SUFFIX)] if args.pkg.endswith(RELEASED_SUFFIX) else args.pkg
         target = stem + (RELEASED_SUFFIX if want_final else "")
+        if layout == "article":
+            target = args.pkg  # 新结构：只改 frontmatter，不改目录名
 
         if args.apply:
             apply_rename(args.base, args.pkg, target, draft, fm, body, head, fm)
@@ -144,7 +153,7 @@ def main():
         print("%-44s %-6s %8s  %s" % (name, status, cn, flag))
 
         if args.apply:
-            draft = os.path.join(args.base, name, "公众号稿.md")
+            draft, _ = find_draft(os.path.join(args.base, name))
             text = open(draft, encoding="utf-8").read()
             fm, body, head, sep = split_fm(text)
             fm = set_field(fm, "word_count", str(cn))

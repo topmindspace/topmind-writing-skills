@@ -14,9 +14,16 @@ Supported beyond CommonMark:
   - four heading-2 style variants
 
 Usage:
+    python3 md2wechat.py --input <文章名>/<文章名>.md --embed-images
+        # 文章文件夹结构：--out-dir 缺省 <文章名>/out，--slug 缺省文件名，
+        # --asset-root 缺省文章文件夹
     python3 md2wechat.py --input 稿.md --out-dir 交付包 --slug foo \
         --asset-root /path/to/repo [--theme theme.json] [--link-mode footnote] \
-        [--embed-images]
+        [--embed-images] [--auto-number]
+
+Headings: 二级标题写了「一、」「1.」这类手写序号就原样保留，不再自动编号；
+都没写时按主题样式自动编号。--auto-number 恢复旧行为（剥离手写序号后统一编号）。
+Images: 图片后紧跟（或隔一个空行）的「来源：……」行渲染成图注样式。
 
 Outputs:
     <out-dir>/<slug>-公众号版.html   full page, copy body section into WeChat
@@ -581,13 +588,16 @@ def match_img_only(line):
         return None
     return line[2:k], src
 CAPTION_RE = re.compile(r"^\*(.+)\*\s*$")
+# 图片后紧跟的「来源：」行渲染成图注（core-voice V14）；中间最多隔一个空行
+SOURCE_RE = re.compile(r"^(来源[：:].+)$")
 TABLE_SEP_RE = re.compile(r"^\|?[\s:|-]+\|[\s:|-]*$")
 CONTAINER_RE = re.compile(r"^:::+\s*(\w+)?\s*(.*)$")
 
 CN_NUM = "一二三四五六七八九十壹贰叁肆伍陆柒捌玖拾"
 
-# 标题里手写的中文/阿拉伯序号。序号应由排版层生成（可换样式、可加引用），
-# 写进标题文本后就变成了不可编程的字符串。这里统一剥离后重新编号。
+# 标题里手写的中文/阿拉伯序号。默认：稿子里的二级标题带手写序号（「一、」「1.」）就原样保留，
+# 排版层不再自动编号；二级标题都没写序号时才按主题样式自动编号。--auto-number 恢复旧行为：
+# 一律剥离手写序号后由排版层重新编号。
 # 注意：\d{1,2}[、.．](?!\d) 带负向断言，避免把「3.4× 成本」这类
 # 以数字开头的标题误剥成「4× 成本」。
 HAND_NUM_RE = re.compile(
@@ -625,6 +635,16 @@ def para_style(theme):
             % (theme["para_gap"], theme["line_height"], theme["align"]))
 
 
+def keep_hand_num(theme):
+    return bool(theme.get("_keep_hand_num"))
+
+
+def detect_hand_numbers(lines):
+    """二级标题里有没有手写序号（「一、」「1.」「第一章」）。"""
+    return any(HAND_NUM_RE.match(l.strip()[3:].strip())
+               for l in lines if l.strip().startswith("## "))
+
+
 def render_heading(level, text, theme, index=None):
     accent = theme["accent"]
     if level == 1:
@@ -633,12 +653,18 @@ def render_heading(level, text, theme, index=None):
         return ('<p style="font-size:20px;font-weight:700;color:%s;'
                 'text-align:center;margin:0 0 18px;line-height:1.5;'
                 'letter-spacing:0.5px;">%s</p>'
-                % (theme["text_strong"], render_inline(HAND_NUM_RE.sub("", text).strip() or text)))
+                % (theme["text_strong"], render_inline(text.strip() if keep_hand_num(theme)
+                                                       else (HAND_NUM_RE.sub("", text).strip() or text))))
 
     if level == 2:
         style = theme.get("h2_style", "number")
-        # 先剥离手写序号，再按主题样式决定是否由排版层补编号
-        plain = HAND_NUM_RE.sub("", text).strip() or text.strip()
+        if keep_hand_num(theme):
+            # 保留手写序号：标题原样输出，不再补排版层编号
+            plain = text.strip()
+            index = None
+        else:
+            # 先剥离手写序号，再按主题样式决定是否由排版层补编号
+            plain = HAND_NUM_RE.sub("", text).strip() or text.strip()
         t = render_inline(plain)
         num = ""
         if "number" in style and index:
@@ -672,7 +698,8 @@ def render_heading(level, text, theme, index=None):
                 % (theme["text_strong"], accent, num, t))
 
     if level == 3:
-        t = render_inline(HAND_NUM_RE.sub("", text).strip() or text)
+        t = render_inline(text.strip() if keep_hand_num(theme)
+                          else (HAND_NUM_RE.sub("", text).strip() or text))
         return ('<h3 style="font-size:16px;font-weight:600;color:%s;'
                 'margin:26px 0 12px;line-height:1.5;">%s</h3>'
                 % (theme["text_strong"], t))
@@ -878,12 +905,18 @@ def render_hr(theme):
             'margin:0 auto;"></section></section>' % theme["accent"])
 
 
-def render_figure(src, caption, theme, alt=""):
+def render_figure(src, caption, theme, alt="", source=None):
     cap = ""
     if caption:
         cap = ('<p style="font-size:13px;color:%s;text-align:center;'
                'margin:9px 0 %s;line-height:1.6;">%s</p>'
-               % (theme["text_light"], theme["para_gap"], render_inline(caption)))
+               % (theme["text_light"], "4px" if source else theme["para_gap"], render_inline(caption)))
+    if source:
+        cap += ('<p style="font-size:12px;color:%s;text-align:center;'
+                'margin:%s 0 %s;line-height:1.6;">%s</p>'
+                % (theme["text_light"], "0" if caption else "9px", theme["para_gap"],
+                   render_inline(source)))
+        caption = caption or source
     border = ""  # MD3 优雅：图片无边框，只保留圆角
     altattr = ' alt="%s"' % esc(alt) if alt else ""
     # 图片一律 max-width:100%，绝不用 width:100%：正文容器约 677px，
@@ -1093,7 +1126,9 @@ def convert_blocks(lines, md_path, out_dir, theme, ctx):
     toc_at = None  # 导读落点：首个正文段落之后
 
     # 预扫描：末章是否为收束类，决定它的编号用数字还是 ∞
-    h2_texts = [HAND_NUM_RE.sub("", l.strip()[3:]).strip() or l.strip()[3:].strip()
+    keep = keep_hand_num(theme)
+    h2_texts = [(l.strip()[3:].strip() if keep else
+                 (HAND_NUM_RE.sub("", l.strip()[3:]).strip() or l.strip()[3:].strip()))
                 for l in lines if l.strip().startswith("## ")]
     h2_total = len(h2_texts)
     last_is_summary = bool(h2_total) and bool(SUMMARY_H2_RE.match(h2_texts[-1]))
@@ -1144,8 +1179,8 @@ def convert_blocks(lines, md_path, out_dir, theme, ctx):
             marker = h2_index
             if level == 2:
                 h2_index += 1
-                h2_titles.append(HAND_NUM_RE.sub("", m.group(2)).strip()
-                                 or m.group(2).strip())
+                h2_titles.append(m.group(2).strip() if keep else
+                                 (HAND_NUM_RE.sub("", m.group(2)).strip() or m.group(2).strip()))
                 marker = ("∞" if (last_is_summary and h2_index == h2_total)
                           else h2_index)
             out.append(render_heading(level, m.group(2).strip(), theme, marker))
@@ -1199,14 +1234,24 @@ def convert_blocks(lines, md_path, out_dir, theme, ctx):
         m = match_img_only(stripped)
         if m:
             caption = None
+            source = None
             if i + 1 < n:
                 cm = CAPTION_RE.match(lines[i + 1].strip())
                 if cm:
                     caption = cm.group(1)
                     i += 1
+            # 「来源：」行（紧跟或隔一个空行）→ 图注样式
+            j = i + 1
+            if j < n and not lines[j].strip() and j + 1 < n:
+                j += 1
+            if j < n:
+                sm = SOURCE_RE.match(lines[j].strip())
+                if sm:
+                    source = sm.group(1)
+                    i = j
             src = resolve_image(m[1], md_path, out_dir,
                                 ctx["assets"], ctx["asset_root"])
-            out.append(render_figure(src, caption, theme, alt=m[0]))
+            out.append(render_figure(src, caption, theme, alt=m[0], source=source))
             i += 1
             continue
 
@@ -1243,8 +1288,10 @@ def convert_blocks(lines, md_path, out_dir, theme, ctx):
 
 def convert(md_text, md_path, out_dir, theme, link_mode="footnote",
             render_mermaid=False, asset_root=None, use_pangu=True,
-            toc=True, sign_mode="auto", author="", author_bio=""):
+            toc=True, sign_mode="auto", author="", author_bio="", auto_number=False):
     lines = strip_frontmatter(md_text.split("\n"))
+    theme = dict(theme)
+    theme["_keep_hand_num"] = (not auto_number) and detect_hand_numbers(lines)
     han_chars = sum(len(HAN_RE.findall(l)) for l in lines)
     ctx = {"assets": [], "diagrams": [], "footnotes": [],
            "render_mermaid": render_mermaid, "asset_root": asset_root,
@@ -1320,7 +1367,7 @@ def render_toc(titles, theme):
     # 导读的标记必须跟正文标题一致：
     #  - 标题带编号（h2_style 含 number）→ 导读也用编号；末章收束类用 ∞，避免「导读 04 / 正文 ∞」
     #  - 标题不带编号（center/underline/plain）→ 导读只用中性圆点，不要凭空造出 01/02
-    numbered = "number" in theme.get("h2_style", "number")
+    numbered = "number" in theme.get("h2_style", "number") and not keep_hand_num(theme)
     last_summary = bool(titles) and bool(SUMMARY_H2_RE.match(titles[-1]))
 
     def label(k):
@@ -1696,6 +1743,9 @@ def main():
     ap.add_argument("--author", default="",
                     help="签名区署名；留空则不输出署名行（不再写 {{作者名}} 占位）")
     ap.add_argument("--author-bio", default="", help="签名区一句话简介")
+    ap.add_argument("--auto-number", action="store_true",
+                    help="二级标题一律剥离手写序号、由排版层重新编号（旧行为）；"
+                         "默认：稿里写了「一、」这类序号就原样保留")
     args = ap.parse_args()
 
     if args.list_themes:
@@ -1704,10 +1754,17 @@ def main():
                                            "、".join(t["genre"]) or "（未声明题材）"))
         return
 
-    missing = [n for n, v in (("--input", args.input), ("--out-dir", args.out_dir),
-                              ("--slug", args.slug)) if not v]
-    if missing:
-        sys.exit("缺少必填参数：%s" % "、".join(missing))
+    if not args.input:
+        sys.exit("缺少必填参数：--input")
+    # 文章文件夹结构（<文章名>/<文章名>.md）：--out-dir 缺省 <文章文件夹>/out，
+    # --slug 缺省为文件名，--asset-root 缺省为文章文件夹
+    in_dir = os.path.dirname(os.path.abspath(args.input))
+    if not args.out_dir:
+        args.out_dir = os.path.join(in_dir, "out")
+    if not args.slug:
+        args.slug = os.path.splitext(os.path.basename(args.input))[0]
+    if not args.asset_root:
+        args.asset_root = in_dir
 
     if os.path.isdir(args.input):
         sys.exit("错误：输入是目录不是文件 %s" % args.input)
@@ -1733,6 +1790,7 @@ def main():
         not args.no_pangu,
         toc=not args.no_toc, sign_mode=args.signature,
         author=args.author, author_bio=args.author_bio,
+        auto_number=args.auto_number,
     )
 
     title = args.title

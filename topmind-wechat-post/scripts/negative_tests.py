@@ -75,10 +75,33 @@ def main() -> None:
         (td / "num.md").write_text(
             "# t\n\n## 第叁章 大写序号\n\n正文。\n", encoding="utf-8")
         r = run("md2wechat.py", ["--input", str(td / "num.md"),
-                                 "--out-dir", str(td / "o7"), "--slug", "t7"])
+                                 "--out-dir", str(td / "o7"), "--slug", "t7", "--auto-number"])
         html = (td / "o7" / "t7-公众号版.html").read_text(encoding="utf-8")
-        check("md2wechat 大写数字序号剥离",
+        check("md2wechat --auto-number 大写数字序号剥离",
               "第叁章" not in html and ">01</span>" in html)
+        # 7b. 默认保留手写序号：不剥离、不再补 01/02，导读用「·」
+        (td / "hand.md").write_text(
+            "# t\n\n## 一、起点\n\n正文。\n\n## 二、跟进\n\n正文。\n\n## 三、判断\n\n正文。\n"
+            "\n## 四、收尾\n\n正文。\n", encoding="utf-8")
+        run("md2wechat.py", ["--input", str(td / "hand.md"),
+                             "--out-dir", str(td / "o7b"), "--slug", "t7b"])
+        html = (td / "o7b" / "t7b-公众号版.html").read_text(encoding="utf-8")
+        check("md2wechat 默认保留手写序号、不叠加自动编号",
+              "一、起点" in html and "四、收尾" in html and ">01</span>" not in html)
+        # 7c. 缺省输出到 <输入目录>/out、slug=文件名；图片后「来源：」行渲染为图注
+        art = td / "新文章"
+        (art / "images").mkdir(parents=True)
+        (art / "images" / "01-a.png").write_bytes(_b64.b64decode(png))
+        (art / "新文章.md").write_text(
+            "---\ntitle: 新文章\n---\n\n# 新文章\n\n正文。\n\n![图](images/01-a.png)\n\n"
+            "来源：某项目官方文档\n\n后文。\n", encoding="utf-8")
+        r = run("md2wechat.py", ["--input", str(art / "新文章.md")])
+        outp = art / "out" / "新文章-公众号版.html"
+        html = outp.read_text(encoding="utf-8") if outp.exists() else ""
+        check("md2wechat 缺省输出到 out/ 且「来源：」行成图注",
+              r.returncode == 0 and "来源：某项目官方文档" in html
+              and html.count("来源：某项目官方文档") == 1
+              and "font-size:12px" in html.split("来源：某项目官方文档")[0][-200:], r.stdout[-300:])
 
         # 8. md2wechat 分隔线不触发自家合规 WARN（inline-block）
         (td / "hr.md").write_text("# t\n\n---\n\n正文。\n", encoding="utf-8")
@@ -212,16 +235,66 @@ def main() -> None:
         for d in ("00-收件箱", "20-长文", "88-输出"):
             (ws / d).mkdir(parents=True)
         env4 = dict(env3, TOPMIND_WORKSPACE=str(ws))
-        r = subprocess.run([PY, str(SCRIPTS / "new-article.py"), "--slug", "测试", "--title", "T",
+        r = subprocess.run([PY, str(SCRIPTS / "new-article.py"), "--legacy", "--slug", "测试", "--title", "T",
                             "--date", "2026-01-02"],
                            capture_output=True, text=True, timeout=60, env=env4, cwd=str(td))
         want = ws / "20-长文" / ("%d-公众号" % _dt.date.today().year) / "2026-01-02-测试" / "公众号稿.md"
-        check("new-article 按名称发现长文类别 + 当年专题", r.returncode == 0 and want.is_file(),
+        check("new-article --legacy 按名称发现长文类别 + 当年专题，建旧结构", r.returncode == 0 and want.is_file(),
               (r.stdout + r.stderr)[:200])
         if want.is_file():
             fmtxt = want.read_text(encoding="utf-8")
             check("骨架 frontmatter 的 category/topic 取实际目录名",
                   "category: 20-长文" in fmtxt and ("topic: %d-公众号" % _dt.date.today().year) in fmtxt)
+
+        # 18b. new-article 默认新结构：<文章名>/<文章名>.md + images/cover/raw/out + 素材来源.md
+        topic = ws / "20-长文" / ("%d-公众号" % _dt.date.today().year)
+        r = subprocess.run([PY, str(SCRIPTS / "new-article.py"), "--title", "新结构测试",
+                            "--date", "2026-01-03", "--tags", "AI,测试"],
+                           capture_output=True, text=True, timeout=60, env=env4, cwd=str(td))
+        art = topic / "新结构测试"
+        md = art / "新结构测试.md"
+        ok = (r.returncode == 0 and md.is_file()
+              and all((art / d).is_dir() for d in ("images", "cover", "raw", "out"))
+              and (art / "素材来源.md").is_file())
+        check("new-article 默认建新结构文章文件夹", ok, (r.stdout + r.stderr)[:300])
+        if md.is_file():
+            t = md.read_text(encoding="utf-8")
+            check("新结构骨架：五字段 frontmatter、无 ::: 容器",
+                  all(("\n%s:" % k) in t for k in ("title", "date", "status", "tags", "cover"))
+                  and ":::" not in t.replace("::: 容器", ""))
+            r = run("check_article.py", [str(md)])
+            check("check_article 新骨架 E 级为零", r.returncode == 0, (r.stdout + r.stderr)[:300])
+        r = subprocess.run([PY, str(SCRIPTS / "new-article.py"), "--title", "新结构测试"],
+                           capture_output=True, text=True, timeout=60, env=env4, cwd=str(td))
+        check("new-article 文件夹已存在时拒绝覆盖", r.returncode != 0 and "Traceback" not in r.stderr,
+              (r.stdout + r.stderr)[:200])
+        # 18c. sync-status 新结构：只改 frontmatter，不改目录名
+        r = run("sync-status.py", ["--set", "定稿", str(art), "--apply"])
+        check("sync-status 新结构只改 status 不改目录名",
+              r.returncode == 0 and art.is_dir() and "status: 定稿" in md.read_text(encoding="utf-8"),
+              (r.stdout + r.stderr)[:300])
+        r = run("sync-mapping.py", ["--base", str(topic), "--no-topstream", "--no-topic"])
+        check("sync-mapping 同时认新旧结构", r.returncode == 0 and "新结构测试" in r.stdout
+              and "2026-01-02-测试" in r.stdout, (r.stdout + r.stderr)[-400:])
+        # 18d. lint-wechat：新源稿里 ::: 报错；旧交付包（公众号稿.md）只告警
+        (td / "box.md").write_text("# t\n\n正文。\n\n::: tip\n小技巧\n:::\n", encoding="utf-8")
+        r = run("lint-wechat.py", ["--input", str(td / "box.md")])
+        check("lint-wechat 源稿 ::: 容器报错", r.returncode == 1 and "容器" in r.stdout, r.stdout[-300:])
+        r = run("lint-wechat.py", ["--input", str(td / "box.md"), "--legacy"])
+        check("lint-wechat --legacy 容器不报错", r.returncode == 0, r.stdout[-300:])
+        # 18e. check_article：编号顺序、缺图、Obsidian 写法
+        bad = td / "坏稿"
+        (bad / "images").mkdir(parents=True)
+        (bad / "images" / "01-a.png").write_bytes(_b64.b64decode(png))
+        (bad / "images" / "02-b.png").write_bytes(_b64.b64decode(png))
+        (bad / "坏稿.md").write_text(
+            "---\ntitle: 坏稿\ndate: 2026-01-01\nstatus: 草稿\ntags: []\ncover: cover/c.png\n---\n\n"
+            "# 坏稿\n\n![b](images/02-b.png)\n\n![a](images/01-a.png)\n\n![[x.png]]\n\n"
+            "![缺](images/03-c.png)\n", encoding="utf-8")
+        r = run("check_article.py", [str(bad)])
+        check("check_article 报编号乱序/Obsidian 写法/缺图并退出 1",
+              r.returncode == 1 and "E4" in r.stdout and "E5" in r.stdout and "E3" in r.stdout,
+              r.stdout[-400:])
 
         # 19. audit-provenance 参数错误干净退出（退出码 2）
         r = run("audit-provenance.py", ["--draft", str(td / "nope.md"), "--source", str(td / "nope2.md")])

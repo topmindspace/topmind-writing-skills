@@ -2,9 +2,10 @@
 
 **[中文](./README.md)** | English
 
-Turn a Markdown draft into a "copy → paste → publish" X long-form (Article) package.
+One long-form article has a single source `<title>/<title>.md`: by default it goes through topmind-revise and the Markdown is the deliverable;
+when you want to post on X, a "copy → paste → publish" X long-form (Article) package is derived into `out/` on request.
 
-- Version: **v0.4.21** (ships with `@topmindspace/topmind-writing-skills@0.8.44`)
+- Version: **v0.4.22** (ships with `@topmindspace/topmind-writing-skills@0.8.45`)
 
 ## Install
 
@@ -15,19 +16,22 @@ npx @topmindspace/topmind-writing-skills install topmind-x-article
 ## Usage
 
 ```bash
-# 1. Draft → one-click-copy HTML (preferred)
-python3 scripts/md2x-html.py <draft>.md --out <package>/X长文.html \
-  --images-from 公众号稿.md [--cover cover-1500x600.png]
-# --images-from derives image order from the WeChat draft in document order
-# (required when the X draft is derived from it);
+# 0. Create the article folder + structure check (images as ![caption](images/01-xx.png), source on the next line "来源：…")
+python3 scripts/article_scaffold.py --title "My article"
+python3 scripts/check_article.py "My article/"
+
+# 1. On request: one-click-copy HTML (preferred) → My article/out/X长文.html
+python3 scripts/md2x-html.py "My article/My article.md"
+# reads the source's ![]() lines and embeds images in document order; the cover defaults to frontmatter `cover`;
 # never hand-assemble --images (filename sort order != document order —
 # this once misplaced a whole section's images).
+# Legacy layout: md2x-html.py X长文.md --out X长文.html --images-from 公众号稿.md
 # Open X长文.html in a browser → click the top 「一键复制全文」 button → paste into the X Article editor body
 # (the first # heading is excluded from the clipboard — fill it into X's title field by hand;
 #  upload the cover separately via X's dedicated cover entry)
 
-# 2. Plain-text fallback (when HTML copying misbehaves)
-python3 scripts/md2x.py <draft>.md --out <package>/X发布稿.txt
+# 2. On request: plain-text fallback (when HTML copying misbehaves) → My article/out/X发布稿.txt
+python3 scripts/md2x.py "My article/My article.md"
 
 # 3. Cover: generate a 1500×600 cover with topmind-cover
 
@@ -50,8 +54,8 @@ native copy button, while pasted `<pre>` is discarded by X).
 The plain-text fallback follows `references/x-format.md`: headings → plain text lines,
 horizontal rules → blank lines, emphasis markers removed, links → `text（url）`, images →
 `[图N]` (image list appended at the end), tables → "label：value" lists, blockquotes unquoted.
-Lists become emoji bullets by default (`- ` → 🔹, nested → two-space-indented ▫️, `1.` → 1️⃣, at most two levels), because
-plain-text X posts do not render Markdown lists; `--list-style keep` keeps the original markers (rules in `references/x-post-format.md`).
+Lists become "· " / "1）" by default (nested items indented two spaces, at most two levels), because
+plain-text X posts do not render Markdown lists; `--list-style emoji` gives 🔹 / ▫️ / 1️⃣ and `--list-style keep` keeps the original markers (rules in `references/x-post-format.md`).
 `python3 scripts/lint_x_post.py X发布稿.txt --long` is a quick self-check. The X Article HTML path pastes rich text, so native lists stay.
 
 Read the result through once by hand after converting.

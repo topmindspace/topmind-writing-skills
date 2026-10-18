@@ -24,7 +24,8 @@ import re
 import shutil
 import sys
 
-from wechat_paths import require_base, resolve_topstream  # 同目录模块：路径解析不写死个人路径/编号/年份
+sys.dont_write_bytecode = True  # 同目录模块 import，不留 __pycache__
+from wechat_paths import find_draft, require_base, resolve_topstream  # 同目录模块：路径解析不写死个人路径/编号/年份
 
 CONTAINER_RE = re.compile(r"^:::\s*\w*\s*$")
 HIGHLIGHT_RE = re.compile(r"==([^=]+)==")
@@ -130,9 +131,9 @@ def main():
         return 1
 
     pkg_path = args.pkg if os.path.isabs(args.pkg) else os.path.join(require_base(args.base, args.workspace), args.pkg)
-    draft = os.path.join(pkg_path, "公众号稿.md")
-    if not os.path.exists(draft):
-        print("✗ 找不到公众号稿：%s" % draft)
+    draft, _layout = find_draft(pkg_path)  # 新结构 <文章名>/<文章名>.md，旧结构 公众号稿.md
+    if not draft:
+        print("✗ 找不到源稿（<文章名>.md 或 公众号稿.md）：%s" % pkg_path)
         return 1
 
     text = open(draft, encoding="utf-8").read()

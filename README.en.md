@@ -19,7 +19,7 @@
 
 ### topmind-wechat-post · WeChat article authoring
 
-Full lifecycle for WeChat articles: delivery package, review & rewrite, three quality gates (facts / logic / de-AI-flavor), WeChat inline typography (images must be embedded), publish checklist and status sync. Python stdlib only — zero dependencies.
+Full lifecycle for WeChat articles: single-source article folder (`<title>/<title>.md`), review & rewrite, three quality gates (run by topmind-revise by default: facts / logic / de-AI-flavor), WeChat inline typography on request (images must be embedded, output goes to `out/`), publish checklist and status sync. Hand-written heading numbers are kept as written; legacy `公众号稿.md` packages stay readable. Python stdlib only — zero dependencies.
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-wechat-post
@@ -27,7 +27,7 @@ npx @topmindspace/topmind-writing-skills install topmind-wechat-post
 
 ### topmind-x-article · One-click X long-form publishing
 
-Markdown draft → one-click-copy HTML (rich text, images embedded) / plain-text fallback (`md2x.py`: images → `[图N]`, tables → "item: value" lists, lists → emoji bullets because plain-text X does not render Markdown lists) + cover art + publish checklist. Publishing is done by hand-pasting; fetch the text back for verification after posting.
+Delivers one `<title>.md` by default (after topmind-revise); when you want to post on X, derives into `out/` on request: one-click-copy HTML (rich text; reads the source's `![]()` lines and embeds images in order, "来源：" lines become captions) / plain-text fallback (`md2x.py`: images → `[图N]`, tables → "item: value" lists, lists → "·" / "1）" with emoji optional, because plain-text X does not render Markdown lists) + cover art + publish checklist. Publishing is done by hand-pasting; fetch the text back for verification after posting.
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-x-article
@@ -119,7 +119,7 @@ The writing skills share one rule set (`shared/references/`, copied into each sk
 
 Also:
 
-- **Originals first** (`image-sourcing.md`): find official / original-post / third-party images before writing and log sources in a private list inside the delivery package; self-made charts are a fallback and must be labeled 自制 with the data source.
+- **Originals first** (`image-sourcing.md`): find official / original-post / third-party images before writing and log sources in the private `素材来源.md` inside the article folder; self-made charts are a fallback and must be labeled 自制 with the data source.
 - **De-AI pass is mandatory**: rewrite boundaries first (change wording, never facts or certainty); W warnings need a decision rather than a zero count; the regression set `scripts/test_lint_rules.py` keeps normal writing from being flagged. topmind-format reports hits without rewriting.
 - **Fixed revision order** (`revision-workflow.md`): facts → logic → cut redundancy → de-AI → voice check → layout → fidelity check → over-edit check; back up first and report before/after word counts (`count_words.py`). `topmind-revise` runs it when installed.
 
@@ -145,16 +145,16 @@ Every skill ships sample outputs written by us (fictional or neutral topics; no 
 
 | Skill | Version | What it does |
 |-------|---------|--------------|
-| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.15** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
-| [`topmind-x-article`](./topmind-x-article/) | **0.4.21** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
-| [`topmind-cover`](./topmind-cover/) | **0.4.12** | Cover art for X / WeChat (X master 1500×600 / 5:2): striking, theme-focused; 22-style cover style library + 16:9 X short-post cover scene + 24 title treatments + 7-layer scene recipe + 55 example images (22 styles × 2 sizes + 11 variant samples) + 1 style overview |
-| [`topmind-briefs`](./topmind-briefs/) | **0.2.23** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper explainers / product alerts / mechanism explainers; sources → images → content → layout; one copy-ready plain-text X block (no HTML by default, emoji optional, no AI tone), links / images sent separately; asks before generating any image |
-| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.15** | X viral short posts: 18 template types + combinations, duanzi layout (blank lines, no emoji, plain bullet lines), one copy-ready plain-text block per post with hashtags last, links / images sent separately, classification tags listed separately; asks before generating an image |
-| [`topmind-format`](./topmind-format/) | **0.1.8** | X plain-text formatter: to duanzi (blank lines, no emoji) / to short post (paragraphing + sensible lists, emoji optional); layout only, words unchanged, with a fidelity check; one copy-ready plain-text body, links / images sent separately |
-| [`topmind-revise`](./topmind-revise/) | **0.1.0** | Revision and quality check: edit, tighten, de-AI, three quality gates and fidelity audit; four modes (audit / revise / embed / quick); every change maps to a rule code, with an over-edit guard; the long-form skills use it by default |
+| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.16** | WeChat article lifecycle: single-source article folder, review, 3 quality gates (revise by default), inline typography on request & publish checklist |
+| [`topmind-x-article`](./topmind-x-article/) | **0.4.22** | X long-form: single-source Markdown (revise by default) → on-request one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
+| [`topmind-cover`](./topmind-cover/) | **0.4.13** | Cover art for X / WeChat (X master 1500×600 / 5:2): striking, theme-focused; 22-style cover style library + 16:9 X short-post cover scene + 24 title treatments + 7-layer scene recipe + 55 example images (22 styles × 2 sizes + 11 variant samples) + 1 style overview |
+| [`topmind-briefs`](./topmind-briefs/) | **0.2.24** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper explainers / product alerts / mechanism explainers; sources → images → content → layout; one copy-ready plain-text X block (no HTML by default, emoji optional, no AI tone), links / images sent separately; asks before generating any image |
+| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.16** | X viral short posts: 18 template types + combinations, duanzi layout (blank lines, no emoji, plain bullet lines), one copy-ready plain-text block per post with hashtags last, links / images sent separately, classification tags listed separately; asks before generating an image |
+| [`topmind-format`](./topmind-format/) | **0.1.9** | X plain-text formatter: to duanzi (blank lines, no emoji) / to short post (paragraphing + sensible lists, emoji optional); layout only, words unchanged, with a fidelity check; one copy-ready plain-text body, links / images sent separately |
+| [`topmind-revise`](./topmind-revise/) | **0.1.1** | Revision and quality check: edit, tighten, de-AI, three quality gates and fidelity audit; four modes (audit / revise / embed / quick); every change maps to a rule code, with an over-edit guard; the long-form skills use it by default |
 | [`topmind-poster`](./topmind-poster/) | **0.1.6** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
 
-Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.44** (whole-repo same-tag releases).
+Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.45** (whole-repo same-tag releases).
 
 ### Which skill, and how they combine
 

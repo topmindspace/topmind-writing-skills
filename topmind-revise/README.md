@@ -4,7 +4,7 @@
 
 把一篇稿子改得更短、更准、更像作者本人，并且能证明没改坏事实。长文、短文、段子、回复、标题都能用；可以单独用，也会被 `topmind-wechat-post`、`topmind-x-article` 写长文时默认调用。
 
-- 版本：**v0.1.0**（随 `@topmindspace/topmind-writing-skills@0.8.44` 发布）
+- 版本：**v0.1.1**（随 `@topmindspace/topmind-writing-skills@0.8.45` 发布）
 
 ## 安装
 

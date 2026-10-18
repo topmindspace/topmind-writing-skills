@@ -108,3 +108,24 @@ def require_base(cli_base=None, cli_workspace=None):
     if not base:
         raise SystemExit(MISSING_BASE)
     return base
+
+
+LEGACY_DRAFT = "公众号稿.md"
+
+
+def find_draft(pkg):
+    """在一个文章目录里找源稿，返回 (路径, 结构) 或 (None, None)。
+
+    - 新结构（默认）：<文章名>/<文章名>.md，状态只记在 frontmatter，目录名不随状态变；
+    - 旧结构（只读兼容）：<YYYY-MM-DD-短名>[-released]/公众号稿.md，不自动迁移。
+    """
+    if not os.path.isdir(pkg):
+        return None, None
+    legacy = os.path.join(pkg, LEGACY_DRAFT)
+    if os.path.isfile(legacy):
+        return legacy, "legacy"
+    name = os.path.basename(os.path.normpath(pkg))
+    art = os.path.join(pkg, name + ".md")
+    if os.path.isfile(art):
+        return art, "article"
+    return None, None

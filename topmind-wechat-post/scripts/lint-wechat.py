@@ -8,6 +8,10 @@ Chinese typography conventions. Zero dependency.
 Usage:
     python3 lint-wechat.py --input 稿.md --asset-root /path/to/repo
     python3 lint-wechat.py --input 稿.md --fix      # auto-fix CJK spacing
+    python3 lint-wechat.py --input 公众号稿.md --legacy   # 旧交付包：::: 容器只告警不报错
+
+源稿里的 ::: 容器默认报错：长文是单源 Markdown，要能被任何编辑器和派生脚本读，
+「金句/数据/提示」用普通段落、加粗或引用写。旧交付包加 --legacy 只读兼容。
 """
 
 import argparse
@@ -145,7 +149,7 @@ def fix_cjk(path, dry_run=False):
 
 # ------------------------------------------------------------------ lint
 
-def lint(path, max_para, max_item, asset_root=None):
+def lint(path, max_para, max_item, asset_root=None, legacy=False):
     with open(path, encoding="utf-8") as fh:
         raw = fh.read()
     # fm_off：frontmatter 占掉的行数。所有报出的行号必须加回它，
@@ -214,6 +218,9 @@ def lint(path, max_para, max_item, asset_root=None):
         if cm:
             flush_para(idx)
             kind = (cm.group(1) or "").strip().lower()
+            if kind and not legacy:
+                errors.append("L%d 源稿里用了 `::: %s` 容器：单源长文不用容器，改成普通段落、加粗或引用"
+                              "（旧交付包加 --legacy 只告警）" % (idx + 1 + fm_off, kind))
             if kind:
                 if kind not in KNOWN_CONTAINERS:
                     warns.append("L%d 未知容器 `::: %s`（会被当成 note 渲染）："
@@ -392,6 +399,8 @@ def main():
     ap.add_argument("--asset-root", default="")
     ap.add_argument("--fix", action="store_true", help="自动修复中英文之间的空格")
     ap.add_argument("--warn-only", action="store_true")
+    ap.add_argument("--legacy", action="store_true",
+                    help="旧交付包（公众号稿.md）只读兼容：::: 容器不报错")
     args = ap.parse_args()
 
     if args.fix:
@@ -409,7 +418,8 @@ def main():
 
     (errors, warns, info, total, strong, headings,
      body_paras, marker_paras, anchor_count) = lint(
-        args.input, args.max_para, args.max_item, args.asset_root or None)
+        args.input, args.max_para, args.max_item, args.asset_root or None,
+        legacy=args.legacy or os.path.basename(args.input) == "公众号稿.md")
 
     first_para = ""
     with open(args.input, encoding="utf-8") as fh:

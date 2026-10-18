@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """sync-mapping.py — 校验「frontmatter ⇄ 目录名 ⇄ topstream 文件 ⇄ 派生视图」映射一致性。
 
+两种目录结构都认：新结构 <文章名>/<文章名>.md（状态只在 frontmatter，目录名不校验后缀）、
+旧结构 YYYY-MM-DD-<短名>[-released]/公众号稿.md（只读兼容）。
 frontmatter 是映射唯一真源，topic.md 与 topstream `docs/公众号映射.md` 是派生视图。
 派生视图靠手改，容易与真源漂移。本脚本只读校验，报告差异，不改文件。
 
@@ -17,7 +19,8 @@ import os
 import re
 import sys
 
-from wechat_paths import require_base, resolve_topstream  # 同目录模块：路径解析不写死个人路径/编号/年份
+sys.dont_write_bytecode = True  # 同目录模块 import，不留 __pycache__
+from wechat_paths import find_draft, require_base, resolve_topstream  # 同目录模块：路径解析不写死个人路径/编号/年份
 
 VALID_STATUSES = ("草稿", "定稿", "已发布")
 FINAL_STATUSES = ("定稿", "已发布")
@@ -49,18 +52,18 @@ def cjk_count(body):
 
 
 def collect(base):
-    """返回 [(dirname, pkg_path, fm, body)]"""
+    """返回 [(dirname, pkg_path, fm, body, layout)]"""
     out = []
     if not os.path.isdir(base):
         return out
     for name in sorted(os.listdir(base)):
         pkg = os.path.join(base, name)
-        draft = os.path.join(pkg, "公众号稿.md")
-        if not os.path.isdir(pkg) or not os.path.exists(draft):
+        draft, layout = find_draft(pkg)
+        if not draft:
             continue
         text = open(draft, encoding="utf-8").read()
         fm, body = split_fm(text)
-        out.append((name, pkg, fm, body))
+        out.append((name, pkg, fm, body, layout))
     return out
 
 
@@ -72,7 +75,7 @@ def check(base, topstream, check_topic):
 
     errors, warns = [], []
 
-    for name, pkg, fm, body in rows:
+    for name, pkg, fm, body, layout in rows:
         tag = "[" + name + "]"
         if fm is None:
             errors.append("%s 无 frontmatter" % tag)
@@ -84,8 +87,11 @@ def check(base, topstream, check_topic):
         target_file = get_field(fm, "target_file") or ""
         wc = get_field(fm, "word_count")
 
-        # 字段完备性
-        if direction not in ("forward", "reverse"):
+        # 字段完备性（新结构里 direction / source_file / target_file 是可选字段：
+        # 只有对接 topstream 的文章才写，写了就按同样规则校验）
+        if layout == "article" and not direction:
+            pass
+        elif direction not in ("forward", "reverse"):
             errors.append("%s direction 非法：%r（应为 forward/reverse）" % (tag, direction))
         if status not in VALID_STATUSES:
             errors.append("%s status 非法：%r" % (tag, status))
@@ -97,9 +103,11 @@ def check(base, topstream, check_topic):
         if direction == "forward" and source_file and not source_file.startswith("notes/"):
             warns.append("%s source_file 应以 notes/ 开头：%s" % (tag, source_file))
 
-        # 目录名与状态
+        # 目录名与状态（新结构目录名就是文章名，不随状态改）
         m = DIR_RE.match(name)
-        if not m:
+        if layout == "article":
+            pass
+        elif not m:
             errors.append("%s 目录名不符合 YYYY-MM-DD-<短名>[-released]：%s" % (tag, name))
         else:
             has_sfx = name.endswith(RELEASED_SUFFIX)
@@ -134,7 +142,7 @@ def check(base, topstream, check_topic):
                 m = DIR_RE.match(x.rstrip("/"))
                 if m:
                     listed.add(m.group(0))
-            on_disk = set(n for n, _, _, _ in rows)          # 文章包（含 公众号稿.md）
+            on_disk = set(n for n, _, _, _, lay in rows if lay == "legacy")          # 文章包（含 公众号稿.md）
             on_disk_all = set(n for n in os.listdir(base)
                               if os.path.isdir(os.path.join(base, n)))  # 含策划包等
             missing_in_topic = on_disk - listed
@@ -147,7 +155,7 @@ def check(base, topstream, check_topic):
     # 输出
     print("映射校验：%s" % base)
     print("-" * 80)
-    for name, pkg, fm, body in rows:
+    for name, pkg, fm, body, layout in rows:
         if fm is None:
             continue
         d = get_field(fm, "direction")

@@ -87,14 +87,63 @@ def main() -> None:
             encoding="utf-8")
         r = run([str(td / "lst.md"), "--out", str(td / "o9.txt")])
         out = (td / "o9.txt").read_text(encoding="utf-8") if (td / "o9.txt").exists() else ""
-        check("列表转 emoji 项目符号（两层缩进、序号 keycap）",
-              r.returncode == 0 and "🔹 一" in out and "  ▫️ 二点一" in out and "  ▫️ 更深" in out
-              and "1️⃣ 步骤一" in out and "2️⃣ 步骤二" in out)
+        check("列表默认 plain（「· 」「1）」，二级缩进两格）",
+              r.returncode == 0 and "· 一" in out and "  · 二点一" in out and "  · 更深" in out
+              and "1）步骤一" in out and "2）步骤二" in out and "🔹" not in out)
+        r = run([str(td / "lst.md"), "--out", str(td / "o9e.txt"), "--list-style", "emoji"])
+        oute = (td / "o9e.txt").read_text(encoding="utf-8") if (td / "o9e.txt").exists() else ""
+        check("--list-style emoji 仍可用（两层缩进、序号 keycap）",
+              r.returncode == 0 and "🔹 一" in oute and "  ▫️ 二点一" in oute and "  ▫️ 更深" in oute
+              and "1️⃣ 步骤一" in oute and "2️⃣ 步骤二" in oute)
         check("代码块内的 - 不被改写、-5% 不被当列表",
               "    - 代码里的" in out and "-5% 不是列表" in out)
         r = run([str(td / "lst.md"), "--out", str(td / "o10.txt"), "--list-style", "keep"])
         out = (td / "o10.txt").read_text(encoding="utf-8") if (td / "o10.txt").exists() else ""
         check("--list-style keep 保留原符号", r.returncode == 0 and "- 一" in out and "1. 步骤一" in out)
+
+        # 10. 文章文件夹结构：md2x / md2x-html 直接读 <文章名>.md，产物缺省进 out/
+        import base64 as _b64
+        png = _b64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk"
+                             "+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==")
+        art = td / "示例文章"
+        for d in ("images", "cover", "out"):
+            (art / d).mkdir(parents=True)
+        (art / "images" / "01-first.png").write_bytes(png)
+        (art / "images" / "02-second.png").write_bytes(png + b"\x00second")
+        (art / "cover" / "cover-1500x600.png").write_bytes(png)
+        (art / "示例文章.md").write_text(
+            "---\ntitle: 示例文章\ndate: 2026-01-01\nstatus: 草稿\ntags: []\n"
+            "cover: cover/cover-1500x600.png\n---\n\n# 示例文章\n\n开头。\n\n"
+            "![第一张](images/01-first.png)\n\n来源：某官方文档\n\n中段。\n\n"
+            "![第二张](images/02-second.png)\n\n```\n![代码里的](images/none.png)\n```\n",
+            encoding="utf-8")
+        html_script = ROOT / "scripts" / "md2x-html.py"
+        r = subprocess.run([PY, str(html_script), str(art / "示例文章.md")],
+                           capture_output=True, text=True, timeout=30)
+        outp = art / "out" / "X长文.html"
+        html = outp.read_text(encoding="utf-8") if outp.exists() else ""
+        b1 = _b64.b64encode(png).decode()
+        b2 = _b64.b64encode(png + b"\x00second").decode()
+        check("md2x-html 直接读 ![]()，按文档顺序嵌图到 out/X长文.html",
+              r.returncode == 0 and html.count('<figure class="ximg"') == 2
+              and 0 <= html.find(b1) < html.find(b2), (r.stdout + r.stderr)[-300:])
+        check("md2x-html「来源：」行成小号图注、代码块里的 ![]() 不动",
+              '<p class="src">来源：某官方文档</p>' in html and "代码里的" in html)
+        check("md2x-html 缺省读 frontmatter cover", "cover-1500x600" in html or html.count("data:image/png") == 3,
+              str(html.count("data:image/png")))
+        (art / "旧.md").write_text("# t\n\n[图1]\n", encoding="utf-8")
+        r = subprocess.run([PY, str(html_script), str(art / "旧.md"), "--out", str(td / "x.html")],
+                           capture_output=True, text=True, timeout=30)
+        check("md2x-html 有 [图N] 却没给图片来源 → 干净报错",
+              r.returncode != 0 and "--images-from" in r.stderr and "Traceback" not in r.stderr, r.stderr[-200:])
+        r = run([str(art / "示例文章.md")])
+        txt = art / "out" / "X发布稿.txt"
+        check("md2x 缺省输出到 out/X发布稿.txt",
+              r.returncode == 0 and txt.is_file() and "[图1]" in txt.read_text(encoding="utf-8"),
+              (r.stdout + r.stderr)[-200:])
+        r = subprocess.run([PY, str(ROOT / "scripts" / "check_article.py"), str(art)],
+                           capture_output=True, text=True, timeout=30)
+        check("check_article 示例文章结构通过", r.returncode == 0, r.stdout[-300:])
 
     if fails:
         print(f"\n[negative_tests] {len(fails)} 项失败")

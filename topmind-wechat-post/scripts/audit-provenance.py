@@ -46,6 +46,8 @@
 
 ## 用法
 
+    python3 scripts/audit-provenance.py --draft <文章名>/ --source <文章名>/raw/源稿.md
+        # --draft 给文章文件夹时读 <文章名>/<文章名>.md（旧交付包读 公众号稿.md）
     python3 scripts/audit-provenance.py --draft <包>/公众号稿.md --source <包>/源稿-X长文.md
     python3 scripts/audit-provenance.py --draft a.md --source b.md --skip '^>\\s*\\[!' --json
     python3 scripts/audit-provenance.py --draft a.md --source b.md --threshold 0.8 --verbose
@@ -57,6 +59,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from difflib import SequenceMatcher
@@ -322,7 +325,8 @@ def report(res) -> int:
 def main():
     ap = argparse.ArgumentParser(
         description="双向逐段溯源审计：查改稿有没有悄悄扩写或漏掉")
-    ap.add_argument("--draft", required=True, help="派生稿（如 公众号稿.md）")
+    ap.add_argument("--draft", required=True,
+                    help="派生稿：<文章名>.md，或文章文件夹（读 <文章名>/<文章名>.md；旧交付包读 公众号稿.md）")
     ap.add_argument("--source", required=True, help="源稿（如 源稿-X长文.md）")
     ap.add_argument("--threshold", type=float, default=0.72,
                     help="相似度阈值，低于它即待判定（默认 0.72）")
@@ -331,6 +335,13 @@ def main():
     ap.add_argument("--json", action="store_true", help="输出 JSON")
     ap.add_argument("--verbose", action="store_true", help="打印逐段明细")
     args = ap.parse_args()
+
+    if os.path.isdir(args.draft):
+        d = os.path.normpath(args.draft)
+        for cand in (os.path.join(d, os.path.basename(d) + ".md"), os.path.join(d, "公众号稿.md")):
+            if os.path.isfile(cand):
+                args.draft = cand
+                break
 
     for p in (args.draft, args.source):
         try:

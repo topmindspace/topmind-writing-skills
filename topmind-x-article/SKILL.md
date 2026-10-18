@@ -1,9 +1,9 @@
 ---
 name: topmind-x-article
-description: "X 长文（Article）一键发布包：Markdown 原稿 → 可直接复制的 X长文.html（富文本一键复制+配图内嵌）/ X发布稿.txt（纯文本兜底，列表自动转 emoji 项目符号；长文可保留文内链接，派生 X 短帖时链接、原图另发）+ 封面图 + 发布清单，由用户人工点发布。Use when X 长文、发 X 文章、写 X 文章、X article、长文发 X、写 X 长文、X 文章排版、推特长文、twitter 长文、Twitter Article。Do NOT use for 短推文、短帖、快讯与段子写稿（→ topmind-viral-posts 或 topmind-briefs）、现成文字格式化与转段子（→ topmind-format）、把短帖发出去（→ topmind-x，须用户确认）、公众号文章（→ topmind-wechat-post）、只要封面或头图（→ topmind-cover）、单独改稿、去 AI 味与质检（→ topmind-revise）。"
+description: "X 长文（Article）发布：默认组合 topmind-revise 改稿，交付单源 <文章名>/<文章名>.md（Obsidian 直接看）；要发 X 时再按需派生 out/X长文.html（富文本一键复制+配图内嵌）与 out/X发布稿.txt（纯文本兜底；长文可保留文内链接，派生 X 短帖时链接、原图另发）+ 封面图 + 发布清单，由用户人工点发布。Use when X 长文、发 X 文章、写 X 文章、X article、长文发 X、写 X 长文、X 文章排版、推特长文、twitter 长文、Twitter Article。Do NOT use for 短推文、短帖、快讯与段子写稿（→ topmind-viral-posts 或 topmind-briefs）、现成文字格式化与转段子（→ topmind-format）、把短帖发出去（→ topmind-x，须用户确认）、公众号文章（→ topmind-wechat-post）、只要封面或头图（→ topmind-cover）、单独改稿、去 AI 味与质检（→ topmind-revise）。"
 license: MIT
 metadata:
-  version: "0.4.21"
+  version: "0.4.22"
   action_category: "write"
   triggers: "X 长文, 发 X 文章, 写 X 文章, X article, 长文发 X, X 发长文, X 文章排版, 转纯文本, X 纯文本, X发布稿, 发 article, 一键复制, 写 X 长文, X 长文发布, 推特长文, twitter 长文, Twitter Article"
   author: "TopMindSpace"
@@ -11,13 +11,16 @@ metadata:
   updated: "2026-10-18"
 ---
 
-# topmind-x-article · X 长文一键发布
+# topmind-x-article · X 长文
 
-把一篇 Markdown 原稿变成"复制 → 粘贴 → 发"的 X 长文发布包。
+一篇长文只有一份源稿 `<文章名>/<文章名>.md`。默认交付这份 Markdown（含 images/、cover/、素材来源.md），
+Obsidian 里直接能看；用户要发 X 时，再从它派生发布包到 `out/`。
 
 ```
-原稿.md → md2x-html.py → X长文.html（一键复制全文+配图）→ 封面图(topmind-cover) → 发布清单 → 人工粘贴发布
-原稿.md → md2x.py     → X发布稿.txt（纯文本兜底）
+<文章名>.md ─(默认)→ topmind-revise 改稿 → check_article.py 体检 → 交付 Markdown
+            ─(按需)→ md2x-html.py → out/X长文.html（一键复制全文+配图）
+            ─(按需)→ md2x.py      → out/X发布稿.txt（纯文本兜底）
+            ─(按需)→ topmind-cover → cover/cover-1500x600.png → 发布清单 → 人工粘贴发布
 ```
 
 ## 语言铁律
@@ -30,20 +33,27 @@ metadata:
 
 ## 工作流
 
-0. **写稿与改稿（必过，先于转换）**：
-   - **先找图再写字**：按 `references/image-sourcing.md` 找官方 / 原帖 / 第三方原图，来源记进发布包里的私有 `素材来源.md`（不进本仓库）；自制图只作兜底，图注写「自制」和数据来源（W18）。
-   - **去 AI 味**：成稿按 `references/de-ai-rules.md` 逐条过（只改表达，不改事实和确定性）；`python3 scripts/lint_x_post.py 公众号稿.md --md` 的 W9 / W14–W18 清零。
-   - **改稿**：按 `references/revision-workflow.md` 四步走：逻辑与事实 → 删冗余 → 去 AI 味 → 排版；每轮先备份到新时间戳目录，交付时报改前 / 改后字数。
-1. **转 HTML**（一键复制的核心，首选）：
+0. **建文件夹、写稿、改稿（默认组合 topmind-revise，先于任何转换）**：
+   - 新文章先建文件夹：`python3 scripts/article_scaffold.py --title "文章名" [--base 目录]`，
+     得到 `<文章名>/<文章名>.md` + `images/ cover/ raw/ out/` + `素材来源.md`；已存在就报错，不覆盖。
+   - **先找图再写字**：按 `references/image-sourcing.md` 找官方 / 原帖 / 第三方原图，按出现顺序存成
+     `images/01-xxx.png`、`02-xxx.png`，正文直接写 `![说明](images/01-xxx.png)`，出处写在图片下一行
+     「来源：……」，同时记进私有 `素材来源.md`（不进本仓库）。自制图只作兜底，只用于有出处的数据，图注或「来源：」行写「自制」和数据来源（W18）。
+   - 小标题想要序号就手写「一、」「二、」，不用 `:::` 容器、callout、`![[ ]]`。
+   - **改稿交给 `topmind-revise`**（`mode=embed genre=long sources=<文章名>/素材来源.md`）：
+     它按 core-voice 改写、跑 `de_ai_lint.py` / `revise_check.py` / `count_words.py`，把终稿和三行摘要
+     （字数前后、未核实条数、保留的提示）回给本技能，完整报告落 `out/改稿报告.md`。
+     没装 revise 时按随包 `references/revision-workflow.md` 手动走：逻辑与事实 → 删冗余 → 去 AI 味 → 排版，
+     `python3 scripts/de_ai_lint.py <文章名>.md --genre long` 的 W 每条有结论（改掉或写保留理由），H 只供判断。
+   - 体检：`python3 scripts/check_article.py <文章名>/` E 级清零（五项 frontmatter、H1 = title = 文件名、
+     图片存在且编号跟出现顺序一致、无容器和 wikilink）。
+   - **到这里就是默认交付**：一份 `<文章名>.md`。用户没说要 X 版，就不生成 HTML。
+1. **按需：转 HTML**（用户说「出 X 版 / 一键复制 / X 长文 HTML」时）：
    ```bash
-   python3 scripts/md2x-html.py <原稿>.md --out <包>/X长文.html \
-     --images-from 公众号稿.md [--cover cover-1500x600.png]
+   python3 scripts/md2x-html.py <文章名>/<文章名>.md
+   # → <文章名>/out/X长文.html；封面缺省读 frontmatter 的 cover
    ```
-   `--images-from` 从公众号稿按文档顺序派生图片（X 稿永远由公众号稿派生时必用）。
-   **禁止手工拼 `--images` 列表**：文件名数字顺序 ≠ 文档顺序
-   （如 `14-kling` 与 `15-china-models` 按名排序会错位），手工传参曾导致整段配图错乱。
-   只有无公众号稿可派生的纯 X 原创稿，才允许用 `--images <图1> <图2> ...`，
-   此时必须逐张核对文件名与 `[图N]` 的对应关系。
+   直接读源稿里的 `![]()`，按文档顺序嵌图，不需要再派生 `X长文.md`，也不手工拼 `--images`。
    单文件 HTML：内联样式 + 配图 base64 内嵌。浏览器打开后点页顶
    「一键复制全文」，富文本（含格式）进剪贴板，去 X 文章编辑器粘贴。
    转换规则见 `references/x-html-format.md`。
@@ -51,6 +61,7 @@ metadata:
    - 每张配图自动编号 `[图N]`。「一键复制全文」只带文字和格式，配图位置换成 `[图N]` 占位段
      （X 不认 data-URI 随文粘贴，几 MB base64 还会拖垮剪贴板）；粘贴后在每个 `[图N]` 处
      点该图下「复制图片」→ Cmd/Ctrl+V，或「下载图片」后上传，再删掉占位。
+   - 图片下一行的「来源：」渲染成小号灰字图注，随正文一起复制。
    - 复制按顺序降级：copy 事件 + `execCommand('copy')`（同步，file:// 与聊天附件预览等
      iframe 里也能用）→ `navigator.clipboard.write(ClipboardItem)` → `writeText` →
      自动全选正文并提示按 Cmd/Ctrl+C。每一步都有 toast，不会静默失败。
@@ -60,33 +71,51 @@ metadata:
      读者侧一键复制只能来自 X 原生代码块，需在编辑器里 Insert → Code 手动逐块转换
      （X 原生代码块带 native copy button；粘贴 `<pre>` 会被 X 丢弃，走不过去）。
      详见 `references/x-html-format.md`「提示词的复制链路（双通道）」。
-   - 封面走 `--cover` 只在页顶预览 + 提供下载；**封面始终在 X 编辑器单独上传**
-     （X 有独立封面入口）。
-2. **转纯文本**（兜底）：`python3 scripts/md2x.py <原稿>.md --out <包>/X发布稿.txt`，
+   - 封面只在页顶预览 + 提供下载；**封面始终在 X 编辑器单独上传**（X 有独立封面入口）。
+2. **按需：转纯文本**（兜底）：`python3 scripts/md2x.py <文章名>/<文章名>.md` → `out/X发布稿.txt`，
    规则见 `references/x-format.md`。HTML 复制异常时的备用入口。
-   **列表**：纯文本不渲染 Markdown 列表，`md2x.py` 默认把 `- ` / `1. ` 转成 emoji 项目符号
-   （🔹 一级、▫️ 二级缩进两格、1️⃣ 序号，最多两层；交付物不用 `--list-style keep`），
-   规则见 `references/x-post-format.md`；交付规约见 **`references/x-delivery-contract.md`（必读必守）**：长文是规约里写明的例外——`X长文.html` / `X发布稿.txt` 里合理的文内链接照常保留（lint 用 `--long`，不查 E10–E12）；但信源清单、封面、说明仍另列，不糅进稿子。从长文再派生 X 短帖时按短文规则：一段可复制纯文本，链接、原图另发。转完可跑 `python3 scripts/lint_x_post.py <包>/X发布稿.txt --long` 自检。
+   **列表**：纯文本不渲染 Markdown 列表，`md2x.py` 默认把 `- ` / `1. ` 转成「· 」/「1）」
+   （二级缩进两格，最多两层）；`--list-style emoji` 可选 🔹 / ▫️ / 1️⃣，`keep` 保留原符号。
+   规则见 `references/x-post-format.md`；交付规约见 **`references/x-delivery-contract.md`（必读必守）**：长文是规约里写明的例外——`X长文.html` / `X发布稿.txt` 里合理的文内链接照常保留（lint 用 `--long`，不查 E10–E12）；但信源清单、封面、说明仍另列，不糅进稿子。从长文再派生 X 短帖时按短文规则：一段可复制纯文本，链接、原图另发。转完可跑 `python3 scripts/lint_x_post.py out/X发布稿.txt --long` 自检。
    转完**通读一遍**：X 不渲染 markdown，标记剥离后断句、emphasis 全靠文字本身，
-   读不顺就回原稿改。
+   读不顺就回源稿改。
    注意区分两条链路：`X长文.html` 走 X Article 编辑器的富文本，**原生列表保留**（以 `references/x-html-format.md` 为准）；
-   只有 `X发布稿.txt` 这种纯文本兜底稿，以及短帖（→ `topmind-viral-posts` / `topmind-briefs`）才需要把列表改成纯文本写法（emoji 或「1）」「·」）。
-3. **封面图**：调 `topmind-cover`，平台选 `x`，得 1500×600 主图。
+   只有 `X发布稿.txt` 这种纯文本兜底稿，以及短帖（→ `topmind-viral-posts` / `topmind-briefs`）才需要把列表改成纯文本写法。
+3. **封面图**：调 `topmind-cover`，平台选 `x`，得 1500×600 主图，放进 `cover/`，frontmatter 的 `cover` 指向它。
 4. **发布清单**：按 `references/publish-checklist.md` 逐项过。
 5. **发布**：用户在 X Article 编辑器粘贴全文、上传封面与配图（按 `[图N]` 编号），
    人工点发布。**API 不发长文**（topmind-x 的 xurl 只覆盖短推文）。
-6. **收尾**：记录发布时间与链接；全文抓回核对一遍（标题、数字、图序）。
+6. **收尾**：frontmatter 的 `status` 改「已发布」；记录发布时间与链接；全文抓回核对一遍（标题、数字、图序）。
 
 ## 目录约定
 
 ```
-<包>/
-├── 原稿.md            # 输入（或复用既有原稿）
-├── X长文.html         # 首选复制入口：浏览器打开，一键复制全文
-├── X发布稿.txt        # 纯文本兜底入口（列表为 emoji 项目符号）
-├── cover-1500x600.png # 封面（topmind-cover 产出，X 编辑器单独上传）
-└── 发布清单.md        # 本次发布 checklist（含时间、链接）
+<文章名>/
+├── <文章名>.md        # 唯一源稿：改稿永远只改它
+├── images/            # 01-xxx.png、02-xxx.png…，按正文出现顺序编号
+├── cover/             # cover-1500x600.png 等（topmind-cover 产出，X 编辑器单独上传）
+├── 素材来源.md        # 私有：图源、承重事实来源、未核实条目
+├── raw/               # 原始下载、截图、笔记（不发布）
+└── out/               # 按需生成，可随时重建，不手改
+    ├── X长文.html     # 首选复制入口：浏览器打开，一键复制全文
+    ├── X发布稿.txt    # 纯文本兜底入口
+    └── 改稿报告.md    # topmind-revise 的完整报告
 ```
+
+旧结构（`公众号稿.md` + 派生 `X长文.md` + `[图N]`）只读兼容：
+`python3 scripts/md2x-html.py X长文.md --out X长文.html --images-from 公众号稿.md` 仍可用，不自动迁移。
+
+## 派生规则（历次配图错位与重号的结论）
+
+- **单源**：只改 `<文章名>.md`，改完重新派生 `out/`；`out/` 里的文件不手改，不另存一份 X 稿。
+- **图跟着文字走**：图片行紧跟它证明的那段文字（最多隔一段）；改稿移动段落时，图片行一起搬。
+- **编号 = 出现顺序**：`images/` 文件名编号与正文出现顺序一致，`check_article.py` 不一致就报 E4。
+  曾因按文件名排序手工传 `--images`（文件名顺序 ≠ 文档顺序）导致从某张图起整段错位一格；
+  现在 `md2x-html.py` 直接按文档顺序读 `![]()`，不再允许手工排序。
+- **序号不叠加**：小标题手写「一、」时原样保留，派生时不再加序号（曾出现「一、一、」重号）。
+- **构建后必查**：HTML 体积（有图时 MB 级）、data-URI 数量 = 图片数（+1 封面）、无 `:::` 残留；
+  抽查每张图前后几行是否出现该图主题词，章节题图只查节标题相关性。
+- **封面不占编号**：正文图按 `[图1]…[图N]` 编号，封面单独上传；`X发布稿.txt` 的 `[图N]` 与 HTML 一致。
 
 ## 实战沉淀
 
@@ -100,21 +129,20 @@ metadata:
 - **长文改稿铁律**：用户嫌稿子长、AI 味重时，交给 `topmind-revise`（`mode=revise genre=long`）；没装时按 `references/revision-workflow.md` 和 `references/writing-principles.md` 第五点六节整改，场景写法以 `references/core-voice.md` 为准：
   公式化标签改平实说法（「三个词」→「简单总结」、「五个分支」→「主要 5 个方向」、「三件事」→「有三大特征」）；
   过去一句话 + 图、现在汇总加分析、未来写判断（「预计」「大概率」）+ 一条支撑事实；原图（官方截图、原始 X 帖、官方文书、第三方数据图）先于文字，
-  自制图只用于有出处的数据；一段 2–3 句、不超过约 110 字。改完跑 `python3 scripts/de_ai_lint.py X长文.md`：W 每条有结论（改掉或写保留理由），H 只供判断；
-  用 `python3 scripts/count_words.py` 对比改稿前后字数，`python3 scripts/revise_check.py` 核对数字、引语没被改坏。每张图的来源 URL 记在本地私有信源清单，不进公开仓库。
+  自制图只用于有出处的数据；一段 2–3 句、不超过约 110 字。每张图的来源 URL 记在本地私有信源清单，不进公开仓库。
 - 补充信息（邀请码、链接、勘误）**不挤正文**，发在发布后首条评论并置顶
 - 标题 ≤140 字符，写清讲什么（core-voice V01）；开头用具体事实，接地气、好懂（V05）；配图逐张按 `[图N]` 顺序上传，传完对照清单点一遍
-- 事实修正只改发布包，不回头改已发原文（除非勘误）
+- 事实修正只改源稿再重新派生，不回头改已发原文（除非勘误）
 - 提示词密集型文章（如 N 条直出提示词），发布时建议把提示词引用块逐块转为
   X 原生代码块（Insert → Code → 粘贴 → 删原块，每块约 10 秒）：这是 X 平台唯一可靠的
   读者侧一键复制链路（原生代码块带 native copy button，已实测确认）
 - X 编辑器不认剪贴板里的 data-URI 图片：**全文复制只带文字和格式，图片一律按 `[图N]` 手动补**，
   不要承诺一键带图
-- **复制按钮失效（2026-10-17 实踩）**：旧版只用 `navigator.clipboard.write`，在 file:// 未授权、
+- **复制按钮失效（实踩）**：旧版只用 `navigator.clipboard.write`，在 file:// 未授权、
   聊天附件预览（沙箱 iframe、无 clipboard-write）里被拒，`writeText` 降级同样被拒 → 只弹"复制失败"；
   旧版还把 6.4MB base64 塞进 text/html。现已改为 execCommand 同步优先 + 图片占位，
   改动后用无头 Chrome 在 file://、http、两种沙箱 iframe 下回读剪贴板验证
-- **图片手动补位（2026-10-02 新增）**：每张图下有「复制图片」按钮，
+- **图片手动补位**：每张图下有「复制图片」按钮，
   把 PNG 以 `image/png` 写进剪贴板，X 编辑器支持直接粘贴图片
   （X 认图片粘贴，不认 data-URI 随文粘贴）。流程：点「复制图片」→
   去 X 编辑器对应位置 Ctrl/Cmd+V。失败时回退到「下载图片」再上传。
@@ -136,52 +164,6 @@ metadata:
 
 - `topmind-x`（topmind-skills 包）：短推文发帖连接器，须用户确认后才发；xurl 只覆盖短推文，不发长文。
 - `topmind-capture`：「只想存档不发布」时的收录路由。
-
-## 实战沉淀（2026-10-02 插件化/RSI 项目）
-
-- **文本派生铁律**：`X长文.md` 由 `公众号稿.md` 去 YAML frontmatter 派生，
-  `##` 标题原样保留（源稿标题已带序号如"一、"，**不重复加序号**——曾出现"一、一、"重号 bug）；
-  正文中的 `![alt](...)` 必须转成裸 `[图N]` 标记（独占一行，N=文档顺序），
-  `md2x-html.py` 只认 `[图N]`， raw `![]()` 会原样显示成文字、图片一张都嵌不进去
-  （2026-10-02 实踩：构建显示"成功"但 HTML 只有 25KB、0 张 data-URI）。
-  **容器转换**：`::: pull` / `::: stat` / `::: tip` 等微信容器 X 不支持，
-  派生时必须转为 X 兼容格式（`::: pull` → `> ` 引用；`::: stat` → 加粗列表）。
-  派生后 `md2x-html.py --images-from 公众号稿.md [--cover 新封面.png]` + `md2x.py` 重建，
-  构建后必查：HTML 体积（MB 级）、data-URI 数量 = 图片数、[图N] 连续、无 `:::` 残留。
-
-## 实战沉淀（2026-10-01 九月全景项目）
-
-- **HTML 占位符映射铁律**：`md2x-html.py --cover` 注入封面到 `__COVER__`，正文图按序注入
-  `__IMG_01__`–`__IMG_N__`。曾出现错位 bug（封面位置注入 `__IMG_01__`、正文图整体后移、
-  最后一张图跑到 `__COVER__`），原因是占位符替换顺序错误。修复后验收标准：
-  第一张 base64 图解码为 1500×600（封面尺寸），无占位符残留。
-- **X发布稿.txt 图序**：由 `md2x.py` 从 X长文.md 生成，`[图N]` 编号与 HTML 正文图顺序一致，
-  封面不占编号（X 编辑器单独上传封面）。
-
-## 实战沉淀（2026-10-01 九月全景·配图错位修复）
-
-- **错位症状 A**：Grok 4.7 配图落在 Meta 段落之后；"国产模型一览"落在手机段落之后。
-  原因：改稿时只动文字不动图，图片 markdown 行被"落下"到下一段。
-- **铁律**：图片必须紧跟它证明的那段文字（最多隔一段）；改稿移动段落时，图片行一起搬。
-- **错位症状 B（根本原因）**：旧版 X 构建从"六、工具与 Agent"起配图全错
-  （Codex 段配 OpenRouter 图、Harness 段配 AA 榜单图……）。
-  原因：`X长文.md` 里只有裸 `[图N]` 标记，图片靠 `--images` 命令行手工传参；
-  构建时按 `images/*` 文件名排序传入，而文件名数字顺序 ≠ 文档顺序
-  （`14-kling`/`15-china-models` 建图顺序与文档顺序相反；`21-codex`/`22-harness`
-  是后加的，排在 `16-openrouter` 之后）。从图 14 起全部错位一格，
-  图 14/15 互换不易察觉，到图 16（Codex 段）才明显暴露。
-- **根治**：`md2x-html.py` 新增 `--images-from 公众号稿.md`，
-  从公众号稿的 `![]()` 按文档顺序自动派生图片，**不再允许手工排序**；
-  脚本内置校验：`[图N]` 必须连续编号且数量 = 图片数，否则直接报错退出
-  （不静默生成错版）。
-- **构建后必跑三项校验**（缺一不可）：
-  1. 脚本自校验通过（数量/连续性）。
-  2. 嵌入图顺序校验：逐张解码 base64，与源文件按文档顺序比对（像素或字节一致即过）。
-  3. 图文邻近校验：每张图前后各取 6 行，检查是否出现该图主题关键词
-     （如 Grok 图邻近必须有"Grok"）；章节题图（节首图）只查节标题相关性。
-- **派生纪律**：`X长文.md` 永远由 `公众号稿.md` 重新派生（脚本重排 `[图N]`），
-  不手工改编号；派生后 `X发布稿.txt` 同步重生成。
-  `公众号稿.md` 是唯一真源：改图先改公众号稿，再重派生 X 稿，两边永不独立改图。
 
 ## 发文铁律
 

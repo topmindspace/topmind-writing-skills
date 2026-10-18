@@ -55,7 +55,8 @@ def main() -> None:
     for ref in ("core-voice.md", "de-ai-rules.md", "revision-workflow.md", "image-sourcing.md",
                 "fact-check.md", "report-template.md", "examples.md"):
         check(f"规则随包自带: references/{ref}", (ROOT / "references" / ref).is_file())
-    for sc in ("de_ai_lint.py", "lint_x_post.py", "count_words.py", "revise_check.py", "audit-provenance.py"):
+    for sc in ("de_ai_lint.py", "lint_x_post.py", "count_words.py", "revise_check.py", "audit-provenance.py",
+               "check_article.py"):
         check(f"脚本随包自带: scripts/{sc}", (ROOT / "scripts" / sc).is_file())
 
     # 2. 坏 frontmatter / 缺 README
@@ -140,6 +141,14 @@ def main() -> None:
     check("examples：改后 0 W", r.returncode == 0, r.stdout[-300:])
     r = run(["scripts/lint_x_post.py", str(ex / "02-短文-改后.txt"), "--strict"])
     check("examples：短文改后通过 lint_x_post --strict", r.returncode == 0, r.stdout[-300:])
+
+    # 6b. check_article：缺 frontmatter 字段 → E1，退出 1，无 Traceback
+    with tempfile.TemporaryDirectory() as td:
+        art = Path(td) / "某文"
+        art.mkdir()
+        (art / "某文.md").write_text("---\ntitle: 某文\n---\n\n# 某文\n\n正文。\n", encoding="utf-8")
+        r = run(["scripts/check_article.py", str(art / "某文.md")])
+        check("check_article 缺字段报 E1 并退出 1", r.returncode == 1 and "E1" in r.stdout and no_tb(r), r.stdout[-200:])
 
     # 7. 可编译
     for f in sorted((ROOT / "scripts").glob("*.py")):

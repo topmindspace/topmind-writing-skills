@@ -7,7 +7,7 @@
 X 版交付一段可直接复制的纯文本（emoji 可选），**链接（含来源）、原图、配图另发**，不和正文混在一起；公众号版约 300–800 字 Markdown。
 没有原图时先问要不要配图（`topmind-cover`）；链接那一条写明来源名称、发布时间与 URL。
 
-- 版本：**v0.2.23**（随 `@topmindspace/topmind-writing-skills@0.8.44` 发布）
+- 版本：**v0.2.24**（随 `@topmindspace/topmind-writing-skills@0.8.45` 发布）
 
 ## 安装
 

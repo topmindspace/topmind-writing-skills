@@ -20,6 +20,8 @@
     "references/revision-workflow.md": ["topmind-briefs", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article", "topmind-revise"],
     "scripts/de_ai_lint.py": ["topmind-briefs", "topmind-cover", "topmind-format", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article", "topmind-revise"],
     "scripts/count_words.py": ["topmind-briefs", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article", "topmind-revise"],
+    "scripts/article_scaffold.py": ["topmind-wechat-post", "topmind-x-article"],
+    "scripts/check_article.py": ["topmind-wechat-post", "topmind-x-article", "topmind-revise"],
     "scripts/revise_check.py": ["topmind-briefs", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article", "topmind-revise"],
     "scripts/audit-provenance.py": ["topmind-wechat-post", "topmind-x-article", "topmind-revise"],
     "references/core-voice.md": ["topmind-briefs", "topmind-cover", "topmind-format", "topmind-viral-posts", "topmind-wechat-post", "topmind-x-article", "topmind-revise"]

@@ -290,8 +290,15 @@ def image_label_hits(lines: list[str], start: int):
         if not m:
             continue
         alt, path = m.group(1), m.group(2)
-        if SELFMADE_HINT_RE.search(alt + " " + path) and not (SELFMADE_HINT_RE.search(alt) and SOURCE_HINT_RE.search(alt)):
-            out.append((start + off, "W18", "自制图没标清楚：图注（alt）里写「自制」和数据来源，例如「自制，数据：xx 官方」"))
+        # 新结构里出处写在图片下一行（可隔一个空行）的「来源：」，也算图注
+        nxt = ""
+        for k in (off + 1, off + 2):
+            if k < len(lines) and lines[k].strip():
+                nxt = lines[k].strip() if re.match(r"^来源[：:]", lines[k].strip()) else ""
+                break
+        label = alt + " " + nxt
+        if SELFMADE_HINT_RE.search(alt + " " + path) and not (SELFMADE_HINT_RE.search(label) and (SOURCE_HINT_RE.search(alt) or nxt)):
+            out.append((start + off, "W18", "自制图没标清楚：图注（alt）或下一行「来源：」里写「自制」和数据来源，例如「来源：自制，数据：xx 官方」"))
     return out
 
 

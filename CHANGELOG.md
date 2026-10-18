@@ -1,3 +1,23 @@
+## [0.8.45] - 2026-10-18
+
+> 根包 0.8.44 → **0.8.45**（patch）；技能版本：topmind-wechat-post 0.3.15 → 0.3.16、topmind-x-article 0.4.21 → 0.4.22、topmind-revise 0.1.0 → 0.1.1、topmind-briefs 0.2.23 → 0.2.24、topmind-cover 0.4.12 → 0.4.13、topmind-format 0.1.8 → 0.1.9、topmind-viral-posts 0.3.15 → 0.3.16（后四个只是随包共享副本更新）；topmind-poster 0.1.6 不变。
+
+### 新增（长文交付改造：单源 Markdown，HTML 按需）
+
+- 长文改为一个文章文件夹 `<文章名>/`：唯一源稿 `<文章名>.md`（frontmatter 五项 title / date / status / tags / cover，H1 = title = 文件名）、`images/`（按出现顺序编号）、`cover/`、私有 `素材来源.md`、`raw/`、`out/`（派生产物，可随时重建）。默认只交付 Markdown，Obsidian 里直接能看；要 X 版或公众号版时再派生到 `out/`。
+- 新增共享脚本 `article_scaffold.py`（建文章文件夹；文件名安全化、最长 80 字；已存在就报错，不覆盖）和 `check_article.py`（E 级：frontmatter 五项、标题一致、图片存在、编号顺序与出现顺序一致（后出现的图序号反而更小才报）、无 `![[ ]]` / callout / `:::`；W 级：没被引用的图、远程图片、编号不连续或带 11a 这类插入后缀、自制图标注 W18；有 E 退出码 1）。
+- topmind-wechat-post / topmind-x-article 默认组合 topmind-revise：写完先由 revise 执行改稿与质量三关（嵌入模式，完整报告落 `out/改稿报告.md`），HTML / 纯文本只在用户要时生成。
+
+### 变更
+
+- `md2x-html.py`：源稿没有 `[图N]` 时直接按文档顺序读独占一行的 `![]()`（路径相对 md 所在目录，代码块内不动，远程图片跳过并告警），不再需要派生 `X长文.md`；图片下一行的「来源：」渲染成小号灰字图注；`--cover` 缺省读 frontmatter 的 `cover`；`--out` 缺省 `<文章文件夹>/out/X长文.html`；有 `[图N]` 却没给图片来源时直接报错。`--images-from` / `--images` 旧用法保留。
+- `md2x.py`：列表默认 `plain`（「· 」「1）」，二级缩进两格），`--list-style emoji` 可选；`--out` 缺省 `out/X发布稿.txt`。
+- `md2wechat.py`：二级标题有手写序号（「一、」「1.」）时原样保留，不再剥离、不再叠加自动编号，导读用「·」；新增 `--auto-number` 恢复旧行为；`--out-dir` 缺省 `<输入目录>/out`、`--slug` 缺省文件名、`--asset-root` 缺省输入目录；图片后的「来源：」行渲染成图注。
+- wechat-post：`new-article.py` 默认建新结构，`--legacy --slug` 保留旧的 `YYYY-MM-DD-slug/公众号稿.md`；`sync-status.py` / `sync-mapping.py` / `push-to-topstream.py` 新旧结构都认，新结构只改 frontmatter 的 status、不改目录名，旧包的 `-released` 改名逻辑不变；`lint-wechat.py` 对新源稿里的 `:::` 报错（`公众号稿.md` 或 `--legacy` 只告警）；`direction / source_file / target_file / word_count` 改为可选字段。
+- `de_ai_lint.py` 的 W18：图片下一行写了「来源：自制，数据：…」也算标清楚；`audit-provenance.py` 的 `--draft` 可以直接给文章文件夹。
+- 文档：wechat-post / x-article 的 SKILL.md、README 与 references（workflow、typography-rules、element-spec、known-pits、x-html-format、x-format、publish-checklist）换成新文件夹与按需派生；x-article 的「文本派生铁律」「HTML 占位符」「配图错位」三节合并为「派生规则」；`writing-principles.md` 第六节改为「单源、按需派生」。
+- 旧交付包只读兼容，不自动迁移。
+
 ## [0.8.44] - 2026-10-18
 
 > 根包 0.8.43 → **0.8.44**（patch）；技能版本：新增 topmind-revise **0.1.0**；topmind-briefs 0.2.22 → 0.2.23、topmind-cover 0.4.11 → 0.4.12、topmind-format 0.1.7 → 0.1.8、topmind-viral-posts 0.3.14 → 0.3.15、topmind-wechat-post 0.3.14 → 0.3.15、topmind-x-article 0.4.20 → 0.4.21；topmind-poster 0.1.6 不变。

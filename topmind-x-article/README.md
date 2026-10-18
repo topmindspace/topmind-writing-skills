@@ -2,9 +2,10 @@
 
 [English](./README.en.md) | 中文
 
-把 Markdown 原稿变成"复制 → 粘贴 → 发"的 X 长文（Article）发布包。
+一篇长文只有一份源稿 `<文章名>/<文章名>.md`：默认先过 topmind-revise、交付这份 Markdown；
+要发 X 时再按需派生"复制 → 粘贴 → 发"的 X 长文（Article）发布包到 `out/`。
 
-- 版本：**v0.4.21**（随 `@topmindspace/topmind-writing-skills@0.8.44` 发布）
+- 版本：**v0.4.22**（随 `@topmindspace/topmind-writing-skills@0.8.45` 发布）
 
 ## 安装
 
@@ -15,16 +16,20 @@ npx @topmindspace/topmind-writing-skills install topmind-x-article
 ## 用法
 
 ```bash
-# 1. 原稿转一键复制 HTML（首选）
-python3 scripts/md2x-html.py <原稿>.md --out <包>/X长文.html \
-  --images-from 公众号稿.md [--cover cover-1500x600.png]
-# --images-from 从公众号稿按文档顺序派生图片（X 稿由公众号稿派生时必用）；
+# 0. 建文章文件夹 + 结构体检（图片写 ![说明](images/01-xx.png)，出处写在下一行「来源：……」）
+python3 scripts/article_scaffold.py --title "文章名"
+python3 scripts/check_article.py 文章名/
+
+# 1. 按需：一键复制 HTML（首选），产物 文章名/out/X长文.html
+python3 scripts/md2x-html.py 文章名/文章名.md
+# 直接读源稿的 ![]() 按文档顺序嵌图，封面缺省读 frontmatter 的 cover；
 # 禁止手工拼 --images 列表（文件名排序 ≠ 文档顺序，曾导致整段配图错位）。
 # 浏览器打开 X长文.html → 点页顶「一键复制全文」→ 粘贴进 X Article 编辑器正文
 # （首个 # 标题不进剪贴板，手动填入 X 标题栏；封面在 X 独立入口单独上传）
+# 旧结构：md2x-html.py X长文.md --out X长文.html --images-from 公众号稿.md
 
-# 2. 纯文本兜底（HTML 复制异常时）
-python3 scripts/md2x.py <原稿>.md --out <包>/X发布稿.txt
+# 2. 按需：纯文本兜底（HTML 复制异常时），产物 文章名/out/X发布稿.txt
+python3 scripts/md2x.py 文章名/文章名.md
 
 # 3. 封面图：用 topmind-cover 生成 1500×600
 
@@ -44,8 +49,8 @@ native copy button，粘贴 `<pre>` 会被 X 丢弃，走不过去）。
 
 纯文本兜底按 `references/x-format.md`：标题→纯文本行、分隔线→空行、加粗/斜体/
 行内代码去标记、链接→`文字（url）`、图片→`[图N]`（文末附配图清单）、表格→"项：值"列表、
-引用去 `>`；列表默认转 emoji 项目符号（`- ` → 🔹，嵌套 → 缩进两格的 ▫️，`1.` → 1️⃣，最多两层，因为 X 纯文本不渲染 Markdown 列表；
-`--list-style keep` 可保留原符号，规则见 `references/x-post-format.md`）。转完必须人工通读一遍；
+引用去 `>`；列表默认转「· 」「1）」（嵌套缩进两格，最多两层，因为 X 纯文本不渲染 Markdown 列表；
+`--list-style emoji` 可选 🔹 / ▫️ / 1️⃣，`--list-style keep` 保留原符号，规则见 `references/x-post-format.md`）。转完必须人工通读一遍；
 可用 `python3 scripts/lint_x_post.py X发布稿.txt --long` 自检。X 长文 HTML 走 X Article 编辑器富文本，原生列表保留。
 
 ## 最小示例

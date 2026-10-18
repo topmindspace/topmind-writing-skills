@@ -2,10 +2,16 @@
 """md2x-html.py — Markdown 原稿 → 可直接复制的 X 长文 HTML（单文件）。
 
 用法：
-    python3 md2x-html.py 原稿.md --out X长文.html \\
-        --images 样张1.png 样张2.png ... [--cover cover-1500x600.png]
+    python3 md2x-html.py <文章名>/<文章名>.md
+        # 文章文件夹结构：直接读源稿里的 ![说明](images/xx.png)，按文档顺序嵌图；
+        # --out 缺省 <文章名>/out/X长文.html，--cover 缺省读 frontmatter 的 cover
+    python3 md2x-html.py X长文.md --out X长文.html --images-from 公众号稿.md   # 旧结构
+    python3 md2x-html.py 原稿.md --out X长文.html --images 1.png 2.png [--cover c.png]
 
 约定（与 md2x.py 对齐）：
+- 源稿没有 `[图N]`、只有独占一行的 `![说明](本地路径)` 时，按文档顺序直接取图（路径相对 md 所在目录），
+  内部换成 `[图N]`，不需要再派生 X长文.md；远程图片无法内嵌，跳过并告警
+- 图片后紧跟（或隔一个空行）的「来源：……」行渲染成小号灰字图注，复制时作为一段文字保留
 - `[图N]` 独占一行 → 按顺序取 --images[N-1]，转成内嵌 data-URI 的 <figure>；
   点击图片弹出 lightbox 放大查看原图（右键可另存/截图，不拦截右键菜单）
 - ``` 围栏代码块（直出提示词）→ <blockquote> + 「复制提示词」按钮。
@@ -78,6 +84,7 @@ body { margin: 0; background: #f7f9fa; color: #0f1419;
 figure.ximg { margin: 22px 0; }
 figure.ximg img { width: 100%; border-radius: 10px; display: block;
                  border: 1px solid #eff3f4; cursor: zoom-in; }
+.article p.src { font-size: 13px; line-height: 1.6; color: #536471; margin: -12px 0 18px; }
 figure.ximg figcaption { display: flex; justify-content: space-between; align-items: center;
                         margin-top: 8px; font-size: 13px; color: #536471; }
 .prompt { position: relative; margin: 14px 0 20px; }
@@ -341,6 +348,51 @@ def inline_md(s):
     return s
 
 
+IMG_LINE_RE = re.compile(r"^\s*!\[([^\]]*)\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)\s*$")
+
+
+def inline_images(md_text, base):
+    """把独占一行的 ![说明](本地路径) 换成 [图N]，返回 (新文本, 图片绝对路径列表)。
+
+    围栏代码块里的行不动；远程图片无法内嵌，换成一行「（远程图片：url）」并告警。"""
+    out, images, fence = [], [], None
+    for line in md_text.split("\n"):
+        st = line.strip()
+        fm = re.match(r"^(`{3,})", st)
+        if fm:
+            if fence is None:
+                fence = fm.group(1)
+            elif len(fm.group(1)) >= len(fence) and st.strip("`") == "":
+                fence = None
+            out.append(line)
+            continue
+        m = IMG_LINE_RE.match(line) if fence is None else None
+        if not m:
+            out.append(line)
+            continue
+        src = m.group(2)
+        if re.match(r"https?://", src):
+            print("警告：跳过远程图片（无法内嵌）：%s" % src, file=sys.stderr)
+            out.append("（远程图片：%s）" % src)
+            continue
+        images.append(src if os.path.isabs(src) else os.path.normpath(os.path.join(base, src)))
+        out.append("[图%d]" % len(images))
+    return "\n".join(out), images
+
+
+def frontmatter_value(md_text, key):
+    lines = md_text.split("\n")
+    if not lines or lines[0].strip() != "---":
+        return None
+    for ln in lines[1:]:
+        if ln.strip() == "---":
+            break
+        m = re.match(r"^%s:\s*(.+?)\s*$" % re.escape(key), ln)
+        if m:
+            return m.group(1).strip().strip("\"'")
+    return None
+
+
 def md_to_html(md_text, images, cover):
     lines = md_text.split("\n")
     out = []
@@ -510,6 +562,11 @@ def md_to_html(md_text, images, cover):
             continue
 
         close_lists()
+        # 图片后的「来源：」行 → 小号灰字图注（上一个输出块是图片时）
+        if re.match(r"^来源[：:]", s) and out and out[-1].startswith('<figure class="ximg"'):
+            out.append('<p class="src">%s</p>' % inline_md(s))
+            i += 1
+            continue
         # 保留行首缩进（X 稿里用 emoji 项目符号表示二级条目时需要缩进）：
         # 行首 ≥2 个空格 / 全角空格转成 &nbsp;，避免 HTML 把缩进吞掉
         lead = len(line) - len(line.lstrip(" \u3000"))
@@ -541,14 +598,15 @@ def md_to_html(md_text, images, cover):
 
 def main():
     ap = argparse.ArgumentParser(description="Markdown 原稿 → X 长文 HTML（一键复制）")
-    ap.add_argument("md", help="原稿 markdown 路径")
-    ap.add_argument("--out", required=True, help="输出 HTML 路径")
+    ap.add_argument("md", help="原稿 markdown 路径（文章文件夹结构下就是 <文章名>.md）")
+    ap.add_argument("--out", default=None, help="输出 HTML 路径（缺省 <md 所在目录>/out/X长文.html）")
     ap.add_argument("--images", nargs="*", default=[], help="[图N] 对应的图片路径（按顺序）")
     ap.add_argument("--images-from", default=None, metavar="WECHAT_MD",
-                    help="从指定的 markdown（如公众号稿.md）中按文档顺序提取 ![]() 本地图片路径，"
-                         "作为 [图N] 的图片来源。X 稿必须从公众号稿派生时用此项，"
+                    help="从指定的 markdown（如旧结构的公众号稿.md）中按文档顺序提取 ![]() 本地图片路径，"
+                         "作为 [图N] 的图片来源。缺省：源稿自己有 ![]() 就直接读它；"
                          "禁止手工拼 --images 顺序（曾因此出现配图错位）")
-    ap.add_argument("--cover", default=None, help="封面图路径（1500×600，5:2）")
+    ap.add_argument("--cover", default=None,
+                    help="封面图路径（1500×600，5:2）；缺省读 frontmatter 的 cover（相对 md 所在目录）")
     args = ap.parse_args()
 
     if not os.path.isfile(args.md):
@@ -556,6 +614,29 @@ def main():
         sys.exit(1)
     with open(args.md, encoding="utf-8") as f:
         md_text = f.read()
+    md_dir = os.path.dirname(os.path.abspath(args.md))
+    if not args.out:
+        args.out = os.path.join(md_dir, "out", "X长文.html")
+    if not args.cover:
+        fc = frontmatter_value(md_text, "cover")
+        if fc:
+            cp = fc if os.path.isabs(fc) else os.path.normpath(os.path.join(md_dir, fc))
+            if os.path.isfile(cp):
+                args.cover = cp
+            else:
+                print("警告：frontmatter 的 cover 文件不存在，跳过封面：%s" % fc, file=sys.stderr)
+
+    has_markers = any(re.fullmatch(r"\[图\d+\]", ln.strip()) for ln in md_text.split("\n"))
+    if not has_markers and not args.images and not args.images_from:
+        # 新结构：源稿只有 ![]()，直接按文档顺序取图
+        md_text, derived = inline_images(md_text, md_dir)
+        if derived:
+            print("从源稿直接取图：%d 张" % len(derived), file=sys.stderr)
+        args.images = derived
+    elif has_markers and not args.images and not args.images_from:
+        print("源稿里有 [图N] 但没给图片来源：加 --images-from <带 ![]() 的稿子>，"
+              "或把 [图N] 换回 ![说明](images/xx.png)", file=sys.stderr)
+        sys.exit(1)
 
     # 图片来源：优先 --images-from（从公众号稿等源 md 按文档顺序派生），杜绝手工排序错位
     images = list(args.images)

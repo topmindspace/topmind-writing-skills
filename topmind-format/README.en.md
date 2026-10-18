@@ -4,7 +4,7 @@
 
 Lays out existing text for X: **duanzi mode** (one sentence per line, a blank line between every line, no emoji at all, bullets without symbols) or **short-post mode** (paragraphing; lists become 「·」/「1）」 or, optionally, emoji bullets; title emoji and motifs are optional). Layout only — the words are never changed; a fidelity check enforces it. Links, source lines and image notes are pulled out of the body so it stays one copy-ready plain-text block; links and images are sent separately.
 
-- Version: **v0.1.8** (ships with `@topmindspace/topmind-writing-skills@0.8.44`)
+- Version: **v0.1.9** (ships with `@topmindspace/topmind-writing-skills@0.8.45`)
 
 ## Install
 

@@ -3,7 +3,7 @@ name: topmind-revise
 description: "改稿与质检：改稿、精简、去 AI 味、质量三关（事实 / 逻辑 / 去 AI 味）与保真审计，长文、短文、段子、回复、标题都能用。四种模式：只审不改（出改稿报告）、改稿（先备份再写回）、嵌入（topmind-wechat-post / topmind-x-article 写长文时默认调用，只回终稿）、快审（标题、短文、段子、回复）。规则来自共享的 core-voice（场景规则）和 de-ai-rules（结构模式 + 改写边界）；脚本分 W 警告 / H 提示两级；防过度改稿：没命中的段落不动，每处改动对应规则编号。Use when 改稿、帮我改改、精简、润色、去 AI 味、去AI味、AI 味太重、改得像人写的、审稿、质检、质量检查、三关、保真审计、按我的意见改、改标题、起标题、写摘要、revise、de-AI、proofread。Do NOT use for 从零写一篇新文章（→ topmind-wechat-post / topmind-x-article / topmind-briefs / topmind-viral-posts）、只排版不改字（→ topmind-format）、出 HTML 或排版导出（→ topmind-x-article / topmind-wechat-post）、封面与配图（→ topmind-cover / topmind-poster）、发布。"
 license: MIT
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   action_category: "write"
   triggers: "改稿, 帮我改改, 改一下这篇, 精简, 润色, 去 AI 味, 去AI味, AI 味太重, 改得像人写的, 审稿, 质检, 质量检查, 三关, 事实核查这篇, 保真审计, 按我的意见改, 改标题, 起标题, 写摘要, 检查一下这篇, revise, edit this draft, proofread, de-AI, make it sound human, quality check"
   author: "TopMindSpace"
@@ -104,6 +104,7 @@ metadata:
 | `scripts/count_words.py` | 统一口径的字数统计（改前 / 改后、单段最长） |
 | `scripts/revise_check.py` | 保真比对 + 过度改稿检查 + 报告骨架 |
 | `scripts/audit-provenance.py` | 有源稿时的双向逐段溯源审计 |
+| `scripts/check_article.py` | 长文文章文件夹体检（`<文章名>/<文章名>.md`）：frontmatter、标题一致、图片存在且按出现顺序编号、无容器 / callout / `![[ ]]`；改稿移动段落或图片后跑一次 |
 
 这些脚本的唯一真源在仓库 `shared/scripts/`，本目录是逐字节副本。
 
