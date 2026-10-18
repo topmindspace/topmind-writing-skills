@@ -7,8 +7,9 @@ X 的普通帖子不渲染 Markdown。本脚本检查 X 稿，并可把常见 Ma
 
 用法：
     python3 lint_x_post.py X稿.txt                 # 检查（一个文件里多条帖子用单独一行 --- 分隔）
-    python3 lint_x_post.py X稿.txt --fix --out X稿.fixed.txt   # 自动改写后输出到新文件（列表改 🔹 / 1️⃣）
-    python3 lint_x_post.py X稿.txt --fix --style plain --out X稿.fixed.txt   # 列表改「·」/「1）」
+    python3 lint_x_post.py X稿.txt --fix --out X稿.fixed.txt   # 自动改写后输出到新文件（列表改「·」/「1）」）
+    python3 lint_x_post.py X稿.txt --fix --style emoji --out X稿.fixed.txt   # 列表改 🔹 / 1️⃣
+    python3 lint_x_post.py 回复.txt --genre reply  # 文体：long / short / duanzi / reply / title
     python3 lint_x_post.py X发布稿.txt --long      # 长文兜底稿：不查话题标签位置和字数
     python3 lint_x_post.py 段子.txt --duanzi       # 段子体：出现任何 emoji（含列表符号、人设点缀）记 W13
     python3 lint_x_post.py 公众号稿.md --md        # Markdown 稿只查去 AI 味 / 长段落 / 自制图标注
@@ -29,10 +30,12 @@ W9 同时查公式化计数标签（「xx三个词」「xx一句话」「xx五�
   W15 中文结构套话（设问自答、揭晓式冒号、升华收尾、抽象拔高、铺垫过渡、进行+动词、对冲叠加、无出处权威、空洞期许、客服腔）；
   W16 英文结构套话（not X but Y、not just…but、signpost opener、wrap-up filler、transition stack、inflated vocab、role inflation、hedge stack、chatbot residue、in today's…）；
   W17 标点腔（破折号 / 感叹号过多、！！ ？！ 连用）；W18 自制图图注没写「自制」和数据来源（--long / --md 的 ![]() 行）。
-  --md：Markdown 稿（公众号稿.md）只查内容类警告，不查 Markdown 语法。
+  --md：Markdown 稿只查内容类警告，不查 Markdown 语法。
+去 AI 味规则在同目录 de_ai_lint.py（本脚本 import），另有 W19「人名说：」、W20 过渡句、W21 复述图片，
+以及 H1–H12 提示（语境词、新闻式精确、对仗收句等）：提示只供判断，不计入 --strict，也不要求改。
 短文分点不强制 emoji：🔹 / 1️⃣ 等 emoji 符号，或「1）」「·」「【小标题】」等纯文本方式都可以；只禁止会被当成 Markdown 的 - * + 1.。
 
-退出码：有错误 → 1；加 --strict 时警告也算失败；其余 → 0。
+退出码：有错误 → 1；加 --strict 时警告也算失败（提示不算）；其余 → 0。
 只用 Python 标准库。
 """
 from __future__ import annotations
@@ -93,162 +96,23 @@ MAX_TAGS = 3
 CHAR_LIMIT = 1000  # 短文（X 纯文本帖）约 1000 字内；更长的写成长文（X Article）
 MAX_DECOR_EMOJI = 4  # 列表符号之外的点缀表情上限（规则建议 1–3 个）
 
-# --- 去 AI 味：常见套话（只警告，不报错；规则见 writing-principles.md「去 AI 味」）--
-AI_PHRASES = [
-    "综上所述", "总而言之", "值得注意的是", "值得一提的是", "不难发现", "毋庸置疑",
-    "让我们一起", "首先，", "其次，", "最后，", "在当今", "随着.{1,12}的发展",
-    "颠覆性", "革命性", "一文读懂", "一文看懂", "建议收藏", "干货满满", "赋能",
-    "不是.{1,12}而是", "真正的", "从来不是", "一句话总结", "划重点",
-    "总的来说", "总体而言", "总体来看", "不仅.{1,16}更", "不仅.{1,16}还", "毫无疑问", "不可否认", "众所周知",
-    "重磅", "炸裂", "震撼", "惊艳", "里程碑式", "划时代", "全方位", "一站式", "无缝", "深度赋能",
-    "让我们拭目以待", "拭目以待", "未来已来", "这或许就是", "开启.{1,8}新篇章", "新纪元",
-    r"更[^\s、，。]{1,3}、更[^\s、，。]{1,3}、更[^\s、，。]{1,3}",
-    "进行了一个", "做出了.{0,4}改进",
-    # 公式化计数标签：「xx三个词」「xx一句话」「xx五个分支」「三件事」→ 改成「简单总结」「主要 5 个方向」「有三大特征」
-    r"[一二三四五六七八九十两0-9]+\s*个(?:词|关键词|字|分支)", "一句话", r"[二三四五六七八九十两]件事",
-]
-LONG_PARA_MAX = 110  # 长文单段字数上限（不含列表行），超过就拆短或改成列表
+# --- 去 AI 味：规则在 de_ai_lint.py（同目录、同一份规则表）；这里只做 X 格式检查 ---------------
+sys.dont_write_bytecode = True  # 同目录模块不写 __pycache__（技能包里不留缓存）
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import de_ai_lint as D  # noqa: E402
+
+AI_PHRASES = D.AI_PHRASES
+AI_RE = D.AI_RE
+ZH_STRUCT_RE = D.ZH_STRUCT_RE
+EN_STRUCT_RE = D.EN_STRUCT_RE
+LONG_PARA_MAX = D.LONG_PARA_MAX
+EMOJI_RE = D.EMOJI_RE
+MD_IMG_RE = D.MD_IMG_RE
 HOOK_MAX_WEIGHT = 60  # 首行（钩子）加权字数上限，约 30 个汉字
-AI_RE = re.compile("|".join(AI_PHRASES))
-EMOJI_RE = re.compile(r"[\U0001F100-\U0001F2FF\U0001F300-\U0001FAFF\u2600-\u27BF]")
-
-# --- 去 AI 味：结构模式（逐行查，只警告；规则表见 references/de-ai-rules.md） ---------
-# W15 中文结构套话。每条都是「句式」而不是单个词，正则刻意收窄，宁可漏报也不误报正常写法。
-ZH_STRUCT = [
-    ("设问自答", r"[？?]\s*(?:答案(?:是|很简单)|很简单[，,：:]|原因(?:很简单|在于)[，,：:]?)"),
-    ("揭晓式冒号", r"(?:^|[。！？\s])(?:答案|真相|秘诀)(?:是|就是|其实是)?[：:]\s*\S"),
-    ("升华收尾", r"^(?:而)?这(?:或许|也许)?(?:才|就)是[^，。！？\n]{0,14}(?:意义|本质|答案|未来|关键|力量|魅力|价值|真谛)[。！!]?\s*$"),
-    ("抽象拔高", r"归根结底|本质上[，,]|某种(?:程度|意义)上|在一定程度上|不言而喻|显而易见的是"),
-    ("铺垫过渡", r"(?:废)?话不多说|接下来[，,]?(?:就)?让我们|下面(?:我们)?(?:就)?来(?:看看|聊聊|拆解|盘点)|让我们(?:一起)?来(?:看看|聊聊)"),
-    ("进行+动词", r"进行(?:了)?(?:一次|一番|一系列|深入的?|全面的?|有效的?)?(?:分析|研究|讨论|优化|处理|测试|评估|探索|沟通|调整|改进|对比|梳理|总结|介绍|说明|解读)"),
-    ("对冲叠加", r"(?:或许|也许)[^。！？\n]{0,6}(?:可能|或许|也许)|可能[^。！？\n也]{0,6}(?:或许|也许)"),
-    ("无出处权威", r"(?:专家|业内人士|分析人士|有研究|研究人员|权威人士)(?:普遍)?(?:指出|认为|表示|发现)"),
-    ("空洞期许", r"未来可期|让我们(?:共同|一起)(?:期待|见证)|一起见证|值得每一个人"),
-    ("客服腔", r"希望(?:这篇|本文|以上|这些)?(?:内容)?(?:能)?对(?:你|您|大家)有(?:所)?帮助|欢迎(?:在评论区)?(?:留言)?交流讨论"),
-]
-ZH_STRUCT_RE = [(name, re.compile(rx)) for name, rx in ZH_STRUCT]
-AUTHORITY_SOURCED_RE = re.compile(r"\d|据|《|https?://|「|“")  # 同一行带数字 / 出处 / 引号的不算无出处
-# W16 英文结构套话（英文稿、中英混排都查；只匹配整词，大小写不敏感）
-EN_STRUCT = [
-    ("not X but Y", r"\b(?:it'?s|this is|that'?s)\s+not\s+(?:just\s+|only\s+)?(?:about\s+)?[\w\s'-]{1,30}[,;—–-]+\s*(?:it'?s|but)\b"),
-    ("not just X, but", r"\bnot\s+(?:just|only|merely)\b[^.!?\n]{1,40}\bbut\s+(?:also\s+)?"),
-    ("isn't just", r"\b(?:isn'?t|aren'?t|wasn'?t)\s+just\b"),
-    ("signpost opener", r"\b(?:here'?s the thing|let'?s dive in|let'?s break (?:it|this) down|buckle up|without further ado|in this (?:post|article), (?:we|i)'?ll)\b"),
-    ("wrap-up filler", r"\b(?:in conclusion|in summary|to sum (?:it )?up|all in all|at the end of the day|the bottom line is)\b"),
-    ("transition stack", r"(?:^|[.!?]\s+)(?:moreover|furthermore|additionally|consequently),"),
-    ("inflated vocab", r"\b(?:delve|delves|delving|tapestry|testament to|pivotal|underscores?|fostering|vibrant|nestled|game[- ]changer|ever[- ]evolving|fast[- ]paced world|seamless(?:ly)?|unparalleled|groundbreaking|revolutioni[sz]e)\b"),
-    ("role inflation", r"\b(?:plays? a (?:crucial|pivotal|vital|key) role|serves as a|stands as a|marks a (?:significant|major) (?:shift|milestone))\b"),
-    ("hedge stack", r"\b(?:it is|it'?s) (?:important|worth) (?:to note|noting)\b|\bit'?s worth mentioning\b"),
-    ("chatbot residue", r"\b(?:i hope this helps|great question|certainly!|as an ai\b|feel free to (?:ask|reach out)|happy to help)"),
-    ("in today's", r"\bin today'?s (?:\w+[- ])?(?:world|landscape|era|age)\b"),
-]
-EN_STRUCT_RE = [(name, re.compile(rx, re.I)) for name, rx in EN_STRUCT]
-# W17 标点腔：破折号、感叹号堆叠，连用标点
-DASH_RE = re.compile(r"——|—")
-BANG_RE = re.compile(r"[！!](?!=)")
-PUNCT_RUN_RE = re.compile(r"[！!？?]{2,}")
-DASH_SHORT_MAX = 2       # 短文破折号最多 2 处
-BANG_SHORT_MAX = 2       # 短文感叹号最多 2 个
-DENSITY_PER_K = 3        # 长文：每 1000 字超过 3 处破折号 / 感叹号才报
-# W18 自制图标注（--md / --long 的 Markdown 图片行）：自制图 alt 里要写「自制」和数据来源
-MD_IMG_RE = re.compile(r"^\s*!\[([^\]]*)\]\(([^)\s]+)[^)]*\)\s*$")
-SELFMADE_HINT_RE = re.compile(r"自制|self[- ]?made", re.I)
-SOURCE_HINT_RE = re.compile(r"数据|来源|据|source|data", re.I)
-
-
-def struct_hits(lines: list[str], start: int):
-    """逐行查 W15 / W16，返回 [(行号, 代码, 说明)]；同一条规则在一篇里最多报 3 处。"""
-    out, seen = [], {}
-    in_fence = False
-    for off, ln in enumerate(lines):
-        if FENCE_RE.match(ln):
-            in_fence = not in_fence
-            continue
-        if in_fence or not ln.strip() or URL_RE.fullmatch(ln.strip()):
-            continue
-        body = URL_RE.sub("", ln)
-        for name, rx in ZH_STRUCT_RE:
-            m = rx.search(body)
-            if not m:
-                continue
-            if name == "无出处权威" and AUTHORITY_SOURCED_RE.search(body):
-                continue
-            seen[name] = seen.get(name, 0) + 1
-            if seen[name] <= 3:
-                out.append((start + off, "W15", f"中文结构套话「{name}」：{m.group(0).strip()[:24]}；按 de-ai-rules.md 改写"))
-        for name, rx in EN_STRUCT_RE:
-            m = rx.search(body)
-            if not m:
-                continue
-            seen[name] = seen.get(name, 0) + 1
-            if seen[name] <= 3:
-                out.append((start + off, "W16", f"英文结构套话「{name}」：{m.group(0).strip()[:32]}；按 de-ai-rules.md 改写"))
-    return out
-
-
-def punct_hits(lines: list[str], start: int, long_mode: bool):
-    text = "\n".join(ln for ln in lines if not FENCE_RE.match(ln))
-    out = []
-    for off, ln in enumerate(lines):
-        m = PUNCT_RUN_RE.search(ln)
-        if m:
-            out.append((start + off, "W17", f"标点连用「{m.group(0)}」：一个就够"))
-            break
-    n_chars = max(1, sum(1 for ch in text if not ch.isspace()))
-    dashes, bangs = len(DASH_RE.findall(text)), len(BANG_RE.findall(text))
-    if long_mode:
-        lim = max(3, DENSITY_PER_K * n_chars / 1000)
-        if dashes > lim:
-            out.append((start, "W17", f"破折号 {dashes} 处（约 {n_chars} 字）：多数改成逗号、句号或冒号"))
-        if bangs > lim:
-            out.append((start, "W17", f"感叹号 {bangs} 个（约 {n_chars} 字）：语气靠事实，不靠感叹号"))
-    else:
-        if dashes > DASH_SHORT_MAX:
-            out.append((start, "W17", f"破折号 {dashes} 处：短文最多 {DASH_SHORT_MAX} 处，其余改成逗号、句号或冒号"))
-        if bangs > BANG_SHORT_MAX:
-            out.append((start, "W17", f"感叹号 {bangs} 个：短文最多 {BANG_SHORT_MAX} 个"))
-    return out
-
-
-def image_label_hits(lines: list[str], start: int):
-    out = []
-    for off, ln in enumerate(lines):
-        m = MD_IMG_RE.match(ln)
-        if not m:
-            continue
-        alt, path = m.group(1), m.group(2)
-        if SELFMADE_HINT_RE.search(alt + " " + path) and not (SELFMADE_HINT_RE.search(alt) and SOURCE_HINT_RE.search(alt)):
-            out.append((start + off, "W18", "自制图没标清楚：图注（alt）里写「自制」和数据来源，例如「自制，数据：xx 官方」"))
-    return out
-
-
-def md_to_plain(lines: list[str]) -> list[str]:
-    """--md：把 Markdown 稿（公众号稿）转成逐行对应的纯文本，只为跑内容检查；行号不变。"""
-    out, in_fm, in_fence = [], False, False
-    for i, ln in enumerate(lines):
-        if i == 0 and ln.strip() == "---":
-            in_fm = True
-            out.append("")
-            continue
-        if in_fm:
-            if ln.strip() == "---":
-                in_fm = False
-            out.append("")
-            continue
-        if FENCE_RE.match(ln):
-            in_fence = not in_fence
-            out.append("")
-            continue
-        if in_fence or TABLE_RE.match(ln) or SEP_RE.match(ln) or HEADING_RE.match(ln) or MD_IMG_RE.match(ln):
-            out.append("")
-            continue
-        t = QUOTE_RE.sub("", ln) if QUOTE_RE.match(ln) else ln
-        t = re.sub(r"^(\s*)(?:[-*+]|\d{1,3}[.)])\s+", r"\1· ", t)
-        t = BOLD_RE.sub(lambda m: m.group(0).strip("*_"), t)
-        t = LINK_RE.sub(lambda m: m.group(1), t)
-        t = CODE_RE.sub(lambda m: m.group(0).strip("`"), t)
-        out.append(t)
-    return out
+struct_hits = D.struct_hits
+punct_hits = D.punct_hits
+image_label_hits = D.image_label_hits
+md_to_plain = D.md_to_plain
 
 
 def _is_wide(ch: str) -> bool:
@@ -302,8 +166,16 @@ DUANZI_EMOJI_RE = re.compile(
 
 
 def lint_post(start: int, lines: list[str], long_mode: bool, duanzi: bool = False):
-    """返回 (errors, warnings)，元素为 (行号, 代码, 说明)。"""
-    errs, warns = [], []
+    """返回 (errors, warnings)，元素为 (行号, 代码, 说明)。H 级提示见 lint_post_full。"""
+    errs, warns, _hints = lint_post_full(start, lines, long_mode, duanzi)
+    return errs, warns
+
+
+def lint_post_full(start: int, lines: list[str], long_mode: bool, duanzi: bool = False, genre: str | None = None):
+    """返回 (errors, warnings, hints)。genre 缺省按 long_mode / duanzi 推断。"""
+    if genre is None:
+        genre = "long" if long_mode else ("duanzi" if duanzi else "short")
+    errs, warns, hints = [], [], []
     in_fence = False
     bullets = []  # (行号, 缩进宽度, 符号)
     blank_run = 0
@@ -409,14 +281,12 @@ def lint_post(start: int, lines: list[str], long_mode: bool, duanzi: bool = Fals
         if decor > MAX_DECOR_EMOJI:
             warns.append((start, "W8", f"点缀表情 {decor} 个（列表符号不计），建议 1–3 个，避免杂乱"))
         first = next((ln for ln in lines if ln.strip()), "")
-        if x_weight(first) > HOOK_MAX_WEIGHT:
-            warns.append((start, "W10", f"首行加权字数约 {x_weight(first)}，超过 {HOOK_MAX_WEIGHT}（约 30 个汉字）：首行做钩子，先给结论或最扎眼的数字"))
+        if genre in ("short", "duanzi") and x_weight(first) > HOOK_MAX_WEIGHT:
+            warns.append((start, "W10", f"首行加权字数约 {x_weight(first)}，超过 {HOOK_MAX_WEIGHT}（约 30 个汉字）：首行一句简单的话题陈述，约 30 字内"))
         n = sum(1 for ch in URL_RE.sub("", "\n".join(ln for ln in lines if not PLACEHOLDER_RE.match(ln))) if not ch.isspace())
         if n > CHAR_LIMIT:
             warns.append((start, "W7", f"约 {n} 字，超过短文的 {CHAR_LIMIT} 字左右；这么长的内容写成长文（X Article）"))
-    hits = sorted({m.group(0) for m in AI_RE.finditer("\n".join(lines))})
-    if hits:
-        warns.append((start, "W9", "疑似 AI 套话：" + " / ".join(hits[:4]) + "；改成平实说法或删掉"))
+    warns.extend(D.phrase_hits(lines, start))
     if long_mode:
         for off, ln in enumerate(lines):
             if ln.strip() and not BULLET_RE.match(ln):
@@ -424,10 +294,16 @@ def lint_post(start: int, lines: list[str], long_mode: bool, duanzi: bool = Fals
                 if n > LONG_PARA_MAX:
                     warns.append((start + off, "W14", f"这一段约 {n} 字，超过 {LONG_PARA_MAX} 字：拆成短段，或改成「概要 + 列表」，能用图说明的就删字"))
     warns.extend(struct_hits(lines, start))
-    warns.extend(punct_hits(lines, start, long_mode))
+    pw, ph = D.punct_split(lines, start, long_mode)
+    warns.extend(pw)
+    hints.extend(ph)
     if long_mode:
         warns.extend(image_label_hits(lines, start))
-    return errs, warns
+    vw, vh = D.voice_hits(lines, start, genre)
+    warns.extend(vw)
+    hints.extend(vh)
+    hints.sort(key=lambda h: (h[0], int(h[1][1:])))
+    return errs, warns, hints
 
 
 def fix_lines(lines: list[str], long_mode: bool, style: str = "emoji") -> list[str]:
@@ -477,16 +353,22 @@ def fix_lines(lines: list[str], long_mode: bool, style: str = "emoji") -> list[s
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="X 纯文本帖检查：无 Markdown 列表/标题/加粗，正文不含链接/来源行/配图说明")
+    ap = argparse.ArgumentParser(description="X 纯文本帖检查：无 Markdown 列表/标题/加粗，正文不含链接/来源行/配图说明；去 AI 味分 W 警告 / H 提示")
     ap.add_argument("files", nargs="+", help="X 稿文件，- 表示标准输入")
     ap.add_argument("--long", action="store_true", help="长文兜底稿模式（X发布稿.txt）：整份当一篇，不查话题标签位置和字数")
     ap.add_argument("--fix", action="store_true", help="自动改写 Markdown 写法为 X 写法（需 --out；只处理单个文件）")
     ap.add_argument("--out", help="--fix 的输出文件")
-    ap.add_argument("--style", choices=["emoji", "plain"], default="emoji", help="--fix 的列表写法：emoji（🔹 / 1️⃣，默认）或 plain（· / 1））")
+    ap.add_argument("--style", choices=["plain", "emoji"], default="plain", help="--fix 的列表写法：plain（· / 1），默认）或 emoji（🔹 / 1️⃣）")
     ap.add_argument("--duanzi", action="store_true", help="段子体模式：出现任何 emoji（含列表符号、人设点缀）记 W13")
-    ap.add_argument("--strict", action="store_true", help="警告也算失败")
-    ap.add_argument("--md", action="store_true", help="Markdown 稿（公众号稿 / X长文.md）只查内容：去 AI 味（W9、W15–W17）、长段落（W14）、自制图标注（W18）；不查 Markdown 语法")
+    ap.add_argument("--genre", choices=list(D.GENRES), help="文体：long / short / duanzi / reply / title；缺省按 --long / --md / --duanzi 推断")
+    ap.add_argument("--no-hints", action="store_true", help="不打印 H 级提示")
+    ap.add_argument("--strict", action="store_true", help="警告也算失败（H 级提示永远不算）")
+    ap.add_argument("--md", action="store_true", help="Markdown 稿只查内容：去 AI 味（W9、W14–W21、H 提示）、自制图标注（W18）；不查 Markdown 语法")
     args = ap.parse_args()
+    if args.genre == "duanzi":
+        args.duanzi = True
+    if args.genre == "long" and not args.md:
+        args.long = True
 
     if args.fix:
         if len(args.files) != 1 or not args.out:
@@ -499,7 +381,7 @@ def main() -> int:
         print(f"已写出 {args.out}")
         args.files = [args.out]
 
-    total_e = total_w = 0
+    total_e = total_w = total_h = 0
     for f in args.files:
         try:
             text = sys.stdin.read() if f == "-" else Path(f).read_text(encoding="utf-8-sig")
@@ -507,26 +389,32 @@ def main() -> int:
             print(f"错误：无法读取 {f}（{e}）", file=sys.stderr)
             return 2
         if args.md:
-            raw = text.splitlines()
-            plain = md_to_plain(raw)
-            errs, warns = lint_post(1, plain, True, False)
-            errs = []  # Markdown 语法在公众号稿里是合法的，只保留内容类警告
-            warns = [w for w in warns if w[1] in ("W9", "W14", "W15", "W16", "W17")] + image_label_hits(raw, 1)
-            for no, code, msg in sorted(warns):
+            warns, hints = D.analyze(text, "long", markdown=True)
+            if args.no_hints:
+                hints = []
+            for no, code, msg in warns:
                 print(f"{f}:{no}: [{code}] 警告：{msg}")
+            for no, code, msg in hints:
+                print(f"{f}:{no}: [{code}] 提示：{msg}")
             total_w += len(warns)
+            total_h += len(hints)
             continue
         for idx, (start, lines) in enumerate(split_posts(text, args.long), 1):
-            errs, warns = lint_post(start, lines, args.long, args.duanzi)
+            errs, warns, hints = lint_post_full(start, lines, args.long, args.duanzi, args.genre)
+            if args.no_hints:
+                hints = []
             label = "" if args.long else f"#帖{idx} "
             for no, code, msg in errs:
                 print(f"{f}:{no}: {label}[{code}] 错误：{msg}")
             for no, code, msg in warns:
                 print(f"{f}:{no}: {label}[{code}] 警告：{msg}")
+            for no, code, msg in hints:
+                print(f"{f}:{no}: {label}[{code}] 提示：{msg}")
             total_e += len(errs)
             total_w += len(warns)
+            total_h += len(hints)
     status = "通过" if not total_e and not (args.strict and total_w) else "未通过"
-    print(f"lint_x_post：{status}（错误 {total_e}，警告 {total_w}）")
+    print(f"lint_x_post：{status}（错误 {total_e}，警告 {total_w}，提示 {total_h}）")
     return 1 if total_e or (args.strict and total_w) else 0
 
 

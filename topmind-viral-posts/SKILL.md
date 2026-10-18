@@ -1,14 +1,14 @@
 ---
 name: topmind-viral-posts
-description: "X 引流段子/爆款短篇：18 类型模板（含热点资讯、冷知识、差额冲刺）+ 钩子×主体×收尾组合玩法；段子体排版（一句一行、行间空一行、完全不用 emoji，分点不加符号）、口语化、带互动钩子；每条帖子附话题标签（1–3 个 hashtag）与内部分类标签，每条交付一段可直接复制的纯文本（X 不渲染 Markdown；话题标签在末行），链接（含来源）、原图、配图另发，绝不混进正文；配图原图优先（官方/第三方/自己的后台截图）；没有原图时先问用户是否配图，同意后才走 topmind-cover 出 16:9 图。只起草不代发。Use when 引流段子、段子、爆款短篇、爆款短文、涨粉帖、涨粉段子、互关帖、互关求粉、X 短帖、热点段子、蹭热点、新人报到、打卡帖、话题标签、hashtag、X 引流、traffic post、viral post；引流互动型（段子、钩子、涨粉）走本技能。Do NOT use for 把现成文字转段子、格式化、排版（→ topmind-format）、X 长文与发 X 文章（→ topmind-x-article）、公众号文章与公众号短文（→ topmind-wechat-post / topmind-briefs）、信息密度型干货短文、快讯与数据榜单（→ topmind-briefs）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、把帖子发出去（→ topmind-x，须用户确认）。"
+description: "X 引流段子/爆款短篇：18 类型模板（含热点资讯、冷知识、差额冲刺）+ 钩子×主体×收尾组合玩法；段子体排版（一句一行、行间空一行、完全不用 emoji，分点不加符号）、口语化、运营帖带互动钩子、话题段子末行动作反转；每条帖子附话题标签（话题段子默认 2 个，运营帖 1–3 个）与内部分类标签，每条交付一段可直接复制的纯文本（X 不渲染 Markdown；话题标签在末行），链接（含来源）、原图、配图另发，绝不混进正文；配图原图优先（官方/第三方/自己的后台截图）；没有原图时先问用户是否配图，同意后才走 topmind-cover 出 16:9 图。只起草不代发。Use when 引流段子、段子、爆款短篇、爆款短文、涨粉帖、涨粉段子、互关帖、互关求粉、X 短帖、热点段子、蹭热点、新人报到、打卡帖、话题标签、hashtag、X 引流、traffic post、viral post；引流互动型（段子、钩子、涨粉）走本技能。Do NOT use for 把现成文字转段子、格式化、排版（→ topmind-format）、X 长文与发 X 文章（→ topmind-x-article）、公众号文章与公众号短文（→ topmind-wechat-post / topmind-briefs）、信息密度型干货短文、快讯与数据榜单（→ topmind-briefs）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、单独改稿、去 AI 味与质检（→ topmind-revise）、把帖子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.3.14"
+  version: "0.3.15"
   action_category: "write"
   triggers: "引流段子, 段子, 写段子, 冷知识段子, 冲粉帖, 破千, 爆款短篇, 爆款短文, 涨粉帖, 涨粉短帖, 涨粉段子, 互关帖, 互关求粉, X 短帖, 热点段子, 蹭热点, 新人报到, 打卡帖, 话题标签, hashtag, traffic post, viral post, 写引流段子, 涨粉内容, 互关内容, X 引流"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-14"
+  updated: "2026-10-18"
 ---
 
 # topmind-viral-posts · X 引流段子/爆款短篇
@@ -16,6 +16,7 @@ metadata:
 基于对 X 中文区常见高互动写法的归纳，示例均为自编。目标：**短、真、钩子**——读者 3 秒能看完，忍不住点赞/评论/关注。
 
 > **必读必守**：[references/x-delivery-contract.md](references/x-delivery-contract.md)——**段子完全不用 emoji**（无人设点缀、无情绪表情、无列表符号）；分点就一条一行、靠行间空行区分，禁用 `- ` `1. `；每条帖子正文是一段可直接复制的纯文本（单独一个 `text` 块），**不含 URL 和来源行**；链接一条、图片一条另发，内部标签放说明里。
+> **写法规则**：段子、回复、转发点评按 [references/core-voice.md](references/core-voice.md) 的段子 / 回复条目（V19 V26 V27 V29–V32）；去 AI 味按 [references/de-ai-rules.md](references/de-ai-rules.md)。
 
 ## 十八大类型
 
@@ -50,15 +51,15 @@ metadata:
 每条帖子带两类标签，详见 [references/tags-and-topics.md](references/tags-and-topics.md)：
 
 - **内部分类标签**：类型（上面 18 个之一）、用途（涨粉 / 互关 / 引流 / 日常 / 立人设 / 追热点 / 互动）、平台（X）、语气（亲和低姿态 / 自嘲幽默 / 干货利落 / 克制客观 / 反差暴论 / 温暖祝福 / 好奇追问 / 真诚笃定）。写在正文块外的「内部标签」里，不进正文。
-- **话题标签（hashtag）**：每条 1–3 个，放在正文最后一行，不插进正文或列表中间；互关类以 `#蓝V互关 #follow` 为核心；不叠同义标签，不用诱导刷量、敏感或与内容无关的标签；热点资讯型只用事件、产品、公司的通用名称，传闻不用会让人以为已证实的标签。
+- **话题标签（hashtag）**：话题段子默认 2 个（宽泛词 + 主题词），运营引流帖（互关、新人报到、打卡）1–3 个，放在正文最后一行，不插进正文或列表中间；互关类以 `#蓝V互关 #follow` 为核心；不叠同义标签，不用诱导刷量、敏感或与内容无关的标签；热点资讯型只用事件、产品、公司的通用名称，传闻不用会让人以为已证实的标签。
 
 ## X 纯文本排版
 
 规则见 [references/x-post-format.md](references/x-post-format.md) 与交付规约：
 
-- 不用 Markdown；段子体完全不用 emoji，分点不加符号，一条一行、行间空行；热点资讯型的「短文版」按短文体处理（分点可用 emoji 或「1）」「·」，emoji 不强制）。
+- 不用 Markdown；段子体完全不用 emoji，分点不加符号，一条一行、行间空行；热点资讯型的「短文版」按短文体处理（分点默认「·」，行多用「1）」，短列表才用 emoji）。
 - 有事实的帖子（热点、数据、工具）：正文里用文字点到出处（「官方称」「据传」），来源链接另发一条；纯运营段子不需要。
-- 自检：`python3 scripts/lint_x_post.py X稿.txt --duanzi`（出现 emoji 报 W13；正文有 URL / 来源行 / 配图说明报 E10–E12；多条用 `---` 分隔；`--fix --out 新文件` 自动改 Markdown）。
+- 自检：`python3 scripts/lint_x_post.py X稿.txt --duanzi`（等同 `--genre duanzi`；回复用 `--genre reply`；出现 emoji 报 W13；正文有 URL / 来源行 / 配图说明报 E10–E12；多条用 `---` 分隔；`--fix --out 新文件` 自动改 Markdown）。
 
 ## 热点资讯型（第 7 类）专项规约
 
@@ -105,12 +106,12 @@ metadata:
 - **时空锚点**：新闻资讯类正文必须带时间点（如"10 月 3 日""昨天""上周"）
   或事件发生地点（如"旧金山""北京""斯洛文尼亚"）；
   时间地点是资讯可信度的地基，不许写成"最近""某地"。
-- 涉中国厂商/中国语境：措辞正面积极客观；敏感表述先和用户确认。
+- 涉国内厂商：不贬低、不站队攻击、不传谣；事实清楚时可以用有冲击力的表述；敏感表述先和用户确认（core-voice V21）。
 
 ### Output（热点型）
 
 - 段子版：50-150 字 + 1-4 张原图（注明来源）。
-- 短文版：300-800 字 + 多图，结构：导读句 → 事实（分点，emoji 或「1）」「·」） → 点评一句（标明是观点）。
+- 短文版：300-800 字 + 多图，结构：导读句 → 事实（分点默认「·」） → 需要时点评一句（写成「预计」「现在看起来」，不用「我认为」）。
 - 两种版本都必须核实一手来源；正文用文字标注口径（「官方称」「据传」），来源链接另发，不进正文。
 
 ## 何时不用
@@ -119,6 +120,7 @@ metadata:
 - 公众号文章（长文）→ `topmind-wechat-post`；公众号短文、双平台干货短文 → `topmind-briefs`
 - 干货短文、快讯、数据榜单（第三方客观口吻）→ `topmind-briefs`
 - 只要封面、头图 → `topmind-cover`；长图、海报、信息图 → `topmind-poster`
+- 单独改一条现成的帖子、去 AI 味、质检 → `topmind-revise`（`mode=quick genre=duanzi`）
 - 把帖子发到 X → `topmind-x`（须用户确认）
 - 需要深度论证的严肃话题（本技能只做短平快引流；热点深度解读走 briefs 或长文）
 
@@ -126,17 +128,35 @@ metadata:
 
 1. **开头定生死**：读者先看到的是前几行，**钩子 + 核心事实 + 行动号召放在最前面**；
    hashtag 放最后一行。没有 280 字限制，但段子要短平快，写完把废话砍掉。
-   结构：第一行即钩子 → 2-4 行核心事实 → 最后一行神评论/提问。
+   运营引流帖结构：第一行即钩子 → 2-4 行核心事实 → 最后一行神评论 / 提问；话题段子见下面「段子配方」，末行用动作完成反转。
 2. **段子体排版**：一句一行，**行与行之间都空一行**；一行一个意思，尽量不超过 20 字，长句在逗号处断开。
    现成文字要转段子体时交给 `topmind-format`（只排版不改字）；段子体零 emoji（emoji 体系只用于短文体）。
 3. **口语化**：说人话，不说书面语。"蓝朋友""上岸""串门"比"用户""成功""交流"好。
 4. **具体数字**：4869 个粉 > "几千个粉"；3 小时 > "刚才"。
-5. **互动钩子**：每帖至少一个——提问、二选一、求互关、求评论。
-6. **Hashtag**：每条 1–3 个，放最后一行；互关类必带 `#蓝V互关 #follow`；干货类带 `#新手指南`、`#运营技巧` 这类读者会搜的词；日常类可带 `#日拱一卒`。数量、位置与敏感词规则见 [references/tags-and-topics.md](references/tags-and-topics.md)。
+5. **互动钩子**：只限运营引流类（互关、新人报到、打卡、冷知识引流），每帖至少一个——提问、二选一、求互关、求评论；话题段子不强制，以动作反转收尾。
+6. **Hashtag**：话题段子默认 2 个，运营引流帖 1–3 个，放最后一行；互关类必带 `#蓝V互关 #follow`；干货类带 `#新手指南`、`#运营技巧` 这类读者会搜的词；日常类可带 `#日拱一卒`。数量、位置与敏感词规则见 [references/tags-and-topics.md](references/tags-and-topics.md)。
 7. **不用 emoji**：段子里没有人设点缀、情绪表情和列表符号，语气全靠文字本身。
-8. **去 AI 味**：不用"首先其次最后""综上所述""总的来说""值得注意的是""不仅…更…"，不写"不是 A 而是 B"式反转和三连排比，不用感叹号堆砌，结尾不升华。
-   **必过**：按 [references/de-ai-rules.md](references/de-ai-rules.md) 逐条过（只改表达，不改事实）；吸引力要求见 [references/writing-principles.md](references/writing-principles.md) 第五点五节；lint 的 W9 / W10 / W15–W17 警告要清掉。
+8. **去 AI 味**：不用"首先其次最后""综上所述""值得注意的是""不仅…更…"，少用"不是 A 而是 B"和三连排比，不用感叹号堆砌，结尾不升华；对话写「人名：」，不写「人名说：」。
+   **必过**：按 [references/de-ai-rules.md](references/de-ai-rules.md) 逐条过（只改表达，不改事实）；吸引力要求见 [references/writing-principles.md](references/writing-principles.md) 第五点五节；lint 的 W 警告每条要有结论（改掉或说明保留理由），H 提示只供判断。
 9. **不用 Markdown**：分点不加符号，见上节与交付规约。
+
+## 段子配方（话题段子）
+
+按 `references/core-voice.md` V31：
+
+- 具体产品（点名某个 agent、某个编辑器）+ 真实可信的生活场景 + 它的典型特点（翻你的记录、照章办事）+ 末行**用动作完成反转**。
+- 时事段子：首句点出两方的场景，第二句直接亮出反差，少铺垫。
+- 对话写「人名：」；凭空设计的情节显得尴尬；调侃厂商可以，不编、不传谣。
+- 圈内梗可以用，梗放在大家都看得懂的位置（V19）。
+
+## 回复与转发点评
+
+按 `references/core-voice.md` V29、V30：
+
+- 回复越短越好，可以只是词组；基本形是「态度 + 一点口语」，不复述原帖；要加深度只加帖子外或推出来的东西（站队、代入自己、理解动机、往后问一句）。
+- 被批评时的公开回复可以客气；纠正别人一句口语点破。
+- 转发点评：当前热词 + 动作（更新了 / 发新版了）+ 感叹，可以配一个匹配的 emoji 和一次「！！」；不复述更新内容。
+- 自检：`python3 scripts/lint_x_post.py 回复.txt --genre reply`。
 
 ## 配图铁律
 
@@ -191,7 +211,7 @@ clean uncluttered background, vertical 9:16
 1. **选类型**：看用户要什么效果（涨粉→互关型/新人型；互动→提问型/自嘲型；立人设→干货型/打卡型；追热点→热点资讯型）。
 2. **套公式**：从 `references/patterns.md` 取对应公式，填内容。
 3. **配图**：先找原图（官方 > 第三方 / 原帖图，注明来源），给 1–2 张图片地址；没有原图时**先问用户要不要配图**，用户同意才走 topmind-cover 生图（清新优雅/MD3商务风），可先附一个出图 prompt 供用户决定；不擅自生图。
-4. **自检**：删掉"正确的废话"；去 AI 味按 `references/de-ai-rules.md` 过完；用户要改稿时按 `references/revision-workflow.md`（备份 → 逻辑与事实 → 删冗余 → 去 AI 味 → 排版，报改前 / 改后字数）；确认有钩子、段子体行间空行、话题标签 1–3 个在末行、事实类的来源链接已整理到另发的链接里；`scripts/lint_x_post.py --duanzi` E 类清零（含 E10 URL、E11 来源行、E12 配图说明）、W12（正文混入标签 / 说明）清零；加 `--duanzi` 时 W13（出现 emoji）清零。
+4. **自检**：删掉"正确的废话"；去 AI 味按 `references/de-ai-rules.md` 过完；用户要改稿时转 `topmind-revise`（`mode=quick genre=duanzi`），没装就按 `references/revision-workflow.md` 手动走（备份 → 事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照 → 排版 → 保真审计，报改前 / 改后字数）；确认有钩子、段子体行间空行、话题标签 1–3 个在末行、事实类的来源链接已整理到另发的链接里；`scripts/lint_x_post.py --duanzi` E 类清零（含 E10 URL、E11 来源行、E12 配图说明）、W12（正文混入标签 / 说明）清零；加 `--duanzi` 时 W13（出现 emoji）清零。
 5. **交付**：一次 3–5 条让用户挑，严格按 [references/x-delivery-contract.md](references/x-delivery-contract.md)。
 
 ## Output Contract

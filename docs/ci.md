@@ -17,7 +17,7 @@
 bash scripts/ci_skill_gates.sh
 ```
 
-对每个发现的技能目录依次：
+先跑一次仓库级的去 AI 味规则回归 `python3 scripts/test_lint_rules.py`（「不应报」的正常写法被误报、该报的没报、H 提示卡住了 `--strict`，都算失败），再对每个发现的技能目录依次：
 
 1. 有运行时依赖才装：有锁文件 `npm ci --omit=dev`，没有则 `npm install --omit=dev --no-package-lock`；目前各技能都没有依赖，这一步跳过，不生成锁文件
 2. `package_skill.py --check` + `audit_{styles,docs,skill,css}.py`
@@ -36,7 +36,7 @@ npm run check && npm run audit && npm run privacy
 
 ## 共享真源与规范校验
 
-- `node scripts/sync_shared.js --check`：`shared/manifest.json` 声明的共享脚本与 `writing-principles.md`，各技能副本必须与 `shared/` 真源逐字节一致（`prepack` 也会跑）。
+- `node scripts/sync_shared.js --check`：`shared/manifest.json` 声明的共享脚本（`de_ai_lint.py`、`lint_x_post.py`、`count_words.py`、`revise_check.py`、`audit-provenance.py` 等）与共享文档（`core-voice.md`、`de-ai-rules.md`、`writing-principles.md` 等），各技能副本必须与 `shared/` 真源逐字节一致（`prepack` 也会跑）。
 - `node scripts/check_evals.js`：`evals/evals.json` 每个技能 ≥3 条、含负例；用例 prompt 必须命中 expected_skill 的触发词；description 的 Do NOT 只能指向存在的技能。
 - `agentskills validate <skill>`（`pip install skills-ref==0.1.1`）：frontmatter 顶层只允许规范字段，自定义字段在 `metadata` 下。
 
@@ -58,3 +58,4 @@ Release 的 publish 步骤：
 
 - 各技能 `audit_*.py` 定义的质量门禁（如去 AI 味、数字来源、配图校验）
 - `negative_tests.py` 的负向用例必须全绿
+- `scripts/test_lint_rules.py` 的「不应报」用例不许删来过 CI：误报就改规则，不改用例

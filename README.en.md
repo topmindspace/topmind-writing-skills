@@ -9,7 +9,7 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/topmindspace/topmind-writing-skills/ci.yml?style=flat-square&label=CI)](https://github.com/topmindspace/topmind-writing-skills/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 
-**TopMindSpace writing-skills collection** — WeChat articles, X long-form posts, short-form briefs, viral short posts, cover art, long-image rendering: six skills, one repo.
+**TopMindSpace writing-skills collection** — WeChat articles, X long-form posts, short-form briefs, viral short posts, revision and quality checks, cover art, long-image rendering: seven skills, one repo.
 
 <p align="center">
   <img src="docs/assets/writing-cover.png" alt="topmind-writing-skills · writing skills collection" width="960" />
@@ -57,18 +57,26 @@ Paste existing text: **to duanzi** → one sentence per line with blank lines be
 npx @topmindspace/topmind-writing-skills install topmind-format
 ```
 
+### topmind-revise · Revision and quality check
+
+Makes a draft shorter, more accurate and closer to the author's voice, and proves the facts survived. Four modes: audit (report only), revise (back up, then write back), embed (called by the WeChat / X long-form skills; returns only the final draft) and quick (titles, short posts, one-liners, replies). Pipeline: facts → logic → cut redundancy → de-AI → voice check → layout → fidelity check → over-edit check; `revise_check.py` diffs numbers, quotes, proper nouns and hedging words, and reports the share of clean paragraphs that were rewritten anyway.
+
+```bash
+npx @topmindspace/topmind-writing-skills install topmind-revise
+```
+
 ### Shared X plain-text rules (all skills that output X text)
 
 Single source in `shared/references/`, distributed to each skill's `references/` via the manifest:
 
 | Doc | Covers |
 |---|---|
-| `x-delivery-contract.md` (must read) | Short-post workflow: sources → original post/images → content → layout; emoji optional for short posts (emoji or 「1）」/「·」/【headings】 bullets), none at all in duanzi; never `- ` / `1. `; the X short-post / duanzi body is one copy-ready plain-text block (hashtags last); **links (including sources), original images and generated images are sent separately**; X long-form and WeChat articles may keep in-text links |
+| `x-delivery-contract.md` (must read) | Short-post workflow: sources → original post/images → content → layout; emoji optional for short posts (bullets default to 「·」, 「1）」 for longer lists, emoji only for short lists, 【headings】 for longer posts), none at all in duanzi; never `- ` / `1. `; the X short-post / duanzi body is one copy-ready plain-text block (hashtags last); **links (including sources), original images and generated images are sent separately**; X long-form and WeChat articles may keep in-text links |
 | `x-post-format.md` | No Markdown, bullet sets, spacing, sources, skeletons, images, WeChat → X |
 | `emoji-system.md` | The TopMind emoji system (short posts only, optional): 0–2 persona motifs (🐔 🐱 🌱) at start/end; 0–1 keyword-matched title emoji; one bullet set per post |
 | `x-layout-patterns.md` | Layout patterns in our own words |
 
-Checks: `lint_x_post.py` (E1–E9 Markdown leftovers; E10–E12 URLs / source lines / image notes in the body; W9 AI-sounding phrases, W10 first line too long for a hook, W12 notes / internal tags in the body; W14 long-form paragraph too long, W15 / W16 Chinese / English structural patterns, W17 punctuation tics, W18 self-made image without data source; W13 any emoji in a duanzi post with `--duanzi`; `--long` skips E10–E12 for long-form; `--md` runs the content warnings on Markdown drafts). De-AI rule table: `de-ai-rules.md`; hook checklist: section 5.5 of `writing-principles.md`.
+Checks: `lint_x_post.py` reports three levels. **E errors** (E1–E9 Markdown leftovers; E10–E12 URLs / source lines / image notes in the body) must be zero. **W warnings** (W9 AI-sounding phrases, W10 first line too long, W12 notes / internal tags, W14 paragraph too long, W15 / W16 Chinese / English structural patterns, W17 punctuation tics, W18 self-made image without data source, W19 「name 说：」, W20 transition sentences, W21 retelling an image; W13 any emoji in a duanzi post with `--duanzi`) each need a decision. **H hints** (context words, news-style precision, parallel closing lines, emoji density, etc.) are advisory and never fail `--strict`. Pick the genre with `--genre long|short|duanzi|reply|title`; hide hints with `--no-hints`. The de-AI part shares one rule set with `de_ai_lint.py` (`de-ai-rules.md`).
 
 ### topmind-cover · Cover art generation
 
@@ -99,13 +107,21 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 > Also do not install the old package's `^2` (2.0.0–2.1.1 deprecated).
 
 
-## Shared writing workflow (since 0.8.43)
+## Shared writing workflow (since 0.8.44: three layers)
 
-briefs, viral-posts, x-article and wechat-post share three references (`shared/references/`, copied into each skill):
+The writing skills share one rule set (`shared/references/`, copied into each skill so standalone installs work):
+
+| Layer | Files | Covers |
+|---|---|---|
+| Voice | `core-voice.md` | Scenario rules (V01–V33): titles, openings, endings, numbers, quotes, source lines, lists, emoji, replies, joke recipe |
+| De-AI | `de-ai-rules.md` + `de_ai_lint.py` | Rewrite boundaries plus structural patterns (Z / E / P codes); the linter reports W (each needs a decision) and H (advisory) |
+| Execution | `topmind-revise` | Runs `revision-workflow.md` end to end, with a fidelity check, an over-edit check and a revision report |
+
+Also:
 
 - **Originals first** (`image-sourcing.md`): find official / original-post / third-party images before writing and log sources in a private list inside the delivery package; self-made charts are a fallback and must be labeled 自制 with the data source.
-- **De-AI pass is mandatory** (`de-ai-rules.md`): Chinese and English structural-pattern table plus rewrite boundaries (change wording, never facts or certainty). `lint_x_post.py` checks the scriptable part: W9 stock phrases, W15 Chinese structural patterns, W16 English structural patterns, W17 punctuation tics, W18 unlabeled self-made images; use `--md` for WeChat drafts. topmind-format reports hits without rewriting.
-- **Fixed revision order** (`revision-workflow.md`): logic & facts → cut redundancy → de-AI → layout; back up first and report before/after word counts every round.
+- **De-AI pass is mandatory**: rewrite boundaries first (change wording, never facts or certainty); W warnings need a decision rather than a zero count; the regression set `scripts/test_lint_rules.py` keeps normal writing from being flagged. topmind-format reports hits without rewriting.
+- **Fixed revision order** (`revision-workflow.md`): facts → logic → cut redundancy → de-AI → voice check → layout → fidelity check → over-edit check; back up first and report before/after word counts (`count_words.py`). `topmind-revise` runs it when installed.
 
 ## Original examples
 
@@ -116,6 +132,7 @@ Every skill ships sample outputs written by us (fictional or neutral topics; no 
 | topmind-viral-posts (one-liners) | [`topmind-viral-posts/examples/`](./topmind-viral-posts/examples/) |
 | topmind-briefs (short posts) | [`topmind-briefs/examples/`](./topmind-briefs/examples/) |
 | topmind-format (formatting) | [`topmind-format/examples/`](./topmind-format/examples/) |
+| topmind-revise (revision) | [`topmind-revise/examples/`](./topmind-revise/examples/) |
 | topmind-x-article (X long-form) | [`topmind-x-article/examples/`](./topmind-x-article/examples/) |
 | topmind-wechat-post (WeChat) | [`topmind-wechat-post/examples/`](./topmind-wechat-post/examples/) |
 | topmind-poster (posters) | [`topmind-poster/examples/`](./topmind-poster/examples/) |
@@ -128,15 +145,16 @@ Every skill ships sample outputs written by us (fictional or neutral topics; no 
 
 | Skill | Version | What it does |
 |-------|---------|--------------|
-| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.14** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
-| [`topmind-x-article`](./topmind-x-article/) | **0.4.20** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
-| [`topmind-cover`](./topmind-cover/) | **0.4.11** | Cover art for X / WeChat (X master 1500×600 / 5:2): striking, theme-focused; 22-style cover style library + 16:9 X short-post cover scene + 24 title treatments + 7-layer scene recipe + 55 example images (22 styles × 2 sizes + 11 variant samples) + 1 style overview |
-| [`topmind-briefs`](./topmind-briefs/) | **0.2.22** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper explainers / product alerts / mechanism explainers; sources → images → content → layout; one copy-ready plain-text X block (no HTML by default, emoji optional, no AI tone), links / images sent separately; asks before generating any image |
-| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.14** | X viral short posts: 18 template types + combinations, duanzi layout (blank lines, no emoji, plain bullet lines), one copy-ready plain-text block per post with hashtags last, links / images sent separately, classification tags listed separately; asks before generating an image |
-| [`topmind-format`](./topmind-format/) | **0.1.7** | X plain-text formatter: to duanzi (blank lines, no emoji) / to short post (paragraphing + sensible lists, emoji optional); layout only, words unchanged, with a fidelity check; one copy-ready plain-text body, links / images sent separately |
+| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.15** | WeChat article lifecycle: package, review, 3 quality gates, inline typography & publish checklist |
+| [`topmind-x-article`](./topmind-x-article/) | **0.4.21** | X long-form one-click publish: Markdown → one-click-copy HTML (images/prompt copy, click-to-zoom images) / plain-text fallback + cover + checklist |
+| [`topmind-cover`](./topmind-cover/) | **0.4.12** | Cover art for X / WeChat (X master 1500×600 / 5:2): striking, theme-focused; 22-style cover style library + 16:9 X short-post cover scene + 24 title treatments + 7-layer scene recipe + 55 example images (22 styles × 2 sizes + 11 variant samples) + 1 style overview |
+| [`topmind-briefs`](./topmind-briefs/) | **0.2.23** | Short-form briefs (WeChat + X): one topic, one chart; data rankings / paper explainers / product alerts / mechanism explainers; sources → images → content → layout; one copy-ready plain-text X block (no HTML by default, emoji optional, no AI tone), links / images sent separately; asks before generating any image |
+| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.15** | X viral short posts: 18 template types + combinations, duanzi layout (blank lines, no emoji, plain bullet lines), one copy-ready plain-text block per post with hashtags last, links / images sent separately, classification tags listed separately; asks before generating an image |
+| [`topmind-format`](./topmind-format/) | **0.1.8** | X plain-text formatter: to duanzi (blank lines, no emoji) / to short post (paragraphing + sensible lists, emoji optional); layout only, words unchanged, with a fidelity check; one copy-ready plain-text body, links / images sent separately |
+| [`topmind-revise`](./topmind-revise/) | **0.1.0** | Revision and quality check: edit, tighten, de-AI, three quality gates and fidelity audit; four modes (audit / revise / embed / quick); every change maps to a rule code, with an over-edit guard; the long-form skills use it by default |
 | [`topmind-poster`](./topmind-poster/) | **0.1.6** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
 
-Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.43** (whole-repo same-tag releases).
+Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.44** (whole-repo same-tag releases).
 
 ### Which skill, and how they combine
 
@@ -144,12 +162,13 @@ Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package
 |---|---|---|
 | A data-driven brief (numbers, rankings, launches) | `topmind-briefs` | → `topmind-format` for layout; no original image → `topmind-cover` 16:9 |
 | Engagement jokes, follower posts | `topmind-viral-posts` | → `topmind-format` to re-lay duanzi; pair with a briefs version for the same event |
-| Existing text, layout only | `topmind-format` | words unchanged; rewriting → briefs / viral-posts |
-| Thousands-of-words X article | `topmind-x-article` | + `topmind-cover` (5:2); shorter than a post → briefs |
-| WeChat long-form & layout | `topmind-wechat-post` | + `topmind-cover`; 300–800-char briefs → briefs |
+| Existing text, layout only | `topmind-format` | words unchanged; rewriting → `topmind-revise` |
+| Edit, tighten, de-AI, quality check | `topmind-revise` | standalone, or called by x-article / wechat-post after drafting |
+| Thousands-of-words X article | `topmind-x-article` | + `topmind-revise` + `topmind-cover` (5:2); shorter than a post → briefs |
+| WeChat long-form & layout | `topmind-wechat-post` | + `topmind-revise` + `topmind-cover`; 300–800-char briefs → briefs |
 | Long images, posters, infographics | `topmind-poster` | copy written first by briefs / wechat-post |
 
-> SKILL.md frontmatter uses only Agent Skills spec keys at the top level (`name` / `description` / `license` / `metadata`); version, `action_category`, `triggers` and other custom keys live under `metadata` as strings, so `skills-ref validate` passes. Shared scripts and `writing-principles.md` have a single source in `shared/`; skill folders keep byte-identical copies (CI checks with `node scripts/sync_shared.js --check`). The npm package ships only `overview.png` from the cover examples; the per-style samples stay on GitHub / in the Release zip.
+> SKILL.md frontmatter uses only Agent Skills spec keys at the top level (`name` / `description` / `license` / `metadata`); version, `action_category`, `triggers` and other custom keys live under `metadata` as strings, so `skills-ref validate` passes. Shared scripts and references (`core-voice.md`, `de-ai-rules.md`, `writing-principles.md` and more) have a single source in `shared/`; skill folders keep byte-identical copies (CI checks with `node scripts/sync_shared.js --check`). The npm package ships only `overview.png` from the cover examples; the per-style samples stay on GitHub / in the Release zip.
 
 ## Install
 
@@ -181,6 +200,7 @@ topmind-writing-skills/
 ├─ topmind-briefs/                    # skill (SKILL.md + assets + references + scripts)
 ├─ topmind-viral-posts/               # skill (X viral short posts, duanzi layout)
 ├─ topmind-format/                    # skill (X plain-text formatter: duanzi / short post)
+├─ topmind-revise/                    # skill (revision and quality check)
 ├─ topmind-poster/                    # skill (HTML → high-res long image / section images)
 ├─ topmind-cover/                     # skill
 ├─ topmind-wechat-post/               # skill

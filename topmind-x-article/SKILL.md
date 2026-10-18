@@ -1,14 +1,14 @@
 ---
 name: topmind-x-article
-description: "X 长文（Article）一键发布包：Markdown 原稿 → 可直接复制的 X长文.html（富文本一键复制+配图内嵌）/ X发布稿.txt（纯文本兜底，列表自动转 emoji 项目符号；长文可保留文内链接，派生 X 短帖时链接、原图另发）+ 封面图 + 发布清单，由用户人工点发布。Use when X 长文、发 X 文章、写 X 文章、X article、长文发 X、写 X 长文、X 文章排版、推特长文、twitter 长文、Twitter Article。Do NOT use for 短推文、短帖、快讯与段子写稿（→ topmind-viral-posts 或 topmind-briefs）、现成文字格式化与转段子（→ topmind-format）、把短帖发出去（→ topmind-x，须用户确认）、公众号文章（→ topmind-wechat-post）、只要封面或头图（→ topmind-cover）。"
+description: "X 长文（Article）一键发布包：Markdown 原稿 → 可直接复制的 X长文.html（富文本一键复制+配图内嵌）/ X发布稿.txt（纯文本兜底，列表自动转 emoji 项目符号；长文可保留文内链接，派生 X 短帖时链接、原图另发）+ 封面图 + 发布清单，由用户人工点发布。Use when X 长文、发 X 文章、写 X 文章、X article、长文发 X、写 X 长文、X 文章排版、推特长文、twitter 长文、Twitter Article。Do NOT use for 短推文、短帖、快讯与段子写稿（→ topmind-viral-posts 或 topmind-briefs）、现成文字格式化与转段子（→ topmind-format）、把短帖发出去（→ topmind-x，须用户确认）、公众号文章（→ topmind-wechat-post）、只要封面或头图（→ topmind-cover）、单独改稿、去 AI 味与质检（→ topmind-revise）。"
 license: MIT
 metadata:
-  version: "0.4.20"
+  version: "0.4.21"
   action_category: "write"
   triggers: "X 长文, 发 X 文章, 写 X 文章, X article, 长文发 X, X 发长文, X 文章排版, 转纯文本, X 纯文本, X发布稿, 发 article, 一键复制, 写 X 长文, X 长文发布, 推特长文, twitter 长文, Twitter Article"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-14"
+  updated: "2026-10-18"
 ---
 
 # topmind-x-article · X 长文一键发布
@@ -25,8 +25,8 @@ metadata:
 - **默认中文**：标题、正文、配图文案一律用中文写作，这是默认行为，不需要用户每次声明。
 - **英文是例外**：只有用户**明确说**"写英文文章/帖子"时才用英文。用户消息里夹杂英文词、
   给英文参考素材、引用英文原文，都不算"要求写英文"。
-- 引用英文一手素材（官方公告、模型卡、论文标题）时保留英文原文，正文主体仍是中文，
-  必要时在旁给中文翻译。
+- 官方产品名、模型名、论文标题保留英文；引语正文写「人名：中文意思」，英文原文记进素材来源，
+  不在正文里原文加括注（`references/core-voice.md` V13）。
 
 ## 工作流
 
@@ -92,18 +92,18 @@ metadata:
 
 - **事实铁律**：承重事实（数字、排名、发布日期、融资额）逐条回一手来源
   （官方公告/模型卡/论文/财报）；厂商给的数字标"厂商口径"或"官方口径"；
-  媒体转引标"据 XX 报道"；查不到一手来源的传闻删；推测必须显式标"（推测）"，
-  与事实段落切割，不混写。改稿续写时正文已有数字回源重核（上一轮文本最不可信）。
+  媒体转引标"据 XX 报道"（点名媒体，不写泛泛的「据报道」）；查不到一手来源的传闻删；
+  未来判断用「预计」「大概率」「现在看起来」，附一条支撑事实，不写「我认为」，与事实段落切割，不混写。改稿续写时正文已有数字回源重核（上一轮文本最不可信）。
 - **文字铁律**：去 AI 味、精炼、不编造；看图即得的简单事实不再展开复述；
   多用第三方客观素材，观点可以撞、表达必须原创。
 - **交付铁律**：发布/分享时直接用交付的 HTML 原文件原样呈现，不临时重新生成版本。
-- **长文改稿铁律**：用户嫌稿子长、AI 味重时，按 `references/writing-principles.md` 第五点六节整改：
+- **长文改稿铁律**：用户嫌稿子长、AI 味重时，交给 `topmind-revise`（`mode=revise genre=long`）；没装时按 `references/revision-workflow.md` 和 `references/writing-principles.md` 第五点六节整改，场景写法以 `references/core-voice.md` 为准：
   公式化标签改平实说法（「三个词」→「简单总结」、「五个分支」→「主要 5 个方向」、「三件事」→「有三大特征」）；
-  过去简单串、现在汇总加分析、未来写显式判断；原图（官方截图、原始 X 帖、官方文书、第三方数据图）先于文字，
-  自制图只用于有出处的数据；单段不超过约 110 字。改完跑 `lint_x_post.py --long`，W9 / W14–W17 清零，
-  并对比改稿前后字数。每张图的来源 URL 记在本地私有信源清单，不进公开仓库。
+  过去一句话 + 图、现在汇总加分析、未来写判断（「预计」「大概率」）+ 一条支撑事实；原图（官方截图、原始 X 帖、官方文书、第三方数据图）先于文字，
+  自制图只用于有出处的数据；一段 2–3 句、不超过约 110 字。改完跑 `python3 scripts/de_ai_lint.py X长文.md`：W 每条有结论（改掉或写保留理由），H 只供判断；
+  用 `python3 scripts/count_words.py` 对比改稿前后字数，`python3 scripts/revise_check.py` 核对数字、引语没被改坏。每张图的来源 URL 记在本地私有信源清单，不进公开仓库。
 - 补充信息（邀请码、链接、勘误）**不挤正文**，发在发布后首条评论并置顶
-- 标题 ≤140 字符，首段 3 行内出钩子；配图逐张按 `[图N]` 顺序上传，传完对照清单点一遍
+- 标题 ≤140 字符，写清讲什么（core-voice V01）；开头用具体事实，接地气、好懂（V05）；配图逐张按 `[图N]` 顺序上传，传完对照清单点一遍
 - 事实修正只改发布包，不回头改已发原文（除非勘误）
 - 提示词密集型文章（如 N 条直出提示词），发布时建议把提示词引用块逐块转为
   X 原生代码块（Insert → Code → 粘贴 → 删原块，每块约 10 秒）：这是 X 平台唯一可靠的

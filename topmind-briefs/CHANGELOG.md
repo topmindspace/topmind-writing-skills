@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.23 (2026-10-18)
+
+- 写法规则改为引用共享的 `core-voice.md`：首行一句话题陈述、事实讲完就停（去掉收尾句）、列表默认「·」、话题标签默认 2 个；引语正文写「人名：中文意思」；未完全确认的热点首行用一次「？！」，不写泛泛的「据报道」
+- lint 分 W 警告 / H 提示两级：W 每条要有结论，H 只供判断；公众号版改跑 `de_ai_lint.py`
+- 用户要改稿时转 `topmind-revise`，没装就按随包 `revision-workflow.md` 手动走
+
 ## 0.2.22 (2026-10-17)
 
 - 去 AI 味改为必过步骤（`de-ai-rules.md`，lint 新增 W15–W18 与 `--md`）；写字前先找原图（`image-sourcing.md`）；改稿按固定四步（`revision-workflow.md`）

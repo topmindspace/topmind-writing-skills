@@ -3,12 +3,12 @@ name: topmind-cover
 description: "文章封面配图生成：X 长文与公众号共用，也为 X 短文 / 短帖在没有原图时出 16:9 首图，并供 topmind-briefs、topmind-viral-posts 的配图环节调用。震撼、醒目、主题突出；平台尺寸规范、22 种风格模板与风格组合、七层场景配方与中英提示词模板、默认 2–3 个方案、24 种标题花式与副信息组件、分层背景库、10 种构图骨架、TopMind IP 主角、七项评分重做门槛、生图 + 脚本叠字双路径、命名落盘全流程覆盖。Use when 文章封面、封面图、X 短文封面、短帖封面、头图、题图、首图、X 长文头图、公众号封面、公众号头图、封面风格、banner、cover、thumbnail。Do NOT use for 正文插图、长图、海报与信息图（→ topmind-poster）、短文与段子写稿（→ topmind-briefs / topmind-viral-posts）、PPT/报告封面与多页演示（→ topmind-presentation）。"
 license: MIT
 metadata:
-  version: "0.4.11"
+  version: "0.4.12"
   action_category: "write"
   triggers: "封面, 封面图, X 短文封面, 短帖封面, 头图, 题图, 首图, 封面配图, 缩略图, banner, cover, thumbnail, 公众号封面, 公众号题图, 公众号头图, X 封面, X 首图, X 长文头图, 文章封面, 封面风格"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-14"
+  updated: "2026-10-18"
 ---
 
 # topmind-cover · 封面配图生成
@@ -123,7 +123,7 @@ X 短文、X 短帖**原图优先**：有官方截图、基准图、后台截图
    **选风格（三步，必做）**：① 按题材从 `references/cover-styles.md` 选 1 种（22 选 1，浅色优先）→ ② 看 `assets/examples/<style>.png` 确认视觉语言（本地没有该图时看 `overview.png` 对应格子）→ ③ 看该风格章节的标题写法规范，心里有标题雏形。
    **选骨架**：从 `cover-styles.md` 的 10 种构图骨架选 1 种（L1–L4 基础：左文右图 / 公式流 / 场景嵌字 / 报刊网格；L5–L10 场景互动：左字右角色互动 / 中字两侧道具 / 上字下场景 / 流程卡片铺陈 / 举牌 / 掀纸破框）。
    **风格组合**：主风格 + 辅风格各取一个层（主角、背景、标题处理），组合表见 `references/scene-builder.md` 第四节；只用单一风格时也要满足下面的丰富度底线。
-1. **标题提炼**（先定文案，不画图）：用所选风格在 `cover-styles.md` 对应章节的标题写法规范提炼标题（一般 ≤10 字）；不满意就重写，满意再进下一步。
+1. **标题提炼**（先定文案，不画图）：用所选风格在 `cover-styles.md` 对应章节的标题写法规范提炼标题（一般 ≤10 字）；封面大字主题词直给，不写煽情口号（`references/core-voice.md` V03）；不满意就重写，满意再进下一步。
    - 坏："关于 Manus 2.0 的一些思考与体验"（长、没钩子）→ 好："Manus 2.0 实测"（短、有断言）
 2. **场景配方（必做，替代过去的一句话 brief）**：按 `references/scene-builder.md` 七层填写：主题 → 隐喻 / 冲突 → 主角 → 与标题互动的动作 → 道具 → 背景 → 光线。
    - 丰富度底线：1 个主角 + 1 个与标题互动的动作 + 2–4 个主题道具 + 1–3 处装饰 + 背景 ≥3 层 + 标题 1 主 1 辅花式；上限：主角 ≤2、强调色 ≤2、焦点只有一个。
@@ -173,8 +173,9 @@ X 短文、X 短帖**原图优先**：有官方截图、基准图、后台截图
 
 "公众号包规约"（正文引用 `images/00-封面.png`、`图片上传清单.md` 登记两版）来自宿主智能体环境，仓库内无此文件；缺失时仍按固定命名落盘，不阻塞核心流程。
 
-## 被 topmind-briefs / topmind-viral-posts 调用时
+## 被 topmind-briefs / topmind-viral-posts / 长文技能调用时
 
+- **封面大字由文章标题提炼**，不另起口号；标题和封面文案的规则见 `references/core-voice.md` V01–V03；要改封面文案措辞时可交给 `topmind-revise`（`mode=quick genre=title`）。
 - **briefs（干货短文）**：只在没有可用原图时走「X 短文封面」场景，标题取核心数字或结论；有原图就用原图当首图。
 - **viral-posts（段子、涨粉帖）**：只借用本技能的风格配方与 prompt 写法（清新优雅 / MD3 商务风），
   画幅按调用方要求（X 单图 1200×675 或 1:1），不套用长文封面的标题字高、10% 安全区和 900×383 裁剪；无标题的图库类配图也不需要「标题 ≤10 字」。

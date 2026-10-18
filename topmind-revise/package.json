@@ -1,0 +1,13 @@
+{
+  "author": "TopMindSpace",
+  "description": "改稿与质检：改稿、精简、去 AI 味、质量三关与保真审计；可单独用，也被长文技能默认调用。",
+  "license": "MIT",
+  "name": "topmind-revise",
+  "private": true,
+  "repository": {
+    "directory": "topmind-revise",
+    "type": "git",
+    "url": "git+https://github.com/topmindspace/topmind-writing-skills.git"
+  },
+  "version": "0.1.0"
+}

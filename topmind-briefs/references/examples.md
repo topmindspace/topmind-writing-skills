@@ -1,29 +1,27 @@
 # 示例 · 干货短文（自编示例）
 
 > 模型名、基准名、数字、链接皆为虚构，只演示结构。
-> 交付按 [x-delivery-contract.md](x-delivery-contract.md)：正文是一段可直接复制的纯文本（不含 URL、来源行、配图说明），链接一条、图片一条另发；分点可用 emoji 或「1）」「·」【小标题】，emoji 不强制，规则见 [x-post-format.md](x-post-format.md)。
+> 交付按 [x-delivery-contract.md](x-delivery-contract.md)：正文是一段可直接复制的纯文本（不含 URL、来源行、配图说明），链接一条、图片一条另发；分点默认「·」，行多用「1）」，短列表才用 emoji，规则见 [x-post-format.md](x-post-format.md)；写法规则见 [core-voice.md](core-voice.md) 短文条目。
 > X 短文是一条纯文本帖，约 1000 字内都可以，不需要拆条。
 
 ## 例 1：数据榜单型（不用 emoji）
 
-结构：反直觉钩子 → 基准一句 → 最扎眼数字 → 有观点的收尾 → 标签。
+结构：一句话题陈述 → 基准一句 → 最关键的数字 → 讲完就停 → 标签。
 
 ```text
 小模型也可能更划算：ToyBench 上单任务只要 0.25 美元
 
 ToyBench-Tasks 测的是智能体做多步任务的能力。
 
-模型 A 完成 64% 的任务，跑完 300 个任务一共约 75 美元，单任务成本比模型 B 低好几倍。
+模型 A 完成 64% 的任务，跑完 300 个任务一共 75 美元；模型 B 完成 69%，单任务成本是它的 4 倍。
 
-批量跑任务的团队，先拿它做基线，比直接上最贵的模型省事。
-
-#ToyBench #AI智能体
+#AI #ToyBench
 ```
 
 链接：ToyBench 官方榜单｜2026-10-12（页面标注）｜https://example.com/toybench
 图片：[图1] https://example.com/toybench/chart.png — 完成率与单任务成本对比；来源：官方榜单
 
-## 例 2：榜单速报型（emoji 列表）
+## 例 2：榜单速报型（短列表用 emoji）
 
 结构：排名 + 分数开头 → 价格一句 → 「xx：」+ 列表 → 纵向对比 → 标签。
 
@@ -38,9 +36,9 @@ ToyBench-Tasks 测的是智能体做多步任务的能力。
 🔹 长文档
 🔹 多语言
 
-比上次更新涨了三位，领先模型 D 12 分。按这个价格，长文档场景值得换过去试一周。
+比上次更新涨了三位，领先模型 D 12 分。
 
-#ToyArena
+#AI #ToyArena
 ```
 
 链接：ToyArena 榜单｜2026-10-13（UTC）｜https://example.com/toyarena
@@ -56,7 +54,7 @@ ToyBench-Tasks 测的是智能体做多步任务的能力。
 · 丢掉用不上的
 · 笔记就存在普通文件里，不用额外服务
 
-上下文成本能不能真降下来，还要看第三方复现。
+论文里的成本数据还没有第三方复现。
 
 #AI智能体
 ```

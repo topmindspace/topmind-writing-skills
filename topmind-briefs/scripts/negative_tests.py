@@ -90,10 +90,14 @@ def main() -> None:
             check("lint_x_post 对 Markdown 列表/标题/加粗退出码=1", r.returncode == 1, f"rc={r.returncode}")
             r = run_quiet([str(lint), str(good)], t)
             check("lint_x_post 对 emoji 列表退出码=0", r.returncode == 0, r.stdout[-200:])
-            r = run_quiet([str(lint), str(bad), "--fix", "--out", str(t / "fixed.txt")], t)
+            r = run_quiet([str(lint), str(bad), "--fix", "--style", "emoji", "--out", str(t / "fixed.txt")], t)
             fixed = (t / "fixed.txt").read_text(encoding="utf-8") if (t / "fixed.txt").exists() else ""
             check("lint_x_post --fix 后无 Markdown 列表且检查通过",
                   r.returncode == 0 and "🔹 响应更快" in fixed and "1️⃣ 先装" in fixed and "**" not in fixed, r.stdout[-200:])
+            r = run_quiet([str(lint), str(bad), "--fix", "--out", str(t / "fixed_plain.txt")], t)
+            fixed = (t / "fixed_plain.txt").read_text(encoding="utf-8") if (t / "fixed_plain.txt").exists() else ""
+            check("lint_x_post --fix 默认纯文本列表（· / 1）",
+                  r.returncode == 0 and "· 响应更快" in fixed and "1）先装" in fixed and "🔹" not in fixed, fixed[:200])
             r = run_quiet([str(lint), str(t / "nope.txt")], t)
             check("lint_x_post 缺失文件干净报错", r.returncode == 2 and "Traceback" not in (r.stderr or ""))
 

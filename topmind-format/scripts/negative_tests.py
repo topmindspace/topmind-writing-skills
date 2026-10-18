@@ -90,7 +90,7 @@ def main() -> None:
             check("lint_x_post 对 Markdown 列表/标题/加粗退出码=1", r.returncode == 1, f"rc={r.returncode}")
             r = run_quiet([str(lint), str(good)], t)
             check("lint_x_post 对 emoji 列表退出码=0", r.returncode == 0, r.stdout[-200:])
-            r = run_quiet([str(lint), str(bad), "--fix", "--out", str(t / "fixed.txt")], t)
+            r = run_quiet([str(lint), str(bad), "--fix", "--style", "emoji", "--out", str(t / "fixed.txt")], t)
             fixed = (t / "fixed.txt").read_text(encoding="utf-8") if (t / "fixed.txt").exists() else ""
             check("lint_x_post --fix 后无 Markdown 列表且检查通过",
                   r.returncode == 0 and "🔹 响应更快" in fixed and "1️⃣ 先装" in fixed and "**" not in fixed, r.stdout[-200:])
@@ -186,19 +186,20 @@ def main() -> None:
             check("lint：英文 not-just-but / signpost / transition / role inflation / chatbot residue 报 W16",
                   r.stdout.count("W16") >= 4 and "chatbot residue" in r.stdout, r.stdout[-400:])
             pu = t / "punct.txt"
-            pu.write_text("太快了！！\n\n一——二——三——四\n\n好！好！\n", encoding="utf-8")
+            pu.write_text("太快了！！\n\n真的吗？？\n\n一——二——三——四\n\n好！好！好！\n", encoding="utf-8")
             r = run_quiet([str(lint), str(pu)], t)
             check("lint：标点连用、破折号 / 感叹号过多报 W17", r.stdout.count("W17") >= 3, r.stdout[-300:])
+            check("lint：短文「！！」一处只给 H2 提示", r.stdout.count("H2") == 1, r.stdout[-300:])
             okx = t / "legit.txt"
             okx.write_text("测试还在进行中，结果下周出。\n\n这就是我用的配置。\n\n据 IDC 报告，分析人士认为出货量 6 月回升 12%。\n\n可能是 A，也可能是 B。\n\n是不是该换了？我也说不准。\n\n这个 API 很稳，文档写得清楚。\n\nThe launch is not ready yet. We delayed it by two weeks.\n", encoding="utf-8")
             r = run_quiet([str(lint), str(okx), "--strict"], t)
             check("lint：正常写法不误报 W15 / W16 / W17（进行中、这就是…配置、有出处的分析人士、也可能、是不是）",
                   r.returncode == 0 and not any(c in r.stdout for c in ("W15", "W16", "W17")), r.stdout[-400:])
             md = t / "post.md"
-            md.write_text("---\ntitle: t\n---\n# 标题\n\n**加粗**和 [链接](https://a.example) 都合法。\n\n- 列表也合法\n\n![自制流量图](images/01-x.png)\n\n![自制，数据：官方 2026-09](images/02-y.png)\n\n总的来说，未来可期。\n", encoding="utf-8")
+            md.write_text("---\ntitle: t\n---\n# 标题\n\n**加粗**和 [链接](https://a.example) 都合法。\n\n- 列表也合法\n\n![自制流量图](images/01-x.png)\n\n![自制，数据：官方 2026-09](images/02-y.png)\n\n综上所述，未来可期。总的来说就这样。\n", encoding="utf-8")
             r = run_quiet([str(lint), str(md), "--md"], t)
-            check("lint --md：Markdown 语法不报错，套话报 W9 / W15，缺数据来源的自制图报 W18（只报 1 张）",
-                  r.returncode == 0 and "E1" not in r.stdout and "E4" not in r.stdout and "W9" in r.stdout and "W15" in r.stdout and r.stdout.count("W18") == 1, r.stdout[-400:])
+            check("lint --md：Markdown 语法不报错，套话报 W9 / W15，缺数据来源的自制图报 W18（只报 1 张），「总的来说」只给 H1",
+                  r.returncode == 0 and "E1" not in r.stdout and "E4" not in r.stdout and "W9" in r.stdout and "W15" in r.stdout and r.stdout.count("W18") == 1 and "H1" in r.stdout, r.stdout[-400:])
             dz.write_text("今天打卡\n\n回评论\n\n冲\n", encoding="utf-8")
             r = run_quiet([str(lint), str(dz), "--duanzi"], t)
             check("lint --duanzi：零 emoji 段子不报 W13", "W13" not in (r.stdout + r.stderr), (r.stdout + r.stderr)[-200:])

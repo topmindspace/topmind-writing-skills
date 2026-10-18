@@ -1,14 +1,14 @@
 ---
 name: topmind-wechat-post
-description: "管一篇公众号文章从选题/底稿到发布清单的完整生命周期：交付包搭建、审校改写、质量三关（事实/逻辑/去AI味，含改稿保真溯源审计）、状态同步、微信内联排版与发布清单。只出 HTML 与清单，不代发。Use when 写公众号、写公众号文章、公众号长文、公众号排版、微信排版、公众号定稿、发公众号、公众号交付包、公众号发布清单、wechat、mp format。Do NOT use for 公众号短文与快讯（300–800 字，→ topmind-briefs）、X 帖子与段子（→ topmind-viral-posts；派生的 X 短帖交付一段可复制纯文本，链接、原图另发）、X 纯文本格式化与转段子（→ topmind-format）、X 长文（→ topmind-x-article）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、只改错别字、小红书/知乎、纯网页发布、通用长文润色（→ topmind-write）。"
+description: "管一篇公众号文章从选题/底稿到发布清单的完整生命周期：交付包搭建、审校改写、质量三关（事实/逻辑/去AI味，含改稿保真溯源审计）、状态同步、微信内联排版与发布清单。只出 HTML 与清单，不代发。Use when 写公众号、写公众号文章、公众号长文、公众号排版、微信排版、公众号定稿、发公众号、公众号交付包、公众号发布清单、wechat、mp format。Do NOT use for 公众号短文与快讯（300–800 字，→ topmind-briefs）、X 帖子与段子（→ topmind-viral-posts；派生的 X 短帖交付一段可复制纯文本，链接、原图另发）、X 纯文本格式化与转段子（→ topmind-format）、X 长文（→ topmind-x-article）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、只改错别字、小红书/知乎、纯网页发布、单独改稿与去 AI 味（→ topmind-revise）、通用长文写作（→ topmind-write）。"
 license: MIT
 metadata:
-  version: "0.3.14"
+  version: "0.3.15"
   action_category: "write"
   triggers: "公众号, 写公众号, 微信排版, 公众号排版, 公众号稿, 公众号长文, 排版这篇文章, 定稿, 发公众号, 公众号交付, wechat, mp format, 写公众号文章, 公众号排版定稿, 公众号发布清单"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-14"
+  updated: "2026-10-18"
 ---
 
 # topmind-wechat-post · 公众号创作技能
@@ -31,8 +31,8 @@ metadata:
 - **默认中文**：标题、正文、配图文案一律用中文写作，这是默认行为，不需要用户每次声明。
 - **英文是例外**：只有用户**明确说**"写英文文章"时才用英文。用户消息里夹杂英文词、
   给英文参考素材、引用英文原文，都不算"要求写英文"。
-- 引用英文一手素材（官方公告、模型卡、论文标题）时保留英文原文，正文主体仍是中文，
-  必要时在旁给中文翻译。
+- 官方产品名、模型名、论文标题保留英文；引语正文写「人名：中文意思」，英文原文记进素材来源，
+  不在正文里原文加括注（`references/core-voice.md` V13）。
 
 ## 脚本（真源）
 
@@ -44,9 +44,12 @@ metadata:
 | `scripts/push-to-topstream.py` | 可选回推：公众号稿降级为纯 Markdown notes |
 | `scripts/lint-wechat.py` | 排版体检 + 自动修复（中英文间距、段长、AI 腔…） |
 | `scripts/md2wechat.py` | Markdown → 全内联 HTML；**必加 `--embed-images`** |
-| `scripts/lint_x_post.py` | 派生 X 版时的 X 稿检查：无 Markdown 列表/标题/加粗，正文无 URL / 来源行 / 配图说明；公众号稿用 `--md` 只查去 AI 味（W9、W15–W17）、长段落（W14）、自制图标注（W18）（与 briefs、viral-posts、x-article 同一份） |
+| `scripts/de_ai_lint.py` | 去 AI 味检查（公众号稿默认用它）：W 警告（W9、W14–W21）+ H 提示（语境词等，只供判断）；规则见 `references/de-ai-rules.md` |
+| `scripts/lint_x_post.py` | 派生 X 版时的 X 稿检查：无 Markdown 列表/标题/加粗，正文无 URL / 来源行 / 配图说明；去 AI 味部分复用 `de_ai_lint.py`（`--md` 等同 `de_ai_lint.py`） |
+| `scripts/count_words.py` | 统一口径字数（改前 / 改后、单段最长） |
+| `scripts/revise_check.py` | 改稿保真比对（数字、引语、专名、确定性词）+ 过度改稿检查 |
 | `scripts/scan_ai_flavor.py` | 中文去 AI 味打分入口：默认跑随包 `scan_ai_flavor_builtin.py`（词面分）；`$TOPMIND_AI_SCAN` 指向外部扫描脚本时转发过去；`--which` 查实际执行哪份 |
-| `scripts/audit-provenance.py` | **改稿保真审计**：双向逐段溯源（本稿→源稿 / 源稿→本稿），抓悄悄扩写与被落下的段。有源稿时定稿必跑 |
+| `scripts/audit-provenance.py` | （共享脚本）**改稿保真审计**：双向逐段溯源（本稿→源稿 / 源稿→本稿），抓悄悄扩写与被落下的段。有源稿时定稿必跑 |
 | `scripts/wechat_paths.py` | 路径解析模块（被上面脚本导入）：不写死个人路径、类别编号与年份 |
 
 ```bash
@@ -137,11 +140,11 @@ python3 scripts/sync-status.py --set 定稿 <包> --apply
 
 ## 质量三关（定稿前必过）
 
-写稿前先找图、记来源（[`references/image-sourcing.md`](references/image-sourcing.md)，信源清单放交付包，不进本仓库）；改稿按 [`references/revision-workflow.md`](references/revision-workflow.md) 四步：逻辑与事实 → 删冗余 → 去 AI 味 → 排版，每轮先备份、报改前 / 改后字数。
+写稿前先找图、记来源（[`references/image-sourcing.md`](references/image-sourcing.md)，信源清单放交付包，不进本仓库）；装了 `topmind-revise` 时由它执行三关（`mode=embed genre=long`）；没装就按 [`references/revision-workflow.md`](references/revision-workflow.md) 手动走：事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照（[`references/core-voice.md`](references/core-voice.md)）→ 排版 → 保真审计 → 过度改稿检查，每轮先备份、报改前 / 改后字数（`scripts/count_words.py`）。
 
 ### 关 1 · 事实
 
-- 承重数字回**一手来源**；厂商口径 / 据报道 分开写  
+- 承重数字回**一手来源**；厂商口径与媒体报道分开写，媒体报道点名具体媒体（「据 XX 报道」），不写泛泛的「据报道」  
 - 查不到一手来源的传闻**删**  
 - 改稿续写：正文已有数字**回源重核**（上一轮文本最不可信）  
 - 多口径（主轮/复跑）显式拆开；表格从数据源生成，禁止手抄  
@@ -166,8 +169,9 @@ python3 scripts/sync-status.py --set 定稿 <包> --apply
 **必过**：按 [`references/de-ai-rules.md`](references/de-ai-rules.md) 逐条过，先守改写边界（只改表达，不改事实和确定性）。
 
 ```bash
-python3 scripts/lint_x_post.py <包>/公众号稿.md --md   # W9 / W14–W18 清零或说明保留理由
+python3 scripts/de_ai_lint.py <包>/公众号稿.md         # W 每条有结论（改掉或写保留理由）；H 只供判断
 python3 scripts/scan_ai_flavor.py <包>/公众号稿.md      # 总分 ≥85（人话）
+python3 scripts/revise_check.py <备份>/公众号稿.md <包>/公众号稿.md   # 改稿后：数字 / 引语没被改坏，没命中的段落没被大改
 ```
 
 - 配了外部扫描器（`$TOPMIND_AI_SCAN`）且它输出「作者姿态分」时，姿态分同样 ≥85；`--which` 确认实际执行哪份，定稿门禁要外部扫描器时加 `--require-external`
@@ -182,7 +186,7 @@ python3 scripts/scan_ai_flavor.py <包>/公众号稿.md      # 总分 ≥85（�
 
 ## 排版要点（写稿时）
 
-- 开头 150 字内钩子；单段 ≤110 字；列表项 ≤70 字  
+- 开头用具体事实，接地气、好懂（`references/core-voice.md` V05），不硬凑对仗收句；单段 2–3 句、≤110 字；列表项 ≤70 字  
 - 二级标题不手写序号（排版层自动生成）；容器：`::: stat|pull|note|tip|warn|danger|dialogue`  
 - **`::: stat` 内必须是 `数值 | 说明` 管道行**，否则静默丢弃  
 - 评测稿：**图承担数据，正文只解读**；健康密度 **300–450 字/图**  
@@ -235,7 +239,7 @@ topmind Desktop 的「公众号创作」插件是本技能的可视化工作流�
 
 ## 外部依赖
 
-无必需的外部技能。去 AI 味规则与检查随包自带（`references/de-ai-rules.md`、`scripts/lint_x_post.py --md`、`scripts/scan_ai_flavor.py`）；
+无必需的外部技能。去 AI 味规则与检查随包自带（`references/core-voice.md`、`references/de-ai-rules.md`、`scripts/de_ai_lint.py`、`scripts/scan_ai_flavor.py`）；推荐同时安装 `topmind-revise` 执行质量三关，没装时按随包的 `references/revision-workflow.md` 手动走；
 想接入自己的扫描脚本时设 `$TOPMIND_AI_SCAN=/path/to/script.py`，参数与退出码原样转发。
 
 ## When NOT to use
@@ -247,7 +251,7 @@ topmind Desktop 的「公众号创作」插件是本技能的可视化工作流�
 - 单独出长图、海报、信息图 → `topmind-poster`  
 - 通用长文写作与交付 → `topmind-write`（topmind-skills 包）
 - 封面配图、头图 → `topmind-cover`
-- 只去 AI 味不排版 → 按 `references/de-ai-rules.md` 改写（中英文都适用），跑 `lint_x_post.py --md` 核对，不走排版导出
+- 只改稿、去 AI 味、质检，不排版 → `topmind-revise`（没装就按 `references/de-ai-rules.md` 改写，跑 `scripts/de_ai_lint.py` 核对）
 
 ## 历史案例
 

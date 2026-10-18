@@ -3,7 +3,7 @@
 """scan_ai_flavor_builtin.py — 中文去 AI 味打分（随包内置实现）。
 
 给一篇 Markdown / 纯文本稿打 0–100 分（越高越像人写的），并列出命中位置。
-规则与 `lint_x_post.py` 同源（W9 套话词、W15 中文结构套话、W16 英文结构套话、W17 标点腔），
+规则与 `de_ai_lint.py`（`lint_x_post.py` 复用）同源（W9 套话词、W15 中文结构套话、W16 英文结构套话、W17 标点腔），
 另加几条只适合整篇看的结构信号：长段落（W14）、段落长度过分整齐、段首加粗标签重复、段末金句。
 规则表见 references/de-ai-rules.md。只给词面与结构分，不给「作者姿态分」。
 
@@ -27,8 +27,9 @@ from collections import Counter
 from pathlib import Path
 
 sys.dont_write_bytecode = True  # 不在技能目录里留 __pycache__
+sys.dont_write_bytecode = True  # 同目录模块不写 __pycache__（技能包里不留缓存）
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import lint_x_post as L  # noqa: E402  同目录、同一份规则
+import de_ai_lint as L  # noqa: E402  同目录、同一份规则（lint_x_post 也复用它）
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")

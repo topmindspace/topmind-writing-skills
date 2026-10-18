@@ -29,6 +29,9 @@ if [[ ${#SKILLS[@]} -eq 0 ]]; then
 fi
 echo "ci_skill_gates: discovered ${SKILLS[*]}"
 
+# 去 AI 味规则回归：「不应报」的写法被误报、或该报的没报，就失败
+"$PY" scripts/test_lint_rules.py
+
 run_one() {
   local skill="$1"
   echo "=== gates: ${skill} ==="

@@ -1,3 +1,25 @@
+## [0.8.44] - 2026-10-18
+
+> 根包 0.8.43 → **0.8.44**（patch）；技能版本：新增 topmind-revise **0.1.0**；topmind-briefs 0.2.22 → 0.2.23、topmind-cover 0.4.11 → 0.4.12、topmind-format 0.1.7 → 0.1.8、topmind-viral-posts 0.3.14 → 0.3.15、topmind-wechat-post 0.3.14 → 0.3.15、topmind-x-article 0.4.20 → 0.4.21；topmind-poster 0.1.6 不变。
+
+### 新增（规则层三层设计 + 改稿与质检技能）
+
+- 新技能 **topmind-revise（改稿与质检）**：四种模式（只审不改 / 改稿 / 嵌入 / 快审），流程「事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照 → 排版 → 保真审计 → 过度改稿检查」；每处改动对应规则编号或作者意见，没命中的段落不动。
+- 新增共享规约 `core-voice.md`：V01–V33 场景规则（标题、开头、收尾、数字、引用、来源行、列表、emoji、回复、段子配方等）与文体速查表；briefs、viral-posts、format、wechat-post、x-article、cover、revise 随包自带。
+- `de-ai-rules.md` 升级到 v2：改写边界补「何时不改」「有作者样本就跟样本」；Z01–Z38 加信号强弱与脚本列，新增单句收尾、格言式伪深度、和假想敌辩论、句式开头复读、小节过渡句、复述图片、「人名说：」、新闻式精确等条目；P03 对首行「？！」豁免；「怎么跑」改为 E 清零、W 有结论、H 只提示。
+- 新增共享脚本 `de_ai_lint.py`：W 警告 + H 提示两级，`--genre long|short|duanzi|reply|title`、`--json`、`--no-hints`、`--strict`（H 不计入）；新增 W19「人名说：」、W20 过渡句 / 不言自明的引导语、W21 复述图片，以及 H1–H12（语境词、短文「！！」一处、我认为、新闻式精确、对仗收句、来源行描述图、emoji 过密、无效信息、说教式反问标题、段落超过 3 句、短文话题标签超过 2 个、长文「人名说：」）。
+- 新增共享脚本 `count_words.py`（统一字数口径）、`revise_check.py`（数字 / 引语 / 英文专名 / 确定性词保真比对 + 过度改稿比例 + 改稿报告骨架）；`audit-provenance.py` 从 wechat-post 移到 `shared/`，分发给 wechat-post、x-article、revise。
+- 仓库级规则回归 `scripts/test_lint_rules.py`（不应报 38 条、应报 W 26 条、应报 H 14 条），接入 `ci_skill_gates.sh`。
+
+### 变更
+
+- `lint_x_post.py` 的去 AI 味部分改为复用 `de_ai_lint.py`，原有错误 / 警告编号和参数不变；新增 `--genre`、`--no-hints`，汇总行增加「提示」数；`--fix --style` 默认改为纯文本列表（「·」「1）」），要 emoji 时加 `--style emoji`。
+- 从 W 降为 H 的语境词：「一文读懂」「毫无疑问 / 不可否认」「归根结底」「真正的」「重磅 / 里程碑」「未来已来 / 拭目以待」「总结来说 / 总的来说」；「综上所述」「首先 / 其次 / 最后」「真正的 X 从来不是」等仍是 W。
+- `writing-principles.md`：标题不反问、不说教（一.5）；措辞偏好、吸引力清单、长文改稿按 core-voice 收紧（过去一句 + 图、未来用「预计 / 大概率」、按读者三档解释概念、段落 2–3 句）；涉及国内厂商改为「不贬低、不站队、不传谣」。`revision-workflow.md` 重写为 revise 的完整流程（没装 revise 时手动走）。
+- X 文本规约：列表默认「·」、行多用「1）」，emoji 只给短列表；短文事实讲完就停、不硬加收尾句；话题标签默认 2 个（运营段子 1–3 个）；`image-sourcing.md` 补「来源：」行写法。
+- briefs：首行一句话题陈述、示例去掉收尾句；viral-posts：互动钩子只限运营引流类，新增「段子配方」「回复与转发点评」两节和一个话题段子示例；format：H 提示不写进「建议改」，改写转 revise；cover：封面大字由文章标题提炼、主题词直给；wechat-post / x-article：质量三关可由 revise 执行，引语正文写「人名：中文意思」，媒体转述点名媒体，开头改为引用 core-voice V05；`scan_ai_flavor_builtin.py` 改为直接复用 `de_ai_lint.py`。
+- evals 新增 revise 5 条（含 2 条负例）及 briefs / x-article / wechat-post 与 revise 的组合用例；现成稿子的润色、去 AI 味改稿改由 revise 承接。
+
 ## [0.8.43] - 2026-10-17
 
 > 根包 0.8.42 → **0.8.43**（patch）；技能版本：topmind-briefs 0.2.21 → 0.2.22、topmind-format 0.1.6 → 0.1.7、topmind-viral-posts 0.3.13 → 0.3.14、topmind-wechat-post 0.3.13 → 0.3.14、topmind-x-article 0.4.19 → 0.4.20。

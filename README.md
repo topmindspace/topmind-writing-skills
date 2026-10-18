@@ -7,7 +7,7 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/topmindspace/topmind-writing-skills/ci.yml?style=flat-square&label=CI)](https://github.com/topmindspace/topmind-writing-skills/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 
-**TopMindSpace 写作技能合集** —— 公众号文章、X 长文、干货短文、引流段子、封面配图、长图出图：六个技能，一个仓库。
+**TopMindSpace 写作技能合集** —— 公众号文章、X 长文、干货短文、引流段子、改稿与质检、封面配图、长图出图：七个技能，一个仓库。
 
 <p align="center">
   <img src="docs/assets/writing-cover.png" alt="topmind-writing-skills · 写作技能合集" width="960" />
@@ -57,18 +57,26 @@ npx @topmindspace/topmind-writing-skills install topmind-viral-posts
 npx @topmindspace/topmind-writing-skills install topmind-format
 ```
 
+### topmind-revise · 改稿与质检
+
+把一篇稿子改得更短、更准、更像作者本人，并且能证明没改坏事实。四种模式：只审不改（出改稿报告）、改稿（先备份再写回）、嵌入（公众号 / X 长文写完默认调用，只回终稿）、快审（标题、短文、段子、回复）。流程：事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照 → 排版 → 保真审计 → 过度改稿检查；`revise_check.py` 比对数字、引语、专名和确定性词，并统计「没命中却被改写」的段落占比。
+
+```bash
+npx @topmindspace/topmind-writing-skills install topmind-revise
+```
+
 ### X 文本统一规约（所有产出 X 纯文本的技能共用）
 
 共享文档在 `shared/references/`，经 manifest 分发到各技能 `references/`：
 
 | 文档 | 管什么 |
 |---|---|
-| `x-delivery-contract.md`（必读必守） | 短文工作流：信源 → 原帖原图 → 内容 → 排版；短文 emoji 不强制（分点可用 emoji 或「1）」「·」【小标题】），段子完全不用 emoji，都禁用 `- ` `1. `；X 短文 / 段子的正文是一段可直接复制的纯文本（话题标签在末行），**链接（含来源）、原图、配图另发**；X 长文与公众号长文可保留文内链接 |
+| `x-delivery-contract.md`（必读必守） | 短文工作流：信源 → 原帖原图 → 内容 → 排版；短文 emoji 不强制（分点默认「·」，行多用「1）」，短列表才用 emoji，较长短文用【小标题】），段子完全不用 emoji，都禁用 `- ` `1. `；X 短文 / 段子的正文是一段可直接复制的纯文本（话题标签在末行），**链接（含来源）、原图、配图另发**；X 长文与公众号长文可保留文内链接 |
 | `x-post-format.md` | 不用 Markdown、列表符号、留白、来源、骨架、配图、公众号稿→X 稿 |
 | `emoji-system.md` | TopMind emoji 体系唯一出处（只用于短文体，且不强制）：人设点缀 🐔 🐱 🌱 0–2 个只放首尾；标题 emoji 0–1 个对上关键词；列表符号一帖一套 |
 | `x-layout-patterns.md` | 我们总结的版式规律（首行给结论、列表引导语、【小标题】分节等） |
 
-检查：`lint_x_post.py`（E1–E9 Markdown 残留；E10–E12 正文有 URL / 来源行 / 配图说明；W9 AI 套话、W10 首行太长不像钩子、W12 混入说明 / 内部标签；W14 长文单段过长、W15 / W16 中英文结构套话、W17 标点腔、W18 自制图没标数据来源；`--duanzi` 时 W13 段子里出现 emoji；`--long` 长文不查 E10–E12；`--md` 查 Markdown 稿的内容类警告）。去 AI 味规则表在 `de-ai-rules.md`，吸引力清单在 `writing-principles.md` 第五点五节。
+检查：`lint_x_post.py` 分三级——**E 错误**（E1–E9 Markdown 残留；E10–E12 正文有 URL / 来源行 / 配图说明）必须清零；**W 警告**（W9 AI 套话、W10 首行太长、W12 混入说明 / 内部标签、W14 单段过长、W15 / W16 中英文结构套话、W17 标点腔、W18 自制图没标数据来源、W19「人名说：」、W20 过渡句、W21 复述图片；`--duanzi` 时 W13 段子里出现 emoji）每条要有结论；**H 提示**（语境词、新闻式精确、对仗收句、emoji 过密等）只供判断，不计入 `--strict`。`--genre long|short|duanzi|reply|title` 选文体，`--no-hints` 关掉提示。去 AI 味部分和 `de_ai_lint.py` 是同一份规则（`de-ai-rules.md`）。
 
 ### topmind-cover · 封面配图生成
 
@@ -99,13 +107,21 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 > 也不要安装旧包的 `^2`（2.0.0–2.1.1 已弃用）。
 
 
-## 共用写作流程（0.8.43 起）
+## 共用写作流程（0.8.44 起：三层设计）
 
-briefs、viral-posts、x-article、wechat-post 共用三份规约（`shared/references/`，各技能自带副本）：
+写作技能共用一套规则（`shared/references/`，各技能自带副本，单独安装也能用）：
+
+| 层 | 文件 | 管什么 |
+|---|---|---|
+| 核心经验 | `core-voice.md` | 场景规则（V01–V33）：标题、开头、收尾、数字、引用、来源行、列表、emoji、回复、段子配方…… |
+| 去 AI 味 | `de-ai-rules.md` + `de_ai_lint.py` | 改写边界 + 结构模式（Z / E / P 编号）；脚本分 W 警告（每条要有结论）和 H 提示（只供判断） |
+| 执行 | `topmind-revise` | 按 `revision-workflow.md` 跑完改稿流程、保真审计和过度改稿检查，出改稿报告 |
+
+另外：
 
 - **原图优先**（`image-sourcing.md`）：写字之前先找官方 / 原帖 / 第三方原图，来源记进交付包里的私有信源清单；自制图只作兜底，标「自制」和数据来源。
-- **去 AI 味必过**（`de-ai-rules.md`）：中英文结构模式规则表 + 改写边界（只改表达，不改事实和确定性）。`lint_x_post.py` 自动查能脚本化的部分：W9 套话词、W15 中文结构套话、W16 英文结构套话、W17 标点腔、W18 自制图标注；公众号稿用 `--md`。topmind-format 只报告命中、不改字。
-- **固定改稿流程**（`revision-workflow.md`）：逻辑与事实 → 删冗余 → 去 AI 味 → 排版；每轮先备份，报改前 / 改后字数。
+- **去 AI 味必过**：先守改写边界（只改表达，不改事实和确定性）；W 警告不要求清零，要求每条有结论；规则回归测试 `scripts/test_lint_rules.py` 守住「不应报」的正常写法。topmind-format 只报告命中、不改字。
+- **固定改稿流程**（`revision-workflow.md`）：事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照 → 排版 → 保真审计 → 过度改稿检查；每轮先备份，报改前 / 改后字数（`count_words.py`）。装了 `topmind-revise` 就由它执行。
 
 ## 原创示例
 
@@ -116,6 +132,7 @@ briefs、viral-posts、x-article、wechat-post 共用三份规约（`shared/refe
 | topmind-viral-posts（段子） | [`topmind-viral-posts/examples/`](./topmind-viral-posts/examples/) |
 | topmind-briefs（短文） | [`topmind-briefs/examples/`](./topmind-briefs/examples/) |
 | topmind-format（排版） | [`topmind-format/examples/`](./topmind-format/examples/) |
+| topmind-revise（改稿） | [`topmind-revise/examples/`](./topmind-revise/examples/) |
 | topmind-x-article（X 长文） | [`topmind-x-article/examples/`](./topmind-x-article/examples/) |
 | topmind-wechat-post（公众号） | [`topmind-wechat-post/examples/`](./topmind-wechat-post/examples/) |
 | topmind-poster（长图海报） | [`topmind-poster/examples/`](./topmind-poster/examples/) |
@@ -128,15 +145,16 @@ briefs、viral-posts、x-article、wechat-post 共用三份规约（`shared/refe
 
 | 技能 | 版本 | 做什么 |
 |------|------|--------|
-| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.14** | 公众号文章全生命周期：交付包、审校改写、质量三关、微信内联排版与发布清单 |
-| [`topmind-x-article`](./topmind-x-article/) | **0.4.20** | X 长文一键发布：Markdown 原稿 → 一键复制 HTML（含配图/提示词复制、图片点击放大）/ 纯文本兜底 + 封面图 + 发布清单 |
-| [`topmind-cover`](./topmind-cover/) | **0.4.11** | 文章封面配图（X / 公众号共用，X 主尺寸 1500×600 / 5:2）：震撼醒目主题突出；22 种封面风格库 + X 短文 16:9 封面场景 + 24 种标题花式 + 七层场景配方 + 55 张示例图（22 种风格 × 2 尺寸 + 11 张变体样张） + 1 张风格总览图 |
-| [`topmind-briefs`](./topmind-briefs/) | **0.2.22** | 干货短文（公众号 + X 双平台）：一件事讲透，数据榜单/论文解读/新品速递；信源 → 原图 → 内容 → 排版；X 版交付一段可复制纯文本（默认不出 HTML，emoji 可选，去 AI 味），链接 / 原图 / 配图另发，无原图先询问配图 |
-| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.14** | X 引流段子/爆款短篇：18 大类型模板 + 组合玩法，段子体（行间空行，零 emoji，分点不加符号）、每条一段可复制纯文本、话题标签在末行，链接 / 原图另发、分类标签另列；无原图先询问再走 topmind-cover |
-| [`topmind-format`](./topmind-format/) | **0.1.7** | X 纯文本格式化：转段子（行间空行，零 emoji）/ 格式化成短文（分段 + 合理列表，emoji 可选），只动排版不改字，带原文保真校验；交付一段可复制纯文本，链接 / 原图另发 |
+| [`topmind-wechat-post`](./topmind-wechat-post/) | **0.3.15** | 公众号文章全生命周期：交付包、审校改写、质量三关、微信内联排版与发布清单 |
+| [`topmind-x-article`](./topmind-x-article/) | **0.4.21** | X 长文一键发布：Markdown 原稿 → 一键复制 HTML（含配图/提示词复制、图片点击放大）/ 纯文本兜底 + 封面图 + 发布清单 |
+| [`topmind-cover`](./topmind-cover/) | **0.4.12** | 文章封面配图（X / 公众号共用，X 主尺寸 1500×600 / 5:2）：震撼醒目主题突出；22 种封面风格库 + X 短文 16:9 封面场景 + 24 种标题花式 + 七层场景配方 + 55 张示例图（22 种风格 × 2 尺寸 + 11 张变体样张） + 1 张风格总览图 |
+| [`topmind-briefs`](./topmind-briefs/) | **0.2.23** | 干货短文（公众号 + X 双平台）：一件事讲透，数据榜单/论文解读/新品速递；信源 → 原图 → 内容 → 排版；X 版交付一段可复制纯文本（默认不出 HTML，emoji 可选，去 AI 味），链接 / 原图 / 配图另发，无原图先询问配图 |
+| [`topmind-viral-posts`](./topmind-viral-posts/) | **0.3.15** | X 引流段子/爆款短篇：18 大类型模板 + 组合玩法，段子体（行间空行，零 emoji，分点不加符号）、每条一段可复制纯文本、话题标签在末行，链接 / 原图另发、分类标签另列；无原图先询问再走 topmind-cover |
+| [`topmind-format`](./topmind-format/) | **0.1.8** | X 纯文本格式化：转段子（行间空行，零 emoji）/ 格式化成短文（分段 + 合理列表，emoji 可选），只动排版不改字，带原文保真校验；交付一段可复制纯文本，链接 / 原图另发 |
+| [`topmind-revise`](./topmind-revise/) | **0.1.0** | 改稿与质检：改稿、精简、去 AI 味、质量三关与保真审计；四种模式（只审不改 / 改稿 / 嵌入 / 快审），每处改动对应规则编号，防过度改稿；长文技能默认组合 |
 | [`topmind-poster`](./topmind-poster/) | **0.1.6** | HTML+CSS → 高清长图 / 海报 / 信息图 PNG：无头 Chrome 2× 截图 + 自动裁白；「一段一图」分段图批量出图（生成器 + 渲染器） |
 
-安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.43**（整仓同 tag 发版）。
+安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.44**（整仓同 tag 发版）。
 
 ### 怎么选、怎么组合
 
@@ -144,14 +162,15 @@ briefs、viral-posts、x-article、wechat-post 共用三份规约（`shared/refe
 |---|---|---|
 | 一件事的干货短文（数据、榜单、发布） | `topmind-briefs` | → `topmind-format` 统一排版；没有原图 → 先问，同意后 `topmind-cover` 出 16:9 首图 |
 | 引流段子、涨粉帖、互关帖 | `topmind-viral-posts` | → `topmind-format` 重排段子体；同一事件可配一条 briefs 干货版 |
-| 现成文字只要排版（转段子 / 格式化） | `topmind-format` | 只动排版不改字；要改写内容再转 briefs / viral-posts |
-| 数千字 X 长文 | `topmind-x-article` | + `topmind-cover`（5:2 封面）；短于一帖的内容走 briefs |
-| 公众号长文与排版 | `topmind-wechat-post` | + `topmind-cover`；300–800 字短文走 briefs |
+| 现成文字只要排版（转段子 / 格式化） | `topmind-format` | 只动排版不改字；要改写内容转 `topmind-revise` |
+| 改稿、精简、去 AI 味、质检 | `topmind-revise` | 单独用；或被 x-article / wechat-post 写完长文时调用 |
+| 数千字 X 长文 | `topmind-x-article` | + `topmind-revise`（改稿质检）+ `topmind-cover`（5:2 封面）；短于一帖的内容走 briefs |
+| 公众号长文与排版 | `topmind-wechat-post` | + `topmind-revise`（质量三关）+ `topmind-cover`；300–800 字短文走 briefs |
 | 长图、海报、信息图 PNG | `topmind-poster` | 文案先由 briefs / wechat-post 写好 |
 
 > SKILL.md frontmatter 顶层只用 Agent Skills 规范字段（`name` / `description` / `license` / `metadata`），版本、`action_category`、`triggers` 等自定义字段放在 `metadata` 下（字符串值），能通过官方校验器 `skills-ref validate`。
 >
-> 共享脚本与共享文档（`writing-principles.md`、X 文本规约四件套）的唯一真源在 `shared/`，各技能目录保留逐字节副本（单独安装也能用）；改共享文件只改 `shared/`，再跑 `npm run sync:shared`，CI 用 `--check` 校验。
+> 共享脚本与共享文档（`core-voice.md`、`de-ai-rules.md`、`writing-principles.md`、X 文本规约四件套等）的唯一真源在 `shared/`，各技能目录保留逐字节副本（单独安装也能用）；改共享文件只改 `shared/`，再跑 `npm run sync:shared`，CI 用 `--check` 校验。
 >
 > npm 包不含 cover 的单风格样张（`assets/examples/<style>*.png`），只保留 `overview.png`；完整样张见 GitHub 仓库或 Release zip。
 
@@ -185,6 +204,7 @@ topmind-writing-skills/
 ├─ topmind-briefs/               # 技能（SKILL.md + assets + references + scripts）
 ├─ topmind-viral-posts/          # 技能（X 引流段子/爆款短篇，段子体）
 ├─ topmind-format/               # 技能（X 纯文本格式化：转段子 / 格式化成短文）
+├─ topmind-revise/               # 技能（改稿与质检）
 ├─ topmind-poster/               # 技能（HTML → 高清长图 / 分段图）
 ├─ topmind-cover/                # 技能
 ├─ topmind-wechat-post/          # 技能
