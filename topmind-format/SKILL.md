@@ -73,7 +73,7 @@ metadata:
    **去 AI 味检查必跑，但本技能不改字**：W 警告的命中按 [references/de-ai-rules.md](references/de-ai-rules.md) 写进改动说明，交给用户决定；H 提示只是语境判断（场景规则见 [references/core-voice.md](references/core-voice.md)），不写进「建议改」。用户明确要求改写时，建议转 `topmind-revise`（只改表达，不改事实）。
 5. **交付**（按 [references/x-delivery-contract.md](references/x-delivery-contract.md)）：正文一条（格式化结果，一个独立 `text` 块）→ 链接一条（原文里拿出来的 URL / 来源行，没有就写「用户提供，未附来源」）→ 图片一条（用户给了就列 1–2 张，没有就写「未找到原图」并问要不要配图）→ 改动说明（排版改动、加了哪些 emoji、挪出了哪些链接、发现的疑似错字）。多条帖子每条一块。
 
-## 铁律
+## 边界（硬约束：不改字）
 
 - **不改字**：错别字、口头禅、粗口、标点都保留；看到明显错字或事实可疑处，在交付说明里提一句，由用户决定改不改。
 - **不加事实**：不补数据、不补来源、不加话题标签；原文缺来源时，在交付说明里提醒「这条有数据但没来源」。

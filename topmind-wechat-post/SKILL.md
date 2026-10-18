@@ -40,7 +40,7 @@ metadata:
 
 长文：先写骨架（每节要点 + 形式 + 图表计划 + 字数），再写正文。
 
-## 语言铁律
+## 语言：默认中文
 
 - **默认中文**：标题、正文、配图文案一律用中文写作，这是默认行为，不需要用户每次声明。
 - **英文是例外**：只有用户**明确说**"写英文文章"时才用英文。用户消息里夹杂英文词、
@@ -154,7 +154,7 @@ target_file: pending    # reverse：pending | notes/xxx.md
 word_count: 0           # 纯中文字数，sync-status 维护
 ```
 
-**交付铁律**：发布/分享时直接用 `out/` 里的 HTML 原文件原样呈现，
+**交付**：发布/分享时直接用 `out/` 里的 HTML 原文件原样呈现，
 不临时重新生成版本；`<文章名>.md` 是唯一改稿入口，改稿后重建 `out/` 再交付。
 
 状态**不要手改目录名**，用脚本改 frontmatter：
@@ -234,9 +234,9 @@ python3 scripts/md2wechat.py --input <文章名>/<文章名>.md --embed-images \
 ```
 
 1. **永远 `--embed-images`**，否则粘贴丢图（相对路径被序列化成 file://）  
-2. **图片 basename 铁律**：正文引用名 = `images/` 目标名；禁止两套同名图共处  
+2. **图片 basename 一致（硬约束）**：正文引用名 = `images/` 目标名；禁止两套同名图共处  
 3. 合规自检出现 `✗` 改生成器，不要手改 HTML  
-4. **配图位置铁律**：图片必须紧跟它证明的那段文字
+4. **配图位置**：图片必须紧跟它证明的那段文字
    （最多隔一段）；改稿移动段落时图片行一起搬。构建后必跑：嵌入图数量=文档图数量、
    嵌入图顺序=文档出现顺序（逐张解码与源文件比对）；每张图前后 6 行做主题关键词
    邻近检查，不通过则人工核对。
@@ -287,6 +287,6 @@ topmind Desktop 的「公众号创作」插件是本技能的可视化工作流�
 
 具体项目里沉淀下来的做法（带日期）见 [`references/case-notes.md`](references/case-notes.md)，按需读取；本页只保留通用规则。
 
-## 发文铁律
+## 写作原则
 
-精炼客观 + 素材优先 + 研究深度，见 [references/writing-principles.md](references/writing-principles.md)。触发本技能时默认执行。
+写作原则见 [references/social-writing-principles.md](references/social-writing-principles.md)（第 0 层）和 [references/information-design.md](references/information-design.md)（第 1 层）；研究类选题按 [references/research-mode.md](references/research-mode.md)；目录和交付规约见 [references/workspace.md](references/workspace.md)。触发本技能时默认执行。

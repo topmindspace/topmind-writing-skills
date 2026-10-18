@@ -33,7 +33,7 @@ Obsidian 里直接能看；用户要发 X 时，再从它派生发布包到 `out
 
 长文：先写骨架（每节要点 + 形式 + 图表计划 + 字数），再写正文；X 不渲染表格，派生时转分行或做成图。
 
-## 语言铁律
+## 语言：默认中文
 
 - **默认中文**：标题、正文、配图文案一律用中文写作，这是默认行为，不需要用户每次声明。
 - **英文是例外**：只有用户**明确说**"写英文文章/帖子"时才用英文。用户消息里夹杂英文词、
@@ -131,14 +131,14 @@ Obsidian 里直接能看；用户要发 X 时，再从它派生发布包到 `out
 
 ## 实战沉淀
 
-- **事实铁律**：承重事实（数字、排名、发布日期、融资额）逐条回一手来源
+- **事实（硬约束）**：承重事实（数字、排名、发布日期、融资额）逐条回一手来源
   （官方公告/模型卡/论文/财报）；厂商给的数字标"厂商口径"或"官方口径"；
   媒体转引标"据 XX 报道"（点名媒体，不写泛泛的「据报道」）；查不到一手来源的传闻删；
   未来判断用「预计」「大概率」「现在看起来」，附一条支撑事实，不写「我认为」，与事实段落切割，不混写。改稿续写时正文已有数字回源重核（上一轮文本最不可信）。
-- **文字铁律**：去 AI 味、精炼、不编造；看图即得的简单事实不再展开复述；
+- **文字**：去 AI 味、精炼、不编造；看图即得的简单事实不再展开复述；
   多用第三方客观素材，观点可以撞、表达必须原创。
-- **交付铁律**：发布/分享时直接用交付的 HTML 原文件原样呈现，不临时重新生成版本。
-- **长文改稿铁律**：用户嫌稿子长、AI 味重时，交给 `topmind-revise`（`mode=revise genre=long`）；没装时按 `references/revision-workflow.md` 和 `references/writing-principles.md` 第五点六节整改，场景写法以 `references/core-voice.md` 为准：
+- **交付**：发布/分享时直接用交付的 HTML 原文件原样呈现，不临时重新生成版本。
+- **长文改稿**：用户嫌稿子长、AI 味重时，交给 `topmind-revise`（`mode=revise genre=long`）；没装时按 `references/revision-workflow.md`、`references/information-design.md`（结构和篇幅）和 `references/image-sourcing.md`（图先于字）整改，场景写法以 `references/core-voice.md` 为准：
   公式化标签改平实说法（「三个词」→「简单总结」、「五个分支」→「主要 5 个方向」、「三件事」→「有三大特征」）；
   过去一句话 + 图、现在汇总加分析、未来写判断（「预计」「大概率」）+ 一条支撑事实；原图（官方截图、原始 X 帖、官方文书、第三方数据图）先于文字，
   自制图只用于有出处的数据；一段 2–3 句、不超过约 110 字。每张图的来源 URL 记在本地私有信源清单，不进公开仓库。
@@ -177,6 +177,6 @@ Obsidian 里直接能看；用户要发 X 时，再从它派生发布包到 `out
 - `topmind-x`（topmind-skills 包）：短推文发帖连接器，须用户确认后才发；xurl 只覆盖短推文，不发长文。
 - `topmind-capture`：「只想存档不发布」时的收录路由。
 
-## 发文铁律
+## 写作原则
 
-精炼客观 + 素材优先 + 研究深度，见 [references/writing-principles.md](references/writing-principles.md)。触发本技能时默认执行。
+写作原则见 [references/social-writing-principles.md](references/social-writing-principles.md)（第 0 层）和 [references/information-design.md](references/information-design.md)（第 1 层）；研究类选题按 [references/research-mode.md](references/research-mode.md)；目录和交付规约见 [references/workspace.md](references/workspace.md)。触发本技能时默认执行。

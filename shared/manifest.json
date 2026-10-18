@@ -86,7 +86,9 @@
       "topmind-viral-posts",
       "topmind-wechat-post",
       "topmind-x-article",
-      "topmind-revise"
+      "topmind-revise",
+      "topmind-cover",
+      "topmind-poster"
     ],
     "references/revision-workflow.md": [
       "topmind-briefs",
@@ -140,6 +142,17 @@
       "topmind-wechat-post",
       "topmind-x-article",
       "topmind-revise"
+    ],
+    "references/research-mode.md": [
+      "topmind-briefs",
+      "topmind-viral-posts",
+      "topmind-wechat-post",
+      "topmind-x-article",
+      "topmind-revise"
+    ],
+    "references/workspace.md": [
+      "topmind-wechat-post",
+      "topmind-x-article"
     ]
   }
 }

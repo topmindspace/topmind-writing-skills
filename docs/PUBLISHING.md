@@ -71,7 +71,7 @@ CI/Release 细节见 [`docs/ci.md`](./ci.md)。
    npm run check && npm run audit && npm run privacy
    npm run check:shared && npm run check:evals && npm run validate:spec   # 共享真源一致 / 评测骨架 / 官方校验器
    ```
-   改了 `shared/` 下的共享脚本或 `writing-principles.md` 时先 `npm run sync:shared`，不要直接改技能目录里的副本。
+   改了 `shared/` 下的共享脚本或共享文档时先 `npm run sync:shared`，不要直接改技能目录里的副本。
 4. 新技能：`npm run sync:files`（把发现的技能目录写入 `package.json` `files`）。
 5. 提交并打 tag：
    ```bash

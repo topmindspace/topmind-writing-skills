@@ -2,7 +2,7 @@
 
 > **适用范围**：X 短文与段子——`topmind-briefs` 的 X 版、`topmind-viral-posts`、`topmind-format`，以及 `topmind-wechat-post` 派生的 X 短帖。
 > **不适用**：`topmind-x-article` 的 X 长文（`X长文.html` / `X发布稿.txt`）和公众号长文、briefs 的公众号版——长文里合理的文内链接照常保留；但长文的信源、原图、说明仍按第三节另列。
-> 排版细则见 `x-post-format.md`，emoji 见 `emoji-system.md`，版式见 `x-layout-patterns.md`，去 AI 味与吸引力见 `writing-principles.md` 第五点五节。
+> 排版细则见 `x-post-format.md`，emoji 见 `emoji-system.md`，版式见 `x-layout-patterns.md`，吸引力见 `core-voice.md` 原则 2、4、9，成稿后去 AI 味自查见 `de-ai-rules.md`。
 
 ## 一、短文工作流：先信源，后排版
 

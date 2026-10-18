@@ -168,7 +168,7 @@ Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package
 | WeChat long-form & layout | `topmind-wechat-post` | + `topmind-revise` + `topmind-cover`; 300–800-char briefs → briefs |
 | Long images, posters, infographics | `topmind-poster` | copy written first by briefs / wechat-post |
 
-> SKILL.md frontmatter uses only Agent Skills spec keys at the top level (`name` / `description` / `license` / `metadata`); version, `action_category`, `triggers` and other custom keys live under `metadata` as strings, so `skills-ref validate` passes. Shared scripts and references (`core-voice.md`, `de-ai-rules.md`, `writing-principles.md` and more) have a single source in `shared/`; skill folders keep byte-identical copies (CI checks with `node scripts/sync_shared.js --check`). The npm package ships only `overview.png` from the cover examples; the per-style samples stay on GitHub / in the Release zip.
+> SKILL.md frontmatter uses only Agent Skills spec keys at the top level (`name` / `description` / `license` / `metadata`); version, `action_category`, `triggers` and other custom keys live under `metadata` as strings, so `skills-ref validate` passes. Shared scripts and references (`social-writing-principles.md`, `information-design.md`, `core-voice.md`, `de-ai-rules.md` and more) have a single source in `shared/`; skill folders keep byte-identical copies (CI checks with `node scripts/sync_shared.js --check`). The npm package ships only `overview.png` from the cover examples; the per-style samples stay on GitHub / in the Release zip.
 
 ## Install
 

@@ -42,13 +42,13 @@ metadata:
 - 单独改一篇现成稿子、去 AI 味、质检 → `topmind-revise`
 - 把稿子发到 X → `topmind-x`（发帖连接器，须用户确认后才发）
 
-## 语言铁律
+## 语言：默认中文
 
 - **默认中文**：标题、正文、配图说明一律用中文，不需要用户每次声明。
 - **英文是例外**：只有用户**明确说**「写英文」时才用英文。消息里夹英文词、给英文素材、引用英文原文，都不算要求写英文。
 - 官方产品名、论文标题保留英文；引语正文写「人名：中文意思」，英文原文记进素材来源，不在正文里原文加括注（core-voice V13）。
 
-## 尊重原始信息（铁律）
+## 尊重原始信息（硬约束：事实）
 
 1. **原始信息**：事实、数字、时间以一手来源为准（官方公告、更新日志、论文、原帖、财报）；二手报道至少找 2 个独立来源交叉确认，无法核实的承重事实删掉。
 2. **原文**：引用原话时逐字照录并加「」，写明出处；不把转述写成引语，不改原文数字的单位和口径。
@@ -66,7 +66,7 @@ metadata:
    - 首行一句简单的话题陈述：「是什么 + 最关键的事实」，约 30 字内，只看首行也拿到信息；不用设问钩子，真里程碑把「第一」放句首（core-voice V05、V20）；
    - 具体数字和场景，说人话，事实讲完就停，不硬加收尾句，也不用「你会换吗？」拉互动（V10）；对比给出对象和定语，比的对象选读者认识的知名对手，不写「约 / 左右」，不用千分位（V12）；
    - 读者不关心的背景删掉，借来的热点一句带过；推测写成问句，不写成事实（V22）；不写「理由就一条：」这类总结腔，直接说理由（V08）；
-   - **去 AI 味（必过）**：按 [references/de-ai-rules.md](references/de-ai-rules.md) 逐条过（先守改写边界：只改表达，不改事实和确定性），再对照 [references/core-voice.md](references/core-voice.md) 短文条目和 [references/writing-principles.md](references/writing-principles.md) 第五点五节「吸引力清单」；
+   - **成稿后去 AI 味自查**：按 [references/de-ai-rules.md](references/de-ai-rules.md) 过一遍（审稿用，先守改写边界：只改表达，不改事实和确定性），再对照 [references/core-voice.md](references/core-voice.md) 原则 2、4、9 和短文条目；
    - 出处在正文里只用文字点到（「官方称」「据论文」），不贴 URL、不写来源行。
 4. **排版**（目标：方便阅读），按 [references/platform-specs.md](references/platform-specs.md)、[references/x-post-format.md](references/x-post-format.md)、[references/x-layout-patterns.md](references/x-layout-patterns.md)：
    - 一段 1–3 行，段间空一行；3–7 条并列信息才用列表，前一行写「xx：」引导语，2 条就写成两句；
@@ -143,12 +143,12 @@ X 版末尾默认给 2 个话题标签（属正文，是正文最后一行；备
 | 要一张数据长图 | 本技能出文案 → `topmind-poster` 出图 |
 | 同一事件出段子 | 本技能出干货版，`topmind-viral-posts` 出引流版，事实与来源保持一致 |
 
-## 运营铁律
+## 运营约定
 
 - 只起草，不代发。发布前用户确认。
 - 数字必须有一手来源（链接另发）；厂商数字标「官方称 / 厂商口径」。
 - 不碰医疗建议、投资建议、政治站队。
 
-## 发文铁律
+## 写作原则
 
-精炼客观 + 素材优先 + 研究深度，见 [references/writing-principles.md](references/writing-principles.md)。触发本技能时默认执行。
+写作原则见 [references/social-writing-principles.md](references/social-writing-principles.md)（第 0 层）和 [references/information-design.md](references/information-design.md)（第 1 层）；研究类选题按 [references/research-mode.md](references/research-mode.md)。触发本技能时默认执行。

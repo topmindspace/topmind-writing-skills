@@ -170,7 +170,7 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 
 > SKILL.md frontmatter 顶层只用 Agent Skills 规范字段（`name` / `description` / `license` / `metadata`），版本、`action_category`、`triggers` 等自定义字段放在 `metadata` 下（字符串值），能通过官方校验器 `skills-ref validate`。
 >
-> 共享脚本与共享文档（`core-voice.md`、`de-ai-rules.md`、`writing-principles.md`、X 文本规约四件套等）的唯一真源在 `shared/`，各技能目录保留逐字节副本（单独安装也能用）；改共享文件只改 `shared/`，再跑 `npm run sync:shared`，CI 用 `--check` 校验。
+> 共享脚本与共享文档（`social-writing-principles.md`、`information-design.md`、`core-voice.md`、`de-ai-rules.md`、X 文本规约四件套等）的唯一真源在 `shared/`，各技能目录保留逐字节副本（单独安装也能用）；改共享文件只改 `shared/`，再跑 `npm run sync:shared`，CI 用 `--check` 校验。
 >
 > npm 包不含 cover 的单风格样张（`assets/examples/<style>*.png`），只保留 `overview.png`；完整样张见 GitHub 仓库或 Release zip。
 
