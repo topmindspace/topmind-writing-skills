@@ -3,7 +3,7 @@ name: topmind-format
 description: "X 纯文本格式化：用户贴一段现成文字，只改排版、不改字。转段子 → 每句一行、行与行之间空一行，完全不用 emoji（去掉点缀与列表符号，分点一条一行）；格式化成短文 → 合理分段换行、合理列表（「·」「1）」或 emoji，emoji 不强制，用就按 TopMind 体系）。保留原文事实与措辞，自带保真校验脚本；交付一段可直接复制的纯文本，原文里的链接（含来源）、原图、配图拿出来另发，不混进正文；没有原图时询问是否配图。只交付不代发。Use when 转段子、改成段子格式、段子格式、格式化、格式化一下、格式化成短文、排一下版、整理格式、加空行、分行、加 emoji、X 排版、format。Do NOT use for 从零写段子、涨粉帖（→ topmind-viral-posts）、从零写干货短文、快讯（→ topmind-briefs）、X 长文（→ topmind-x-article）、公众号排版与公众号 HTML（→ topmind-wechat-post）、封面（→ topmind-cover）、改写措辞、去 AI 味改稿与质检（→ topmind-revise）、把帖子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.1.10"
+  version: "0.1.11"
   action_category: "write"
   triggers: "转段子, 改成段子, 段子格式, 格式化, 格式化一下, 格式化成短文, 排一下版, 整理格式, 加空行, 分行, 加 emoji, X 排版, format"
   author: "TopMindSpace"
@@ -35,7 +35,7 @@ metadata:
 - 要改写措辞、压缩字数、去 AI 味（不只是排版）→ `topmind-revise`；从零重写 → `topmind-viral-posts` / `topmind-briefs`
 - 发帖 → `topmind-x`（须用户确认）
 
-> **必读必守**：[references/x-delivery-contract.md](references/x-delivery-contract.md)——**短文体**分点默认「·」，行多用「1）」，短列表才用 emoji，较长短文用【小标题】；**段子体完全不用 emoji**，分点不加符号、一条一行；两种都禁用 `- ` `1. `；格式化结果是一段可直接复制的纯文本，**不含 URL、来源行、配图说明**；链接一条、图片一条另发，改动说明最后另列。
+> **必读（交付格式是硬约束）**：[references/x-delivery-contract.md](references/x-delivery-contract.md)——**短文体**分点默认「·」，行多用「1）」，短列表才用 emoji，较长短文用【小标题】；**段子体完全不用 emoji**，分点不加符号、一条一行；两种都禁用 `- ` `1. `；格式化结果是一段可直接复制的纯文本，**不含 URL、来源行、配图说明**；链接一条、图片一条另发，改动说明最后另列。
 
 ## 两种模式
 

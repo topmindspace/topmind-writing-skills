@@ -1,4 +1,4 @@
-# X 文本交付规约（必读必守）
+# X 文本交付规约（必读：交付格式是硬约束）
 
 > **适用范围**：X 短文与段子——`topmind-briefs` 的 X 版、`topmind-viral-posts`、`topmind-format`，以及 `topmind-wechat-post` 派生的 X 短帖。
 > **不适用**：`topmind-x-article` 的 X 长文（`X长文.html` / `X发布稿.txt`）和公众号长文、briefs 的公众号版——长文里合理的文内链接照常保留；但长文的信源、原图、说明仍按第三节另列。

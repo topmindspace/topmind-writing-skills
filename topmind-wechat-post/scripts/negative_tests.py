@@ -71,6 +71,14 @@ def main() -> None:
               "data:image/png;base64," in html, r.stdout[:200])
         check("md2wechat 行内图片进清单", "a.png" in manifest)
 
+        # 6b. HTML 注释（写作提示、骨架备注）不进公众号 HTML；代码里的原样保留
+        (td / "cm.md").write_text("# t\n\n<!-- 写作提示：先放结论 -->\n第一段 <!-- 行内备注 --> 正文。\n\n<!--\n骨架备注\n-->\n第二段 `<!-- 行内代码 -->`。\n\n```html\n<!-- 围栏保留 -->\n```\n", encoding="utf-8")
+        r = run("md2wechat.py", ["--input", str(td / "cm.md"), "--out-dir", str(td / "ocm"), "--slug", "cm"])
+        h = (td / "ocm" / "cm-公众号版.html").read_text(encoding="utf-8") if (td / "ocm" / "cm-公众号版.html").exists() else ""
+        check("md2wechat 去掉 HTML 注释、保留代码里的 <!--",
+              r.returncode == 0 and all(k not in h for k in ("写作提示", "行内备注", "骨架备注"))
+              and "行内代码" in h and "围栏保留" in h, (r.stdout + r.stderr)[-300:])
+
         # 7. md2wechat 大写数字序号同样被剥离
         (td / "num.md").write_text(
             "# t\n\n## 第叁章 大写序号\n\n正文。\n", encoding="utf-8")

@@ -3,7 +3,7 @@ name: topmind-cover
 description: "文章封面配图生成：X 长文与公众号共用，也为 X 短文 / 短帖在没有原图时出 16:9 首图，并供 topmind-briefs、topmind-viral-posts 的配图环节调用。震撼、醒目、主题突出；平台尺寸规范、22 种风格模板与风格组合、七层场景配方与中英提示词模板、默认 2–3 个方案、24 种标题花式与副信息组件、分层背景库、10 种构图骨架、TopMind IP 主角、七项评分重做门槛、生图 + 脚本叠字双路径、命名落盘全流程覆盖。Use when 文章封面、封面图、X 短文封面、短帖封面、头图、题图、首图、X 长文头图、公众号封面、公众号头图、封面风格、banner、cover、thumbnail。Do NOT use for 正文插图、长图、海报与信息图（→ topmind-poster）、短文与段子写稿（→ topmind-briefs / topmind-viral-posts）、PPT/报告封面与多页演示（→ topmind-presentation）。"
 license: MIT
 metadata:
-  version: "0.4.14"
+  version: "0.4.15"
   action_category: "write"
   triggers: "封面, 封面图, X 短文封面, 短帖封面, 头图, 题图, 首图, 封面配图, 缩略图, banner, cover, thumbnail, 公众号封面, 公众号题图, 公众号头图, X 封面, X 首图, X 长文头图, 文章封面, 封面风格"
   author: "TopMindSpace"
@@ -85,7 +85,7 @@ metadata:
 
 
 
-> 示例图为原创演示：只学设计原则，不临摹第三方版式（详见 `references/cover-styles.md` 顶部"原创铁律"）。
+> 示例图为原创演示：只学设计原则，不临摹第三方版式（详见 `references/cover-styles.md` 顶部「原创（硬约束）」）。
 
 ## 意图判断 → 直出 / 讨论（生成前必做）
 

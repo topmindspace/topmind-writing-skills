@@ -3,7 +3,7 @@ name: topmind-wechat-post
 description: "管一篇公众号文章从选题/底稿到发布清单的完整生命周期：单源文章文件夹 <文章名>/<文章名>.md、审校改写、质量三关（默认组合 topmind-revise：事实/逻辑/去AI味，含改稿保真溯源审计）、状态同步；用户要公众号版时再按需出微信内联 HTML 与发布清单到 out/。不代发。Use when 写公众号、写公众号文章、公众号长文、公众号排版、微信排版、公众号定稿、发公众号、公众号交付包、公众号发布清单、wechat、mp format。Do NOT use for 公众号短文与快讯（300–800 字，→ topmind-briefs）、X 帖子与段子（→ topmind-viral-posts；派生的 X 短帖交付一段可复制纯文本，链接、原图另发）、X 纯文本格式化与转段子（→ topmind-format）、X 长文（→ topmind-x-article）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、只改错别字、小红书/知乎、纯网页发布、单独改稿与去 AI 味（→ topmind-revise）、通用长文写作（→ topmind-write）。"
 license: MIT
 metadata:
-  version: "0.3.17"
+  version: "0.3.18"
   action_category: "write"
   triggers: "公众号, 写公众号, 微信排版, 公众号排版, 公众号稿, 公众号长文, 排版这篇文章, 定稿, 发公众号, 公众号交付, wechat, mp format, 写公众号文章, 公众号排版定稿, 公众号发布清单"
   author: "TopMindSpace"
@@ -28,7 +28,7 @@ metadata:
 > 同一选题要出 X 版时，从同一份 `<文章名>.md` 派生（→ `topmind-x-article`，按需进 `out/`）；X 纯文本稿的列表改成「·」「1）」（emoji 可选，不强制）
 >（X 纯文本不渲染 Markdown 列表，规则见 [references/x-post-format.md](references/x-post-format.md)），
 > 只允许排版差异，内容一致；源稿本身继续用 Markdown 列表。
-> 派生的 X 短帖按 **[references/x-delivery-contract.md](references/x-delivery-contract.md)（必读必守）** 交付：正文是一段可直接复制的纯文本，**不含 URL 和来源行**；长文里的文内链接和原图挪到另发的链接 / 图片消息。公众号长文本身可以有文内链接，不受此限。
+> 派生的 X 短帖按 **[references/x-delivery-contract.md](references/x-delivery-contract.md)（必读：交付格式是硬约束）** 交付：正文是一段可直接复制的纯文本，**不含 URL 和来源行**；长文里的文内链接和原图挪到另发的链接 / 图片消息。公众号长文本身可以有文内链接，不受此限。
 
 ## 先读：写作原则与信息设计
 
@@ -122,7 +122,7 @@ python3 scripts/new-article.py --title "<标题>" --direction reverse
 
 取源注意（RSC 载荷、图片 hash 映射、`md5` 去重、截图裁切）见 `references/workflow.md`「站外拉取取源注意」；差异与口径写进文章文件夹的 `素材来源.md`。
 
-**回推纪律**：notes 保持纯 Markdown（源稿本来就不用 `:::` 容器；旧交付包里的容器 / 徽章 / `==高亮==` 回推时去掉）；回推**务必带 `--assets`**（否则 GitHub 上 `images/` 死链）。命令串见 `references/workflow.md`「收尾」。
+**回推规则**：notes 保持纯 Markdown（源稿本来就不用 `:::` 容器；旧交付包里的容器 / 徽章 / `==高亮==` 回推时去掉）；回推**务必带 `--assets`**（否则 GitHub 上 `images/` 死链）。命令串见 `references/workflow.md`「收尾」。
 
 ## 文章文件夹与状态
 
@@ -169,7 +169,7 @@ lint、排版、同步状态（`-released` 改名逻辑只对旧包生效）；`
 
 ## 质量三关（定稿前必过）
 
-写稿前先填文章文件夹里的 `骨架.md`：主要信息、读者、每节要点 / 形式 / 图表计划 / 字数（方法见 [`references/information-design.md`](references/information-design.md) 第一、二节）。形式在骨架里定下来，写的时候才不会默认写成段落；写完回头对一遍骨架。再找图、记来源（[`references/image-sourcing.md`](references/image-sourcing.md)，信源清单放文章文件夹的 `素材来源.md`，不进本仓库）。**默认组合 `topmind-revise`**：三关由它执行（`mode=embed genre=long sources=<文章名>/素材来源.md`），它把终稿和三行摘要回给本技能、完整报告落 `out/改稿报告.md`；没装就按 [`references/revision-workflow.md`](references/revision-workflow.md) 手动走：⓪ 结构 → 事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照（[`references/core-voice.md`](references/core-voice.md)）→ 排版 → 保真审计 → 过度改稿检查，每轮先备份、报改前 / 改后字数（`scripts/count_words.py`）。
+写稿前先填文章文件夹里的 `骨架.md`：主要信息、读者、每节要点 / 形式 / 图表计划 / 字数（方法见 [`references/information-design.md`](references/information-design.md) 第一、二节）。形式在骨架里定下来，写的时候才不会默认写成段落；写完回头对一遍骨架。再找图、记来源（[`references/image-sourcing.md`](references/image-sourcing.md)，信源清单放文章文件夹的 `素材来源.md`，不进本仓库）。**默认组合 `topmind-revise`**：三关由它执行（`mode=embed genre=long sources=<文章名>/素材来源.md`），它把终稿和三行摘要回给本技能、完整报告落 `out/改稿报告.md`；没装就按 [`references/revision-workflow.md`](references/revision-workflow.md) 手动走：⓪ 结构 → 事实 → 逻辑 → 删冗余 → 去 AI 味 → 措辞原则对照（[`references/core-voice.md`](references/core-voice.md)）→ 排版 → 保真审计 → 过度改稿检查，每轮先备份、报改前 / 改后字数（`scripts/count_words.py`）。
 
 ### 关 1 · 事实
 
@@ -220,7 +220,7 @@ python3 scripts/revise_check.py <备份>/<文章名>.md <文章名>.md   # 改�
 - **源稿不用 `:::` 容器、callout、`![[ ]]`**：金句、数据、提示用普通段落、加粗或引用写；`lint-wechat.py` 对新源稿里的 `:::` 报错（旧交付包只告警，md2wechat 仍能渲染）  
 - 图片写 `![说明](images/01-xxx.png)`，出处写在下一行「来源：……」，排版时渲染成图注  
 - 评测稿：**图承担数据，正文只解读**；健康密度 **300–450 字/图**  
-- 个股用词红线：禁用 买入/推荐/目标价…；文末投资声明  
+- 个股用词（合规硬约束）：禁用 买入/推荐/目标价…；文末投资声明  
 
 更多：[`references/typography-rules.md`](references/typography-rules.md) · [`references/wechat-constraints.md`](references/wechat-constraints.md)。
 
@@ -262,7 +262,7 @@ python3 scripts/md2wechat.py --input <文章名>/<文章名>.md --embed-images \
 `md2wechat.py --list-themes` 看全部；`--theme genre:评测` 可按题材自动选。  
 渲染规格见 [`references/element-spec.md`](references/element-spec.md) · 主题映射见 [`references/theme-map.md`](references/theme-map.md)。
 
-**平台红线速查**（详见 [`references/wechat-constraints.md`](references/wechat-constraints.md)）：禁 `div`/`pre`/`h1`/`figure`/`thead`/flex/float/gradient/shadow；表格 `table-layout` 不写 fixed；列数 ≥4 转卡片。
+**平台硬约束速查**（详见 [`references/wechat-constraints.md`](references/wechat-constraints.md)）：禁 `div`/`pre`/`h1`/`figure`/`thead`/flex/float/gradient/shadow；表格 `table-layout` 不写 fixed；列数 ≥4 转卡片。
 
 ## 与 Desktop「公众号创作」
 

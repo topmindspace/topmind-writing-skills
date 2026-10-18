@@ -3,7 +3,7 @@ name: topmind-x-article
 description: "X 长文（Article）发布：默认组合 topmind-revise 改稿，交付单源 <文章名>/<文章名>.md（Obsidian 直接看）；要发 X 时再按需派生 out/X长文.html（富文本一键复制+配图内嵌）与 out/X发布稿.txt（纯文本兜底；长文可保留文内链接，派生 X 短帖时链接、原图另发）+ 封面图 + 发布清单，由用户人工点发布。Use when X 长文、发 X 文章、写 X 文章、X article、长文发 X、写 X 长文、X 文章排版、推特长文、twitter 长文、Twitter Article。Do NOT use for 短推文、短帖、快讯与段子写稿（→ topmind-viral-posts 或 topmind-briefs）、现成文字格式化与转段子（→ topmind-format）、把短帖发出去（→ topmind-x，须用户确认）、公众号文章（→ topmind-wechat-post）、只要封面或头图（→ topmind-cover）、单独改稿、去 AI 味与质检（→ topmind-revise）。"
 license: MIT
 metadata:
-  version: "0.4.23"
+  version: "0.4.24"
   action_category: "write"
   triggers: "X 长文, 发 X 文章, 写 X 文章, X article, 长文发 X, X 发长文, X 文章排版, 转纯文本, X 纯文本, X发布稿, 发 article, 一键复制, 写 X 长文, X 长文发布, 推特长文, twitter 长文, Twitter Article"
   author: "TopMindSpace"
@@ -88,7 +88,7 @@ Obsidian 里直接能看；用户要发 X 时，再从它派生发布包到 `out
    规则见 `references/x-format.md`。HTML 复制异常时的备用入口。
    **列表**：纯文本不渲染 Markdown 列表，`md2x.py` 默认把 `- ` / `1. ` 转成「· 」/「1）」
    （二级缩进两格，最多两层）；`--list-style emoji` 可选 🔹 / ▫️ / 1️⃣，`keep` 保留原符号。
-   规则见 `references/x-post-format.md`；交付规约见 **`references/x-delivery-contract.md`（必读必守）**：长文是规约里写明的例外——`X长文.html` / `X发布稿.txt` 里合理的文内链接照常保留（lint 用 `--long`，不查 E10–E12）；但信源清单、封面、说明仍另列，不糅进稿子。从长文再派生 X 短帖时按短文规则：一段可复制纯文本，链接、原图另发。转完可跑 `python3 scripts/lint_x_post.py out/X发布稿.txt --long` 自检。
+   规则见 `references/x-post-format.md`；交付规约见 **`references/x-delivery-contract.md`（必读：交付格式是硬约束）**：长文是规约里写明的例外——`X长文.html` / `X发布稿.txt` 里合理的文内链接照常保留（lint 用 `--long`，不查 E10–E12）；但信源清单、封面、说明仍另列，不糅进稿子。从长文再派生 X 短帖时按短文规则：一段可复制纯文本，链接、原图另发。转完可跑 `python3 scripts/lint_x_post.py out/X发布稿.txt --long` 自检。
    转完**通读一遍**：X 不渲染 markdown，标记剥离后断句、emphasis 全靠文字本身，
    读不顺就回源稿改。
    注意区分两条链路：`X长文.html` 走 X Article 编辑器的富文本，**原生列表保留**（以 `references/x-html-format.md` 为准）；

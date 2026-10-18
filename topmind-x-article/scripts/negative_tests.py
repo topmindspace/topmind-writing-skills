@@ -153,6 +153,20 @@ def main() -> None:
                            capture_output=True, text=True, timeout=30)
         check("check_article 示例文章结构通过", r.returncode == 0, r.stdout[-300:])
 
+        # HTML 注释（写作提示、骨架备注）不进派生产物；代码里的原样保留
+        (td / "cm.md").write_text("# t\n\n<!-- 写作提示：先放结论 -->\n第一段 <!-- 行内备注 --> 正文。\n\n<!--\n骨架备注\n-->\n第二段 `<!-- 行内代码 -->`。\n\n```html\n<!-- 围栏保留 -->\n```\n", encoding="utf-8")
+        r = run([str(td / "cm.md"), "--out", str(td / "cm.txt")])
+        t = (td / "cm.txt").read_text(encoding="utf-8") if (td / "cm.txt").exists() else ""
+        check("md2x 去掉 HTML 注释、保留代码里的 <!--",
+              r.returncode == 0 and all(k not in t for k in ("写作提示", "行内备注", "骨架备注"))
+              and "第一段 正文。" in t and "行内代码" in t and "围栏保留" in t, t[:300])
+        r = subprocess.run([PY, str(ROOT / "scripts" / "md2x-html.py"), str(td / "cm.md"), "--out", str(td / "cm.html")],
+                           capture_output=True, text=True, timeout=30)
+        h = (td / "cm.html").read_text(encoding="utf-8") if (td / "cm.html").exists() else ""
+        check("md2x-html 去掉 HTML 注释、保留代码里的 <!--",
+              r.returncode == 0 and all(k not in h for k in ("写作提示", "行内备注", "骨架备注"))
+              and "行内代码" in h and "围栏保留" in h, (r.stdout + r.stderr)[-300:])
+
     if fails:
         print(f"\n[negative_tests] {len(fails)} 项失败")
         sys.exit(1)

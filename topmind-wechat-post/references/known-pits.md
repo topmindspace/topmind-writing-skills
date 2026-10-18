@@ -17,7 +17,7 @@ grep -c 'src="data:image/' <包>/*-公众号版.html  # 期望 = 正文图数
 
 `resolve_image()` 按 **basename** 复制到 `images/`。`images/bare/01.png` 与 `images/01.png` 同名 → 产出 `01-1.png` → 删副本 = HTML 图全挂。
 
-**铁律**：
+**怎么避免**：
 
 - 正文只引用 `images/XX.png`，包内只放正文那一套  
 - 多套用不同前缀（`full-` / `bare-`），不要靠子目录区分  

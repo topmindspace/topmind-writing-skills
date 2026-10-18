@@ -4,7 +4,7 @@
 
 把一篇稿子改得更短、更准、更像作者本人，并且能证明没改坏事实。长文、短文、段子、回复、标题都能用；可以单独用，也会被 `topmind-wechat-post`、`topmind-x-article` 写长文时默认调用。
 
-- 版本：**v0.1.2**（随 `@topmindspace/topmind-writing-skills@0.8.46` 发布）
+- 版本：**v0.1.3**（随 `@topmindspace/topmind-writing-skills@0.8.47` 发布）
 
 ## 安装
 
@@ -21,7 +21,7 @@ npx @topmindspace/topmind-writing-skills install topmind-revise
 | （被长文技能调用） | 嵌入 | 只交回终稿和三行摘要，完整报告落盘 |
 | 改标题 / 起标题 / 写摘要 / 改这条短文 | 快审 | 一个改后版本，最多附 2 个候选 |
 
-流程：事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照 → 排版 → 保真审计 → 过度改稿检查。
+流程：⓪ 结构 → 事实 → 逻辑 → 删冗余 → 去 AI 味 → 措辞原则对照 → 排版 → 保真审计 → 过度改稿检查。
 
 ```bash
 python3 scripts/de_ai_lint.py 稿子.md                     # W 警告 + H 提示
@@ -30,13 +30,14 @@ python3 scripts/count_words.py 改前.md 改后.md
 python3 scripts/revise_check.py 改前.md 改后.md --report 改稿报告.md
 ```
 
-## 三层规则
+## 规则分层
 
 | 层 | 文件 | 管什么 |
 |---|---|---|
-| 核心经验 | [references/core-voice.md](./references/core-voice.md) | 场景规则：标题、开头、收尾、数字、引用、来源行、列表、emoji…… |
-| 去 AI 味 | [references/de-ai-rules.md](./references/de-ai-rules.md) | 改写边界 + 结构模式（Z / E / P 编号），脚本 W / H 两级 |
-| 执行 | 本技能 | 按 [references/revision-workflow.md](./references/revision-workflow.md) 跑完并出报告 |
+| 第 0 层 · 写作原则 | [references/social-writing-principles.md](./references/social-writing-principles.md) | 先想清楚传达什么、结论先行、形式跟着内容走…… |
+| 第 1 层 · 信息设计 | [references/information-design.md](./references/information-design.md) | ⓪ 结构诊断的依据：内容 → 形式决策表、篇幅和密度、I1–I8 提示 |
+| 第 2 层 · 措辞口吻 | [references/core-voice.md](./references/core-voice.md) | 十条措辞原则 + V01–V33 场景例子；短文口吻像还在学习的普通人 |
+| 第 3 层 · 审稿 | 本技能 + [references/de-ai-rules.md](./references/de-ai-rules.md) | 改写边界 + 结构模式（Z / E / P），按 [references/revision-workflow.md](./references/revision-workflow.md) 跑完并出报告 |
 
 ## 防过度改稿
 

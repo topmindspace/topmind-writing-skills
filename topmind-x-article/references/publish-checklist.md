@@ -9,7 +9,7 @@
 - [ ] 原图先找齐：官方 > 原帖 > 第三方 > 自制（兜底）；每张图在私有 `素材来源.md` 里有来源和读取日期，
       正文图片下一行写「来源：……」（见 `image-sourcing.md`）
 - [ ] 自制图只用于有出处的数据，图注或「来源：」行写了「自制」和数据来源（`check_article.py` / `de_ai_lint.py` 不报 W18）
-- [ ] 改稿已过一遍（`topmind-revise`，没装就按 `revision-workflow.md`）：事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照 → 排版 → 保真审计；本轮已备份，记下改前 / 改后字数（`count_words.py`）
+- [ ] 改稿已过一遍（`topmind-revise`，没装就按 `revision-workflow.md`）：事实 → 逻辑 → 删冗余 → 去 AI 味 → 措辞原则对照 → 排版 → 保真审计；本轮已备份，记下改前 / 改后字数（`count_words.py`）
 - [ ] 去 AI 味已按 `de-ai-rules.md` 过完：`de_ai_lint.py` 的 W 每条有结论（改掉或写保留理由），H 只供判断
 
 ## 发布前

@@ -3,7 +3,7 @@ name: topmind-poster
 description: "HTML+CSS 排版并输出高清长图 / 海报 / 信息图 PNG，也覆盖「一段一图」的分段图批量出图（一篇长文 = N 张图，生成器 + 渲染器工作流）。Use when 长图、竖版长图、海报、信息图、分级榜、榜单图、月报长图、分段图、一张图讲清楚、给文章做信息图配图、把 HTML 渲染成 PNG、重做这张图、出 2× 高清图、自动裁掉底部空白、把超长图拆成多张。Do NOT use for 写干货短文、快讯、数据榜单文案（→ topmind-briefs）、段子与引流帖（→ topmind-viral-posts）、文字格式化（→ topmind-format）、单张文章封面与头图（→ topmind-cover）、多页演示或 PPTX（→ topmind-presentation）、纯数据图表 SVG。"
 license: MIT
 metadata:
-  version: "0.1.7"
+  version: "0.1.8"
   action_category: "write"
   triggers: "长图, 竖版长图, 海报, 信息图, 分级榜, 榜单图, 月报长图, 分段图, HTML 转 PNG, 高清出图, poster, long image, 做一张长图, 重做这张图, 更新这张图, 把这张图优化一下, 出一张高清图, 把长图拆成几张, 给文章做信息图"
   author: "TopMindSpace"
@@ -124,7 +124,7 @@ im.crop((0,0,w,min(h, last+1+88))).save('poster.png')  # 88 = 2× 下的 44px �
 
 跑完打印 `im.size` 核对。若内容底边几乎等于窗口高度，**说明内容被截断了**，加大 `--window-size` 重跑。
 
-### 5. 出图后必须自检
+### 5. 出图后自检
 
 **不要生成完就看都不看。** 把长图按等分切成 3–4 段、缩到 700px 宽，逐段用 Read 看图：
 
@@ -278,7 +278,7 @@ build/render.py   # PAGES 列表 [(html, png)]，循环截图 + 自动裁切
 - **能用原图就不重画**：官方图表、榜单截图按 [references/image-sourcing.md](references/image-sourcing.md) 优先；重画的标「自制」和数据来源。
 - **字少**：每块文字只留看图看不出的解读；同一个数字不在图上和文字里各写一遍。
 
-## 内容层面的三条纪律（做榜单 / 信息图时）
+## 内容层面的三条原则（做榜单 / 信息图时；事实相关，按硬约束执行）
 
 1. **每个数字标来源与时点**——「55.5%」和「55.5%（2026-09）」「55.5%（Similarweb 网页口径）」是三个不同的东西
 2. **不同量纲不横比**——网页流量份额 ≠ 移动端月活 ≠ 付费席位；同榜混排必须显式声明「按赛道分档，不做统一排名」

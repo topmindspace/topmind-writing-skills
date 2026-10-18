@@ -1,14 +1,25 @@
-## [Unreleased]
+## [0.8.47] - 2026-10-18
 
-> 未发版；版本号不变。
+> 全面整理文档：README 和各技能文档按「原则优先」四层结构重写，剩余的「铁律」措辞改成「原则 + 怎么判断」，清理废弃文件和过时说明；新增多环境协作字段，渲染脚本去掉 HTML 注释。
+> 根包 0.8.46 → **0.8.47**（patch）；技能版本：topmind-briefs 0.2.25 → 0.2.26、topmind-cover 0.4.14 → 0.4.15、topmind-format 0.1.10 → 0.1.11、topmind-poster 0.1.7 → 0.1.8、topmind-revise 0.1.2 → 0.1.3、topmind-viral-posts 0.3.17 → 0.3.18、topmind-wechat-post 0.3.17 → 0.3.18、topmind-x-article 0.4.23 → 0.4.24。
 
-### 优化
+### 优化（文档整理）
 
+- 根 README（中 / 英）重写：结论先行，技能表带当前版本，新增「写作理念」四层表（第 0 层写作原则 → 第 1 层信息设计 → 第 2 层措辞口吻 → 第 3 层审稿）、文章文件夹结构（`骨架.md`、`参考/`）和多环境协作说明；旧版本号表更新。
+- 深层参考里剩余的「铁律 / 红线 / 纪律」改成「原则 + 怎么判断」：cover 的 `cover-styles.md`（各风格「怎么判断」）、`md3-foundation.md`，wechat-post 的 `known-pits.md`（「怎么避免」）、`typography-rules.md`、`writing-quality.md`、`theme-map.md`，viral-posts 的 `patterns.md`，poster 的内容原则。真正的硬约束（安全区、原创、事实、不改字、平台格式检测、交付格式）保留并标「硬约束」。
+- 「必读必守」统一改成「必读（交付格式是硬约束）」，「核心经验对照」改名「措辞原则对照」。
+- topmind-revise：流程写明「声明 + 备份 → ⓪ 结构 → ① 事实 → …」；README 的「三层规则」换成四层表；第 ⑤ 步按 `core-voice.md` 十条原则和人设抽查。
+- topmind-briefs：删除无引用的 `style-guide.md`（禁止清单式写法），其中的开头写法和发前自检改写成表格并入 `platform-specs.md`；写作步骤加上人设一行。
+- topmind-revise、topmind-viral-posts 的 SKILL.md 补上 `research-mode.md` 入口（之前分发了但没有链接）。
+- topmind-x-article README 的文件夹说明补上 `骨架.md`、`参考/` 和多环境字段。
+- topmind-wechat-post `element-spec.md` 的 `:::` 容器一节标明「只用于旧交付包」；脚本帮助文本同步说明 `:::` 和扩展标记只为旧稿兼容。
+- 公开仓库清理：去掉示例里的私有环境名和「用户偏好」类个人化表述，示例改用中性名称。
 - `core-voice.md` 原则 9 的人设改成「还在学习的普通人」：不是专家，不像科普老师，可以带一点老司机式的自嘲；topmind-viral-posts 的写作要点同步。
 - 删除 `writing-principles.md` 迁移说明文件（0.8.46 已按内容拆到各层，仓库里不再有引用），`shared/manifest.json` 同步去掉；briefs / viral-posts / wechat-post / x-article 不再带这份副本。
 
 ### 特性支持
 
+- 渲染脚本（`md2wechat.py`、`md2x-html.py`、`md2x.py`）去掉 HTML 注释：源稿里临时写的 `<!-- 提示 -->`（可跨行）不进公众号版和 X 版；代码块和行内代码里的注释原样保留。负例测试同步。
 - 多环境协作字段：`article_scaffold.py`（以及 wechat-post 的 `new-article.py`）新建源稿时写 `updated_at`（当前时间，ISO 8601 带时区）、`updated_env`、`updated_by`，后两项用 `--env` / `--by` 填，缺省留空；文章文件夹多建一个 `参考/`，放其他环境写的同主题稿件和素材（`参考-<环境>-<YYYYMMDD>.md`，永远不当源稿）。
 - `check_article.py` 新增 H1 提示：`updated_at` 写了但没有时区时提醒；三个字段都是可选的，旧稿缺了不报，退出码不变。
 - `workspace.md` 新增「多环境协作」一条：字段写法、新旧以 `updated_at` 为准、两边都改过时不覆盖而是存进 `参考/`、提交信息带一致前缀（wechat-post / x-article 的 SKILL.md 与 README 的文件夹说明同步）。
@@ -1272,7 +1283,7 @@
   交付包 / 审校改写 / 质量三关（事实·逻辑·去 AI 味 ≥85）/ 状态同步 / 微信内联排版（`md2wechat --embed-images`）/ 发布清单。
   适配点：frontmatter 去 topmind-pack 专有键（`degradation`/`action_category`/`entrypoint`），
   跨 skill 引用改为通用表述，`writing-quality.md` 改用技能自带 `scan_ai_flavor.py`
-  （原引用本机 `~/.workbuddy` 路径），`md2wechat.py` 缺失输入改干净报错（原 Traceback）。
+  （原引用本机私有路径），`md2wechat.py` 缺失输入改干净报错（原 Traceback）。
 - **topmind-x-article `0.1.0`**：X 长文一键发布。`md2x.py` 把 Markdown 转可直接粘贴进
   X Article 编辑器的纯文本（标题→纯文本行、加粗/斜体去标记、链接→`文字（url）`、
   图片→`[图N]`+文末配图清单、表格→"项：值"列表）；`references/publish-checklist.md`

@@ -1,6 +1,6 @@
 # TopMind emoji 体系（账号人设 · 标题 · 列表）
 
-> 交付与列表规约见 `x-delivery-contract.md`（必读必守）。
+> 交付与列表规约见 `x-delivery-contract.md`（必读：交付格式是硬约束）。
 > **只用于短文体，而且不强制**：短文可以一个 emoji 都不用；要用，就必须用得合理（对得上内容、不堆砌），并且只用本体系。适用于 `topmind-briefs`（短文）、`topmind-format` 的「格式化成短文」、viral-posts 热点资讯型的短文版，以及其他技能派生的 X 短文稿。
 > **段子体完全不用 emoji**（`topmind-viral-posts` 段子、`topmind-format` 转段子）：不用人设点缀、情绪表情、标题 emoji，也不用 emoji 列表符号；分点就一条一行、靠行间空行区分。
 > 公众号稿正文不用人设点缀。列表符号的细则见 `x-post-format.md`，本文只定「用哪些、用几个、放哪里」。

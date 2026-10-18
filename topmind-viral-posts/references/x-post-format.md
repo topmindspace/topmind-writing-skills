@@ -4,7 +4,7 @@
 
 > 适用：`topmind-briefs`、`topmind-viral-posts`、`topmind-format` 的 X 稿，`topmind-x-article` 的 `X发布稿.txt`（长文，可有文内链接），`topmind-wechat-post` 派生的 X 稿。公众号稿继续用 Markdown。
 > X 长文富文本（`X长文.html`）以 `x-html-format.md` 为准。
-> 配套文档：**交付与列表规约 `x-delivery-contract.md`（必读必守）**、emoji `emoji-system.md`、版式规律 `x-layout-patterns.md`。
+> 配套文档：**交付与列表规约 `x-delivery-contract.md`（必读：交付格式是硬约束）**、emoji `emoji-system.md`、版式规律 `x-layout-patterns.md`。
 
 ## 一、不用 Markdown
 

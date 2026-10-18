@@ -1,9 +1,9 @@
 ---
 name: topmind-revise
-description: "改稿与质检：改稿、精简、去 AI 味、质量三关（事实 / 逻辑 / 去 AI 味）与保真审计，长文、短文、段子、回复、标题都能用。四种模式：只审不改（出改稿报告）、改稿（先备份再写回）、嵌入（topmind-wechat-post / topmind-x-article 写长文时默认调用，只回终稿）、快审（标题、短文、段子、回复）。规则来自共享的 core-voice（场景规则）和 de-ai-rules（结构模式 + 改写边界）；脚本分 W 警告 / H 提示两级；防过度改稿：没命中的段落不动，每处改动对应规则编号。Use when 改稿、帮我改改、精简、润色、去 AI 味、去AI味、AI 味太重、改得像人写的、审稿、质检、质量检查、三关、保真审计、按我的意见改、改标题、起标题、写摘要、revise、de-AI、proofread。Do NOT use for 从零写一篇新文章（→ topmind-wechat-post / topmind-x-article / topmind-briefs / topmind-viral-posts）、只排版不改字（→ topmind-format）、出 HTML 或排版导出（→ topmind-x-article / topmind-wechat-post）、封面与配图（→ topmind-cover / topmind-poster）、发布。"
+description: "改稿与质检：改稿、精简、去 AI 味、质量三关（事实 / 逻辑 / 去 AI 味）与保真审计，长文、短文、段子、回复、标题都能用。四种模式：只审不改（出改稿报告）、改稿（先备份再写回）、嵌入（topmind-wechat-post / topmind-x-article 写长文时默认调用，只回终稿）、快审（标题、短文、段子、回复）。规则来自共享的写作原则（第 0 层）、信息设计（第 1 层）、core-voice（第 2 层措辞原则）和 de-ai-rules（结构模式 + 改写边界）；脚本分 W 警告 / H 提示两级，I1–I8 信息设计只作提示；防过度改稿：没命中的段落不动，每处改动对应规则编号。Use when 改稿、帮我改改、精简、润色、去 AI 味、去AI味、AI 味太重、改得像人写的、审稿、质检、质量检查、三关、保真审计、按我的意见改、改标题、起标题、写摘要、revise、de-AI、proofread。Do NOT use for 从零写一篇新文章（→ topmind-wechat-post / topmind-x-article / topmind-briefs / topmind-viral-posts）、只排版不改字（→ topmind-format）、出 HTML 或排版导出（→ topmind-x-article / topmind-wechat-post）、封面与配图（→ topmind-cover / topmind-poster）、发布。"
 license: MIT
 metadata:
-  version: "0.1.2"
+  version: "0.1.3"
   action_category: "write"
   triggers: "改稿, 帮我改改, 改一下这篇, 精简, 润色, 去 AI 味, 去AI味, AI 味太重, 改得像人写的, 审稿, 质检, 质量检查, 三关, 事实核查这篇, 保真审计, 按我的意见改, 改标题, 起标题, 写摘要, 检查一下这篇, revise, edit this draft, proofread, de-AI, make it sound human, quality check"
   author: "TopMindSpace"
@@ -16,7 +16,7 @@ metadata:
 把一篇稿子改得更短、更准、更像作者本人，并且能证明没改坏事实。可以单独用，也可以被写作技能组合调用。
 
 ```
-声明 + 备份 → ① 事实 → ② 逻辑 → ③ 删冗余 → ④ 去 AI 味 → ⑤ 核心经验对照 → ⑥ 排版 → ⑦ 保真审计 → ⑧ 过度改稿检查 → 报告
+声明 + 备份 → ⓪ 结构 → ① 事实 → ② 逻辑 → ③ 删冗余 → ④ 去 AI 味 → ⑤ 措辞原则对照 → ⑥ 排版 → ⑦ 保真审计 → ⑧ 过度改稿检查 → 报告
 ```
 
 ## 先读：写作原则与信息设计
@@ -26,6 +26,7 @@ metadata:
 - [references/social-writing-principles.md](references/social-writing-principles.md)：8 条社交媒体写作原则（先想清楚、结论先行、每句都有新信息、形式跟内容走、简单清楚、原图优先、站在读者那边、真实有分寸）
 - [references/information-design.md](references/information-design.md)：内容 → 形式决策表、篇幅和密度、去啰嗦的判断法
 - 措辞和口吻在这两层之上，见 [references/core-voice.md](references/core-voice.md)
+- 事实关遇到研究类稿子（对比、综述、数据汇总）：[references/research-mode.md](references/research-mode.md)
 
 改稿：先做结构诊断（⓪），再改措辞；去 AI 味模式表只在改稿和自查时读。
 
@@ -74,7 +75,7 @@ metadata:
    python3 scripts/lint_x_post.py 段子.txt --duanzi
    ```
 
-6. **⑤ 核心经验对照**：按文体抽查 `references/core-voice.md` 速查表里的条目（标题、开头、收尾、数字、引用、来源行、列表、emoji……）。
+6. **⑤ 措辞原则对照**：按文体抽查 `references/core-voice.md` 的十条措辞原则和速查表（标题、开头、收尾、数字、引用、来源行、列表、emoji……）；短文、段子、回复的口吻像还在学习的普通人，不像讲台上的专家。
 7. **⑥ 排版**：长文 Markdown（图紧跟它证明的文字，一段 2–3 句，小标题「序号、阶段：概括」）；短文纯文本；段子一句一行、行间空一行；回复一行。
 8. **⑦ 保真审计**：
 

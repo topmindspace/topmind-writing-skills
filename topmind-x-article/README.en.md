@@ -5,7 +5,7 @@
 One long-form article has a single source `<title>/<title>.md`: by default it goes through topmind-revise and the Markdown is the deliverable;
 when you want to post on X, a "copy → paste → publish" X long-form (Article) package is derived into `out/` on request.
 
-- Version: **v0.4.23** (ships with `@topmindspace/topmind-writing-skills@0.8.46`)
+- Version: **v0.4.24** (ships with `@topmindspace/topmind-writing-skills@0.8.47`)
 
 ## Install
 
@@ -16,7 +16,9 @@ npx @topmindspace/topmind-writing-skills install topmind-x-article
 ## Usage
 
 ```bash
-# 0. Create the article folder + structure check (images as ![caption](images/01-xx.png), source on the next line "来源：…")
+# 0. Create the article folder (source + 骨架.md + 素材来源.md + images/ cover/ raw/ out/ 参考/) + structure check
+#    fill 骨架.md before drafting; images as ![caption](images/01-xx.png), source on the next line "来源：…"
+#    working across environments: --env / --by record updated_env / updated_by (see references/workspace.md)
 python3 scripts/article_scaffold.py --title "My article"
 python3 scripts/check_article.py "My article/"
 

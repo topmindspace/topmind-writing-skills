@@ -3,7 +3,7 @@ name: topmind-viral-posts
 description: "X 引流段子/爆款短篇：18 类型模板（含热点资讯、冷知识、差额冲刺）+ 钩子×主体×收尾组合玩法；段子体排版（一句一行、行间空一行、完全不用 emoji，分点不加符号）、口语化、运营帖带互动钩子、话题段子末行动作反转；每条帖子附话题标签（话题段子默认 2 个，运营帖 1–3 个）与内部分类标签，每条交付一段可直接复制的纯文本（X 不渲染 Markdown；话题标签在末行），链接（含来源）、原图、配图另发，绝不混进正文；配图原图优先（官方/第三方/自己的后台截图）；没有原图时先问用户是否配图，同意后才走 topmind-cover 出 16:9 图。只起草不代发。Use when 引流段子、段子、爆款短篇、爆款短文、涨粉帖、涨粉段子、互关帖、互关求粉、X 短帖、热点段子、蹭热点、新人报到、打卡帖、话题标签、hashtag、X 引流、traffic post、viral post；引流互动型（段子、钩子、涨粉）走本技能。Do NOT use for 把现成文字转段子、格式化、排版（→ topmind-format）、X 长文与发 X 文章（→ topmind-x-article）、公众号文章与公众号短文（→ topmind-wechat-post / topmind-briefs）、信息密度型干货短文、快讯与数据榜单（→ topmind-briefs）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、单独改稿、去 AI 味与质检（→ topmind-revise）、把帖子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.3.17"
+  version: "0.3.18"
   action_category: "write"
   triggers: "引流段子, 段子, 写段子, 冷知识段子, 冲粉帖, 破千, 爆款短篇, 爆款短文, 涨粉帖, 涨粉短帖, 涨粉段子, 互关帖, 互关求粉, X 短帖, 热点段子, 蹭热点, 新人报到, 打卡帖, 话题标签, hashtag, traffic post, viral post, 写引流段子, 涨粉内容, 互关内容, X 引流"
   author: "TopMindSpace"
@@ -15,7 +15,7 @@ metadata:
 
 基于对 X 中文区常见高互动写法的归纳，示例均为自编。目标：**短、真、钩子**——读者 3 秒能看完，忍不住点赞/评论/关注。
 
-> **必读必守**：[references/x-delivery-contract.md](references/x-delivery-contract.md)——**段子完全不用 emoji**（无人设点缀、无情绪表情、无列表符号）；分点就一条一行、靠行间空行区分，禁用 `- ` `1. `；每条帖子正文是一段可直接复制的纯文本（单独一个 `text` 块），**不含 URL 和来源行**；链接一条、图片一条另发，内部标签放说明里。
+> **必读（交付格式是硬约束）**：[references/x-delivery-contract.md](references/x-delivery-contract.md)——**段子完全不用 emoji**（无人设点缀、无情绪表情、无列表符号）；分点就一条一行、靠行间空行区分，禁用 `- ` `1. `；每条帖子正文是一段可直接复制的纯文本（单独一个 `text` 块），**不含 URL 和来源行**；链接一条、图片一条另发，内部标签放说明里。
 > **写法规则**：段子、回复、转发点评按 [references/core-voice.md](references/core-voice.md) 的段子 / 回复条目（V19 V26 V27 V29–V32）；去 AI 味按 [references/de-ai-rules.md](references/de-ai-rules.md)。
 
 ## 先读：写作原则与信息设计
@@ -25,6 +25,7 @@ metadata:
 - [references/social-writing-principles.md](references/social-writing-principles.md)：8 条社交媒体写作原则（先想清楚、结论先行、每句都有新信息、形式跟内容走、简单清楚、原图优先、站在读者那边、真实有分寸）
 - [references/information-design.md](references/information-design.md)：内容 → 形式决策表、篇幅和密度、去啰嗦的判断法
 - 措辞和口吻在这两层之上，见 [references/core-voice.md](references/core-voice.md)
+- 研究类选题（要查资料、做对比的）：[references/research-mode.md](references/research-mode.md)
 
 段子：一个主角、一个画面、一句动作反转；不铺垫，每句都有新信息。
 
@@ -86,7 +87,7 @@ metadata:
 | 产品实测 | 新工具上手、横评、翻车现场 | 一手体验优先，二手转述注明 |
 | **AI 模型追踪** | 最新模型发布、多模态模型、开源权重、部署教程、效果对比 | 官方发布、HuggingFace、GitHub、技术博客 |
 | **生图生视频** | 提示词技巧、ComfyUI 工作流、模型对比、参数调优 | Civitai、GitHub、教程文章、实测 |
-| **工具技巧** | ChatGPT/codex/Claude/grok/豆包/Manus/Dots/MIMO/cue 等使用技巧 | 官方文档、社区分享、实测 |
+| **工具技巧** | ChatGPT / Codex / Claude / Grok / 豆包 / Manus 等 AI 工具的使用技巧 | 官方文档、社区分享、实测 |
 | **优惠免费** | 云服务/AI 服务/模型/云主机/订阅的限免、优惠、薅羊毛 | 官方公告、社区爆料（注明时效） |
 | **视觉灵感** | 热门奇特的图片视频、美学风格、创意案例 | X/IG/B站热门（注明来源） |
 
@@ -189,12 +190,12 @@ metadata:
 | 图库 | 适用类型 | 出图要点 |
 |---|---|---|
 | **美女** | 互关求粉 / 新人报到 | 吸睛但不低俗，自然笑容，生活感；避免过度修图网红脸。尺度两档：默认清纯吸睛；性感档（大学生穿搭 T 恤/热裤/吊带、苗条曲线突出、近距离特写）按用户要求选用 |
-| **宠物** | 互关 / 自嘲 / 打卡 / 新人 | 猫为主（用户偏好），狗/鸟点缀；表情生动、有故事感 |
+| **宠物** | 互关 / 自嘲 / 打卡 / 新人 | 猫为主，狗 / 鸟点缀；表情生动、有故事感 |
 | **风景** | 干货 / 提问 / 打卡 | 日出/远眺/星空，配"坚持""远方"意境；清新优雅风 |
 | **奇幻** | 自嘲 / 提问 | 异星风光、奇特地貌、超现实；反差萌，引发好奇 |
 | **标语** | 干货 / 提问（二选一） | MD3 商务风：金句一行 + 浅色底 + 深色字；字少而大 |
 
-**美女生图提示词公式**（2026-10-06 实测优化，用户偏好：漂亮、清纯、身材好、去 AI 味）：
+**人像生图提示词公式**（目标：自然、清爽、有生活感，不像 AI 图）：
 
 ```
 Photorealistic portrait, 35mm film photography aesthetic, shot on 85mm lens f/1.8, subtle film grain:
@@ -224,7 +225,7 @@ clean uncluttered background, vertical 9:16
 1. **选类型**：看用户要什么效果（涨粉→互关型/新人型；互动→提问型/自嘲型；立人设→干货型/打卡型；追热点→热点资讯型）。
 2. **套公式**：从 `references/patterns.md` 取对应公式，填内容。
 3. **配图**：先找原图（官方 > 第三方 / 原帖图，注明来源），给 1–2 张图片地址；没有原图时**先问用户要不要配图**，用户同意才走 topmind-cover 生图（清新优雅/MD3商务风），可先附一个出图 prompt 供用户决定；不擅自生图。
-4. **自检**：删掉"正确的废话"；成稿后按 `references/de-ai-rules.md` 做去 AI 味自查；用户要改稿时转 `topmind-revise`（`mode=quick genre=duanzi`），没装就按 `references/revision-workflow.md` 手动走（备份 → ⓪ 结构 → 事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照 → 排版 → 保真审计，报改前 / 改后字数）；确认有钩子、段子体行间空行、话题标签 1–3 个在末行、事实类的来源链接已整理到另发的链接里；`scripts/lint_x_post.py --duanzi` E 类清零（含 E10 URL、E11 来源行、E12 配图说明）、W12（正文混入标签 / 说明）清零；加 `--duanzi` 时 W13（出现 emoji）清零。
+4. **自检**：删掉"正确的废话"；成稿后按 `references/de-ai-rules.md` 做去 AI 味自查；用户要改稿时转 `topmind-revise`（`mode=quick genre=duanzi`），没装就按 `references/revision-workflow.md` 手动走（备份 → ⓪ 结构 → 事实 → 逻辑 → 删冗余 → 去 AI 味 → 措辞原则对照 → 排版 → 保真审计，报改前 / 改后字数）；确认有钩子、段子体行间空行、话题标签 1–3 个在末行、事实类的来源链接已整理到另发的链接里；`scripts/lint_x_post.py --duanzi` E 类清零（含 E10 URL、E11 来源行、E12 配图说明）、W12（正文混入标签 / 说明）清零；加 `--duanzi` 时 W13（出现 emoji）清零。
 5. **交付**：一次 3–5 条让用户挑，严格按 [references/x-delivery-contract.md](references/x-delivery-contract.md)。
 
 ## Output Contract
@@ -280,4 +281,4 @@ X 的创作者收益，不只看浏览量。
 2. 中文区风格，不硬翻英文 meme。
 3. 互关帖不承诺做不到的事（如"必回关"写成"尽量回关"除非用户明确）。
 4. 美女图不低俗：自然、生活感、有笑容；用户明确要"流量向"时再放开。
-5. 宠物图猫优先（用户偏好），外星/奇幻图取异星风光和奇特地貌。
+5. 宠物图猫优先，外星 / 奇幻图取异星风光和奇特地貌。

@@ -26,6 +26,7 @@
 - 普通行的行首缩进（≥2 个空格或全角空格）保留为 &nbsp;，emoji 项目符号的二级条目不会被吞缩进
 - frontmatter（--- ... ---）跳过，只取 title / cover / subtitle；subtitle（可选）只在页顶预览里给出（no-paste，
   X 文章没有副标题栏，可以拿去当推文文案），不进复制内容
+- HTML 注释（<!-- 写作提示 -->，可跨行）整段去掉，不进产物；代码块和行内代码里的原样保留
 
 设计目标（对标 md2wechat 的公众号体验）：
 - 文本+格式：页顶「一键复制全文」按钮 → 剪贴板富文本 → 粘贴进 X 文章编辑器。
@@ -394,8 +395,54 @@ def frontmatter_value(md_text, key):
     return None
 
 
+_FENCE_OPEN_RE = re.compile(r"^\s{0,3}(`{3,}|~{3,})")
+
+
+def strip_html_comments(text):
+    """去掉正文里的 HTML 注释（<!-- … -->，可跨行）：写作提示、骨架备注不进渲染产物。
+    围栏代码块和行内代码里的 <!-- 原样保留；整行只有注释的行直接删掉。"""
+    out, fence, in_c = [], None, False
+    for line in text.split("\n"):
+        if not in_c:
+            m = _FENCE_OPEN_RE.match(line)
+            if fence is None and m:
+                fence = m.group(1)
+                out.append(line)
+                continue
+            if fence is not None:
+                if m and m.group(1)[0] == fence[0] and len(m.group(1)) >= len(fence) \
+                        and not line.strip()[len(m.group(1)):].strip():
+                    fence = None
+                out.append(line)
+                continue
+        res, rest = "", line
+        while rest:
+            if in_c:
+                j = rest.find("-->")
+                if j < 0:
+                    rest = ""
+                    break
+                rest, in_c = rest[j + 3:], False
+                if res.endswith(" ") and rest.startswith(" "):
+                    rest = rest.lstrip(" ")
+            else:
+                j = rest.find("<!--")
+                if j < 0:
+                    res += rest
+                    break
+                if (res + rest[:j]).count("`") % 2 == 1:  # 行内代码里的 <!-- 不算注释
+                    res, rest = res + rest[:j + 4], rest[j + 4:]
+                    continue
+                res, rest, in_c = res + rest[:j], rest[j + 4:], True
+        if res == line:
+            out.append(line)
+        elif res.strip():
+            out.append(res.rstrip())
+    return "\n".join(out)
+
+
 def md_to_html(md_text, images, cover):
-    lines = md_text.split("\n")
+    lines = strip_html_comments(md_text).split("\n")
     out = []
     cover_uri = data_uri(cover) if cover else None
 

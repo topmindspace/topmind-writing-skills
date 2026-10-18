@@ -7,8 +7,10 @@ and class attributes, so every style in the output is inlined.
 
 Supported beyond CommonMark:
   - code syntax highlighting (inline span colors, no <style>)
-  - ::: container blocks (note/tip/warn/danger/pull/dialogue/stat)
-  - [!badge] inline tags, ==highlight==
+  - ::: container blocks (note/tip/warn/danger/pull/dialogue/stat) — legacy packages only;
+    new single-source drafts use plain Markdown
+  - [!badge] inline tags, ==highlight== (legacy, still rendered)
+  - HTML comments (<!-- writing notes -->, may span lines) are dropped; code keeps them
   - footnote link mode (external links -> end-of-article index)
   - CJK "pangu" spacing between Han and Latin/digits
   - four heading-2 style variants
@@ -1109,6 +1111,52 @@ def handle_mermaid(code, out_dir, diagrams, theme, render):
 
 # ---------------------------------------------------------------- parser
 
+_FENCE_OPEN_RE = re.compile(r"^\s{0,3}(`{3,}|~{3,})")
+
+
+def strip_html_comments(text):
+    """去掉正文里的 HTML 注释（<!-- … -->，可跨行）：写作提示、骨架备注不进渲染产物。
+    围栏代码块和行内代码里的 <!-- 原样保留；整行只有注释的行直接删掉。"""
+    out, fence, in_c = [], None, False
+    for line in text.split("\n"):
+        if not in_c:
+            m = _FENCE_OPEN_RE.match(line)
+            if fence is None and m:
+                fence = m.group(1)
+                out.append(line)
+                continue
+            if fence is not None:
+                if m and m.group(1)[0] == fence[0] and len(m.group(1)) >= len(fence) \
+                        and not line.strip()[len(m.group(1)):].strip():
+                    fence = None
+                out.append(line)
+                continue
+        res, rest = "", line
+        while rest:
+            if in_c:
+                j = rest.find("-->")
+                if j < 0:
+                    rest = ""
+                    break
+                rest, in_c = rest[j + 3:], False
+                if res.endswith(" ") and rest.startswith(" "):
+                    rest = rest.lstrip(" ")
+            else:
+                j = rest.find("<!--")
+                if j < 0:
+                    res += rest
+                    break
+                if (res + rest[:j]).count("`") % 2 == 1:  # 行内代码里的 <!-- 不算注释
+                    res, rest = res + rest[:j + 4], rest[j + 4:]
+                    continue
+                res, rest, in_c = res + rest[:j], rest[j + 4:], True
+        if res == line:
+            out.append(line)
+        elif res.strip():
+            out.append(res.rstrip())
+    return "\n".join(out)
+
+
 def strip_frontmatter(lines):
     if lines and lines[0].strip() == "---":
         for idx in range(1, len(lines)):
@@ -1289,7 +1337,7 @@ def convert_blocks(lines, md_path, out_dir, theme, ctx):
 def convert(md_text, md_path, out_dir, theme, link_mode="footnote",
             render_mermaid=False, asset_root=None, use_pangu=True,
             toc=True, sign_mode="auto", author="", author_bio="", auto_number=False):
-    lines = strip_frontmatter(md_text.split("\n"))
+    lines = strip_frontmatter(strip_html_comments(md_text).split("\n"))
     theme = dict(theme)
     theme["_keep_hand_num"] = (not auto_number) and detect_hand_numbers(lines)
     han_chars = sum(len(HAN_RE.findall(l)) for l in lines)
@@ -1553,7 +1601,7 @@ def audit_inline(body):
       ERROR —— 公众号会静默丢弃该样式或整段吞掉该标签，产物必然与预览不一致
       WARN  —— 转换后仍可读，但存在降级风险或移动端体验问题
 
-    红线依据见 references/wechat-constraints.md，本函数是该文档的可执行版本。
+    硬约束依据见 references/wechat-constraints.md，本函数是该文档的可执行版本。
     """
     issues = []
 

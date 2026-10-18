@@ -5,7 +5,7 @@
 一篇长文只有一份源稿 `<文章名>/<文章名>.md`：默认先过 topmind-revise、交付这份 Markdown；
 要发 X 时再按需派生"复制 → 粘贴 → 发"的 X 长文（Article）发布包到 `out/`。
 
-- 版本：**v0.4.23**（随 `@topmindspace/topmind-writing-skills@0.8.46` 发布）
+- 版本：**v0.4.24**（随 `@topmindspace/topmind-writing-skills@0.8.47` 发布）
 
 ## 安装
 
@@ -16,7 +16,9 @@ npx @topmindspace/topmind-writing-skills install topmind-x-article
 ## 用法
 
 ```bash
-# 0. 建文章文件夹 + 结构体检（图片写 ![说明](images/01-xx.png)，出处写在下一行「来源：……」）
+# 0. 建文章文件夹（源稿 + 骨架.md + 素材来源.md + images/ cover/ raw/ out/ 参考/）+ 结构体检
+#    先填 骨架.md 再写正文；图片写 ![说明](images/01-xx.png)，出处写在下一行「来源：……」
+#    多环境改稿时用 --env / --by 记 updated_env / updated_by（字段说明见 references/workspace.md）
 python3 scripts/article_scaffold.py --title "文章名"
 python3 scripts/check_article.py 文章名/
 

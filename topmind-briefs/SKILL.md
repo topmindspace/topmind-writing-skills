@@ -3,7 +3,7 @@ name: topmind-briefs
 description: "干货短文：一件事讲透，X + 公众号双平台。短文不是长文——默认不出 HTML：工作流按「核实一手信源 → 找原帖原图 → 写内容 → 排版」；X 版交付一段可直接复制的纯文本（首行一句话题陈述、合理分段与列表、去 AI 味、emoji 可选且只用 TopMind 体系、末行默认 2 个话题标签），链接（含来源）、原图（1–2 张）、配图另发，绝不混进正文；公众号版是 300–800 字 Markdown；没有原图时主动询问是否配图，不擅自生图。尊重原始信息、原图、原文。只交付不代发。Use when 写短文、公众号短文、X 短文、发快讯、简讯、速报、数据榜单、榜单速报、论文解读、新品速递、来篇短的、短平快、brief；信息密度型（数据、榜单、发布）走本技能。Do NOT use for 把现成文字格式化、转段子、排版（→ topmind-format）、X 长文与发 X 文章（→ topmind-x-article）、公众号长文与公众号排版 HTML（→ topmind-wechat-post）、引流互动型短帖、段子、涨粉帖、互关帖、爆款短篇（→ topmind-viral-posts）、单独出长图/海报/信息图 PNG（→ topmind-poster）、封面与头图（→ topmind-cover）、单独改稿、去 AI 味与质检（→ topmind-revise）、把稿子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.2.25"
+  version: "0.2.26"
   action_category: "write"
   triggers: "写短文, 公众号短文, X 短文, 发快讯, 快讯, 简讯, 速报, 干货短文, 论文解读, 数据榜单, 榜单速报, 新品速递, brief, 来篇短的, 短平快, 发个快讯"
   author: "TopMindSpace"
@@ -15,7 +15,7 @@ metadata:
 
 一件事，一段话，讲完就停。短文不是长文：**默认不出 HTML、不做排版包**，交付的是可以直接复制粘贴的文字。
 
-> **必读必守**：[references/x-delivery-contract.md](references/x-delivery-contract.md)——X 正文是一段可直接复制的纯文本，**不含 URL 和来源行**；链接一条、图片一条另发。分点默认「·」，行多用「1）」，短列表才用 emoji，禁用 `- ` `1. `；emoji 不强制。
+> **必读（交付格式是硬约束）**：[references/x-delivery-contract.md](references/x-delivery-contract.md)——X 正文是一段可直接复制的纯文本，**不含 URL 和来源行**；链接一条、图片一条另发。分点默认「·」，行多用「1）」，短列表才用 emoji，禁用 `- ` `1. `；emoji 不强制。
 > **写法规则**：[references/core-voice.md](references/core-voice.md) 的短文条目（V01 V05 V08–V13 V16 V20–V22 V24–V28 V32）；去 AI 味按 [references/de-ai-rules.md](references/de-ai-rules.md)。
 
 - 跟 `topmind-viral-posts` 的区别：那是引流互动型段子（第一人称、钩子、涨粉）；这是**信息密度型干货短文**（数据、榜单、论文、新品，第三方客观口吻）。
@@ -65,6 +65,7 @@ metadata:
 3. **写内容**：
    - 先想清楚这条要传达的一件事（第 0 层原则 1）；并列要点、对比、步骤按 [references/information-design.md](references/information-design.md) 的决策表先定成「·」分行、分行对照或「1）」，不写成一段话；
    - 首行一句简单的话题陈述：「是什么 + 最关键的事实」，约 30 字内，只看首行也拿到信息；不用设问钩子，真里程碑把「第一」放句首（core-voice V05、V20）；
+   - 口吻像还在学习的普通人：讲自己看到、试过的，不站讲台，不确定就直说（core-voice 原则 9）；
    - 具体数字和场景，说人话，事实讲完就停，不硬加收尾句，也不用「你会换吗？」拉互动（V10）；对比给出对象和定语，比的对象选读者认识的知名对手，不写「约 / 左右」，不用千分位（V12）；
    - 读者不关心的背景删掉，借来的热点一句带过；推测写成问句，不写成事实（V22）；不写「理由就一条：」这类总结腔，直接说理由（V08）；
    - **成稿后去 AI 味自查**：按 [references/de-ai-rules.md](references/de-ai-rules.md) 过一遍（审稿用，先守改写边界：只改表达，不改事实和确定性），再对照 [references/core-voice.md](references/core-voice.md) 原则 2、4、9 和短文条目；
@@ -81,7 +82,7 @@ metadata:
    - 每个数字都能在另发的链接里找到出处；图和文字说的是同一件事；推测已标注；
    - `python3 scripts/lint_x_post.py X短文.txt`：E 错误清零（Markdown 残留，以及 E10 正文有 URL、E11 有来源行、E12 有配图说明）；W 警告每条要有结论（改掉，或在说明里写保留理由）；H 提示只供判断，不要求改；公众号版跑 `python3 scripts/de_ai_lint.py 公众号短文.md`；
    - 需要统一排版时可跑 `python3 scripts/format_text.py X短文.txt --mode short --out X短文.txt`（只动排版不改字；正文里的链接、来源行会被拿出来另列）。
-   - 用户要求改稿时，转 `topmind-revise`（`mode=revise genre=short`）；没装时按 [references/revision-workflow.md](references/revision-workflow.md) 手动走：备份 → ⓪ 结构 → 事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照 → 排版 → 保真审计，报改前 / 改后字数（`python3 scripts/count_words.py`）。
+   - 用户要求改稿时，转 `topmind-revise`（`mode=revise genre=short`）；没装时按 [references/revision-workflow.md](references/revision-workflow.md) 手动走：备份 → ⓪ 结构 → 事实 → 逻辑 → 删冗余 → 去 AI 味 → 措辞原则对照 → 排版 → 保真审计，报改前 / 改后字数（`python3 scripts/count_words.py`）。
 7. **交付**（只交付，不发布）：见下节「交付格式」；落盘时 `X短文.txt` 只放正文，链接 / 图片 / 说明写进 `交付说明.md`。
 
 ## 交付格式

@@ -54,7 +54,7 @@ Release 的 publish 步骤：
 - 发版：修好后推新 commit + 新 tag（npm 版本不可覆盖；已发布号走上面的幂等路径）
 - 本地：修完再跑 `bash scripts/ci_skill_gates.sh`，确认 exit 0 再推
 
-## 红线（勿为过 CI 而削弱）
+## 硬约束（不为过 CI 而削弱）
 
 - 各技能 `audit_*.py` 定义的质量门禁（如去 AI 味、数字来源、配图校验）
 - `negative_tests.py` 的负向用例必须全绿
