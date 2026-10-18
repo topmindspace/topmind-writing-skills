@@ -1650,8 +1650,11 @@ def atomic_write(path, text):
 
 
 def write_manifest(out_dir, slug, title, assets, diagrams, theme, footnotes,
-                   embedded=False):
+                   embedded=False, subtitle=""):
     lines = ["# 图片上传清单 · %s" % title, ""]
+    if subtitle:
+        lines += ["## 摘要（frontmatter subtitle）", "", subtitle, "",
+                  "> 公众号后台「摘要」栏可以直接用（120 字以内）；正文里不重复。", ""]
     if embedded:
         lines.append("> 本页图片已 base64 内嵌，正常情况下粘贴到后台即带图。"
                      "若有图显示为占位符，再按此顺序逐张上传到素材库替换。")
@@ -1800,6 +1803,12 @@ def main():
         m = re.search(r"^title:\s*(.+)$", fm, re.M)
         if m:
             title = m.group(1).strip().strip("\"'")
+    subtitle = ""
+    if md_text.startswith("---"):
+        end = md_text.find("\n---", 3)
+        m = re.search(r"^subtitle:[ \t]*(\S.*?)[ \t]*$", md_text[3:end] if end > 0 else "", re.M)
+        if m:
+            subtitle = m.group(1).strip().strip("\"'")
     if not title:
         for line in md_text.split("\n"):
             if line.startswith("# "):
@@ -1822,7 +1831,7 @@ def main():
     atomic_write(html_path, page)
 
     manifest = write_manifest(args.out_dir, args.slug, title, assets, diagrams,
-                              theme, footnotes, embed_stats is not None)
+                              theme, footnotes, embed_stats is not None, subtitle)
 
     plain = re.sub(r"<[^>]+>", "", body)
     print("HTML     : %s" % html_path)

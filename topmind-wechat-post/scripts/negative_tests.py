@@ -103,6 +103,36 @@ def main() -> None:
               and html.count("来源：某项目官方文档") == 1
               and "font-size:12px" in html.split("来源：某项目官方文档")[0][-200:], r.stdout[-300:])
 
+        # 7c. frontmatter subtitle（可选）→ 图片上传清单的「摘要」，不进正文
+        (art / "新文章.md").write_text(
+            "---\ntitle: 新文章\nsubtitle: 从一个插件被下架说起\n---\n\n# 新文章\n\n正文。\n", encoding="utf-8")
+        r = run("md2wechat.py", ["--input", str(art / "新文章.md")])
+        mf = art / "out" / "图片上传清单.md"
+        mtxt = mf.read_text(encoding="utf-8") if mf.exists() else ""
+        html = outp.read_text(encoding="utf-8") if outp.exists() else ""
+        check("md2wechat subtitle 写进清单的「摘要」、不进正文",
+              r.returncode == 0 and "## 摘要" in mtxt and "从一个插件被下架说起" in mtxt
+              and "从一个插件被下架说起" not in html.split('id="wx-body"')[-1], (r.stdout + r.stderr)[-300:])
+        (art / "新文章.md").write_text("---\ntitle: 新文章\nsubtitle: \n---\n\n# 新文章\n\n正文。\n", encoding="utf-8")
+        run("md2wechat.py", ["--input", str(art / "新文章.md")])
+        mtxt = mf.read_text(encoding="utf-8") if mf.exists() else ""
+        check("md2wechat subtitle 留空时清单不出「摘要」", "## 摘要" not in mtxt)
+
+        # 7d. article_scaffold 新建的文件夹，check_article 只给 W5（封面还没做）
+        r = run("article_scaffold.py", ["--title", "脚手架样例", "--base", str(td), "--tags", "AI"])
+        r2 = run("check_article.py", [str(td / "脚手架样例")])
+        import re as _re
+        check("scaffold 新文件夹：check_article 通过且只有 W5", r.returncode == 0 and r2.returncode == 0
+              and set(_re.findall(r"\[([EW]\d+)\]", r2.stdout)) == {"W5"}, (r.stderr + r2.stdout)[-300:])
+        sm = (td / "脚手架样例" / "脚手架样例.md").read_text(encoding="utf-8")
+        check("scaffold 写出可选 subtitle 字段", "\nsubtitle: \n" in sm, sm[:200])
+        (td / "脚手架样例" / "脚手架样例.md").write_text(sm.replace("subtitle: ", "subtitle: 脚手架样例"), encoding="utf-8")
+        r2 = run("check_article.py", [str(td / "脚手架样例")])
+        check("check_article：subtitle 和标题一样 → W6", r2.returncode == 0 and "W6" in r2.stdout, r2.stdout[-200:])
+        (td / "脚手架样例" / "脚手架样例.md").write_text(sm.replace("status: 草稿", "status: 定稿"), encoding="utf-8")
+        r2 = run("check_article.py", [str(td / "脚手架样例")])
+        check("check_article：定稿缺封面 → E7、退出 1", r2.returncode == 1 and "E7" in r2.stdout, r2.stdout[-200:])
+
         # 8. md2wechat 分隔线不触发自家合规 WARN（inline-block）
         (td / "hr.md").write_text("# t\n\n---\n\n正文。\n", encoding="utf-8")
         r = run("md2wechat.py", ["--input", str(td / "hr.md"),

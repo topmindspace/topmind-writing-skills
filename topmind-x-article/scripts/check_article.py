@@ -12,12 +12,15 @@ E 级（必须清零，有任何一条退出码 1）：
     E4 images/ 下图片编号与正文出现顺序不一致（后出现的图序号反而更小或重复），或没有序号前缀
     E5 出现 Obsidian 写法 ![[ ]]、callout（> [!note]）或 ::: 容器——源稿要能被任何 Markdown 工具读
     E6 定稿 / 已发布的稿子里还有占位图（文件名带「待补 / 占位 / placeholder」）
+    E7 定稿 / 已发布的稿子，frontmatter cover 指向的封面不存在（或 cover 留空）
 W 级（逐条给结论）：
     W1 images/ 里有图没被正文引用
     W2 远程图片（发布前应下载到 images/）
     W3 顺序正确，但编号不连续或带插入后缀（11a、11b），建议重编号
     W4 草稿期的占位截图：图片还没放进来（文件名带「待补 / 占位 / placeholder / 截图」，或在 素材来源.md 里登记过），
        或放的是占位图；status 改成定稿前要补上
+    W5 草稿期封面还没做：cover 指向的文件不存在或 cover 留空（定稿时升级成 E7）
+    W6 subtitle（可选）写了但和标题一样，或超过 40 字
     W18 自制图没标清楚：图注（alt）或紧跟的「来源：」行要写「自制」和数据来源
         （与 de_ai_lint / lint_x_post 的 W18 同一口径）
 """
@@ -28,6 +31,8 @@ import re
 import sys
 
 REQUIRED = ("title", "date", "status", "tags", "cover")
+OPTIONAL = ("subtitle",)  # 可选字段：留空或不写都行
+SUBTITLE_MAX = 40
 IMG_RE = re.compile(r"!\[([^\]]*)\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 IMG_EXT = (".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg")
 SELFMADE_RE = re.compile(r"自制|self[- ]?made", re.I)
@@ -121,6 +126,22 @@ def check(md_path):
             "%s=%s" % (k, v) for k, v in present.items())))
 
     final = fm.get("status", "") in FINAL_STATUS
+    if "cover" in fm:
+        cv = fm.get("cover", "")
+        if not cv:
+            (errors if final else warns).append(
+                (1, "E7" if final else "W5", "cover 留空：封面做好后填 cover/cover-1500x600.png 这类相对路径"))
+        elif not re.match(r"https?://", cv) and not os.path.isfile(os.path.normpath(os.path.join(root, cv))):
+            if final:
+                errors.append((1, "E7", "定稿的封面不存在：%s" % cv))
+            else:
+                warns.append((1, "W5", "封面还没做：%s（草稿期只提醒；定稿前用 topmind-cover 出图）" % cv))
+    sub = fm.get("subtitle", "")
+    if sub:
+        if title and sub == title:
+            warns.append((1, "W6", "subtitle 和 title 一样，留空或换成概括结构的一句（core-voice V02）"))
+        elif len(sub) > SUBTITLE_MAX:
+            warns.append((1, "W6", "subtitle 有 %d 字，超过 %d 字；副标题概括结构就够（core-voice V02）" % (len(sub), SUBTITLE_MAX)))
     sources_txt = ""
     sp = os.path.join(root, "素材来源.md")
     if os.path.isfile(sp):

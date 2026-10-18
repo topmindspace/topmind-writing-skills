@@ -131,6 +131,14 @@ def main() -> None:
               '<p class="src">来源：某官方文档</p>' in html and "代码里的" in html)
         check("md2x-html 缺省读 frontmatter cover", "cover-1500x600" in html or html.count("data:image/png") == 3,
               str(html.count("data:image/png")))
+        src = (art / "示例文章.md").read_text(encoding="utf-8")
+        (art / "示例文章.md").write_text(src.replace("title: 示例文章\n", "title: 示例文章\nsubtitle: 过去、现在和明年\n"), encoding="utf-8")
+        r = subprocess.run([PY, str(html_script), str(art / "示例文章.md")], capture_output=True, text=True, timeout=30)
+        html = outp.read_text(encoding="utf-8") if outp.exists() else ""
+        check("md2x-html subtitle 只在 no-paste 预览里出现一次",
+              r.returncode == 0 and html.count("过去、现在和明年") == 1 and 'class="cover-note no-paste" id="subtitlebox"' in html,
+              (r.stdout + r.stderr)[-300:])
+        (art / "示例文章.md").write_text(src, encoding="utf-8")
         (art / "旧.md").write_text("# t\n\n[图1]\n", encoding="utf-8")
         r = subprocess.run([PY, str(html_script), str(art / "旧.md"), "--out", str(td / "x.html")],
                            capture_output=True, text=True, timeout=30)

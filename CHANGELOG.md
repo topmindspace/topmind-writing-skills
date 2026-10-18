@@ -2,6 +2,13 @@
 
 > 未发版；版本号不变。
 
+### 优化（第 4 批：长文交付结构）
+
+- frontmatter 新增可选 `subtitle`（副标题）：`article_scaffold.py` 生成空字段；`check_article.py` 留空不报，写了但和标题一样或超过 40 字给 W6；`md2wechat.py` 把它写进图片上传清单的「摘要」（公众号后台摘要栏可直接用），`md2x-html.py` 只在页顶预览里给出（no-paste，不进复制内容）；两边都不往正文里塞。
+- `check_article.py` 新增封面检查：草稿期 cover 指向的文件还没做（或 cover 留空）给 W5，status 是定稿 / 已发布时是 E7。刚用 `article_scaffold.py` 建好的文件夹跑体检只有 W5，脚手架和体检口径对齐。
+- 文档：wechat-post `theme-map.md`、`element-spec.md` 的章节编号描述改成「手写序号原样保留，都没写时才自动编号」，和 `md2wechat.py` 的实际行为一致；wechat-post / x-article SKILL.md 补上 subtitle、W5 / E7 和 raw/ 下的改稿备份位置；`revision-workflow.md` 提示可以在 Obsidian 里排除 raw/，免得搜出两份同名文章。
+- 回归：wechat-post 负向测试新增 6 条（subtitle 进清单 / 留空不出、脚手架只有 W5、写出 subtitle 字段、W6、定稿缺封面 E7）；x-article 新增 1 条（subtitle 只在 no-paste 预览出现一次）。
+
 ### 优化（第 3 批：改稿流程补全与规则层）
 
 - topmind-revise：写清 revise 和 embed 的边界（用户直接说「改稿」就是 revise；embed 步骤、备份、报告都一样，只是对话里只回终稿和三行摘要）；长文备份位置统一为 `<文章文件夹>/raw/备份-<时间戳>/`，单个短文件放同目录 `备份-<时间戳>-<稿名>/`。

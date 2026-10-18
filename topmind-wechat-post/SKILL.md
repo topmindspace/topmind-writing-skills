@@ -121,7 +121,7 @@ python3 scripts/new-article.py --title "<标题>" --direction reverse
 ├── images/                      # 01-xxx.png、02-xxx.png…，按正文出现顺序编号
 ├── cover/                       # 封面
 ├── 素材来源.md                  # 私有：图源、承重事实来源、未核实条目
-├── raw/                         # 原始素材（不发布）
+├── raw/                         # 原始素材（不发布）；改稿备份放 raw/备份-<时间戳>/
 └── out/                         # 按需生成，可随时重建，不手改
     ├── <文章名>-公众号版.html   # 浏览器打开 → 复制正文 → 粘贴后台
     ├── 图片上传清单.md  images/
@@ -135,7 +135,8 @@ title: 文章名           # = H1 = 文件名（check_article.py 校验）
 date: 2026-10-18
 status: 草稿            # 草稿 | 定稿 | 已发布
 tags: [AI, Agent]
-cover: cover/cover-1500x600.png
+cover: cover/cover-1500x600.png   # 草稿期封面还没做 → check_article W5；定稿时 → E7
+subtitle: 从一个插件被下架说起    # 可选：副标题，md2wechat 写进图片上传清单的「摘要」，正文不重复；留空即可
 # 以下为可选字段：对接 topstream 时才写，有就维护，没有不报错
 direction: reverse      # forward | reverse
 source_file: ""         # forward 填 notes/xxx.md

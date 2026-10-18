@@ -6,13 +6,15 @@
 
 生成：
     <文章名>/
-      <文章名>.md      唯一源稿（frontmatter 五个字段 + H1 标题）
+      <文章名>.md      唯一源稿（frontmatter 五个必填字段 + 可选 subtitle + H1 标题）
       images/          正文配图，按出现顺序 01-xxx.png、02-xxx.png
       cover/           封面（cover-1500x600.png 等）
       素材来源.md      每张图、每个数字的出处
       raw/             原始素材、截图、笔记（不发布）
       out/             派生产物（X长文.html、X发布稿.txt、公众号版 HTML），可随时重建
 
+subtitle 可以留空：填了的话 md2wechat 写进图片上传清单的「摘要」，md2x-html 在页顶预览里给出（都不进正文）。
+刚建好的文件夹跑 check_article.py 应该只有 W5（封面还没做）。
 文件夹已存在就报错退出，绝不覆盖。文件名里的 / \\ : * ? " < > | 换成「-」，最长 80 字。
 """
 import argparse
@@ -35,6 +37,7 @@ def frontmatter(title, date, tags):
     tag_list = ", ".join(tags)
     return ("---\n"
             "title: %s\n"
+            "subtitle: \n"
             "date: %s\n"
             "status: 草稿\n"
             "tags: [%s]\n"

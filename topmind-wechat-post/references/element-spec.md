@@ -18,7 +18,7 @@
 | Markdown | 产物 | 级 | 说明 |
 |---|---|---|---|
 | `# 标题` | `<p style="20px/700/center">` | S | 不用 `<h1>`（微信按标题语义覆盖字号） |
-| `## 标题` | `<h2 style="18px/700;color:text_strong">` + 自动编号 | S | 见下方「章节编号」 |
+| `## 标题` | `<h2 style="18px/700;color:text_strong">`；手写序号原样保留，都没写时才自动编号 | S | 见下方「章节编号」 |
 | `### 标题` | `<h3 style="16px/600">` | S | |
 | `#### 标题` | `<h4 style="15px/600">` | S | |
 | 段落 | `<p style="margin:0 0 {para_gap};line-height:{line_height};letter-spacing:0.5px;text-align:left;word-break:break-word">` | S | `text-align` 只允许 left/center/right |

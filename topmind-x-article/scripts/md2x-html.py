@@ -24,7 +24,8 @@
   `---` → hr（X 粘贴可能丢弃，需手动 Insert → 分割线，见 references/x-html-format.md）
 - GFM 表格 → ul.xtable（X 粘贴会丢弃 <table>，转列表保内容）
 - 普通行的行首缩进（≥2 个空格或全角空格）保留为 &nbsp;，emoji 项目符号的二级条目不会被吞缩进
-- frontmatter（--- ... ---）跳过，只取 title
+- frontmatter（--- ... ---）跳过，只取 title / cover / subtitle；subtitle（可选）只在页顶预览里给出（no-paste，
+  X 文章没有副标题栏，可以拿去当推文文案），不进复制内容
 
 设计目标（对标 md2wechat 的公众号体验）：
 - 文本+格式：页顶「一键复制全文」按钮 → 剪贴板富文本 → 粘贴进 X 文章编辑器。
@@ -691,6 +692,10 @@ def main():
     title = m.group(1).strip() if m else "X长文"
 
     body = md_to_html(md_text, images, args.cover)
+    subtitle = frontmatter_value(md_text, "subtitle")
+    if subtitle:
+        body = ('<div class="cover-note no-paste" id="subtitlebox">副标题（不进复制内容，可用作推文文案）：%s</div>\n'
+                % html.escape(subtitle)) + body
     page = HTML_TMPL.replace("@@TITLE@@", html.escape(title)) \
                     .replace("@@CSS@@", CSS) \
                     .replace("@@BODY@@", body) \

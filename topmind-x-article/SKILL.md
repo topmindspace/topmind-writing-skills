@@ -46,7 +46,8 @@ Obsidian 里直接能看；用户要发 X 时，再从它派生发布包到 `out
      没装 revise 时按随包 `references/revision-workflow.md` 手动走：逻辑与事实 → 删冗余 → 去 AI 味 → 排版，
      `python3 scripts/de_ai_lint.py <文章名>.md --genre long` 的 W 每条有结论（改掉或写保留理由），H 只供判断。
    - 体检：`python3 scripts/check_article.py <文章名>/` E 级清零（五项 frontmatter、H1 = title = 文件名、
-     图片存在且编号跟出现顺序一致、无容器和 wikilink）。
+     图片存在且编号跟出现顺序一致、无容器和 wikilink）。草稿期封面还没做只给 W5、占位截图只给 W4，
+     `status` 改成定稿后这两项升级成 E7 / E3。frontmatter 可以加可选的 `subtitle`（副标题，md2x-html 只在页顶预览里给出，不进复制内容）。
    - **到这里就是默认交付**：一份 `<文章名>.md`。用户没说要 X 版，就不生成 HTML。
 1. **按需：转 HTML**（用户说「出 X 版 / 一键复制 / X 长文 HTML」时）：
    ```bash
