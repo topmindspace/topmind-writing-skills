@@ -45,7 +45,8 @@ Obsidian 里直接能看；用户要发 X 时，再从它派生发布包到 `out
 
 0. **建文件夹、写稿、改稿（默认组合 topmind-revise，先于任何转换）**：
    - 新文章先建文件夹：`python3 scripts/article_scaffold.py --title "文章名" [--base 目录]`，
-     得到 `<文章名>/<文章名>.md` + `images/ cover/ raw/ out/` + `素材来源.md`；已存在就报错，不覆盖。
+     得到 `<文章名>/<文章名>.md` + `images/ cover/ raw/ out/` + `骨架.md` + `素材来源.md`；已存在就报错，不覆盖。
+   - **先写骨架**：填 `骨架.md`（主要信息、读者、每节要点 / 形式 / 图表计划 / 字数，方法见 `references/information-design.md` 第一、二节）。并列要点、步骤、对照、数据先在骨架里定成列表 / 表格 / 图，写完正文回头对一遍。X 长文不渲染 Markdown 表格的场景按决策表最后一列处理。
    - **先找图再写字**：按 `references/image-sourcing.md` 找官方 / 原帖 / 第三方原图，按出现顺序存成
      `images/01-xxx.png`、`02-xxx.png`，正文直接写 `![说明](images/01-xxx.png)`，出处写在图片下一行
      「来源：……」，同时记进私有 `素材来源.md`（不进本仓库）。自制图只作兜底，只用于有出处的数据，图注或「来源：」行写「自制」和数据来源（W18）。

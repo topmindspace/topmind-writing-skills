@@ -89,7 +89,7 @@ def _diff(b: Counter, a: Counter) -> dict:
             "次数变化": sorted(f"{k}（{b[k]}→{a[k]}）" for k in b if k in a and a[k] != b[k])}
 
 
-DECLARE_BASIS_RE = re.compile(r"①|②|事实|逻辑|作者")
+DECLARE_BASIS_RE = re.compile(r"⓪|①|②|结构|事实|逻辑|作者")
 
 
 def declared_snippets(report_text: str) -> list[str]:
@@ -186,7 +186,7 @@ def render(r: dict) -> str:
     for ratio, ex in o["examples"]:
         lines.append(f"  · 相似度 {ratio}：{ex}…")
     if o.get("declared"):
-        lines.append(f"  已登记为事实 / 逻辑 / 作者意见的改动 {len(o['declared'])} 段，不计入比例")
+        lines.append(f"  已登记为结构 / 事实 / 逻辑 / 作者意见的改动 {len(o['declared'])} 段，不计入比例")
     return "\n".join(lines)
 
 
@@ -199,9 +199,20 @@ REPORT_TMPL = """# 改稿报告
 
 {counts}
 
+## 信息设计诊断（⓪ 结构）
+
+先于措辞看结构（方法见 information-design.md）；随笔类整篇段落是正常的。
+
+- 主要信息：（一两句；在不在开头）
+- [ ] 每节要点能一句话说出
+- [ ] 并列、步骤、对照、数据没有写成长段（该转列表 / 表格 / 图的已转或已列建议）
+- [ ] 没有重复的段落和复读标题的首句
+- [ ] 篇幅在预算内（有骨架.md 时对照）
+- 结构改动：（light 默认只做低风险改动；重排章节写建议或注明 depth=structure）
+
 ## 改动表
 
-依据填规则编号（Z / P / V / W / H）、「① 事实」「② 逻辑」或「作者意见」；说不出依据的改动恢复原文。
+依据填规则编号（Z / P / V / W / H）、「⓪ 结构」「① 事实」「② 逻辑」或「作者意见」；说不出依据的改动恢复原文。
 
 | 位置 | 依据 | 原文 | 改后 |
 |---|---|---|---|

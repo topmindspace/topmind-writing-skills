@@ -126,6 +126,10 @@ def main() -> None:
               and set(_re.findall(r"\[([EW]\d+)\]", r2.stdout)) == {"W5"}, (r.stderr + r2.stdout)[-300:])
         sm = (td / "脚手架样例" / "脚手架样例.md").read_text(encoding="utf-8")
         check("scaffold 写出可选 subtitle 字段", "\nsubtitle: \n" in sm, sm[:200])
+        skel = td / "脚手架样例" / "骨架.md"
+        sk = skel.read_text(encoding="utf-8") if skel.is_file() else ""
+        check("scaffold 生成骨架.md（主要信息 / 读者 / 每节形式与图表计划），源稿里不写骨架",
+              all(k in sk for k in ("主要信息", "读者", "形式", "图表计划", "字数")) and "骨架" not in sm, sk[:200])
         (td / "脚手架样例" / "脚手架样例.md").write_text(sm.replace("subtitle: ", "subtitle: 脚手架样例"), encoding="utf-8")
         r2 = run("check_article.py", [str(td / "脚手架样例")])
         check("check_article：subtitle 和标题一样 → W6", r2.returncode == 0 and "W6" in r2.stdout, r2.stdout[-200:])

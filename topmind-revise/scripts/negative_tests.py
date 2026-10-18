@@ -146,6 +146,10 @@ def main() -> None:
         o = (json.loads(r.stdout or "{}") if r.returncode == 0 else {}).get("过度改稿", {})
         check("revise_check --declare：登记为逻辑关的改动不计入过度改稿", o.get("over_edit") is False and len(o.get("declared", [])) == 5,
               json.dumps(o, ensure_ascii=False)[:300])
+        r = run(["scripts/revise_check.py", str(clean_b), str(clean_a), "--json", "--declare", str(declare_file("⓪ 结构"))])
+        o = (json.loads(r.stdout or "{}") if r.returncode == 0 else {}).get("过度改稿", {})
+        check("revise_check --declare：登记为⓪结构复查的改动不计入过度改稿", o.get("over_edit") is False and len(o.get("declared", [])) == 5,
+              json.dumps(o, ensure_ascii=False)[:300])
         r = run(["scripts/revise_check.py", str(clean_b), str(clean_a), "--json", "--declare", str(declare_file("Z17 假强调"))])
         o = (json.loads(r.stdout or "{}") if r.returncode == 0 else {}).get("过度改稿", {})
         check("revise_check --declare：依据是规则编号的改动照算", o.get("over_edit") is True, json.dumps(o, ensure_ascii=False)[:300])
@@ -161,6 +165,8 @@ def main() -> None:
         check("revise_check --report：改动表按 diff 预填", "| 改前第" in txt and "真正的本地存储" in txt, txt[:300])
         check("revise_check --report：剩余 H 列进保留未改的命中", "[H1]" in txt and "（一句判断）" in txt, txt[:500])
         check("revise_check --report：带人工检查清单", "## 人工检查" in txt and "- [ ]" in txt)
+        check("revise_check --report：带信息设计诊断（⓪ 结构）且在改动表之前",
+              "## 信息设计诊断" in txt and txt.find("## 信息设计诊断") < txt.find("## 改动表"), txt[:400])
 
         # 5. count_words
         cw = t / "cw.md"

@@ -9,6 +9,7 @@
       <文章名>.md      唯一源稿（frontmatter 五个必填字段 + 可选 subtitle + H1 标题）
       images/          正文配图，按出现顺序 01-xxx.png、02-xxx.png
       cover/           封面（cover-1500x600.png 等）
+      骨架.md          动笔前的信息设计骨架：主要信息、读者、每节要点 / 形式 / 图表计划 / 字数（不发布）
       素材来源.md      每张图、每个数字的出处
       raw/             原始素材、截图、笔记（不发布）
       out/             派生产物（X长文.html、X发布稿.txt、公众号版 HTML），可随时重建
@@ -45,6 +46,23 @@ def frontmatter(title, date, tags):
             "---\n" % (title, date, tag_list))
 
 
+SKELETON_TPL = """# 骨架
+
+动笔前先填，写完正文回头对一遍。判断方法见 references/information-design.md 第一、二节。不发布。
+
+类型：记录 / 观点 / 教程 / 资讯 / 随笔（随笔可以整篇段落）
+主要信息：（读者看完该知道什么，一两句）
+读者：（谁、已经知道什么、为什么会看）
+篇幅：约 ____ 字，__ 张图，__ 个表 / 列表
+
+| 节 | 要点 | 形式 | 图表计划 | 字数 |
+|---|---|---|---|---|
+| 开头 | 结论 + 关键数字 | 段落 | — | 150 |
+| | | | | |
+| 结尾 | | | | |
+"""
+
+
 SOURCES_TPL = """# 素材来源
 
 每张图、每个关键数字一行：用在哪、出处、取用日期。正文图片下方的「来源：」行从这里摘。
@@ -71,6 +89,8 @@ def scaffold(title, base, date=None, tags=None):
     with open(md, "w", encoding="utf-8") as f:
         f.write(frontmatter(name, date, tags))
         f.write("\n# %s\n\n" % name)
+    with open(os.path.join(root, "骨架.md"), "w", encoding="utf-8") as f:
+        f.write(SKELETON_TPL)
     with open(os.path.join(root, "素材来源.md"), "w", encoding="utf-8") as f:
         f.write(SOURCES_TPL)
     return root, md
