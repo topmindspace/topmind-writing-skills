@@ -38,12 +38,6 @@
       "topmind-x-article",
       "topmind-revise"
     ],
-    "references/writing-principles.md": [
-      "topmind-briefs",
-      "topmind-viral-posts",
-      "topmind-wechat-post",
-      "topmind-x-article"
-    ],
     "scripts/format_text.py": [
       "topmind-briefs",
       "topmind-format",

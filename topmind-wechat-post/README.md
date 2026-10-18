@@ -20,7 +20,7 @@ npx @topmindspace/topmind-writing-skills install topmind-wechat-post
 ```bash
 export TOPMIND_WORKSPACE=/path/to/workspace   # 推荐：按名称发现「长文」类别 + {当年}-公众号；或用 --base 指定专题目录
 
-# 新建文章文件夹：<专题>/标题/标题.md + images/ cover/ raw/ out/ + 素材来源.md（--legacy --slug 建旧交付包）
+# 新建文章文件夹：<专题>/标题/标题.md + images/ cover/ raw/ out/ 参考/ + 骨架.md、素材来源.md（--legacy --slug 建旧交付包）
 python3 scripts/new-article.py --title "标题"
 A=<专题>/标题
 

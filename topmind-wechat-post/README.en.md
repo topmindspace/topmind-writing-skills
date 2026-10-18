@@ -19,7 +19,7 @@ npx @topmindspace/topmind-writing-skills install topmind-wechat-post
 ```bash
 export TOPMIND_WORKSPACE=/path/to/workspace   # recommended: finds the long-form category by name + {year}-公众号; or pass --base
 
-# Create an article folder: <topic>/标题/标题.md + images/ cover/ raw/ out/ + 素材来源.md (--legacy --slug for the old layout)
+# Create an article folder: <topic>/标题/标题.md + images/ cover/ raw/ out/ 参考/ + 骨架.md, 素材来源.md (--legacy --slug for the old layout)
 python3 scripts/new-article.py --title "标题"
 A=<topic>/标题
 

@@ -21,6 +21,8 @@ W 级（逐条给结论）：
        或放的是占位图；status 改成定稿前要补上
     W5 草稿期封面还没做：cover 指向的文件不存在或 cover 留空（定稿时升级成 E7）
     W6 subtitle（可选）写了但和标题一样，或超过 40 字
+    H1 updated_at 写了但没有时区（如 2026-10-18T17:00:00，应写成 +08:00 或 Z 结尾）；
+       多环境字段 updated_at / updated_env / updated_by 都是可选的，缺了不报
     W18 自制图没标清楚：图注（alt）或紧跟的「来源：」行要写「自制」和数据来源
         （与 de_ai_lint / lint_x_post 的 W18 同一口径）
 """
@@ -31,7 +33,8 @@ import re
 import sys
 
 REQUIRED = ("title", "date", "status", "tags", "cover")
-OPTIONAL = ("subtitle",)  # 可选字段：留空或不写都行
+OPTIONAL = ("subtitle", "updated_at", "updated_env", "updated_by")  # 可选字段：留空或不写都行
+TZ_RE = re.compile(r"(Z|[+-]\d{2}:?\d{2})$", re.I)
 SUBTITLE_MAX = 40
 IMG_RE = re.compile(r"!\[([^\]]*)\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 IMG_EXT = (".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg")
@@ -57,7 +60,7 @@ def parse_frontmatter(lines):
 
 
 def check(md_path):
-    errors, warns = [], []
+    errors, warns, hints = [], [], []
     md_path = os.path.abspath(md_path)
     root = os.path.dirname(md_path)
     stem = os.path.splitext(os.path.basename(md_path))[0]
@@ -73,6 +76,11 @@ def check(md_path):
         missing = [k for k in REQUIRED if k not in fm]
         if missing:
             errors.append((1, "E1", "frontmatter 缺字段：%s" % "、".join(missing)))
+        ua = fm.get("updated_at", "")
+        if ua and not TZ_RE.search(ua):
+            ua_line = next((i + 1 for i, ln in enumerate(lines[:body_start]) if ln.startswith("updated_at:")), 1)
+            hints.append((ua_line, "H1", "updated_at 没有时区：%s；写成 ISO 8601 带时区（如 +08:00 或 Z 结尾），"
+                                        "多环境协作时新旧以它为准" % ua))
 
     h1, h1_line = None, 0
     fence = False
@@ -206,7 +214,8 @@ def check(md_path):
                 warns.append((0, "W1", "images/ 里没被正文引用：%s" % f))
 
     return {"file": md_path, "errors": [dict(line=l, code=c, msg=m) for l, c, m in errors],
-            "warnings": [dict(line=l, code=c, msg=m) for l, c, m in warns]}
+            "warnings": [dict(line=l, code=c, msg=m) for l, c, m in warns],
+            "hints": [dict(line=l, code=c, msg=m) for l, c, m in hints]}
 
 
 def resolve(path):
@@ -244,7 +253,10 @@ def main():
         for it in r["warnings"]:
             loc = "第 %d 行：" % it["line"] if it["line"] else ""
             print("  [%s] %s%s" % (it["code"], loc, it["msg"]))
-        print("E %d / W %d%s" % (len(r["errors"]), len(r["warnings"]),
+        for it in r["hints"]:
+            print("  [%s] 第 %d 行：%s" % (it["code"], it["line"], it["msg"]))
+        print("E %d / W %d%s%s" % (len(r["errors"]), len(r["warnings"]),
+                                   " / H %d" % len(r["hints"]) if r["hints"] else "",
                                  "" if r["errors"] else "  ✓ 结构通过"))
     return 1 if r["errors"] else 0
 

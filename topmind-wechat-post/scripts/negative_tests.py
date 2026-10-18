@@ -126,6 +126,25 @@ def main() -> None:
               and set(_re.findall(r"\[([EW]\d+)\]", r2.stdout)) == {"W5"}, (r.stderr + r2.stdout)[-300:])
         sm = (td / "脚手架样例" / "脚手架样例.md").read_text(encoding="utf-8")
         check("scaffold 写出可选 subtitle 字段", "\nsubtitle: \n" in sm, sm[:200])
+        check("scaffold 写出多环境字段：updated_at 带时区，updated_env / updated_by 留空",
+              _re.search(r"\nupdated_at: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}([+-]\d{2}:\d{2}|Z)\n", sm) is not None
+              and "\nupdated_env: \n" in sm and "\nupdated_by: \n" in sm, sm[:300])
+        check("scaffold 建出 参考/ 文件夹", (td / "脚手架样例" / "参考").is_dir())
+        r = run("article_scaffold.py", ["--title", "多环境样例", "--base", str(td), "--env", "本地", "--by", "手动"])
+        me = (td / "多环境样例" / "多环境样例.md").read_text(encoding="utf-8") if r.returncode == 0 else ""
+        check("scaffold --env / --by 写进 updated_env / updated_by",
+              "\nupdated_env: 本地\n" in me and "\nupdated_by: 手动\n" in me, (r.stderr + me)[:300])
+        (td / "多环境样例" / "多环境样例.md").write_text(
+            _re.sub(r"\nupdated_at: .*\n", "\nupdated_at: 2026-10-18T17:00:00\n", me), encoding="utf-8")
+        r2 = run("check_article.py", [str(td / "多环境样例")])
+        check("check_article：updated_at 没有时区 → H1 提示，不影响退出码",
+              r2.returncode == 0 and "[H1]" in r2.stdout and "/ H 1" in r2.stdout, r2.stdout[-300:])
+        old = _re.sub(r"\nupdated_(at|env|by): .*", "", me)
+        (td / "多环境样例" / "多环境样例.md").write_text(old, encoding="utf-8")
+        r2 = run("check_article.py", [str(td / "多环境样例")])
+        check("check_article：旧稿没有多环境字段 → 不报 E / H",
+              r2.returncode == 0 and "updated" not in old and set(_re.findall(r"\[([EWH]\d+)\]", r2.stdout)) == {"W5"},
+              r2.stdout[-300:])
         skel = td / "脚手架样例" / "骨架.md"
         sk = skel.read_text(encoding="utf-8") if skel.is_file() else ""
         check("scaffold 生成骨架.md（主要信息 / 读者 / 每节形式与图表计划），源稿里不写骨架",

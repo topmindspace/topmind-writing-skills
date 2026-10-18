@@ -5,6 +5,13 @@
 ### 优化
 
 - `core-voice.md` 原则 9 的人设改成「还在学习的普通人」：不是专家，不像科普老师，可以带一点老司机式的自嘲；topmind-viral-posts 的写作要点同步。
+- 删除 `writing-principles.md` 迁移说明文件（0.8.46 已按内容拆到各层，仓库里不再有引用），`shared/manifest.json` 同步去掉；briefs / viral-posts / wechat-post / x-article 不再带这份副本。
+
+### 特性支持
+
+- 多环境协作字段：`article_scaffold.py`（以及 wechat-post 的 `new-article.py`）新建源稿时写 `updated_at`（当前时间，ISO 8601 带时区）、`updated_env`、`updated_by`，后两项用 `--env` / `--by` 填，缺省留空；文章文件夹多建一个 `参考/`，放其他环境写的同主题稿件和素材（`参考-<环境>-<YYYYMMDD>.md`，永远不当源稿）。
+- `check_article.py` 新增 H1 提示：`updated_at` 写了但没有时区时提醒；三个字段都是可选的，旧稿缺了不报，退出码不变。
+- `workspace.md` 新增「多环境协作」一条：字段写法、新旧以 `updated_at` 为准、两边都改过时不覆盖而是存进 `参考/`、提交信息带一致前缀（wechat-post / x-article 的 SKILL.md 与 README 的文件夹说明同步）。
 
 ## [0.8.46] - 2026-10-18
 

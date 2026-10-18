@@ -3,14 +3,15 @@
 """new-article.py — 一键创建长文文章文件夹（默认新结构）。
 
 默认（新结构，单源）：调用 article_scaffold.py，创建 <base>/<文章名>/：
-  - <文章名>.md   唯一源稿（frontmatter：title/date/status/tags/cover，可选 direction/source_file/target_file）
-  - images/ cover/ raw/ out/ 与 素材来源.md
+  - <文章名>.md   唯一源稿（frontmatter：title/date/status/tags/cover，多环境字段 updated_at/updated_env/updated_by，
+                  可选 direction/source_file/target_file）
+  - images/ cover/ raw/ out/ 参考/ 与 骨架.md、素材来源.md
   公众号 HTML、X 长文 HTML、X 发布稿都从这一份源稿按需派生到 out/。
 
 --legacy（旧结构，兼容老专题）：创建 <base>/YYYY-MM-DD-<slug>/ 交付包，内含公众号稿.md、images/、diagrams/。
 
 Usage:
-    python3 new-article.py --title "GPT-6 深度评测" [--base <专题目录>] [--tags AI,评测] [--images a.png b.png]
+    python3 new-article.py --title "GPT-6 深度评测" [--base <专题目录>] [--tags AI,评测] [--env 环境名] [--by 改稿人] [--images a.png b.png]
     python3 new-article.py --legacy --slug gpt-6-review --title "GPT-6 深度评测" \
         [--base <专题目录>] [--workspace <工作区>] [--date YYYY-MM-DD] [--images src1 src2 ...]
 
@@ -106,7 +107,7 @@ SLUG_RE = re.compile(r"^[\u4e00-\u9fffA-Za-z0-9][\u4e00-\u9fffA-Za-z0-9-]*$")
 def new_layout(args):
     tags = [t.strip() for t in re.split(r"[,，]", args.tags) if t.strip()]
     try:
-        root, md = article_scaffold.scaffold(args.title, args.base, args.date, tags)
+        root, md = article_scaffold.scaffold(args.title, args.base, args.date, tags, args.env, args.by)
     except (FileExistsError, ValueError) as e:
         print("✗ %s" % e)
         return 1
@@ -154,6 +155,8 @@ def main():
     ap.add_argument("--slug", default="",
                     help="仅 --legacy：包名关键词（中文短名，可含英文/数字/连字符）")
     ap.add_argument("--tags", default="", help="新结构：逗号分隔的标签")
+    ap.add_argument("--env", default="", help="新结构：frontmatter updated_env（在哪个环境建的），缺省留空")
+    ap.add_argument("--by", default="", help="新结构：frontmatter updated_by（谁建的：agent / 手动 …），缺省留空")
     ap.add_argument("--title", required=True, help="文章标题")
     ap.add_argument("--base", default=None, help="交付包根（专题目录）；缺省按 wechat_paths.py 规则解析")
     ap.add_argument("--workspace", default=None, help="topmind 工作区根（缺省读 TOPMIND_WORKSPACE）")
