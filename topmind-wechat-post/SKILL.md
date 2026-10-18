@@ -169,7 +169,7 @@ lint、排版、同步状态（`-released` 改名逻辑只对旧包生效）；`
 
 ## 质量三关（定稿前必过）
 
-写稿前先填文章文件夹里的 `骨架.md`：主要信息、读者、每节要点 / 形式 / 图表计划 / 字数（方法见 [`references/information-design.md`](references/information-design.md) 第一、二节）。形式在骨架里定下来，写的时候才不会默认写成段落；写完回头对一遍骨架。再找图、记来源（[`references/image-sourcing.md`](references/image-sourcing.md)，信源清单放文章文件夹的 `素材来源.md`，不进本仓库）。**默认组合 `topmind-revise`**：三关由它执行（`mode=embed genre=long sources=<文章名>/素材来源.md`），它把终稿和三行摘要回给本技能、完整报告落 `out/改稿报告.md`；没装就按 [`references/revision-workflow.md`](references/revision-workflow.md) 手动走：事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照（[`references/core-voice.md`](references/core-voice.md)）→ 排版 → 保真审计 → 过度改稿检查，每轮先备份、报改前 / 改后字数（`scripts/count_words.py`）。
+写稿前先填文章文件夹里的 `骨架.md`：主要信息、读者、每节要点 / 形式 / 图表计划 / 字数（方法见 [`references/information-design.md`](references/information-design.md) 第一、二节）。形式在骨架里定下来，写的时候才不会默认写成段落；写完回头对一遍骨架。再找图、记来源（[`references/image-sourcing.md`](references/image-sourcing.md)，信源清单放文章文件夹的 `素材来源.md`，不进本仓库）。**默认组合 `topmind-revise`**：三关由它执行（`mode=embed genre=long sources=<文章名>/素材来源.md`），它把终稿和三行摘要回给本技能、完整报告落 `out/改稿报告.md`；没装就按 [`references/revision-workflow.md`](references/revision-workflow.md) 手动走：⓪ 结构 → 事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照（[`references/core-voice.md`](references/core-voice.md)）→ 排版 → 保真审计 → 过度改稿检查，每轮先备份、报改前 / 改后字数（`scripts/count_words.py`）。
 
 ### 关 1 · 事实
 

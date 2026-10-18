@@ -54,7 +54,7 @@ Obsidian 里直接能看；用户要发 X 时，再从它派生发布包到 `out
    - **改稿交给 `topmind-revise`**（`mode=embed genre=long sources=<文章名>/素材来源.md`）：
      它按 core-voice 改写、跑 `de_ai_lint.py` / `revise_check.py` / `count_words.py`，把终稿和三行摘要
      （字数前后、未核实条数、保留的提示）回给本技能，完整报告落 `out/改稿报告.md`。
-     没装 revise 时按随包 `references/revision-workflow.md` 手动走：逻辑与事实 → 删冗余 → 去 AI 味 → 排版，
+     没装 revise 时按随包 `references/revision-workflow.md` 手动走：⓪ 结构 → 逻辑与事实 → 删冗余 → 去 AI 味 → 排版，
      `python3 scripts/de_ai_lint.py <文章名>.md --genre long` 的 W 每条有结论（改掉或写保留理由），H 只供判断。
    - 体检：`python3 scripts/check_article.py <文章名>/` E 级清零（五项 frontmatter、H1 = title = 文件名、
      图片存在且编号跟出现顺序一致、无容器和 wikilink）。草稿期封面还没做只给 W5、占位截图只给 W4，

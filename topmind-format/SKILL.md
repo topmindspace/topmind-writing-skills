@@ -71,6 +71,7 @@ metadata:
    短文体把 Markdown 列表改成「·」「1）」（`--bullets emoji` 改 🔹 / 1️⃣）；段子体去掉所有 emoji 与列表符号（条目间空一行，`--split` 不拆列表条目），并拒绝 `--open` / `--close` / `--title-emoji`。
    `lint_x_post.py` 检查 Markdown 残留、符号混用、表情数量、正文里的 URL / 来源行 / 配图说明（E10–E12）、混入的说明（W12）、AI 套话（W9）、中英文结构套话（W15 / W16）、标点腔（W17）、「人名说：」/ 过渡句 / 复述图片（W19–W21）、段子里的 emoji（`--duanzi`，W13），另给 H 级提示（语境词、话题标签过多等）；段子体的单个行间空行不报错。
    **去 AI 味检查必跑，但本技能不改字**：W 警告的命中按 [references/de-ai-rules.md](references/de-ai-rules.md) 写进改动说明，交给用户决定；H 提示只是语境判断（场景规则见 [references/core-voice.md](references/core-voice.md)），不写进「建议改」。用户明确要求改写时，建议转 `topmind-revise`（只改表达，不改事实）。
+   **可转列表 / 表格的地方只报告**：`python3 scripts/info_design_hints.py 原文.md` 给出 I3（并列项可转列表）、I4（对照可转表格）、I1（连续纯文字）等提示，判断方法见 [references/information-design.md](references/information-design.md)。短文体里原文已经是并列分点的照常转「·」「1）」；原文是一段话但内容像列表的，不替用户拆，在改动说明里写「第 N 段可以拆成列表」，由用户决定。
 5. **交付**（按 [references/x-delivery-contract.md](references/x-delivery-contract.md)）：正文一条（格式化结果，一个独立 `text` 块）→ 链接一条（原文里拿出来的 URL / 来源行，没有就写「用户提供，未附来源」）→ 图片一条（用户给了就列 1–2 张，没有就写「未找到原图」并问要不要配图）→ 改动说明（排版改动、加了哪些 emoji、挪出了哪些链接、发现的疑似错字）。多条帖子每条一块。
 
 ## 边界（硬约束：不改字）

@@ -224,7 +224,7 @@ clean uncluttered background, vertical 9:16
 1. **选类型**：看用户要什么效果（涨粉→互关型/新人型；互动→提问型/自嘲型；立人设→干货型/打卡型；追热点→热点资讯型）。
 2. **套公式**：从 `references/patterns.md` 取对应公式，填内容。
 3. **配图**：先找原图（官方 > 第三方 / 原帖图，注明来源），给 1–2 张图片地址；没有原图时**先问用户要不要配图**，用户同意才走 topmind-cover 生图（清新优雅/MD3商务风），可先附一个出图 prompt 供用户决定；不擅自生图。
-4. **自检**：删掉"正确的废话"；去 AI 味按 `references/de-ai-rules.md` 过完；用户要改稿时转 `topmind-revise`（`mode=quick genre=duanzi`），没装就按 `references/revision-workflow.md` 手动走（备份 → 事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照 → 排版 → 保真审计，报改前 / 改后字数）；确认有钩子、段子体行间空行、话题标签 1–3 个在末行、事实类的来源链接已整理到另发的链接里；`scripts/lint_x_post.py --duanzi` E 类清零（含 E10 URL、E11 来源行、E12 配图说明）、W12（正文混入标签 / 说明）清零；加 `--duanzi` 时 W13（出现 emoji）清零。
+4. **自检**：删掉"正确的废话"；成稿后按 `references/de-ai-rules.md` 做去 AI 味自查；用户要改稿时转 `topmind-revise`（`mode=quick genre=duanzi`），没装就按 `references/revision-workflow.md` 手动走（备份 → ⓪ 结构 → 事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照 → 排版 → 保真审计，报改前 / 改后字数）；确认有钩子、段子体行间空行、话题标签 1–3 个在末行、事实类的来源链接已整理到另发的链接里；`scripts/lint_x_post.py --duanzi` E 类清零（含 E10 URL、E11 来源行、E12 配图说明）、W12（正文混入标签 / 说明）清零；加 `--duanzi` 时 W13（出现 emoji）清零。
 5. **交付**：一次 3–5 条让用户挑，严格按 [references/x-delivery-contract.md](references/x-delivery-contract.md)。
 
 ## Output Contract

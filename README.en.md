@@ -59,7 +59,7 @@ npx @topmindspace/topmind-writing-skills install topmind-format
 
 ### topmind-revise · Revision and quality check
 
-Makes a draft shorter, more accurate and closer to the author's voice, and proves the facts survived. Four modes: audit (report only), revise (back up, then write back), embed (called by the WeChat / X long-form skills; returns only the final draft) and quick (titles, short posts, one-liners, replies). Pipeline: facts → logic → cut redundancy → de-AI → voice check → layout → fidelity check → over-edit check; `revise_check.py` diffs numbers, quotes, proper nouns and hedging words, and reports the share of clean paragraphs that were rewritten anyway.
+Makes a draft shorter, more accurate and closer to the author's voice, and proves the facts survived. Four modes: audit (report only), revise (back up, then write back), embed (called by the WeChat / X long-form skills; returns only the final draft) and quick (titles, short posts, one-liners, replies). Pipeline: ⓪ structure review → facts → logic → cut redundancy → de-AI → voice check → layout → fidelity check → over-edit check; `revise_check.py` diffs numbers, quotes, proper nouns and hedging words, and reports the share of clean paragraphs that were rewritten anyway.
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-revise
@@ -107,21 +107,25 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 > Also do not install the old package's `^2` (2.0.0–2.1.1 deprecated).
 
 
-## Shared writing workflow (since 0.8.44: three layers)
+## Writing philosophy: principles first
 
-The writing skills share one rule set (`shared/references/`, copied into each skill so standalone installs work):
+Social posts exist to get information and a point of view across: clear, simple, easy to read, with charts and lists instead of long paragraphs wherever the content allows. So these skills start with how to think, and only then with what to avoid. The writing skills share one layered rule set (`shared/references/`, copied into each skill so standalone installs work):
 
 | Layer | Files | Covers |
 |---|---|---|
-| Voice | `core-voice.md` | Scenario rules (V01–V33): titles, openings, endings, numbers, quotes, source lines, lists, emoji, replies, joke recipe |
-| De-AI | `de-ai-rules.md` + `de_ai_lint.py` | Rewrite boundaries plus structural patterns (Z / E / P codes); the linter reports W (each needs a decision) and H (advisory) |
-| Execution | `topmind-revise` | Runs `revision-workflow.md` end to end, with a fidelity check, an over-edit check and a revision report |
+| 0 · Principles | `social-writing-principles.md` | 8 principles: know what you want to say, lead with the conclusion, every sentence adds something new, form follows content, plain everyday words, originals and data over paraphrase, stand on the reader's side, honest and measured |
+| 1 · Information design | `information-design.md` | Skeleton before prose, a content → form decision table (list / table / image / paragraph), length and density reference lines, ways to spot padding |
+| 2 · Voice | `core-voice.md` | Ten wording principles; V01–V33 are worked examples for titles, openings, numbers, quotes, replies, jokes |
+| Review · De-AI | `de-ai-rules.md` + `de_ai_lint.py` | Pattern table (Z / E / P) grouped by root cause; used for self-review and revision only, not while drafting |
+| Execution | `topmind-revise` | ⓪ structure review → facts → logic → cut redundancy → de-AI → layout → fidelity check → over-edit check, with a revision report |
 
 Also:
 
+- **Principles are written as why + how to judge + example**: examples show the thinking, not a word list; concrete revision cases stay examples, never hard gates.
 - **Originals first** (`image-sourcing.md`): find official / original-post / third-party images before writing and log sources in the private `素材来源.md` inside the article folder; self-made charts are a fallback and must be labeled 自制 with the data source.
-- **De-AI pass is mandatory**: rewrite boundaries first (change wording, never facts or certainty); W warnings need a decision rather than a zero count; the regression set `scripts/test_lint_rules.py` keeps normal writing from being flagged. topmind-format reports hits without rewriting.
-- **Fixed revision order** (`revision-workflow.md`): facts → logic → cut redundancy → de-AI → voice check → layout → fidelity check → over-edit check; back up first and report before/after word counts (`count_words.py`). `topmind-revise` runs it when installed.
+- **Long-form starts with a skeleton**: `article_scaffold.py` creates `骨架.md` in the article folder (main message, reader, per-section points / form / chart plan / length), so the form is decided before drafting.
+- **Scripts hint, people decide**: each W warning needs a decision (not a zero count); H hints and I1–I8 information-design hints are advisory and never part of `--strict`; the regression sets `scripts/test_lint_rules.py` and `scripts/test_info_design.py` keep normal writing from being flagged.
+- **Revise only what is wrong**: rewrite boundaries first (change wording, never facts or certainty); by default only low-risk structural edits (parallel paragraphs → list, comparisons → table, remove repeats); reordering sections needs `depth=structure`.
 
 ## Original examples
 

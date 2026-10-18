@@ -63,6 +63,7 @@ metadata:
 1. **核实信源**：一篇只讲一件事（一个数据、一个榜单变化、一篇论文的核心结论、一个新品的关键参数）。先找一手来源（官方公告、更新日志、论文、仓库、当事人原帖）；厂商数字标「官方称 / 厂商口径」，传言标「据传 / 未证实」。记下每条的**来源名称、发布时间（时区）、URL**——这些另发给用户，不进正文。
 2. **找原帖、原图**（写字之前，按 [references/image-sourcing.md](references/image-sourcing.md)）：原帖链接、官方图 / 截图 1–2 张，来源记进交付说明；自制图只作兜底，标「自制」和数据来源。
 3. **写内容**：
+   - 先想清楚这条要传达的一件事（第 0 层原则 1）；并列要点、对比、步骤按 [references/information-design.md](references/information-design.md) 的决策表先定成「·」分行、分行对照或「1）」，不写成一段话；
    - 首行一句简单的话题陈述：「是什么 + 最关键的事实」，约 30 字内，只看首行也拿到信息；不用设问钩子，真里程碑把「第一」放句首（core-voice V05、V20）；
    - 具体数字和场景，说人话，事实讲完就停，不硬加收尾句，也不用「你会换吗？」拉互动（V10）；对比给出对象和定语，比的对象选读者认识的知名对手，不写「约 / 左右」，不用千分位（V12）；
    - 读者不关心的背景删掉，借来的热点一句带过；推测写成问句，不写成事实（V22）；不写「理由就一条：」这类总结腔，直接说理由（V08）；
@@ -80,7 +81,7 @@ metadata:
    - 每个数字都能在另发的链接里找到出处；图和文字说的是同一件事；推测已标注；
    - `python3 scripts/lint_x_post.py X短文.txt`：E 错误清零（Markdown 残留，以及 E10 正文有 URL、E11 有来源行、E12 有配图说明）；W 警告每条要有结论（改掉，或在说明里写保留理由）；H 提示只供判断，不要求改；公众号版跑 `python3 scripts/de_ai_lint.py 公众号短文.md`；
    - 需要统一排版时可跑 `python3 scripts/format_text.py X短文.txt --mode short --out X短文.txt`（只动排版不改字；正文里的链接、来源行会被拿出来另列）。
-   - 用户要求改稿时，转 `topmind-revise`（`mode=revise genre=short`）；没装时按 [references/revision-workflow.md](references/revision-workflow.md) 手动走：备份 → 事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照 → 排版 → 保真审计，报改前 / 改后字数（`python3 scripts/count_words.py`）。
+   - 用户要求改稿时，转 `topmind-revise`（`mode=revise genre=short`）；没装时按 [references/revision-workflow.md](references/revision-workflow.md) 手动走：备份 → ⓪ 结构 → 事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照 → 排版 → 保真审计，报改前 / 改后字数（`python3 scripts/count_words.py`）。
 7. **交付**（只交付，不发布）：见下节「交付格式」；落盘时 `X短文.txt` 只放正文，链接 / 图片 / 说明写进 `交付说明.md`。
 
 ## 交付格式
