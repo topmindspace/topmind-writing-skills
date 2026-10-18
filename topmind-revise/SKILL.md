@@ -104,7 +104,7 @@ metadata:
 | `scripts/count_words.py` | 统一口径的字数统计（改前 / 改后、单段最长） |
 | `scripts/revise_check.py` | 保真比对 + 过度改稿检查 + 报告骨架 |
 | `scripts/audit-provenance.py` | 有源稿时的双向逐段溯源审计 |
-| `scripts/check_article.py` | 长文文章文件夹体检（`<文章名>/<文章名>.md`）：frontmatter、标题一致、图片存在且按出现顺序编号、无容器 / callout / `![[ ]]`；改稿移动段落或图片后跑一次 |
+| `scripts/check_article.py` | 长文文章文件夹体检（`<文章名>/<文章名>.md`）：frontmatter、标题一致、图片存在且按出现顺序编号、无容器 / callout / `![[ ]]`；草稿期还没补的占位截图（文件名带「待补 / 占位 / 截图」或登记在素材来源里）只给 W4，定稿时才算错；改稿移动段落或图片后跑一次 |
 
 这些脚本的唯一真源在仓库 `shared/scripts/`，本目录是逐字节副本。
 

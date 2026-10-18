@@ -19,6 +19,10 @@ import os
 import re
 import sys
 
+sys.dont_write_bytecode = True  # 同目录模块不写 __pycache__
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import count_words as CW  # noqa: E402  字数口径与 count_words / de_ai_lint W14 一致
+
 FENCE_RE = re.compile(r"^```(\w*)\s*$")
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
 IMG_RE = re.compile(r"!\[([^\]]*)\]\(([^)\s]+)")
@@ -187,7 +191,7 @@ def lint(path, max_para, max_item, asset_root=None, legacy=False):
             return
         text = " ".join(para_buf).strip()
         body_paras += 1
-        length = visual_len(text)
+        length = CW.count_text(text)["longest_paragraph"]
         if length > max_para * 1.8:
             errors.append("L%d 段落过长（%d 字，约 %d 行手机屏）：%s…"
                           % (para_start + 1 + fm_off, length,
@@ -411,8 +415,10 @@ def main():
             break
 
     print("体检：%s" % os.path.basename(args.input))
+    with open(args.input, encoding="utf-8") as fh:
+        words = CW.count_text(fh.read())["chars"]
     print("  字数 %d · 正文 %d 段 · 加粗 %d 处 · 预计阅读 %d 分钟"
-          % (total, body_paras, bold_count, max(1, round(total / 400))))
+          % (words, body_paras, bold_count, max(1, round(words / 400))))
     print("")
     if errors:
         print("错误 %d：" % len(errors))

@@ -61,6 +61,23 @@ SHOULD_PASS = [
     ("duanzi", "我让某 agent 帮我整理这个月的开销\n\n它问我要不要取消三个用不上的订阅\n\n结果第一个取消的就是它自己"),
     ("duanzi", "老板：你这周产出呢\n\n我：agent 在跑"),
     ("duanzi", "两家又同一天发布新模型\n\n最开心的是做评测的博主"),
+    # 讨论词本身、展示反例：不报 W
+    ("long", "有人把「不是…而是」当万能句式，其实多数时候删掉前半句就行。"),
+    ("long", "改前：综上所述，这次升级值得一试。\n\n改后：这次升级值得一试。"),
+    ("long", "A：这不是一次升级，而是一场变革。\n\nB：这次升级改了启动速度。"),
+]
+
+# 应该安静的提示：(文体, 文本, 不应出现的 H 编号)
+SHOULD_NOT_HINT = [
+    ("long", "周末大概跑了 3 个小时，试了约 50 个提示词，用掉了约 20% 的配额。", "H4"),
+    ("long", "「我认为」放在判断前面，听着客气，判断反而变软了。", "H3"),
+    ("long", "改前：我认为明年大平台会二选一。", "H3"),
+    ("long", "以前的清单把「一文读懂」「毫无疑问」都列成了禁词。", "H1"),
+    ("long", "A：开发者在狂奔，平台在刹车。", "H5"),
+    ("long", "改前：比上一个榜首多出 3 万左右。", "H4"),
+    ("long", "你选一个，不满意就再换一批候选。", "H5"),
+    ("long", "## 一、起因：规则太严\n\n正文。\n\n## 二、过程：先出题\n\n正文。\n\n## 参考来源\n\n· 某官网", "H13"),
+    ("long", "# 去 AI 味这件事\n\n去 AI 味要看场景。", "H14"),
 ]
 
 SHOULD_WARN = [
@@ -108,6 +125,11 @@ SHOULD_HINT = [
     ("long", "某创始人说：也许该自己做。", "H12"),
     ("long", "第一句。第二句。第三句。第四句。", "H10"),
     ("reply", "更新了！！", "H2"),
+    ("long", "它写稿，我挑刺。", "H5"),
+    ("long", "新版比上个版本快了约 20%。", "H4"),
+    ("long", "## 一、起因\n\n正文。\n\n## 过程\n\n正文。", "H13"),
+    ("long", "## 二、现在：大厂纷纷跟进，谁先？\n\n正文。", "H13"),
+    ("long", "# 去AI味这件事\n\n去 AI 味要看场景。", "H14"),
 ]
 
 fails: list[str] = []
@@ -133,6 +155,21 @@ def main() -> int:
             fails.append(f"漏报 {code}（{genre}）：{text[:30]!r} → {[c for _, c, _ in h]}")
         if w:
             fails.append(f"提示样例误报 W（{genre}）：{text[:30]!r} → {[c for _, c, _ in w]}")
+    for genre, text, code in SHOULD_NOT_HINT:
+        w, h = run(genre, text)
+        if code in {c for _, c, _ in h}:
+            fails.append(f"误报 {code}（{genre}）：{text[:30]!r}")
+        if w:
+            fails.append(f"安静样例误报 W（{genre}）：{text[:30]!r} → {[c for _, c, _ in w]}")
+    # H4 摘录取完整数字（不再截成「约 1」）
+    _w, h = run("long", "比去年多出约 120 个。")
+    if not any("约 120" in m for _, c, m in h if c == "H4"):
+        fails.append(f"H4 摘录截断：{[m for _, c, m in h]}")
+    # W14 与 count_words.py 同一字数口径
+    import count_words as CW  # noqa: E402
+    para = "这一段写得有点长，" * 13 + "看看两边数出来的字数是不是一样（github.com/x/y）。"
+    if D.visible_len(para) != CW.count_text(para)["longest_paragraph"]:
+        fails.append(f"W14 与 count_words 口径不一致：{D.visible_len(para)} vs {CW.count_text(para)['longest_paragraph']}")
     # CLI：H 不计入 --strict；--no-hints 关掉提示；lint_x_post 与 de_ai_lint 一致
     with tempfile.TemporaryDirectory() as td:
         f = Path(td) / "s.txt"
@@ -150,12 +187,13 @@ def main() -> int:
                            capture_output=True, text=True)
         if '"hints"' not in r.stdout:
             fails.append("de_ai_lint --json 输出缺 hints")
-    total = len(SHOULD_PASS) + len(SHOULD_WARN) + len(SHOULD_HINT)
+    total = len(SHOULD_PASS) + len(SHOULD_WARN) + len(SHOULD_HINT) + len(SHOULD_NOT_HINT)
     if fails:
         print("\n".join("  ✗ " + x for x in fails))
         print(f"[test_lint_rules] {len(fails)} 项失败（共 {total} 条样例）")
         return 1
-    print(f"[test_lint_rules] 全部通过：不应报 {len(SHOULD_PASS)} 条、应报 W {len(SHOULD_WARN)} 条、应报 H {len(SHOULD_HINT)} 条")
+    print(f"[test_lint_rules] 全部通过：不应报 W {len(SHOULD_PASS)} 条、不应报 H {len(SHOULD_NOT_HINT)} 条、"
+          f"应报 W {len(SHOULD_WARN)} 条、应报 H {len(SHOULD_HINT)} 条")
     return 0
 
 

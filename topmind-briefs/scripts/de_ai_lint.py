@@ -137,8 +137,27 @@ IMG_RETELL_RE = re.compile(r"如图所示|如下图|见下图|从图中(?:可以
 # --- H 级（只提示） ---------------------------------------------------------------------
 I_THINK_RE = re.compile(r"我(?:个人)?认为|我觉得|我的判断是?")                               # H3
 NEWS_PRECISION_RE = re.compile(
-    r"(?:大约|约)\s*\d|\d[\d.]*\s*(?:万|亿|千|百)?\s*(?:个|人|元|美元|次|款|家|倍|%|颗|star|星)?\s*左右|较[^，。！？\n]{1,12}高出"
+    r"\d[\d.]*\s*(?:万|亿|千|百)?\s*(?:个|人|元|美元|次|款|家|倍|%|颗|star|星)?\s*左右|较[^，。！？\n]{1,12}高出"
 )                                                                                          # H4
+# 「约 / 大约 + 数字」：只在像新闻稿的地方提示——带万 / 亿 / 千这类量级，或同一句里在做对比。
+# 作者自述的大概数（「试了约 50 个提示词」「大概跑了 3 个小时」）不报。
+ABOUT_NUM_RE = re.compile(r"(?:大约|约)\s*\d[\d.,]*(?:\s*(?:万|亿|千))?(?:\s*%)?")
+ABOUT_MAG_RE = re.compile(r"\d\s*(?:万|亿|千)")
+COMPARE_RE = re.compile(r"比|多出|高出|低于|超过|领先|落后|较|相比|翻了")
+# 只讨论某个词本身：「」“” 里的内容不参与词面 / 句式检查（改写边界：讨论这个词本身的句子不动）
+MENTION_RE = re.compile(r"「[^」\n]{1,40}」|“[^”\n]{1,40}”")
+# 示例行：「改前：」「原文：」「反例：」「A：」…开头的行是在展示别人的写法，不参与检查（W14 段长照查）
+EXAMPLE_LINE_RE = re.compile(r"^\s*(?:·\s*)?(?:改前|原文|修改前|反例|原句|AI 版|❌|✗|[A-D])\s*[：:]")
+# H5 补充：段末两个等长短分句、都以人称 / 主体开头（「它写稿，我挑刺。」）
+SHORT_PAIR_RE = re.compile(r"(?:^|[。！？；])\s*([\u4e00-\u9fff]{2,6})[，,]\s*([\u4e00-\u9fff]{2,6})[。！]?\s*$")
+PAIR_SUBJECT_RE = re.compile(r"^(?:我们|你们|他们|她们|它们|我|你|他|她|它|人|用户|平台|厂商|开发者|作者|读者|机器|模型)")
+# H13：小标题格式（V06「序号、阶段：概括」）
+H2_RE = re.compile(r"^\s{0,3}##\s+(.+?)\s*#*\s*$")
+HAND_NUM_RE = re.compile(r"^(?:[一二三四五六七八九十]+、|\d{1,2}[.、])")
+HEADING_PUNCT_RE = re.compile(r"[：:，,？?！!；;]")
+HEADING_EXEMPT_RE = re.compile(r"参考|来源|附录|延伸阅读|致谢|写在最后|后记|FAQ", re.I)
+# H14：同一说法两种写法（中英混排有空格 / 没空格，如「去AI味」和「去 AI 味」）
+MIXED_TERM_RE = re.compile(r"[\u4e00-\u9fff]{1,4} ?[A-Za-z][A-Za-z0-9+.-]{0,15} ?[\u4e00-\u9fff]{1,4}")
 THOUSANDS_RE = re.compile(r"(?<![\d.,])\d{1,3}(?:,\d{3})+(?![\d,])")                       # H4（中文正文里的千分位）
 PARALLEL_CLOSE_RE = re.compile(
     r"([\u4e00-\u9fff]{1,6})在([\u4e00-\u9fff]{1,8})[，,]\s*([\u4e00-\u9fff]{1,6})在([\u4e00-\u9fff]{1,8})[。！]?\s*$"
@@ -151,6 +170,13 @@ HASHTAG_RE = re.compile(r"(?<![\w&#])#(?!\d+(?![\w\u4e00-\u9fff]))[\w\u4e00-\u9f
 LIST_EMOJI_RE = re.compile(r"^\s*(?:[0-9]\uFE0F?\u20E3|[\U0001F300-\U0001FAFF\u2600-\u27BF]\uFE0F?)\s*\S")
 
 LONG_PARA_MAX = 110
+# 字数口径与 count_words.py 一致：去掉空白、Markdown 符号和链接地址后的字符数
+_CW_SYMBOLS_RE = re.compile(r"[\s*\-#>\[\]()`|]")
+_CW_URL_RE = re.compile(r"\]\([^)]*\)|https?://\S+")
+
+
+def visible_len(text: str) -> int:
+    return len(_CW_SYMBOLS_RE.sub("", _CW_URL_RE.sub("]", text)))
 MAX_PER_RULE = 3
 SHORT_TAGS_MAX = 2
 DECOR_HINT_MAX = 3
@@ -159,7 +185,75 @@ HINT_CODES = {
     "H1": "语境词", "H2": "可接受的连用标点", "H3": "「我认为」式观点句", "H4": "新闻式精确",
     "H5": "对仗收句", "H6": "来源行描述图", "H7": "emoji 过密", "H8": "无效信息",
     "H9": "标题反问说教", "H10": "段落句子多", "H11": "话题标签多", "H12": "「人名说：」",
+    "H13": "小标题格式", "H14": "同一说法两种写法",
 }
+
+
+def mask_mentions(lines: list[str]) -> list[str]:
+    """把「」“”里讨论的词换成占位、把示例行清空，只用于词面 / 句式检查；行号不变。"""
+    out = []
+    for ln in lines:
+        if EXAMPLE_LINE_RE.match(ln):
+            out.append("")
+            continue
+        out.append(MENTION_RE.sub(lambda m: "「" + "某" * 2 + "」", ln))
+    return out
+
+
+def heading_hits(raw: list[str], start: int):
+    """H13：二级小标题有的手写序号、有的没有；或一个小标题里标点叠在一起（V06）。"""
+    heads = []
+    in_fence = False
+    for off, ln in enumerate(raw):
+        if FENCE_RE.match(ln):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        m = H2_RE.match(ln)
+        if m and not HEADING_EXEMPT_RE.search(m.group(1)):
+            heads.append((start + off, m.group(1).strip()))
+    out = []
+    if len(heads) >= 2:
+        numbered = [h for h in heads if HAND_NUM_RE.match(h[1])]
+        if numbered and len(numbered) < len(heads):
+            miss = next(h for h in heads if not HAND_NUM_RE.match(h[1]))
+            out.append((miss[0], "H13", f"小标题「{miss[1][:16]}」没有序号，其他小标题有：序号要么都写、要么都不写（core-voice V06）"))
+    for no, h in heads:
+        body = HAND_NUM_RE.sub("", h)
+        if len(HEADING_PUNCT_RE.findall(body)) >= 2:
+            out.append((no, "H13", f"小标题「{h[:16]}」标点偏多：「序号、阶段：概括」，一个冒号或不加（core-voice V06）"))
+    return out[:MAX_PER_RULE]
+
+
+def term_variant_hits(raw: list[str], start: int):
+    """H14：同一个中英混排说法，有的地方带空格、有的不带（标题和正文最常见）。"""
+    seen: dict[str, dict[str, int]] = {}
+    in_fence = False
+    for off, ln in enumerate(raw):
+        if FENCE_RE.match(ln):
+            in_fence = not in_fence
+            continue
+        if in_fence or MD_IMG_RE.match(ln):
+            continue
+        t = re.sub(r"\]\([^)]*\)|https?://\S+|`[^`]*`", " ", ln)
+        t = re.sub(r"^\s*(?:title|subtitle)\s*:\s*", "", t)
+        for m in MIXED_TERM_RE.finditer(t):
+            core = re.search(r"[A-Za-z][A-Za-z0-9+.-]*", m.group(0)).group(0)
+            seg = m.group(0)
+            i = seg.index(core)
+            left, right = seg[:i], seg[i + len(core):]
+            key = (left.rstrip()[-1:] + core + right.lstrip()[:1])
+            form = ("_" if left.endswith(" ") else "") + core + ("_" if right.startswith(" ") else "")
+            seen.setdefault(key, {}).setdefault(form, start + off)
+    out = []
+    for key, forms in seen.items():
+        spaced = [f for f in forms if f.startswith("_") or f.endswith("_")]
+        tight = [f for f in forms if not (f.startswith("_") or f.endswith("_"))]
+        if spaced and tight:
+            no = min(forms.values())
+            out.append((no, "H14", f"「{key}」有带空格和不带空格两种写法：全文统一一种（标题受文件名限制时，正文跟标题走或在报告里说明）"))
+    return out[:MAX_PER_RULE]
 
 
 # =============================================================================
@@ -307,7 +401,7 @@ def long_para_hits(lines: list[str], start: int):
     for off, ln in enumerate(lines):
         s = ln.strip()
         if s and not s.startswith("·"):
-            n = sum(1 for ch in URL_RE.sub("", ln) if not ch.isspace())
+            n = visible_len(ln)
             if n > LONG_PARA_MAX:
                 out.append((start + off, "W14", f"这一段约 {n} 字，超过 {LONG_PARA_MAX} 字：拆成短段，或改成「概要 + 列表」，能用图说明的就删字"))
     return out
@@ -345,13 +439,22 @@ def voice_hits(lines: list[str], start: int, genre: str, raw: list[str] | None =
         if m and genre in ("long", "short"):
             add(hints, no, "H3", f"「{m.group(0)}」：观点句用「大概率」「预计」直接说（core-voice V08）")
         m = NEWS_PRECISION_RE.search(body)
-        if m:
-            add(hints, no, "H4", f"「{m.group(0).strip()}」：不是新闻稿，数字不必写「约 / 左右」，对比给对象和定语（core-voice V12）")
+        ma = ABOUT_NUM_RE.search(body)
+        if ma and not (ABOUT_MAG_RE.search(ma.group(0)) or COMPARE_RE.search(body)):
+            ma = None
+        if m or ma:
+            frag = (m or ma).group(0).strip()
+            add(hints, no, "H4", f"「{frag}」：不是新闻稿，数字不必写「约 / 左右」，对比给对象和定语（core-voice V12）")
         elif CJK_RE.search(body) and THOUSANDS_RE.search(body):
             add(hints, no, "H4", f"千分位「{THOUSANDS_RE.search(body).group(0)}」：中文正文写「12 万」这类（core-voice V12）")
         m = PARALLEL_CLOSE_RE.search(body)
         if m and m.group(1) != m.group(3):
             add(hints, no, "H5", f"对仗收句「{m.group(0).strip()[:24]}」：事实列完就够，要收就用平实概括（core-voice V05）")
+        else:
+            sp = SHORT_PAIR_RE.search(body)
+            if (sp and len(sp.group(1)) == len(sp.group(2)) and sp.group(1)[0] != sp.group(2)[0]
+                    and PAIR_SUBJECT_RE.match(sp.group(1)) and PAIR_SUBJECT_RE.match(sp.group(2))):
+                add(hints, no, "H5", f"短对仗收句「{sp.group(1)}，{sp.group(2)}」：收尾换成平实说法或生活化类比（core-voice V05 / V10）")
         m = FILLER_INFO_RE.search(body)
         if m and genre != "long":
             add(hints, no, "H8", f"「{m.group(0)}」：不增加信息量，删掉（core-voice V22）")
@@ -385,8 +488,9 @@ def analyze(text: str, genre: str = "long", markdown: bool | None = None, start:
     if markdown is None:
         markdown = genre == "long"
     lines = md_to_plain(raw) if markdown else raw
+    masked = mask_mentions(lines)
     long_mode = genre == "long"
-    warns = phrase_hits(lines, start) + struct_hits(lines, start)
+    warns = phrase_hits(masked, start) + struct_hits(masked, start)
     pw, ph = punct_split(lines, start, long_mode)
     warns += pw
     hints = list(ph)
@@ -394,9 +498,11 @@ def analyze(text: str, genre: str = "long", markdown: bool | None = None, start:
         warns += long_para_hits(lines, start)
     if markdown:
         warns += image_label_hits(raw, start)
-    vw, vh = voice_hits(lines, start, genre, raw if markdown else None)
+    vw, vh = voice_hits(masked, start, genre, raw if markdown else None)
     warns += vw
     hints += vh
+    if markdown:
+        hints += heading_hits(raw, start) + term_variant_hits(raw, start)
     return sorted(warns), sorted(hints, key=lambda h: (h[0], int(h[1][1:])))
 
 

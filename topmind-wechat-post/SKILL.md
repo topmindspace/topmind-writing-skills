@@ -44,7 +44,7 @@ metadata:
 |------|------|
 | `scripts/new-article.py` | 建文章文件夹：默认调用 `article_scaffold.py` 建新结构；`--legacy` 建旧交付包 |
 | `scripts/article_scaffold.py` | （共享脚本）新建 `<文章名>/<文章名>.md` + images/cover/raw/out + 素材来源.md；已存在就报错，不覆盖 |
-| `scripts/check_article.py` | （共享脚本）文章文件夹体检：五项 frontmatter、H1 = title = 文件名、图片存在且编号跟出现顺序一致、无容器 / callout / `![[ ]]`；E 级退出码 1 |
+| `scripts/check_article.py` | （共享脚本）文章文件夹体检：五项 frontmatter、H1 = title = 文件名、图片存在且编号跟出现顺序一致、无容器 / callout / `![[ ]]`；草稿期占位截图只给 W4、定稿才算错；E 级退出码 1 |
 | `scripts/sync-status.py` | 状态 ⇄ 字数（新结构只改 frontmatter；旧交付包保留 `-released` 改名） |
 | `scripts/sync-mapping.py` | 映射一致性（frontmatter + 目录 + 可选 notes + topic 总表），新旧结构都认 |
 | `scripts/push-to-topstream.py` | 可选回推：公众号稿降级为纯 Markdown notes |

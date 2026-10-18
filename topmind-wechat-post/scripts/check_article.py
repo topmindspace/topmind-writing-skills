@@ -8,13 +8,16 @@
 E 级（必须清零，有任何一条退出码 1）：
     E1 frontmatter 缺字段（title / date / status / tags / cover 五个都要有）
     E2 H1 标题、frontmatter title、文件名三者不一致
-    E3 正文引用的本地图片不存在
+    E3 正文引用的本地图片不存在（草稿期的占位截图例外，见 W4；定稿 / 已发布时照样是 E3）
     E4 images/ 下图片编号与正文出现顺序不一致（后出现的图序号反而更小或重复），或没有序号前缀
     E5 出现 Obsidian 写法 ![[ ]]、callout（> [!note]）或 ::: 容器——源稿要能被任何 Markdown 工具读
+    E6 定稿 / 已发布的稿子里还有占位图（文件名带「待补 / 占位 / placeholder」）
 W 级（逐条给结论）：
     W1 images/ 里有图没被正文引用
     W2 远程图片（发布前应下载到 images/）
     W3 顺序正确，但编号不连续或带插入后缀（11a、11b），建议重编号
+    W4 草稿期的占位截图：图片还没放进来（文件名带「待补 / 占位 / placeholder / 截图」，或在 素材来源.md 里登记过），
+       或放的是占位图；status 改成定稿前要补上
     W18 自制图没标清楚：图注（alt）或紧跟的「来源：」行要写「自制」和数据来源
         （与 de_ai_lint / lint_x_post 的 W18 同一口径）
 """
@@ -30,6 +33,9 @@ IMG_EXT = (".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg")
 SELFMADE_RE = re.compile(r"自制|self[- ]?made", re.I)
 SOURCE_HINT_RE = re.compile(r"数据|来源|据|source|data", re.I)
 SOURCE_LINE_RE = re.compile(r"^来源[：:]")
+PLACEHOLDER_NAME_RE = re.compile(r"待补|占位|placeholder", re.I)
+SCREENSHOT_NAME_RE = re.compile(r"截图|screenshot", re.I)
+FINAL_STATUS = ("定稿", "已发布")
 
 
 def parse_frontmatter(lines):
@@ -114,19 +120,39 @@ def check(md_path):
         errors.append((h1_line or 1, "E2", "标题不一致：%s" % "；".join(
             "%s=%s" % (k, v) for k, v in present.items())))
 
+    final = fm.get("status", "") in FINAL_STATUS
+    sources_txt = ""
+    sp = os.path.join(root, "素材来源.md")
+    if os.path.isfile(sp):
+        with open(sp, encoding="utf-8-sig") as f:
+            sources_txt = f.read()
     used = []
+    ordering = []  # 参与编号顺序检查的图（含草稿期还没放进来的占位截图）
     for no, alt, src in refs:
         if re.match(r"https?://", src):
             warns.append((no, "W2", "远程图片，发布前下载到 images/：%s" % src))
             continue
         p = os.path.normpath(os.path.join(root, src))
+        base = os.path.basename(src)
+        is_placeholder = bool(PLACEHOLDER_NAME_RE.search(base))
         if not os.path.isfile(p):
-            errors.append((no, "E3", "图片不存在：%s" % src))
+            planned = is_placeholder or SCREENSHOT_NAME_RE.search(base) or (base in sources_txt)
+            if planned and not final:
+                warns.append((no, "W4", "占位截图还没放进来：%s（草稿期只提醒；改成定稿前要补上）" % src))
+                ordering.append((no, p))
+            else:
+                errors.append((no, "E3", "图片不存在：%s" % src))
             continue
+        if is_placeholder:
+            if final:
+                errors.append((no, "E6", "定稿里还有占位图：%s" % src))
+            else:
+                warns.append((no, "W4", "这张还是占位图：%s（改成定稿前替换）" % src))
         used.append((no, p))
+        ordering.append((no, p))
 
     img_dir = os.path.join(root, "images")
-    in_images = [(no, p) for no, p in used
+    in_images = [(no, p) for no, p in ordering
                  if os.path.dirname(p) == img_dir]
     seen = []
     for no, p in in_images:

@@ -4,8 +4,10 @@
 
 比较改前、改后两份稿子：
   1. 字数：改前 → 改后、单段最长（口径同 count_words.py）。
-  2. 保真：数字、日期、引语（「」“”里的内容）、英文专名、确定性词（可能 / 预计 / 已经 / 据传…）
-     改前有、改后没有的列为「消失」，改后新出现的列为「新增」。数字和引语的变化要逐条确认有依据。
+  2. 保真：数字、日期、引语（「」“”里像句子的内容）、英文专名、确定性词（可能 / 预计 / 已经 / 据传…）
+     按出现次数比：改前有、改后没有的列为「消失」，改后新出现的列为「新增」，两边都有但次数变了的列为「次数变化」
+     （删掉一处「多半」、多引用一次某个数字，都看得见）。数字和引语的变化要逐条确认有依据。
+     「」里只有几个字、没有标点的（「改前」「一文读懂」）是在讨论某个词，不算引语。
   3. 去 AI 味：改前 / 改后各跑一遍 de_ai_lint，报 W / H 数量变化。
   4. 过度改稿：改前没有任何 W 命中的段落里，被改写（不是删除）的比例；超过 30% 提示「可能改过头」。
 
@@ -23,6 +25,7 @@ import difflib
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 try:
@@ -37,6 +40,12 @@ import de_ai_lint as D  # noqa: E402
 
 NUM_RE = re.compile(r"\d+(?:[.,]\d+)*\s*(?:%|万|亿|千|倍|美元|元|个|款|家|次|天|年|月|日|小时|分钟|star)?")
 QUOTE_RE = re.compile(r"「([^」\n]{2,80})」|“([^”\n]{2,80})”")
+QUOTE_PUNCT_RE = re.compile(r"[，。！？：；、,.!?:; ]")
+QUOTE_MIN = 6  # 少于 6 个字且不带标点的「」内容当作「讨论这个词」，不算引语
+
+
+def _is_quote(q: str) -> bool:
+    return len(q) >= QUOTE_MIN or bool(QUOTE_PUNCT_RE.search(q))
 LATIN_RE = re.compile(r"\b[A-Z][A-Za-z0-9.+-]*(?:\s+[A-Z][A-Za-z0-9.+-]*)*\b")
 CERTAINTY = ["可能", "也许", "或许", "预计", "大概率", "多半", "据传", "传言", "厂商口径", "官方称",
              "已经", "即将", "计划", "宣布", "推测", "未证实", "现在看起来"]
@@ -58,15 +67,21 @@ def paragraphs(text: str) -> list[str]:
     return out
 
 
-def tokens(text: str) -> dict[str, set[str]]:
+def tokens(text: str) -> dict[str, Counter]:
     body = "\n".join(CW.body_lines(text))
     body = re.sub(r"\]\([^)]*\)|https?://\S+", "", body)
     return {
-        "数字": {_norm(m.group(0)) for m in NUM_RE.finditer(body)},
-        "引语": {m.group(1) or m.group(2) for m in QUOTE_RE.finditer(body)},
-        "英文专名": {m.group(0) for m in LATIN_RE.finditer(body) if len(m.group(0)) > 1},
-        "确定性词": {w for w in CERTAINTY if w in body},
+        "数字": Counter(_norm(m.group(0)) for m in NUM_RE.finditer(body)),
+        "引语": Counter(q for q in (m.group(1) or m.group(2) for m in QUOTE_RE.finditer(body)) if _is_quote(q)),
+        "英文专名": Counter(m.group(0) for m in LATIN_RE.finditer(body) if len(m.group(0)) > 1),
+        "确定性词": Counter({w: body.count(w) for w in CERTAINTY if w in body}),
     }
+
+
+def _diff(b: Counter, a: Counter) -> dict:
+    return {"消失": sorted(k for k in b if k not in a),
+            "新增": sorted(k for k in a if k not in b),
+            "次数变化": sorted(f"{k}（{b[k]}→{a[k]}）" for k in b if k in a and a[k] != b[k])}
 
 
 def over_edit(before: str, after: str, genre: str):
@@ -92,7 +107,7 @@ def over_edit(before: str, after: str, genre: str):
 
 def check(before: str, after: str, genre: str) -> dict:
     tb, ta = tokens(before), tokens(after)
-    diff = {k: {"消失": sorted(tb[k] - ta[k]), "新增": sorted(ta[k] - tb[k])} for k in tb}
+    diff = {k: _diff(tb[k], ta[k]) for k in tb}
     md = genre == "long"
     wb, hb = D.analyze(before, genre, markdown=md)
     wa, ha = D.analyze(after, genre, markdown=md)
@@ -109,9 +124,9 @@ def render(r: dict) -> str:
     b, a = r["字数"]["改前"], r["字数"]["改后"]
     lines = [f"字数：改前 {b['chars']} → 改后 {a['chars']}｜单段最长 {b['longest_paragraph']} → {a['longest_paragraph']}"]
     for k, v in r["保真"].items():
-        if v["消失"] or v["新增"]:
-            lines.append(f"保真·{k}：消失 {v['消失'][:8]}｜新增 {v['新增'][:8]}")
-    if not any(v["消失"] or v["新增"] for v in r["保真"].values()):
+        if v["消失"] or v["新增"] or v["次数变化"]:
+            lines.append(f"保真·{k}：消失 {v['消失'][:8]}｜新增 {v['新增'][:8]}｜次数变化 {v['次数变化'][:8]}")
+    if not any(v["消失"] or v["新增"] or v["次数变化"] for v in r["保真"].values()):
         lines.append("保真：数字、引语、英文专名、确定性词都没变")
     d = r["去AI味"]
     lines.append(f"去 AI 味：W {d['改前']['W']} → {d['改后']['W']}｜H {d['改前']['H']} → {d['改后']['H']}（H 只是提示）")
@@ -186,7 +201,8 @@ def main(argv: list[str] | None = None) -> int:
         write_report(r, Path(a.report))
         if not a.json:
             print(f"已写出报告骨架：{a.report}")
-    bad = r["过度改稿"]["over_edit"] or any(r["保真"][k]["消失"] or r["保真"][k]["新增"] for k in ("数字", "引语"))
+    bad = r["过度改稿"]["over_edit"] or any(r["保真"][k]["消失"] or r["保真"][k]["新增"] or r["保真"][k]["次数变化"]
+                                         for k in ("数字", "引语"))
     return 1 if (a.strict and bad) else 0
 
 

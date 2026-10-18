@@ -113,6 +113,17 @@ def main() -> None:
         check("revise_check --report 写出报告骨架", rp.is_file() and "## 未核实条目" in rp.read_text(encoding="utf-8"))
         r = run(["scripts/revise_check.py", str(before), str(t / "missing.md")])
         check("revise_check：读不到文件退出码=2 且无 Traceback", r.returncode == 2 and no_tb(r), f"rc={r.returncode}")
+        # 按次数比：删掉一处「多半」、多引用一次数字都要看得见；「改前」这种短词不算引语
+        cb, ca = t / "cnt_b.md", t / "cnt_a.md"
+        cb.write_text("# t\n\n明年多半会涨，后年多半还涨，star 已经 39 万。\n", encoding="utf-8")
+        ca.write_text("# t\n\n这一段里「改前」只是个标签。明年多半会涨，star 已经 39 万，比去年多 39 万。\n", encoding="utf-8")
+        r = run(["scripts/revise_check.py", str(cb), str(ca), "--json"])
+        fid = (json.loads(r.stdout or "{}") if r.returncode == 0 else {}).get("保真", {})
+        check("revise_check：确定性词按次数比（多半 2→1）", any("多半（2→1）" in x for x in fid.get("确定性词", {}).get("次数变化", [])),
+              json.dumps(fid, ensure_ascii=False)[:300])
+        check("revise_check：数字按次数比（39万 1→2）", any(x.startswith("39万（1→2）") for x in fid.get("数字", {}).get("次数变化", [])),
+              json.dumps(fid, ensure_ascii=False)[:300])
+        check("revise_check：「改前」这种短词不算引语", not fid.get("引语", {}).get("新增"), json.dumps(fid, ensure_ascii=False)[:300])
 
         # 过度改稿：干净段落被大面积改写
         clean_b = t / "clean_b.md"
@@ -149,6 +160,19 @@ def main() -> None:
         (art / "某文.md").write_text("---\ntitle: 某文\n---\n\n# 某文\n\n正文。\n", encoding="utf-8")
         r = run(["scripts/check_article.py", str(art / "某文.md")])
         check("check_article 缺字段报 E1 并退出 1", r.returncode == 1 and "E1" in r.stdout and no_tb(r), r.stdout[-200:])
+        # 草稿期占位截图：W4 不报错；改成定稿就是 E3
+        art2 = Path(td) / "占位"
+        art2.mkdir()
+        fm = "---\ntitle: 占位\ndate: 2026-10-18\nstatus: {st}\ntags: [a]\ncover: cover/c.png\n---\n\n# 占位\n\n正文。\n\n![对练截图](images/01-对练截图.png)\n"
+        (art2 / "占位.md").write_text(fm.format(st="草稿"), encoding="utf-8")
+        r = run(["scripts/check_article.py", str(art2)])
+        check("check_article 草稿期占位截图只给 W4", r.returncode == 0 and "W4" in r.stdout and "E3" not in r.stdout, r.stdout[-200:])
+        (art2 / "占位.md").write_text(fm.format(st="定稿"), encoding="utf-8")
+        r = run(["scripts/check_article.py", str(art2)])
+        check("check_article 定稿时缺图仍是 E3", r.returncode == 1 and "E3" in r.stdout, r.stdout[-200:])
+        (art2 / "占位.md").write_text(fm.format(st="草稿").replace("01-对练截图", "01-架构"), encoding="utf-8")
+        r = run(["scripts/check_article.py", str(art2)])
+        check("check_article 普通图片缺失仍是 E3（不是占位）", r.returncode == 1 and "E3" in r.stdout, r.stdout[-200:])
 
     # 7. 可编译
     for f in sorted((ROOT / "scripts").glob("*.py")):

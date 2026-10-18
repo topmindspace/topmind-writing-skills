@@ -30,6 +30,7 @@ sys.dont_write_bytecode = True  # 不在技能目录里留 __pycache__
 sys.dont_write_bytecode = True  # 同目录模块不写 __pycache__（技能包里不留缓存）
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import de_ai_lint as L  # noqa: E402  同目录、同一份规则（lint_x_post 也复用它）
+import count_words as CW  # noqa: E402  字数口径统一用 count_words
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -57,11 +58,11 @@ def scan_text(text: str) -> dict:
 
     for no, ln in enumerate(plain, 1):
         if ln.strip() and not ln.lstrip().startswith("·"):
-            n = sum(1 for ch in L.URL_RE.sub("", ln) if not ch.isspace())
+            n = L.visible_len(ln)
             if n > L.LONG_PARA_MAX:
                 hits.append({"line": no, "code": "W14", "name": "长段落", "text": f"约 {n} 字"})
     body = "\n".join(plain)
-    chars = sum(1 for ch in body if not ch.isspace())
+    chars = CW.count_text(text)["chars"]
     paras = [p for p in re.split(r"\n\s*\n", body) if p.strip()]
     structural, notes = 0, []
     lens = [sum(1 for ch in p if not ch.isspace()) for p in paras if not p.lstrip().startswith("·")]
