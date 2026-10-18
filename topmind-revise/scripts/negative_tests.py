@@ -136,6 +136,31 @@ def main() -> None:
         rep = json.loads(r.stdout or "{}") if r.returncode == 0 else {}
         check("revise_check：没命中的段落被大面积改写 → 提示过度改稿", rep.get("过度改稿", {}).get("over_edit") is True,
               json.dumps(rep.get("过度改稿"), ensure_ascii=False))
+        # --declare：改动表里依据是事实 / 逻辑 / 作者意见的段落不计入；依据是规则编号的照算
+        def declare_file(basis: str) -> Path:
+            f = t / f"declare_{basis[:2]}.md"
+            rows = "\n".join(f"| 改前第 {i} 段 | {basis} | {pb[:18]}… | … |" for i, pb in enumerate(paras_b, 1))
+            f.write_text("# 改稿报告\n\n## 改动表\n\n| 位置 | 依据 | 原文 | 改后 |\n|---|---|---|---|\n" + rows + "\n", encoding="utf-8")
+            return f
+        r = run(["scripts/revise_check.py", str(clean_b), str(clean_a), "--json", "--declare", str(declare_file("② 逻辑"))])
+        o = (json.loads(r.stdout or "{}") if r.returncode == 0 else {}).get("过度改稿", {})
+        check("revise_check --declare：登记为逻辑关的改动不计入过度改稿", o.get("over_edit") is False and len(o.get("declared", [])) == 5,
+              json.dumps(o, ensure_ascii=False)[:300])
+        r = run(["scripts/revise_check.py", str(clean_b), str(clean_a), "--json", "--declare", str(declare_file("Z17 假强调"))])
+        o = (json.loads(r.stdout or "{}") if r.returncode == 0 else {}).get("过度改稿", {})
+        check("revise_check --declare：依据是规则编号的改动照算", o.get("over_edit") is True, json.dumps(o, ensure_ascii=False)[:300])
+        r = run(["scripts/revise_check.py", str(clean_b), str(clean_a), "--declare", str(t / "nope.md")])
+        check("revise_check --declare 读不到文件退出码=2 且无 Traceback", r.returncode == 2 and no_tb(r), f"rc={r.returncode}")
+        # 报告骨架：改动表预填、剩余 H 也列进「保留未改的命中」、带人工检查清单
+        hb, ha = t / "h_b.md", t / "h_a.md"
+        hb.write_text("# t\n\n这是一段普通的介绍，讲本地存储。\n\n第二段保持不变，讲插件。\n", encoding="utf-8")
+        ha.write_text("# t\n\n这是真正的本地存储，一段普通的介绍。\n\n第二段保持不变，讲插件。\n", encoding="utf-8")
+        rp2 = t / "report2.md"
+        run(["scripts/revise_check.py", str(hb), str(ha), "--report", str(rp2)])
+        txt = rp2.read_text(encoding="utf-8") if rp2.is_file() else ""
+        check("revise_check --report：改动表按 diff 预填", "| 改前第" in txt and "真正的本地存储" in txt, txt[:300])
+        check("revise_check --report：剩余 H 列进保留未改的命中", "[H1]" in txt and "（一句判断）" in txt, txt[:500])
+        check("revise_check --report：带人工检查清单", "## 人工检查" in txt and "- [ ]" in txt)
 
         # 5. count_words
         cw = t / "cw.md"

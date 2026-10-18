@@ -10,12 +10,17 @@
      「」里只有几个字、没有标点的（「改前」「一文读懂」）是在讨论某个词，不算引语。
   3. 去 AI 味：改前 / 改后各跑一遍 de_ai_lint，报 W / H 数量变化。
   4. 过度改稿：改前没有任何 W 命中的段落里，被改写（不是删除）的比例；超过 30% 提示「可能改过头」。
+     事实关 / 逻辑关 / 作者意见的改动不算过度改稿：在改稿报告的改动表里登记（依据写「① 事实」「② 逻辑」
+     「作者意见」），再用 --declare 改稿报告.md 跑一次，这些段落会单独列出、不计入比例。
+  5. 报告骨架（--report）：改动表按段落 diff 预填「原文 / 改后」，依据一栏留给人填；
+     「保留未改的命中」列出改后稿里全部 W 和 H（每条都要写理由或改掉），不会再出现「无」却有命中的情况。
 
 用法：
     python3 revise_check.py 改前.md 改后.md                     # 打印检查结果
     python3 revise_check.py 改前.md 改后.md --report 改稿报告.md   # 另外写出报告骨架（改动表留给人填）
     python3 revise_check.py 改前.txt 改后.txt --genre short --json
     python3 revise_check.py 改前.md 改后.md --strict              # 有数字 / 引语变化或过度改稿 → 退出码 1
+    python3 revise_check.py 改前.md 改后.md --declare out/改稿报告.md   # 改动表里登记的事实 / 逻辑 / 作者意见改动不计入过度改稿
 只用 Python 标准库；依赖同目录的 de_ai_lint.py、count_words.py。退出码：读文件失败 → 2。
 """
 from __future__ import annotations
@@ -84,14 +89,35 @@ def _diff(b: Counter, a: Counter) -> dict:
             "次数变化": sorted(f"{k}（{b[k]}→{a[k]}）" for k in b if k in a and a[k] != b[k])}
 
 
-def over_edit(before: str, after: str, genre: str):
+DECLARE_BASIS_RE = re.compile(r"①|②|事实|逻辑|作者")
+
+
+def declared_snippets(report_text: str) -> list[str]:
+    """从改稿报告的改动表里取「依据」是事实 / 逻辑 / 作者意见的行的「原文」片段（去掉省略号和空白）。"""
+    out = []
+    for ln in report_text.splitlines():
+        cells = [c.strip() for c in ln.strip().strip("|").split("|")]
+        if len(cells) < 4 or set(cells[0]) <= {"-", ":", " "} or cells[0] == "位置":
+            continue
+        if DECLARE_BASIS_RE.search(cells[1]):
+            frag = _norm(re.sub(r"[…\.]{1,3}|「|」|`", "", cells[2]))
+            if len(frag) >= 6:
+                out.append(frag[:16])
+    return out
+
+
+def over_edit(before: str, after: str, genre: str, declared: list[str] | None = None):
     bp, ap_ = paragraphs(before), paragraphs(after)
     md = genre == "long"
-    unhit, modified, removed = 0, [], []
+    declared = declared or []
+    unhit, modified, removed, exempt = 0, [], [], []
     for p in bp:
         w, _h = D.analyze(p, genre, markdown=md)
         best = max((difflib.SequenceMatcher(None, _norm(p), _norm(q)).ratio() for q in ap_), default=0.0)
         if w:
+            continue
+        if best < 0.98 and any(frag in _norm(p) for frag in declared):
+            exempt.append(p[:40])
             continue
         unhit += 1
         if best >= 0.98:
@@ -102,10 +128,32 @@ def over_edit(before: str, after: str, genre: str):
             modified.append((round(best, 2), p[:40]))
     ratio = len(modified) / unhit if unhit else 0.0
     return {"unhit_paragraphs": unhit, "modified_without_hit": len(modified), "ratio": round(ratio, 2),
-            "examples": modified[:5], "removed_without_hit": removed[:5], "over_edit": ratio > OVER_EDIT_RATIO}
+            "examples": modified[:5], "removed_without_hit": removed[:5], "declared": exempt,
+            "over_edit": ratio > OVER_EDIT_RATIO}
 
 
-def check(before: str, after: str, genre: str) -> dict:
+def change_rows(before: str, after: str) -> list[tuple[str, str, str]]:
+    """按段落 diff 预填改动表：(位置, 原文, 改后)。"""
+    bp, ap_ = paragraphs(before), paragraphs(after)
+    rows, matched = [], set()
+    for i, p in enumerate(bp, 1):
+        scores = [(difflib.SequenceMatcher(None, _norm(p), _norm(q)).ratio(), j) for j, q in enumerate(ap_)]
+        best, j = max(scores, default=(0.0, -1))
+        if best >= 0.98:
+            matched.add(j)
+            continue
+        if best >= 0.5:
+            matched.add(j)
+            rows.append((f"改前第 {i} 段", p[:60], ap_[j][:60]))
+        else:
+            rows.append((f"改前第 {i} 段", p[:60], "（删除或拆分）"))
+    for j, q in enumerate(ap_):
+        if j not in matched and max((difflib.SequenceMatcher(None, _norm(q), _norm(p)).ratio() for p in bp), default=0) < 0.5:
+            rows.append((f"改后第 {j + 1} 段", "（新增或拆分）", q[:60]))
+    return rows
+
+
+def check(before: str, after: str, genre: str, declared: list[str] | None = None) -> dict:
     tb, ta = tokens(before), tokens(after)
     diff = {k: _diff(tb[k], ta[k]) for k in tb}
     md = genre == "long"
@@ -115,8 +163,10 @@ def check(before: str, after: str, genre: str) -> dict:
         "字数": {"改前": CW.count_text(before), "改后": CW.count_text(after)},
         "保真": diff,
         "去AI味": {"改前": {"W": len(wb), "H": len(hb)}, "改后": {"W": len(wa), "H": len(ha)},
-                  "改后W明细": [f"L{n} [{c}] {m}" for n, c, m in wa]},
-        "过度改稿": over_edit(before, after, genre),
+                  "改后W明细": [f"L{n} [{c}] {m}" for n, c, m in wa],
+                  "改后H明细": [f"L{n} [{c}] {m}" for n, c, m in ha]},
+        "过度改稿": over_edit(before, after, genre, declared),
+        "改动": change_rows(before, after),
     }
 
 
@@ -135,10 +185,15 @@ def render(r: dict) -> str:
     lines.append(f"过度改稿：无命中段落 {o['unhit_paragraphs']} 段，其中被改写 {o['modified_without_hit']} 段（{o['ratio']:.0%}）→ {flag}")
     for ratio, ex in o["examples"]:
         lines.append(f"  · 相似度 {ratio}：{ex}…")
+    if o.get("declared"):
+        lines.append(f"  已登记为事实 / 逻辑 / 作者意见的改动 {len(o['declared'])} 段，不计入比例")
     return "\n".join(lines)
 
 
 REPORT_TMPL = """# 改稿报告
+
+- 技能：topmind-revise · 模式：（revise / embed，embed 写调用方）· 文体：（long / short …）
+- 备份：（备份目录，长文默认 <文章文件夹>/raw/备份-<时间戳>/）
 
 ## 字数
 
@@ -146,13 +201,26 @@ REPORT_TMPL = """# 改稿报告
 
 ## 改动表
 
-| 位置 | 规则编号 / 作者意见 | 原文 | 改后 |
+依据填规则编号（Z / P / V / W / H）、「① 事实」「② 逻辑」或「作者意见」；说不出依据的改动恢复原文。
+
+| 位置 | 依据 | 原文 | 改后 |
 |---|---|---|---|
-|  |  |  |  |
+{changes}
 
 ## 保留未改的命中（及理由）
 
+改后稿里还剩的 W 和 H 全部列在这里：W 每条写保留理由（或回去改掉），H 写一句判断。
+
 {kept}
+
+## 人工检查（事实关 / 逻辑关）
+
+- [ ] 承重数字、日期、排名、「第一」逐条对过素材来源
+- [ ] 引语逐字照录，语气没有升级
+- [ ] 作者自述 / 回忆类说法有记录支撑，或列进未核实条目
+- [ ] 结论靠前；同一事实全文同值，同一事物一个叫法
+- [ ] 导语、小结和后文对得上（没有「每个」「都」这类以偏概全）
+- [ ] 对比有对象和定语
 
 ## 保真比对
 
@@ -170,12 +238,17 @@ REPORT_TMPL = """# 改稿报告
 
 def write_report(r: dict, path: Path) -> None:
     text = render(r).splitlines()
-    kept = "\n".join(f"- {x}：（保留理由）" for x in r["去AI味"]["改后W明细"]) or "- 无"
+    d = r["去AI味"]
+    kept = "\n".join([f"- {x}：（保留理由，或改掉）" for x in d["改后W明细"]]
+                     + [f"- {x}：（一句判断）" for x in d.get("改后H明细", [])]) or "- 无（改后稿没有 W / H 命中）"
+    cell = lambda t: t.replace("|", "／")  # noqa: E731
+    changes = "\n".join(f"| {loc} |  | {cell(a)} | {cell(b)} |" for loc, a, b in r.get("改动", [])) or "| （无改动） |  |  |  |"
     path.write_text(REPORT_TMPL.format(
         counts=text[0],
+        changes=changes,
         kept=kept,
         fidelity="\n".join(f"- {x}" for x in text if x.startswith("保真")),
-        over="\n".join(x for x in text if x.startswith("过度改稿") or x.startswith("  ·")),
+        over="\n".join(x for x in text if x.startswith("过度改稿") or x.startswith("  ")),
     ), encoding="utf-8")
 
 
@@ -187,6 +260,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--report", help="写出改稿报告骨架（Markdown）")
     ap.add_argument("--strict", action="store_true", help="数字 / 引语有变化或过度改稿 → 退出码 1")
+    ap.add_argument("--declare", help="已填好的改稿报告：改动表里依据是事实 / 逻辑 / 作者意见的段落不计入过度改稿")
     a = ap.parse_args(argv)
     try:
         before = Path(a.before).read_text(encoding="utf-8-sig")
@@ -195,7 +269,14 @@ def main(argv: list[str] | None = None) -> int:
         print(f"错误：无法读取（{e}）", file=sys.stderr)
         return 2
     genre = a.genre or ("long" if a.before.lower().endswith(".md") else "short")
-    r = check(before, after, genre)
+    declared = []
+    if a.declare:
+        try:
+            declared = declared_snippets(Path(a.declare).read_text(encoding="utf-8-sig"))
+        except (OSError, UnicodeDecodeError) as e:
+            print(f"错误：无法读取 --declare（{e}）", file=sys.stderr)
+            return 2
+    r = check(before, after, genre, declared)
     print(json.dumps(r, ensure_ascii=False, indent=1) if a.json else render(r))
     if a.report:
         write_report(r, Path(a.report))

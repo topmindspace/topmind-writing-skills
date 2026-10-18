@@ -54,7 +54,8 @@ metadata:
 2. **找原帖、原图**（写字之前，按 [references/image-sourcing.md](references/image-sourcing.md)）：原帖链接、官方图 / 截图 1–2 张，来源记进交付说明；自制图只作兜底，标「自制」和数据来源。
 3. **写内容**：
    - 首行一句简单的话题陈述：「是什么 + 最关键的事实」，约 30 字内，只看首行也拿到信息；不用设问钩子，真里程碑把「第一」放句首（core-voice V05、V20）；
-   - 具体数字和场景，说人话，事实讲完就停，不硬加收尾句（V10）；对比给出对象和定语，不写「约 / 左右」，不用千分位（V12）；
+   - 具体数字和场景，说人话，事实讲完就停，不硬加收尾句，也不用「你会换吗？」拉互动（V10）；对比给出对象和定语，比的对象选读者认识的知名对手，不写「约 / 左右」，不用千分位（V12）；
+   - 读者不关心的背景删掉，借来的热点一句带过；推测写成问句，不写成事实（V22）；不写「理由就一条：」这类总结腔，直接说理由（V08）；
    - **去 AI 味（必过）**：按 [references/de-ai-rules.md](references/de-ai-rules.md) 逐条过（先守改写边界：只改表达，不改事实和确定性），再对照 [references/core-voice.md](references/core-voice.md) 短文条目和 [references/writing-principles.md](references/writing-principles.md) 第五点五节「吸引力清单」；
    - 出处在正文里只用文字点到（「官方称」「据论文」），不贴 URL、不写来源行。
 4. **排版**（目标：方便阅读），按 [references/platform-specs.md](references/platform-specs.md)、[references/x-post-format.md](references/x-post-format.md)、[references/x-layout-patterns.md](references/x-layout-patterns.md)：
