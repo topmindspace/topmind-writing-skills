@@ -30,6 +30,16 @@ metadata:
 > 只允许排版差异，内容一致；源稿本身继续用 Markdown 列表。
 > 派生的 X 短帖按 **[references/x-delivery-contract.md](references/x-delivery-contract.md)（必读必守）** 交付：正文是一段可直接复制的纯文本，**不含 URL 和来源行**；长文里的文内链接和原图挪到另发的链接 / 图片消息。公众号长文本身可以有文内链接，不受此限。
 
+## 先读：写作原则与信息设计
+
+本技能建立在两份共享文件上，动笔前先读：
+
+- [references/social-writing-principles.md](references/social-writing-principles.md)：8 条社交媒体写作原则（先想清楚、结论先行、每句都有新信息、形式跟内容走、简单清楚、原图优先、站在读者那边、真实有分寸）
+- [references/information-design.md](references/information-design.md)：内容 → 形式决策表、篇幅和密度、去啰嗦的判断法
+- 措辞和口吻在这两层之上，见 [references/core-voice.md](references/core-voice.md)
+
+长文：先写骨架（每节要点 + 形式 + 图表计划 + 字数），再写正文。
+
 ## 语言铁律
 
 - **默认中文**：标题、正文、配图文案一律用中文写作，这是默认行为，不需要用户每次声明。

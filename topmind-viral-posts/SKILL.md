@@ -18,6 +18,16 @@ metadata:
 > **必读必守**：[references/x-delivery-contract.md](references/x-delivery-contract.md)——**段子完全不用 emoji**（无人设点缀、无情绪表情、无列表符号）；分点就一条一行、靠行间空行区分，禁用 `- ` `1. `；每条帖子正文是一段可直接复制的纯文本（单独一个 `text` 块），**不含 URL 和来源行**；链接一条、图片一条另发，内部标签放说明里。
 > **写法规则**：段子、回复、转发点评按 [references/core-voice.md](references/core-voice.md) 的段子 / 回复条目（V19 V26 V27 V29–V32）；去 AI 味按 [references/de-ai-rules.md](references/de-ai-rules.md)。
 
+## 先读：写作原则与信息设计
+
+本技能建立在两份共享文件上，动笔前先读：
+
+- [references/social-writing-principles.md](references/social-writing-principles.md)：8 条社交媒体写作原则（先想清楚、结论先行、每句都有新信息、形式跟内容走、简单清楚、原图优先、站在读者那边、真实有分寸）
+- [references/information-design.md](references/information-design.md)：内容 → 形式决策表、篇幅和密度、去啰嗦的判断法
+- 措辞和口吻在这两层之上，见 [references/core-voice.md](references/core-voice.md)
+
+段子：一个主角、一个画面、一句动作反转；不铺垫，每句都有新信息。
+
 ## 十八大类型
 
 | 类型 | 核心钩子 | 配图建议 | 默认标签（用途｜语气｜话题） |

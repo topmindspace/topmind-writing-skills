@@ -22,6 +22,16 @@ metadata:
 - 跟 `topmind-x-article` / `topmind-wechat-post` 的区别：那两个是长文（数千字、多节多图、HTML 发布包）；本技能 X 版是一条纯文本短文（约 1000 字内），公众号版 300–800 字。
 - 现成文字只要排版 → `topmind-format`。
 
+## 先读：写作原则与信息设计
+
+本技能建立在两份共享文件上，动笔前先读：
+
+- [references/social-writing-principles.md](references/social-writing-principles.md)：8 条社交媒体写作原则（先想清楚、结论先行、每句都有新信息、形式跟内容走、简单清楚、原图优先、站在读者那边、真实有分寸）
+- [references/information-design.md](references/information-design.md)：内容 → 形式决策表、篇幅和密度、去啰嗦的判断法
+- 措辞和口吻在这两层之上，见 [references/core-voice.md](references/core-voice.md)
+
+短文：首行给结论；3 个以上要点用「·」分行；原图另发，正文不复述图。
+
 ## 何时不用
 
 - 把现成文字格式化、转段子、加空行和 emoji → `topmind-format`

@@ -15,6 +15,15 @@ metadata:
 
 榜单、信息图、月报长图、海报，以及「一段一图」的分段图批量出图。
 
+## 先读：写作原则与信息设计
+
+本技能建立在两份共享文件上，动笔前先读：
+
+- [references/social-writing-principles.md](references/social-writing-principles.md)：8 条社交媒体写作原则（先想清楚、结论先行、每句都有新信息、形式跟内容走、简单清楚、原图优先、站在读者那边、真实有分寸）
+- [references/information-design.md](references/information-design.md)：内容 → 形式决策表、篇幅和密度、去啰嗦的判断法
+
+长图：按决策表选图表类型，一张图一个结论，图标题直接写结论。
+
 ## 什么时候用
 
 - 用户丢一张海报 / 分级榜 / 信息图，说「再调研一下，更新重做」

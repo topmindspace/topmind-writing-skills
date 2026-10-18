@@ -23,6 +23,16 @@ metadata:
 标题提炼 → 七层场景配方 → 2–3 个方案（风格组合 + 骨架 + 配色）→ 分层 prompt → 整张生成 → 逐字核对 → 局部修正（兜底：场景图 + 脚本叠字）→ 七项评分 + 冲击力自检 → 裁剪双尺寸 → 落盘命名
 ```
 
+## 先读：写作原则与信息设计
+
+本技能建立在两份共享文件上，动笔前先读：
+
+- [references/social-writing-principles.md](references/social-writing-principles.md)：8 条社交媒体写作原则（先想清楚、结论先行、每句都有新信息、形式跟内容走、简单清楚、原图优先、站在读者那边、真实有分寸）
+- [references/information-design.md](references/information-design.md)：内容 → 形式决策表、篇幅和密度、去啰嗦的判断法
+- 措辞和口吻在这两层之上，见 [references/core-voice.md](references/core-voice.md)
+
+封面：一张图只传一个信息，主题词或一个数字直给。
+
 ## 风格索引（22 种，浅色优先）
 
 风格总览图见 `assets/examples/overview.png`（离线可看，npm 包也带）。

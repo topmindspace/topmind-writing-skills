@@ -23,6 +23,16 @@ Obsidian 里直接能看；用户要发 X 时，再从它派生发布包到 `out
             ─(按需)→ topmind-cover → cover/cover-1500x600.png → 发布清单 → 人工粘贴发布
 ```
 
+## 先读：写作原则与信息设计
+
+本技能建立在两份共享文件上，动笔前先读：
+
+- [references/social-writing-principles.md](references/social-writing-principles.md)：8 条社交媒体写作原则（先想清楚、结论先行、每句都有新信息、形式跟内容走、简单清楚、原图优先、站在读者那边、真实有分寸）
+- [references/information-design.md](references/information-design.md)：内容 → 形式决策表、篇幅和密度、去啰嗦的判断法
+- 措辞和口吻在这两层之上，见 [references/core-voice.md](references/core-voice.md)
+
+长文：先写骨架（每节要点 + 形式 + 图表计划 + 字数），再写正文；X 不渲染表格，派生时转分行或做成图。
+
 ## 语言铁律
 
 - **默认中文**：标题、正文、配图文案一律用中文写作，这是默认行为，不需要用户每次声明。

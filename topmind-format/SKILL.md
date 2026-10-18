@@ -16,6 +16,16 @@ metadata:
 用户已经有文字，只想让它在 X 上好读。本技能**只动排版**：换行、空行、列表符号、emoji 点缀（emoji 只用于短文体）；
 不改字、不增删事实、不调换顺序。要改写现成内容时，转给 `topmind-revise`；从零重写时转 `topmind-viral-posts`（段子）或 `topmind-briefs`（短文）。
 
+## 先读：写作原则与信息设计
+
+本技能建立在两份共享文件上，动笔前先读：
+
+- [references/social-writing-principles.md](references/social-writing-principles.md)：8 条社交媒体写作原则（先想清楚、结论先行、每句都有新信息、形式跟内容走、简单清楚、原图优先、站在读者那边、真实有分寸）
+- [references/information-design.md](references/information-design.md)：内容 → 形式决策表、篇幅和密度、去啰嗦的判断法
+- 措辞和口吻在这两层之上，见 [references/core-voice.md](references/core-voice.md)
+
+排版：按决策表提示哪里可以转列表或表格，不改字。
+
 ## 何时不用
 
 - 从零写段子、涨粉帖、互关帖 → `topmind-viral-posts`

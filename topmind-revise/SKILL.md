@@ -19,6 +19,16 @@ metadata:
 声明 + 备份 → ① 事实 → ② 逻辑 → ③ 删冗余 → ④ 去 AI 味 → ⑤ 核心经验对照 → ⑥ 排版 → ⑦ 保真审计 → ⑧ 过度改稿检查 → 报告
 ```
 
+## 先读：写作原则与信息设计
+
+本技能建立在两份共享文件上，动笔前先读：
+
+- [references/social-writing-principles.md](references/social-writing-principles.md)：8 条社交媒体写作原则（先想清楚、结论先行、每句都有新信息、形式跟内容走、简单清楚、原图优先、站在读者那边、真实有分寸）
+- [references/information-design.md](references/information-design.md)：内容 → 形式决策表、篇幅和密度、去啰嗦的判断法
+- 措辞和口吻在这两层之上，见 [references/core-voice.md](references/core-voice.md)
+
+改稿：先做结构诊断（⓪），再改措辞；去 AI 味模式表只在改稿和自查时读。
+
 ## 语言铁律
 
 - **默认中文**：改稿、报告、候选标题都用中文；只有用户明确说要英文时才用英文。
