@@ -187,6 +187,11 @@ def render(r: dict) -> str:
         lines.append(f"  · 相似度 {ratio}：{ex}…")
     if o.get("declared"):
         lines.append(f"  已登记为结构 / 事实 / 逻辑 / 作者意见的改动 {len(o['declared'])} 段，不计入比例")
+    dz = r.get("信息设计")
+    if dz is not None:
+        lines.append(f"信息设计提示（I，只供判断）：改前 {len(dz['改前'])} → 改后 {len(dz['改后'])}")
+        for x in dz["改后"][:5]:
+            lines.append(f"↳ {x}")
     return "\n".join(lines)
 
 
@@ -209,6 +214,10 @@ REPORT_TMPL = """# 改稿报告
 - [ ] 没有重复的段落和复读标题的首句
 - [ ] 篇幅在预算内（有骨架.md 时对照）
 - 结构改动：（light 默认只做低风险改动；重排章节写建议或注明 depth=structure）
+
+脚本提示（info_design_hints.py，I1–I8，只供判断）：
+
+{design}
 
 ## 改动表
 
@@ -247,6 +256,17 @@ REPORT_TMPL = """# 改稿报告
 """
 
 
+def design_summary(before_path: str, after_path: str) -> dict:
+    """改前 / 改后的信息设计提示（I1–I8，只提示）；同目录没有 info_design_hints.py 时为空。"""
+    try:
+        import info_design_hints as IDH
+    except ImportError:
+        return {"改前": [], "改后": []}
+    budget = IDH.read_budget(Path(after_path))
+    fmt = lambda hs: [f"[{c}] L{n} {m}" for n, c, m in hs]  # noqa: E731
+    return {"改前": fmt(IDH.check_file(before_path, budget=budget)), "改后": fmt(IDH.check_file(after_path, budget=budget))}
+
+
 def write_report(r: dict, path: Path) -> None:
     text = render(r).splitlines()
     d = r["去AI味"]
@@ -254,7 +274,14 @@ def write_report(r: dict, path: Path) -> None:
                      + [f"- {x}：（一句判断）" for x in d.get("改后H明细", [])]) or "- 无（改后稿没有 W / H 命中）"
     cell = lambda t: t.replace("|", "／")  # noqa: E731
     changes = "\n".join(f"| {loc} |  | {cell(a)} | {cell(b)} |" for loc, a, b in r.get("改动", [])) or "| （无改动） |  |  |  |"
+    dz = r.get("信息设计")
+    if dz is None:
+        design = "- （短文体不跑；长文 Markdown 才有 I 提示）"
+    else:
+        design = (f"- 改前 {len(dz['改前'])} 条 → 改后 {len(dz['改后'])} 条\n"
+                  + ("\n".join(f"- {x}：（转了 / 不转的理由）" for x in dz["改后"]) or "- 改后稿没有 I 提示"))
     path.write_text(REPORT_TMPL.format(
+        design=design,
         counts=text[0],
         changes=changes,
         kept=kept,
@@ -288,6 +315,8 @@ def main(argv: list[str] | None = None) -> int:
             print(f"错误：无法读取 --declare（{e}）", file=sys.stderr)
             return 2
     r = check(before, after, genre, declared)
+    if genre == "long":
+        r["信息设计"] = design_summary(a.before, a.after)
     print(json.dumps(r, ensure_ascii=False, indent=1) if a.json else render(r))
     if a.report:
         write_report(r, Path(a.report))

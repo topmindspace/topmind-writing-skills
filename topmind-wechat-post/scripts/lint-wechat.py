@@ -435,6 +435,16 @@ def main():
         for i in info:
             print("  · %s" % i)
         print("")
+    try:
+        import info_design_hints as IDH  # 同目录的共享脚本；I 提示只供判断，不影响退出码
+        design = IDH.check_file(args.input)
+    except (ImportError, OSError, UnicodeDecodeError):
+        design = []
+    if design:
+        print("信息设计提示 %d（只供判断，见 references/information-design.md）：" % len(design))
+        for n, c, m in design:
+            print("  · [%s] L%d %s" % (c, n, m))
+        print("")
     if not errors and not warns:
         print("  ✓ 未发现排版问题")
 

@@ -195,6 +195,11 @@ def main() -> int:
                            capture_output=True, text=True)
         if '"hints"' not in r.stdout:
             fails.append("de_ai_lint --json 输出缺 hints")
+    # 信息设计提示 I1–I8 的回归测试一起跑（只提示、不进 --strict）
+    r = subprocess.run([sys.executable, str(ROOT / "scripts" / "test_info_design.py")], capture_output=True, text=True)
+    print(r.stdout.strip())
+    if r.returncode != 0:
+        fails.append("test_info_design 未通过")
     total = len(SHOULD_PASS) + len(SHOULD_WARN) + len(SHOULD_HINT) + len(SHOULD_NOT_HINT)
     if fails:
         print("\n".join("  ✗ " + x for x in fails))

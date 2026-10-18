@@ -14,6 +14,7 @@
 from __future__ import annotations
 
 import json
+import re
 import py_compile
 import shutil
 import subprocess
@@ -165,6 +166,15 @@ def main() -> None:
         check("revise_check --report：改动表按 diff 预填", "| 改前第" in txt and "真正的本地存储" in txt, txt[:300])
         check("revise_check --report：剩余 H 列进保留未改的命中", "[H1]" in txt and "（一句判断）" in txt, txt[:500])
         check("revise_check --report：带人工检查清单", "## 人工检查" in txt and "- [ ]" in txt)
+        lb, la = t / "long_b.md", t / "long_a.md"
+        para = "某笔记工具这周发了新版，把同步改成了可选项，默认只存本地，用户自己决定要不要上云。"
+        lb.write_text("# t\n\n" + "\n\n".join([para] * 5) + "\n", encoding="utf-8")
+        la.write_text("# t\n\n" + para + "\n\n- 同步：可选\n- 存储：本地\n", encoding="utf-8")
+        rp3 = t / "report3.md"
+        r = run(["scripts/revise_check.py", str(lb), str(la), "--report", str(rp3)])
+        t3 = rp3.read_text(encoding="utf-8") if rp3.is_file() else ""
+        check("revise_check：长文给出改前 / 改后信息设计提示数（I，只提示）",
+              "信息设计提示" in r.stdout and re.search(r"改前 [1-9]\d* 条 → 改后 0 条", t3) is not None, r.stdout[-300:] + t3[:200])
         check("revise_check --report：带信息设计诊断（⓪ 结构）且在改动表之前",
               "## 信息设计诊断" in txt and txt.find("## 信息设计诊断") < txt.find("## 改动表"), txt[:400])
 

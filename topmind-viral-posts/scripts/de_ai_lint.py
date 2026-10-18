@@ -508,6 +508,19 @@ def analyze(text: str, genre: str = "long", markdown: bool | None = None, start:
     return sorted(warns), sorted(hints, key=lambda h: (h[0], int(h[1][1:])))
 
 
+def design_hints(path: str) -> list:
+    """信息设计提示 I1–I8（info_design_hints.py）；同目录没有这个脚本时返回空。永远不计入 --strict。"""
+    sys.dont_write_bytecode = True  # 技能包里不留 __pycache__
+    try:
+        here = str(Path(__file__).resolve().parent)
+        if here not in sys.path:
+            sys.path.insert(0, here)
+        import info_design_hints as IDH
+        return IDH.check_file(path)
+    except (ImportError, OSError, UnicodeDecodeError):
+        return []
+
+
 def _guess_genre(path: str) -> str:
     return "long" if path.lower().endswith((".md", ".markdown")) else "short"
 
@@ -520,8 +533,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--json", action="store_true", help="输出 JSON")
     ap.add_argument("--no-hints", action="store_true", help="不打印 H 级提示")
     ap.add_argument("--strict", action="store_true", help="W 也算失败（H 永远不算）")
+    ap.add_argument("--no-design", action="store_true", help="不打印 I 级信息设计提示（长文 Markdown 才有）")
     args = ap.parse_args(argv)
-    report, total_w, total_h = [], 0, 0
+    report, total_w, total_h, total_i = [], 0, 0, 0
     for f in args.files:
         try:
             text = sys.stdin.read() if f == "-" else Path(f).read_text(encoding="utf-8-sig")
@@ -533,21 +547,27 @@ def main(argv: list[str] | None = None) -> int:
         warns, hints = analyze(text, genre, md)
         if args.no_hints:
             hints = []
+        design = [] if (args.no_design or not md or genre != "long" or f == "-") else design_hints(f)
         total_w += len(warns)
         total_h += len(hints)
+        total_i += len(design)
         report.append({"file": f, "genre": genre,
                        "warnings": [{"line": n, "code": c, "msg": m} for n, c, m in warns],
-                       "hints": [{"line": n, "code": c, "msg": m} for n, c, m in hints]})
+                       "hints": [{"line": n, "code": c, "msg": m} for n, c, m in hints],
+                       "design": [{"line": n, "code": c, "msg": m} for n, c, m in design]})
         if not args.json:
             for n, c, m in warns:
                 print(f"{f}:{n}: [{c}] 警告：{m}")
             for n, c, m in hints:
                 print(f"{f}:{n}: [{c}] 提示：{m}")
+            for n, c, m in design:
+                print(f"{f}:{n}: [{c}] 信息设计：{m}")
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=1))
     else:
         failed = args.strict and total_w
-        print(f"de_ai_lint：{'未通过' if failed else '通过'}（警告 {total_w}，提示 {total_h}；提示只供判断，不要求改）")
+        tail = f"；信息设计提示 {total_i}（I，只供判断，见 information-design.md）" if total_i else ""
+        print(f"de_ai_lint：{'未通过' if failed else '通过'}（警告 {total_w}，提示 {total_h}；提示只供判断，不要求改{tail}）")
     return 1 if (args.strict and total_w) else 0
 
 

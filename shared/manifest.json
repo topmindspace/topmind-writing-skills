@@ -153,6 +153,15 @@
     "references/workspace.md": [
       "topmind-wechat-post",
       "topmind-x-article"
+    ],
+    "scripts/info_design_hints.py": [
+      "topmind-briefs",
+      "topmind-cover",
+      "topmind-format",
+      "topmind-viral-posts",
+      "topmind-wechat-post",
+      "topmind-x-article",
+      "topmind-revise"
     ]
   }
 }
