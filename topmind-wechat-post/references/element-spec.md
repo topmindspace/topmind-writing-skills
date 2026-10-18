@@ -37,28 +37,21 @@
 
 | Markdown | 产物 | 级 | 视觉层级 |
 |---|---|---|---|
-| `**文字**` | `<strong style="font-weight:600;color:text_strong">` | S | **锚点层**，全文 ≤5 处 |
+| `**文字**` | `<strong style="font-weight:600;color:text_strong">` | S | 加粗（源稿推荐的唯一强调手段） |
 | `*文字*` | `<em style="font-style:normal;color:text_muted">` | S | 弱化 |
 | `` `代码` `` | `<code style="background:surface;color:accent;font-family:mono">` | S | |
-| `==文字==` | `<strong>` + `background:accent_soft` | S | 容器层（高亮） |
-| `++文字++` 或 `<u>文字</u>` | `<span style="border-bottom:2px solid accent_light;font-weight:600;color:text_strong">` | S | **标记层**，每段 1–3 个 |
-| `~~文字~~` | `<span style="background:accent_soft;font-weight:600">` | S | 半高亮 |
+| `==文字==` | `<strong>` + `background:accent_soft` | S | 兼容读取：旧稿高亮照常渲染，新稿不用 |
+| `++文字++` 或 `<u>文字</u>` | `<span style="border-bottom:2px solid accent_light;font-weight:600;color:text_strong">` | S | 兼容读取：旧稿下划线照常渲染，新稿不用 |
+| `~~文字~~` | `<span style="background:accent_soft;font-weight:600">` | S | 兼容读取：旧稿半高亮照常渲染，新稿不用 |
 | `[!文字]` | `<span style="11px;color:accent;background:accent_soft;padding:1px 6px">` | S | 徽章；不用 `inline-block` |
 | `[文字](url)` | 正文 `文字` + 上标 `[n]`，文末「参考链接」块 | S | 公众号正文不支持可点外链 |
 
-### 视觉层级（三层，写稿时的标记纪律）
+### 强调（源稿只用标准 Markdown）
 
-| 层 | 手段 | 频率 | 用错会怎样 |
-|---|---|---|---|
-| **锚点层** | `**加粗**` | 全文 **≤5 处** | 到处加粗 = 没有重点 |
-| **标记层** | `++下划线++` | **覆盖 ≥60% 的正文段落**，每段 1–3 个 4–15 字短语 | 缺失 = 正文变成一堵灰墙，读者无处落脚 |
-| **容器层** | `==高亮==`、`::: 容器`、引用块 | 按需 | 堆太多会显得花 |
+源稿是单源纯 Markdown（Obsidian、X 派生、公众号派生共用），强调只用 `**加粗**` 和引用块，不写 `++下划线++`、`==高亮==`、`~~荧光笔~~` 这类扩展标记。
 
-标记层是**出现频率最高**的一层，也是最容易被漏掉的一层。
-
-`lint-wechat.py` 分两层判：**标记覆盖率 ≥60%**（带标记的正文段落数 ÷ 正文段落数，低于就报「跳读时没有落点」）+ **锚点加粗 ≤5 处**（超出就报「把标记当锚点用」）。
-
-**不用「强调占比」这个口径**——它把两层合成一个数，会同时掩盖两种病：锚点爆表（加粗 123 处）和标记归零（下划线 0 处）能算出相近的占比，但修法完全不同。占比还容易凑：35 段里只标 5 段、每段标 20 字也能到 10%，而整段划线等于没标。覆盖率对应的是「还有几段没标」这个可执行动作。
+- 加粗留给结论句、关键数据、产品名；没有固定上限，`lint-wechat.py` 只在强调占比超过 20% 时提醒「重点过多」
+- 旧稿里已有的扩展标记，`md2wechat.py` 照常渲染（兼容读取），lint 不报、不计覆盖率
 
 ---
 

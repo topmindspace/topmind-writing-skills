@@ -282,6 +282,18 @@ def main() -> None:
         check("lint-wechat 源稿 ::: 容器报错", r.returncode == 1 and "容器" in r.stdout, r.stdout[-300:])
         r = run("lint-wechat.py", ["--input", str(td / "box.md"), "--legacy"])
         check("lint-wechat --legacy 容器不报错", r.returncode == 0, r.stdout[-300:])
+        # 18d-2. 单源纯 Markdown：不再建议 ++关键词++、不计标记覆盖率、加粗不设 5 处上限
+        plain = "# t\n\n" + "".join("**第%d点** 普通正文段落，没有任何扩展标记，写得很平。\n\n" % i for i in range(8))
+        (td / "plain.md").write_text(plain, encoding="utf-8")
+        r = run("lint-wechat.py", ["--input", str(td / "plain.md")])
+        check("lint-wechat 不再报标记覆盖率 / 不再建议 ++", r.returncode == 0 and "++" not in r.stdout
+              and "覆盖" not in r.stdout, r.stdout[-300:])
+        check("lint-wechat 加粗 8 处不再报 ≤5 上限", "锚点" not in r.stdout and "建议 ≤5" not in r.stdout,
+              r.stdout[-300:])
+        (td / "old.md").write_text("# t\n\n旧稿里有 ++下划线++ 和 ==高亮== 也照常读。\n", encoding="utf-8")
+        r = run("lint-wechat.py", ["--input", str(td / "old.md")])
+        check("lint-wechat 兼容读取旧稿扩展标记不报错", r.returncode == 0 and "Traceback" not in r.stderr,
+              (r.stdout + r.stderr)[-300:])
         # 18e. check_article：编号顺序、缺图、Obsidian 写法
         bad = td / "坏稿"
         (bad / "images").mkdir(parents=True)

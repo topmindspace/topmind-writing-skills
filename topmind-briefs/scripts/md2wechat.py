@@ -528,8 +528,8 @@ def render_inline(raw):
         text,
     )
 
-    # ++下划线++ / <u>下划线</u>：标记层（正文关键词标记），出现频率最高、
-    # 权重介于加粗与高亮之间。esc() 已把 <u> 转义，故这里匹配实体。
+    # ++下划线++ / <u>下划线</u>：兼容读取旧稿的扩展标记，照常渲染；
+    # 新稿是单源纯 Markdown，不再建议写。esc() 已把 <u> 转义，故这里匹配实体。
     underline = ('<span style="border-bottom:2px solid %s;font-weight:600;'
                  'color:%s;">\\1</span>'
                  % (theme["accent_light"], theme["text_strong"]))
