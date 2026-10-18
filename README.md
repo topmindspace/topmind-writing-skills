@@ -158,7 +158,7 @@ npx @topmindspace/topmind-writing-skills install topmind-poster
 | [`topmind-revise`](./topmind-revise/) | **0.1.1** | 改稿与质检：改稿、精简、去 AI 味、质量三关与保真审计；四种模式（只审不改 / 改稿 / 嵌入 / 快审），每处改动对应规则编号，防过度改稿；长文技能默认组合 |
 | [`topmind-poster`](./topmind-poster/) | **0.1.6** | HTML+CSS → 高清长图 / 海报 / 信息图 PNG：无头 Chrome 2× 截图 + 自动裁白；「一段一图」分段图批量出图（生成器 + 渲染器） |
 
-安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.45**（整仓同 tag 发版）。
+安装器 [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) 为 **0.8.46**（整仓同 tag 发版）。
 
 ### 怎么选、怎么组合
 

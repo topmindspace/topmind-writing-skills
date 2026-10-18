@@ -4,7 +4,7 @@ English | [中文](./README.md)
 
 Makes a draft shorter, more accurate and closer to the author's own voice, and proves the facts survived the edit. Works for long-form articles, short posts, one-liners, replies and titles. Use it on its own, or let `topmind-wechat-post` and `topmind-x-article` call it by default when they write long-form pieces.
 
-- Version: **v0.1.1** (ships with `@topmindspace/topmind-writing-skills@0.8.45`)
+- Version: **v0.1.2** (ships with `@topmindspace/topmind-writing-skills@0.8.46`)
 
 ## Install
 

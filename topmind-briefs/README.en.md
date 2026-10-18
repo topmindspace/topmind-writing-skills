@@ -7,7 +7,7 @@ A brief is not a long-form article — **no HTML by default**: the workflow is v
 The X version is one copy-ready plain-text block (emoji optional); **links (including sources), original images and any generated images are sent separately**, never mixed into the body.
 The WeChat version is ~300–800 Chinese characters of Markdown. With no original image it asks before generating one.
 
-- Version: **v0.2.24** (ships with `@topmindspace/topmind-writing-skills@0.8.45`)
+- Version: **v0.2.25** (ships with `@topmindspace/topmind-writing-skills@0.8.46`)
 
 ## Install
 

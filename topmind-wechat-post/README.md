@@ -7,7 +7,7 @@
 一篇长文一个文件夹 `<文章名>/`，唯一源稿 `<文章名>.md`（Obsidian 里直接能看），图片按出现顺序放 `images/`；
 公众号 HTML 只在需要时生成到 `out/`。旧的 `YYYY-MM-DD-名/公众号稿.md` 交付包只读兼容，不自动迁移。
 
-- 版本：**v0.3.16**（随 `@topmindspace/topmind-writing-skills@0.8.45` 发布）
+- 版本：**v0.3.17**（随 `@topmindspace/topmind-writing-skills@0.8.46` 发布）
 
 ## 安装
 

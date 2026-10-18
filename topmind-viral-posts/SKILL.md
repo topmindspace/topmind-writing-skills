@@ -3,7 +3,7 @@ name: topmind-viral-posts
 description: "X 引流段子/爆款短篇：18 类型模板（含热点资讯、冷知识、差额冲刺）+ 钩子×主体×收尾组合玩法；段子体排版（一句一行、行间空一行、完全不用 emoji，分点不加符号）、口语化、运营帖带互动钩子、话题段子末行动作反转；每条帖子附话题标签（话题段子默认 2 个，运营帖 1–3 个）与内部分类标签，每条交付一段可直接复制的纯文本（X 不渲染 Markdown；话题标签在末行），链接（含来源）、原图、配图另发，绝不混进正文；配图原图优先（官方/第三方/自己的后台截图）；没有原图时先问用户是否配图，同意后才走 topmind-cover 出 16:9 图。只起草不代发。Use when 引流段子、段子、爆款短篇、爆款短文、涨粉帖、涨粉段子、互关帖、互关求粉、X 短帖、热点段子、蹭热点、新人报到、打卡帖、话题标签、hashtag、X 引流、traffic post、viral post；引流互动型（段子、钩子、涨粉）走本技能。Do NOT use for 把现成文字转段子、格式化、排版（→ topmind-format）、X 长文与发 X 文章（→ topmind-x-article）、公众号文章与公众号短文（→ topmind-wechat-post / topmind-briefs）、信息密度型干货短文、快讯与数据榜单（→ topmind-briefs）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、单独改稿、去 AI 味与质检（→ topmind-revise）、把帖子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.3.16"
+  version: "0.3.17"
   action_category: "write"
   triggers: "引流段子, 段子, 写段子, 冷知识段子, 冲粉帖, 破千, 爆款短篇, 爆款短文, 涨粉帖, 涨粉短帖, 涨粉段子, 互关帖, 互关求粉, X 短帖, 热点段子, 蹭热点, 新人报到, 打卡帖, 话题标签, hashtag, traffic post, viral post, 写引流段子, 涨粉内容, 互关内容, X 引流"
   author: "TopMindSpace"

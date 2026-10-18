@@ -158,7 +158,7 @@ Every skill ships sample outputs written by us (fictional or neutral topics; no 
 | [`topmind-revise`](./topmind-revise/) | **0.1.1** | Revision and quality check: edit, tighten, de-AI, three quality gates and fidelity audit; four modes (audit / revise / embed / quick); every change maps to a rule code, with an over-edit guard; the long-form skills use it by default |
 | [`topmind-poster`](./topmind-poster/) | **0.1.6** | HTML+CSS → high-res long image / poster / infographic PNG: headless Chrome 2× screenshot + auto-trim; "one image per section" batch workflow (generator + renderer) |
 
-Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.45** (whole-repo same-tag releases).
+Installer [`@topmindspace/topmind-writing-skills`](https://www.npmjs.com/package/@topmindspace/topmind-writing-skills) is **0.8.46** (whole-repo same-tag releases).
 
 ### Which skill, and how they combine
 

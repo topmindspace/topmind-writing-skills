@@ -6,7 +6,7 @@ Full lifecycle for WeChat articles: single-source article folder, review & rewri
 
 One long-form article = one folder `<title>/` with a single source `<title>.md` (readable as-is in Obsidian) and images numbered in order of appearance under `images/`; WeChat HTML is generated into `out/` only when needed. Legacy `YYYY-MM-DD-name/公众号稿.md` packages stay readable and are not migrated automatically.
 
-- Version: **v0.3.16** (ships with `@topmindspace/topmind-writing-skills@0.8.45`)
+- Version: **v0.3.17** (ships with `@topmindspace/topmind-writing-skills@0.8.46`)
 
 ## Install
 

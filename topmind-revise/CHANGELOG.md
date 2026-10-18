@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 (2026-10-18)
+
+- 新增 ⓪ 结构复查和 `depth` 参数：默认 light 只诊断 + 低风险结构改动（并列段转列表、对照转表格、删重复段），`depth=structure` 才重排章节
+- 改稿报告新增「信息设计诊断」，`revise_check.py` 给出改前 / 改后 I 提示数；改动依据可写「⓪ 结构」，`--declare` 时不计入过度改稿
+- 随包新增 `info_design_hints.py`、`social-writing-principles.md`、`information-design.md`、`research-mode.md`；`core-voice.md` 改为十条原则，`de-ai-rules.md` 按根因归组
+
 ## 0.1.1 (2026-10-18)
 
 - 随包新增共享脚本 `check_article.py`：长文文章文件夹（`<文章名>/<文章名>.md`）体检，改稿移动段落或图片后跑一次

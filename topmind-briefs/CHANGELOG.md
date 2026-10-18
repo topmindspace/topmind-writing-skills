@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.25 (2026-10-18)
+
+- 随包新增共享文档 `social-writing-principles.md`（写作原则）、`information-design.md`（内容 → 形式、篇幅）、`research-mode.md`（研究类选题）；`core-voice.md` 改为十条原则 + V 编号例子；`de-ai-rules.md` 改为成稿后自查用
+- 写内容第一步改成先想清楚要传达的一件事，并列、对比、步骤先按决策表定形式
+- 随包新增共享脚本 `info_design_hints.py`（I1–I8 信息设计提示，只供判断）
+
 ## 0.2.24 (2026-10-18)
 
 - 随包共享脚本更新：`md2x-html.py` 能直接读源稿的 `![]()` 按顺序嵌图、「来源：」行渲染成图注、`--out` 缺省 `out/X长文.html`（原有 `--images-from` 用法不变）；`md2wechat.py` 默认保留手写小标题序号（`--auto-number` 恢复旧行为），`--out-dir` / `--slug` 有缺省值

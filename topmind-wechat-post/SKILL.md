@@ -3,7 +3,7 @@ name: topmind-wechat-post
 description: "管一篇公众号文章从选题/底稿到发布清单的完整生命周期：单源文章文件夹 <文章名>/<文章名>.md、审校改写、质量三关（默认组合 topmind-revise：事实/逻辑/去AI味，含改稿保真溯源审计）、状态同步；用户要公众号版时再按需出微信内联 HTML 与发布清单到 out/。不代发。Use when 写公众号、写公众号文章、公众号长文、公众号排版、微信排版、公众号定稿、发公众号、公众号交付包、公众号发布清单、wechat、mp format。Do NOT use for 公众号短文与快讯（300–800 字，→ topmind-briefs）、X 帖子与段子（→ topmind-viral-posts；派生的 X 短帖交付一段可复制纯文本，链接、原图另发）、X 纯文本格式化与转段子（→ topmind-format）、X 长文（→ topmind-x-article）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、只改错别字、小红书/知乎、纯网页发布、单独改稿与去 AI 味（→ topmind-revise）、通用长文写作（→ topmind-write）。"
 license: MIT
 metadata:
-  version: "0.3.16"
+  version: "0.3.17"
   action_category: "write"
   triggers: "公众号, 写公众号, 微信排版, 公众号排版, 公众号稿, 公众号长文, 排版这篇文章, 定稿, 发公众号, 公众号交付, wechat, mp format, 写公众号文章, 公众号排版定稿, 公众号发布清单"
   author: "TopMindSpace"

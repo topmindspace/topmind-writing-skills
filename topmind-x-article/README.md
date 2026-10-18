@@ -5,7 +5,7 @@
 一篇长文只有一份源稿 `<文章名>/<文章名>.md`：默认先过 topmind-revise、交付这份 Markdown；
 要发 X 时再按需派生"复制 → 粘贴 → 发"的 X 长文（Article）发布包到 `out/`。
 
-- 版本：**v0.4.22**（随 `@topmindspace/topmind-writing-skills@0.8.45` 发布）
+- 版本：**v0.4.23**（随 `@topmindspace/topmind-writing-skills@0.8.46` 发布）
 
 ## 安装
 

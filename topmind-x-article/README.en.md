@@ -5,7 +5,7 @@
 One long-form article has a single source `<title>/<title>.md`: by default it goes through topmind-revise and the Markdown is the deliverable;
 when you want to post on X, a "copy → paste → publish" X long-form (Article) package is derived into `out/` on request.
 
-- Version: **v0.4.22** (ships with `@topmindspace/topmind-writing-skills@0.8.45`)
+- Version: **v0.4.23** (ships with `@topmindspace/topmind-writing-skills@0.8.46`)
 
 ## Install
 
