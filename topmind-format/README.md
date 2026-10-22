@@ -2,44 +2,66 @@
 
 [English](./README.en.md) | 中文
 
-把现成的文字排成 X 上好读的样子：**转段子**（每句一行、行间空一行，完全不用 emoji，分点不加符号）或**格式化成短文**（合理分段换行、列表改「·」「1）」或 emoji，标题 emoji 与人设点缀可选）。只动排版，不改字，自带原文保真校验；正文里的链接、来源行、配图行会拿出来另列，交付一段可直接复制的纯文本，链接和图片另发。
+**只改排版，一个字都不改。** 把现成的文字排成 X 上好读的样子：转段子、格式化成短文、把几个备选开头拼成几条完整成品。自带保真校验，改了字就报错；正文里的链接、来源行、配图行拿出来另发。
 
-- 版本：**v0.1.11**（随 `@topmindspace/topmind-writing-skills@0.8.47` 发布）
-
-## 安装
+- 版本：**v0.1.12**
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-format
 ```
 
-## 用法
+你可以这样说：「转段子」「排一下版」「格式化成短文」「加空行」「我想了几个开头，帮我拼成完整的帖子」。
+
+## 三种用法
 
 | 你说 | 结果 |
 |---|---|
-| 转段子 / 段子格式 | 每句一行，行与行之间空一行；去掉所有 emoji 和列表符号，分点一条一行 |
-| 格式化 / 格式化成短文 | 分段、列表改「·」「1）」（`--bullets emoji` 改 🔹 / 1️⃣）；标题 emoji、人设点缀可选 |
+| 转段子 | 每句一行，行与行之间空一行；去掉所有 emoji 和列表符号 |
+| 格式化成短文 | 合理分段；列表改「·」「1）」（要 emoji 就改 🔹 / 1️⃣）；Markdown 引用去掉标记 |
+| 几个开头拼成品 | 每个开头替换正文第一段，各自做保真校验，输出几条完整的帖子 |
+
+## 示例（原创）
+
+输入：
+
+```text
+今天把周报写完了，结果发现写的是上周的。白干两小时，谁懂？
+```
+
+段子体：
+
+```text
+今天把周报写完了，
+
+结果发现写的是上周的。
+
+白干两小时，谁懂？
+```
+
+再给一个备选开头「周报写了两小时，」，拼成第二条成品：
+
+```text
+周报写了两小时，
+
+结果发现写的是上周的。
+
+白干两小时，谁懂？
+```
+
+## 脚本
 
 ```bash
-python3 scripts/format_text.py 原文.txt --mode duanzi --split   # 段子体不接受 --open / --close / --title-emoji
-python3 scripts/format_text.py 原文.txt --mode short --links-out 链接.txt   # 链接 / 来源行另存，另发
-python3 scripts/format_text.py 原文.txt --mode short --bullets emoji --title-emoji 🆕   # emoji 可选
+python3 scripts/format_text.py 原文.txt --mode duanzi --split
+python3 scripts/format_text.py 原文.txt --mode short --links-out 链接.txt
+python3 scripts/format_text.py 原文.txt --mode short --bullets emoji --title-emoji 🆕
+python3 scripts/format_text.py 原文.txt --mode duanzi --variants 开头备选.txt   # 备选用 --- 隔开
 python3 scripts/lint_x_post.py 输出.txt
 ```
 
-emoji 规则（只用于短文体）见 [references/emoji-system.md](./references/emoji-system.md)；X 排版规则见 [references/x-post-format.md](./references/x-post-format.md)。
+去 AI 味检查照跑，但本技能不改字：命中写进改动说明，由你决定；要改内容转 `topmind-revise`。
 
-## 边界
+## 何时不用
 
-从零写段子 → `topmind-viral-posts`；从零写短文 → `topmind-briefs`；X 长文 → `topmind-x-article`；公众号排版 → `topmind-wechat-post`；发帖 → `topmind-x`（须用户确认）。
+从零写段子 → `topmind-viral-posts`；从零写短文 → `topmind-briefs`；X 长文 → `topmind-x-article`；公众号排版 → `topmind-wechat-post`；发帖 → `topmind-x`（须你确认）。
 
-## 开发
-
-```bash
-python3 scripts/audit_skill.py
-python3 scripts/package_skill.py --check
-python3 scripts/negative_tests.py
-```
-
-## 原创示例
-
-我们自己写的示例输出见 [`examples/`](./examples/)（虚构或中性题材，不收录任何第三方原文）。
+更多示例见 [`examples/`](./examples/)，全部自己写，不收录任何第三方原文。

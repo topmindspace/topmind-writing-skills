@@ -14,6 +14,9 @@
     python3 de_ai_lint.py 稿子.md --json             # 机器可读输出（revise_check.py 用）
     python3 de_ai_lint.py 稿子.md --no-hints         # 不打印 H 级提示
     python3 de_ai_lint.py 稿子.md --strict           # W 也算失败（H 永远不算）
+    python3 de_ai_lint.py 快讯.txt --genre short --kind news   # 快讯：首行超 30 字报 W10
+    python3 de_ai_lint.py 关系帖.txt --genre duanzi --kind ops # 关系帖：允许行动号召（W22 豁免）
+    python3 de_ai_lint.py X短文.txt --genre short --sources 素材来源.md   # 标题动词和口径对照（H20）
 
 lint_x_post.py 复用本文件的规则（import），原有警告编号 W9、W14–W18 不变。
 退出码：--strict 且有 W → 1；读文件失败 → 2；其余 → 0。只用 Python 标准库。
@@ -32,6 +35,7 @@ except Exception:
     pass
 
 GENRES = ("long", "short", "duanzi", "reply", "title")
+KINDS = ("post", "news", "ops")  # post：一般帖；news：快讯（首行规则更严）；ops：关系帖（互关 / 打卡，允许行动号召）
 
 # --- 通用正则（lint_x_post.py 也用这些） ---------------------------------------
 HEADING_RE = re.compile(r"^\s{0,3}#{1,6}\s+\S")
@@ -171,7 +175,38 @@ SENT_END_RE = re.compile(r"[。！？!?]")
 HASHTAG_RE = re.compile(r"(?<![\w&#])#(?!\d+(?![\w\u4e00-\u9fff]))[\w\u4e00-\u9fff]{1,40}")
 LIST_EMOJI_RE = re.compile(r"^\s*(?:[0-9]\uFE0F?\u20E3|[\U0001F300-\U0001FAFF\u2600-\u27BF]\uFE0F?)\s*\S")
 
+# --- 社交短帖模式（de-ai-rules 第五节 S01–S10；core-voice V34–V40） -------------------------
+# H9 白名单：真疑问（懂行的人能给出具体答案），开头用不算说教（V34）
+GENUINE_Q_RE = re.compile(r"难道(?:就)?没(?:有)?人|难道只有我|有没有人|是不是(?:就|只有)我|一直没(?:想明白|搞懂|弄懂)|我就纳闷|到底(?:是|靠|怎么|为什么|为啥|哪)")
+# W22 套路互动钩子结尾（S06）
+HOOK_END_RE = re.compile(
+    r"(?:你|你们|大家)(?:会|还会)?(?:换|选|用)(?:吗|哪个|哪家)|(?:你|你们|大家)(?:怎么|如何)看|(?:你|你们|大家)觉得呢"
+    r"|评论区(?:聊聊|说说|见|告诉我|留言|扣\d)|欢迎(?:留言|讨论|评论)|你(?:们)?站哪(?:边|队)|你(?:们)?还知道哪些|你(?:们)?(?:遇到过|有过)吗"
+)
+# W24 类比腔（S02）
+ANALOGY_RE = re.compile(r"跟[^，。！？\n]{1,16}(?:一个|是一个|同一个|一样的)道理|说白了|就好比|好比说|同理[，,]|^[^=\n]{1,16}\s=\s[^=\n]{1,16}$")
+# H16 编经历提示（S05）
+OWN_EXP_RE = re.compile(r"我的(?:做法|土办法|习惯|经验)是?|我(?:一般|平时|通常|每次)(?:都|会|是)|我之前(?:也)?(?:试过|用过|做过|踩过)")
+# H17 X 短文里的口径词 / 查证过程（V39）
+CALIBER_RE = re.compile(r"官方称|据官方|官方口径|厂商口径|按图估读|据悉|据了解|据我查|经核实")
+# H18 中文帖里没必要的英文小词（V38）
+EN_SMALL_RE = re.compile(r"\b(?:credits?|quota|changelog|reset|rollout|waitlist|deprecated|onboarding|release notes?)\b", re.I)
+# H19 播报模板（S07）：警报 emoji + 重磅 / 突发
+ALARM_EMOJI_RE = re.compile("[\U0001F6A8\U0001F4E2\U0001F4E3\u203C\u26A0]")
+BREAKING_RE = re.compile(r"重磅|突发|炸裂|刚刚")
+# W25 英文网文模板（S10）
+EN_TEMPLATE_RE = re.compile(r"\bbingo card\b|^\s*step\s*1\b|\bapparently\b|\byour move\b|\bnot complaining\b|\blet that sink in\b|\bthis is the way\b|\bhot take\s*:|\bunpopular opinion\s*:", re.I)
+# H4 豁免：引述别人的话（「人名：」开头、「说 / 称 / 回应…」开头）
+REPORTED_RE = re.compile(r"^\s*(?:[\u4e00-\u9fffA-Za-z0-9·]{1,12}[：:]|(?:说|称|表示|回应|透露|宣称|承认))")
+# H20 口径和标题动词
+RELEASE_VERB_RE = re.compile(r"正式发布|发布了|上线了|全量|(?<![要快])来了|官宣")
+PREVIEW_SRC_RE = re.compile(r"预告|传闻|灰度|未官宣|还没官宣|内测|泄露|文档里出现")
+REPLY_HINT_MAX = 25
+REPLY_WARN_MAX = 40
+HOOK_MAX_CJK = 30
+
 LONG_PARA_MAX = 110
+HASHTAG_ONLY_RE = re.compile(r"^\s*(?:#[\w\u4e00-\u9fff]{1,40}\s*)+$")
 # 字数口径与 count_words.py 一致：去掉空白、Markdown 符号和链接地址后的字符数
 _CW_SYMBOLS_RE = re.compile(r"[\s*\-#>\[\]()`|]")
 _CW_URL_RE = re.compile(r"\]\([^)]*\)|https?://\S+")
@@ -188,6 +223,8 @@ HINT_CODES = {
     "H5": "对仗收句", "H6": "来源行描述图", "H7": "emoji 过密", "H8": "无效信息",
     "H9": "标题反问说教", "H10": "段落句子多", "H11": "话题标签多", "H12": "「人名说：」",
     "H13": "小标题格式", "H14": "同一说法两种写法",
+    "H15": "回复偏长", "H16": "编经历提示", "H17": "口径词进了正文", "H18": "夹英文小词",
+    "H19": "播报模板", "H20": "标题动词和口径对不上", "H21": "首行偏长",
 }
 
 
@@ -337,21 +374,26 @@ def _first_body_index(lines: list[str]) -> int:
     return next((i for i, ln in enumerate(lines) if ln.strip()), -1)
 
 
-def punct_split(lines: list[str], start: int, long_mode: bool):
-    """W17 与 H2。「？！」在首行 / 标题出现一次不报；短文「！！」一处只提示。返回 (warns, hints)。"""
+def punct_split(lines: list[str], start: int, long_mode: bool, genre: str | None = None):
+    """W17 与 H2。返回 (warns, hints)。
+
+    「？！」首行、末行各可用一次（未完全核实的热点，V22）；短文 / 段子 / 回复里的「！！」「！！！」和感叹号偏多
+    只提示（H2），长文照报 W17。破折号在所有文体都按 W17 查。
+    """
     text = "\n".join(ln for ln in lines if not FENCE_RE.match(ln))
     warns, hints = [], []
     first = _first_body_index(lines)
-    qe_used = bang_used = False
+    last = next((i for i in range(len(lines) - 1, -1, -1) if lines[i].strip() and not HASHTAG_ONLY_RE.match(lines[i])), -1)
+    qe_used: set[int] = set()
+    soft = not long_mode
     for off, ln in enumerate(lines):
         for m in PUNCT_RUN_RE.finditer(ln):
             run = m.group(0)
-            if QE_RE.match(run) and off == first and not qe_used:
-                qe_used = True
+            if QE_RE.match(run) and off in (first, last) and off not in qe_used:
+                qe_used.add(off)
                 continue
-            if DOUBLE_BANG_RE.match(run) and not long_mode and not bang_used:
-                bang_used = True
-                hints.append((start + off, "H2", f"「{run}」：转发点评、惊讶语气可以用一处"))
+            if soft and re.fullmatch(r"[！!]{2,3}", run):
+                hints.append((start + off, "H2", f"「{run}」：转发点评、惊讶语气可以用一处，别处换成句号或「...」"))
                 continue
             warns.append((start + off, "W17", f"标点连用「{run}」：一个就够"))
             break
@@ -370,7 +412,7 @@ def punct_split(lines: list[str], start: int, long_mode: bool):
         if dashes > DASH_SHORT_MAX:
             warns.append((start, "W17", f"破折号 {dashes} 处：短文最多 {DASH_SHORT_MAX} 处，其余改成逗号、句号或冒号"))
         if bangs > BANG_SHORT_MAX:
-            warns.append((start, "W17", f"感叹号 {bangs} 个：短文最多 {BANG_SHORT_MAX} 个"))
+            hints.append((start, "H2", f"感叹号 {bangs} 个：短文一般 {BANG_SHORT_MAX} 个以内，语气尽量靠事实"))
     return warns, hints
 
 
@@ -409,7 +451,7 @@ def long_para_hits(lines: list[str], start: int):
     return out
 
 
-def voice_hits(lines: list[str], start: int, genre: str, raw: list[str] | None = None):
+def voice_hits(lines: list[str], start: int, genre: str, raw: list[str] | None = None, kind: str = "post"):
     """新增的场景检查：W19–W21 与 H1–H12。返回 (warns, hints)。raw 是 Markdown 原文（有就用来查来源行）。"""
     warns, hints, seen = [], [], {}
 
@@ -444,6 +486,8 @@ def voice_hits(lines: list[str], start: int, genre: str, raw: list[str] | None =
         ma = ABOUT_NUM_RE.search(body)
         if ma and not (ABOUT_MAG_RE.search(ma.group(0)) or COMPARE_RE.search(body)):
             ma = None
+        if (m or ma) and REPORTED_RE.match(body):
+            m = ma = None
         if m or ma:
             frag = (m or ma).group(0).strip()
             add(hints, no, "H4", f"「{frag}」：不是新闻稿，数字不必写「约 / 左右」，对比给对象和定语（core-voice V12）")
@@ -462,10 +506,30 @@ def voice_hits(lines: list[str], start: int, genre: str, raw: list[str] | None =
             add(hints, no, "H8", f"「{m.group(0)}」：不增加信息量，删掉（core-voice V22）")
         elif m and m.group(0).startswith("据"):
             add(hints, no, "H8", f"「{m.group(0)}」：点名具体媒体，或不写（core-voice V22）")
-        if (genre == "title" or off == first) and TITLE_PREACH_RE.search(body):
+        if (genre == "title" or off == first) and TITLE_PREACH_RE.search(body) and not GENUINE_Q_RE.search(body):
             add(hints, no, "H9", "标题 / 首行反问说教：写清讲什么，不反问读者（core-voice V01）")
         if is_long and not body.strip().startswith("·") and len(SENT_END_RE.findall(body)) > 3:
             add(hints, no, "H10", "一段超过 3 句：一段 2–3 句，手机上不超过 5 行（core-voice V17）")
+        if genre in ("reply", "duanzi"):
+            m = ANALOGY_RE.search(body)
+            if m:
+                add(warns, no, "W24", f"类比腔「{m.group(0).strip()[:16]}」：换成自己的做法或一个具体场景（de-ai-rules S02）")
+        if genre in ("reply", "short", "duanzi"):
+            m = OWN_EXP_RE.search(body)
+            if m:
+                add(hints, no, "H16", f"「{m.group(0)}」：确认这段经历作者真有；没有就删掉，或在交付说明里提示作者自己讲（de-ai-rules S05）")
+            if CJK_RE.search(body):
+                m = EN_SMALL_RE.search(body)
+                if m:
+                    add(hints, no, "H18", f"中文帖夹英文小词「{m.group(0)}」：换成中文说法（core-voice V38）")
+        if genre == "short":
+            m = CALIBER_RE.search(body)
+            if m:
+                add(hints, no, "H17", f"「{m.group(0)}」：X 短文正文不写查证过程和口径，挪进交付说明的口径提醒（core-voice V39）")
+        if genre in ("reply", "short") and not CJK_RE.search(body):
+            m = EN_TEMPLATE_RE.search(body)
+            if m:
+                add(warns, no, "W25", f"英文网文模板「{m.group(0).strip()}」：换成 3–6 个词的普通说法（de-ai-rules S10）")
     if raw:
         for off, ln in enumerate(raw):
             if SOURCE_DESC_RE.match(ln):
@@ -473,7 +537,7 @@ def voice_hits(lines: list[str], start: int, genre: str, raw: list[str] | None =
     if genre == "short":
         tags = HASHTAG_RE.findall("\n".join(lines))
         if len(tags) > SHORT_TAGS_MAX:
-            add(hints, start, "H11", f"话题标签 {len(tags)} 个：默认两个，宽泛词 + 主题词（core-voice V27）")
+            add(hints, start, "H11", f"话题标签 {len(tags)} 个：段子和短文默认不带，要带最多两个，宽泛词 + 主题词（core-voice V27）")
     if genre in ("short", "reply"):
         items = [ln for ln in lines if LIST_EMOJI_RE.match(ln)]
         decor = sum(len(EMOJI_RE.findall(ln)) for ln in lines if not LIST_EMOJI_RE.match(ln))
@@ -481,10 +545,63 @@ def voice_hits(lines: list[str], start: int, genre: str, raw: list[str] | None =
             add(hints, start, "H7", f"emoji 列表 {len(items)} 条：行多改用「·」或「1）」（core-voice V25）")
         elif decor > DECOR_HINT_MAX:
             add(hints, start, "H7", f"点缀 emoji {decor} 个：避免满屏 emoji（core-voice V26）")
+    body_lines = [(off, ln) for off, ln in enumerate(lines) if ln.strip() and not HASHTAG_ONLY_RE.match(ln)]
+    if body_lines and genre in ("short", "duanzi") and kind != "ops":
+        off, ln = body_lines[-1]
+        m = HOOK_END_RE.search(ln)
+        if m:
+            add(warns, start + off, "W22", f"套路互动钩子结尾「{m.group(0)}」：删掉；要问就问自己真拿不准的（core-voice V34，de-ai-rules S06）")
+    if genre == "duanzi":
+        for (o1, _), (o2, _) in zip(body_lines, body_lines[1:]):
+            if o2 == o1 + 1:
+                add(warns, start + o2, "W23", "段子体行间没空行：一句一行，行与行之间空一行")
+                break
+    if genre == "reply":
+        n = sum(1 for ch in "".join(ln for _, ln in body_lines) if not ch.isspace())
+        if CJK_RE.search("".join(ln for _, ln in body_lines)):
+            if n > REPLY_WARN_MAX:
+                add(warns, start, "W26", f"回复约 {n} 字，超过 {REPLY_WARN_MAX} 字：回复是聊天，不是点评，留态度和你自己的东西（core-voice V37）")
+            elif n > REPLY_HINT_MAX:
+                add(hints, start, "H15", f"回复约 {n} 字：中文回复默认 {REPLY_HINT_MAX} 字以内（core-voice V37）")
+    if genre == "short" and body_lines:
+        alarm = any(ALARM_EMOJI_RE.search(ln) for _, ln in body_lines)
+        breaking = any(BREAKING_RE.search(ln) for _, ln in body_lines[:2])
+        emoji_items = sum(1 for _, ln in body_lines if LIST_EMOJI_RE.match(ln))
+        if alarm and breaking and emoji_items >= 2:
+            add(hints, start, "H19", "播报模板（警报 emoji + 重磅 / 突发 + emoji 分点）：第一句给个人反应或最狠的一个数（de-ai-rules S07）")
     return warns, hints
 
 
-def analyze(text: str, genre: str = "long", markdown: bool | None = None, start: int = 1):
+def first_line_hits(lines: list[str], start: int, genre: str, kind: str = "post"):
+    """W10 / H21 首行长度：快讯（--kind news）首行约 30 字内（W10）；其他短帖首行偏长只提示（H21）。"""
+    first = _first_body_index(lines)
+    if first < 0 or genre not in ("short", "duanzi"):
+        return [], []
+    ln = lines[first]
+    n = sum(1 for ch in ln if not ch.isspace())
+    weight = sum(2 if CJK_RE.match(ch) else 1 for ch in ln if not ch.isspace())
+    if weight <= HOOK_MAX_CJK * 2:
+        return [], []
+    if genre == "short" and kind == "news":
+        return [(start + first, "W10", f"快讯首行约 {n} 字：写「是什么 + 最狠的一个数」，约 {HOOK_MAX_CJK} 字内（core-voice V05）")], []
+    return [], [(start + first, "H21", f"首行约 {n} 字：观点、吐槽、真疑问可以长一点；读一遍，能更短就更短（core-voice V05）")]
+
+
+def sources_hits(lines: list[str], start: int, sources_text: str):
+    """H20：标题 / 首行写了「来了 / 发布 / 上线」，素材来源却标着预告、传闻、灰度（core-voice V40）。"""
+    first = _first_body_index(lines)
+    if first < 0 or not sources_text:
+        return []
+    head = lines[first]
+    m = RELEASE_VERB_RE.search(head)
+    p = PREVIEW_SRC_RE.search(sources_text)
+    if m and p and not re.search(r"[？?]", head):
+        return [(start + first, "H20", f"标题 / 首行写「{m.group(0)}」，素材来源里标着「{p.group(0)}」：动词跟着口径走（core-voice V40）")]
+    return []
+
+
+def analyze(text: str, genre: str = "long", markdown: bool | None = None, start: int = 1,
+            kind: str = "post", sources_text: str = ""):
     """对一段文字跑全部去 AI 味检查。返回 (warns, hints)，元素为 (行号, 代码, 说明)。"""
     raw = text.splitlines()
     if markdown is None:
@@ -493,14 +610,18 @@ def analyze(text: str, genre: str = "long", markdown: bool | None = None, start:
     masked = mask_mentions(lines)
     long_mode = genre == "long"
     warns = phrase_hits(masked, start) + struct_hits(masked, start)
-    pw, ph = punct_split(lines, start, long_mode)
+    pw, ph = punct_split(lines, start, long_mode, genre)
     warns += pw
     hints = list(ph)
+    fw, fh = first_line_hits(lines, start, genre, kind)
+    warns += fw
+    hints += fh
+    hints += sources_hits(lines, start, sources_text)
     if long_mode:
         warns += long_para_hits(lines, start)
     if markdown:
         warns += image_label_hits(raw, start)
-    vw, vh = voice_hits(masked, start, genre, raw if markdown else None)
+    vw, vh = voice_hits(masked, start, genre, raw if markdown else None, kind)
     warns += vw
     hints += vh
     if markdown:
@@ -509,7 +630,7 @@ def analyze(text: str, genre: str = "long", markdown: bool | None = None, start:
 
 
 def design_hints(path: str) -> list:
-    """信息设计提示 I1–I8（info_design_hints.py）；同目录没有这个脚本时返回空。永远不计入 --strict。"""
+    """信息设计提示 I1–I9（info_design_hints.py）；同目录没有这个脚本时返回空。永远不计入 --strict。"""
     sys.dont_write_bytecode = True  # 技能包里不留 __pycache__
     try:
         here = str(Path(__file__).resolve().parent)
@@ -534,6 +655,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--no-hints", action="store_true", help="不打印 H 级提示")
     ap.add_argument("--strict", action="store_true", help="W 也算失败（H 永远不算）")
     ap.add_argument("--no-design", action="store_true", help="不打印 I 级信息设计提示（长文 Markdown 才有）")
+    ap.add_argument("--kind", choices=KINDS, default="post", help="帖子用途：post（默认）/ news（快讯，首行超 30 字报 W10）/ ops（关系帖，允许行动号召）")
+    ap.add_argument("--sources", help="素材来源文件（如 素材来源.md）：标题动词和口径对照（H20）")
     args = ap.parse_args(argv)
     report, total_w, total_h, total_i = [], 0, 0, 0
     for f in args.files:
@@ -544,7 +667,14 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         genre = args.genre or _guess_genre(f)
         md = (not args.plain) and (f.lower().endswith((".md", ".markdown")) or genre == "long")
-        warns, hints = analyze(text, genre, md)
+        src_text = ""
+        if args.sources:
+            try:
+                src_text = Path(args.sources).read_text(encoding="utf-8-sig")
+            except (OSError, UnicodeDecodeError) as e:
+                print(f"错误：无法读取 {args.sources}（{e}）", file=sys.stderr)
+                return 2
+        warns, hints = analyze(text, genre, md, kind=args.kind, sources_text=src_text)
         if args.no_hints:
             hints = []
         design = [] if (args.no_design or not md or genre != "long" or f == "-") else design_hints(f)

@@ -1,3 +1,34 @@
+## [0.8.48] - 2026-10-22
+
+> 全面优化：段子重组为 12 + 2 种写法，短文按 9 种内容类型写，去 AI 味规则新增社交短帖模式和问句口径条目，长文骨架先写「我的判断」并在交付前出图文预览；根 README 和各技能 README 改为能力优先。
+> 根包 0.8.47 → **0.8.48**（patch）；技能版本：topmind-briefs 0.2.26 → 0.2.27、topmind-cover 0.4.15 → 0.4.16、topmind-format 0.1.11 → 0.1.12、topmind-poster 0.1.8 → 0.1.9、topmind-revise 0.1.3 → 0.1.4、topmind-viral-posts 0.3.18 → 0.3.19、topmind-wechat-post 0.3.18 → 0.3.19、topmind-x-article 0.4.24 → 0.4.25。
+
+### 特性支持
+
+- topmind-viral-posts：类型重组为 12 种话题段子（A1 不懂就问、A2 扒料求证、A3 故障求证、A4 卧槽体、A5 冷知识、A6 群聊体、A7 连续剧、A8 算账、A9 站边轻判断、A10 荒诞自嘲、A11 产品反转、A12 借热点）+ 2 种关系帖（B1 关系帖、B2 互助帖）。每种写明适用题材、钩子、结构、收尾、反例和原创示例；新增「想让哪种人来评论」、删尾测试、配图按类型、回复与转发点评、旧编号对照表。示例重写为 7 条。
+- topmind-briefs：9 种内容类型（快讯首发、快讯晚到、预告 / 传闻、新品 / 工具、羊毛、榜单、论文、实测、观点一句话），各自的首行、结构、收尾；新增「一眼快餐」（查证过程和口径进交付说明的口径提醒）、「时效」一节；示例新增 6 条。
+- 共享脚本 `de_ai_lint.py` / `lint_x_post.py`：`--kind post|news|ops` 和 `--sources`；新增 W22–W26（套路互动钩子结尾、段子体行间没空行、类比腔、英文网文模板句、回复过长）和 H15–H21 提示（回复偏长、编经历、口径词进正文、夹英文小词、播报模板、标题动词和口径对不上、首行偏长）；首行过长在快讯里是 W10，其他短帖降为 H21 提示；「？！」在首行、末行各允许一次。
+- 共享脚本 `info_design_hints.py`：新增 I9「素材罗列」（一节很长却没有一句判断）。
+- 共享脚本 `format_text.py`：`--variants` 把几个备选开头拼成几条完整成品，各自做保真校验；Markdown 引用标记自动去掉。
+- 共享脚本 `md2x-html.py`：`--tables-as-images`（表格渲染成图按顺序嵌入，没有 Chrome 时降级为分行列表）和 `--preview`（生成 `out/预览.png`）。
+- 共享脚本 `md2wechat.py`：`--preview` 按手机宽度生成 `预览.png`；「·」开头的行逐行成段。
+- 共享脚本 `check_article.py`：支持短文文件夹（`公众号短文.md` / `X短文.txt`），不要求文件名等于标题、不要求封面。
+- 新增共享脚本 `post_type_report.py`：读作者自己的往期帖子（JSONL / CSV），按开头、收尾、类型、长度、话题标签、配图统计相对表现，`--samples-out` 生成习惯摘要；topmind-revise 新增 `samples=` 参数使用它。
+- 长文（x-article、wechat-post）：骨架必填「我的判断」3–5 条（依据 + 读者会怎么反驳）和每节素材 / 判断比例；方法论、架构、对比类文章至少一张自制图（`raw/自制图源/`）；交付前必出图文预览。`article_scaffold.py` 的骨架模板同步。
+- topmind-revise：快审清单（首行、口径、S01–S10、删尾测试、回复、精炼、作者样本）；`calibration-drill.md` 新增「用数据校准」。
+- topmind-format：`--variants` 与引用块、转发点评的排法写进工作流。
+
+### 优化
+
+- `core-voice.md`：V05 区分快讯和观点的首行；V10 只限制套路互动问句，作者真拿不准的问题可以收尾；V22 允许首行、末行各一处「？！」；V27 话题标签默认不带、最多 2 个；新增 V34–V40（真问句、开头、精炼、回复、口径、预告动词）。
+- `de-ai-rules.md`：新增第五节「社交短帖模式（S01–S10）」。
+- `x-delivery-contract.md`、`x-post-format.md`、`x-layout-patterns.md`、`emoji-system.md`：话题标签默认不带；口径写进交付说明；新增「备选写成完整成品」「回复给两个版本」「交付前自检」三条规则和对应示例。
+- `information-design.md`：骨架加入「我的判断」和自制图，提示码扩到 I1–I9。
+- 文档措辞统一：版本说明一律用「优化 / 特性支持」，其余改为「修正」。
+- 根 README（中 / 英）改为能力优先：分类总览、段子 14 种写法表、短文 9 种类型表、段子 / 短文 / 去 AI 味改前改后示例、长文骨架、触发说法；去掉版本号总表。各技能 README（中 / 英）同步改写。
+- 路由评测新增 8 条用例（不懂就问、群聊体、预告、羊毛、备选开头、回复快审、表格转图预览、长文骨架）。
+- 回归测试：去 AI 味规则用例扩充（62 / 9 / 39 / 26），信息设计用例 13 / 9；format 负例测试按新的提示级别更新。
+
 ## [0.8.47] - 2026-10-18
 
 > 全面整理文档：README 和各技能文档按「原则优先」四层结构重写，剩余的「铁律」措辞改成「原则 + 怎么判断」，清理废弃文件和过时说明；新增多环境协作字段，渲染脚本去掉 HTML 注释。
@@ -338,7 +369,7 @@
   - `cover-prompts.md` 补齐橙色暖阳、卡通素描、赛博霓虹三种风格的完整提示词（第 1 章覆盖全部 22 种风格），新增第 2 章 X 短文 16:9 封面的 6 条场景提示词与填充示例；第 4 章场景推荐补 4 行。
   - `crop-cover.py` 新增 `--preset x-post`，输出 `00-封面-X短文.png`（1200×675）；默认行为不变。
 
-### 修复
+### 优化
 
 - `cover-prompts.md` 里的变量占位符此前全部丢失（只剩 `""`、`（）` 和附录空白列），提示词无法照填；现统一恢复为 `【标题】`、`【胶囊标签】` 等 `【】` 变量。
 - `cover-prompts.md` 标题「十九种」、样张数「42 张」与实际不符，改为 22 种风格、55 张样张。
@@ -384,12 +415,12 @@
 ## [0.8.28] - 2026-10-11
 
 > 根包 0.8.27 → **0.8.28**（patch）；技能版本：topmind-wechat-post 0.3.3 → 0.3.4、topmind-briefs 0.2.10 → 0.2.11。
-> 本次为本地既有修复的补发——该修复此前只存在于本地工作副本，远端 `main` 无对应提交。
+> 本次为本地既有修正的补发——该修正此前只存在于本地工作副本，远端 `main` 无对应提交。
 
 > - 修 bug：`topmind-wechat-post/scripts/lint-wechat.py` 的**盘古之白误报**。检测侧直接对原文做 `PANGU_A/B.search()`，
->   而修复侧 `pangu_line()` 会先屏蔽行内代码 / 链接目标 / 裸 URL —— 两套规则不一致，导致图片链接目标里的中英混排片段
+>   而修正侧 `pangu_line()` 会先屏蔽行内代码 / 链接目标 / 裸 URL —— 两套规则不一致，导致图片链接目标里的中英混排片段
 >   被算作缺空格，而 `--fix` 保护的正是这一段、根本不会改它，告警永远清不掉。新增 `pangu_scan()`，
->   让检测与修复共用同一套屏蔽规则
+>   让检测与修正共用同一套屏蔽规则
 > - 修文案：`md2wechat.py` 的 `--author` 帮助文本仍写「留空写 {{作者名}} 占位」，
 >   而函数自 2026-10-01 起已不再渲染自我介绍行，提示与实际行为对不上，改为「留空则不输出署名行」。
 >   同步 `shared/` 与 `topmind-briefs/` 两份副本
@@ -592,7 +623,7 @@
 >
 > - 配图铁律重写：官方原图 > 第三方原图 > AI 生图；只有纯引流段子或无可用原图时才生图；
 >   生图风格统一为清新优雅 / 商务美观 MD3 风（段子/短文/长文通用）。
-> - 修复 SKILL.md 类型表新人报到型重复行。
+> - 修正 SKILL.md 类型表新人报到型重复行。
 
 ## [0.8.11] - 2026-10-03
 
@@ -657,7 +688,7 @@
 > 根包 0.8.3 → **0.8.4**（patch）；技能：topmind-briefs 0.2.3 → **0.2.4**、
 > topmind-x-article 0.4.3 → **0.4.4**、topmind-wechat-post 0.2.6 → **0.2.7**（patch）。
 >
-> - 全仓：writing-principles.md 编号修复（二点五 4→5→6），四处全量同步
+> - 全仓：writing-principles.md 编号修正（二点五 4→5→6），四处全量同步
 >   （含第五节措辞偏好）。
 
 ## [0.8.3] - 2026-10-02
@@ -896,13 +927,13 @@
 > 根包 0.4.0 → **0.4.1**（patch）；技能版本：top-ppt-html 0.2.0 → **0.2.1**（修技能数据 bug 则 patch）、
 > topmind-cover 保持 0.2.0（仅换样张图+描述文案，无功能变更）、topmind-wechat-post / topmind-x-article 保持 0.1.0。
 > 本轮是第十三轮集成轮（A 文档抛光 + B 示例与描述 + C 新代码复审），改动最小、无新功能。
-> 另含第十四轮集成轮（wechat-post/x-article 真 bug 修复 + installer 测试扩展）：**不 bump 版本**，全部并入 0.4.1。
+> 另含第十四轮集成轮（wechat-post/x-article 真 优化 + installer 测试扩展）：**不 bump 版本**，全部并入 0.4.1。
 
-### 安装器 bug 修复（高危 · Worker C 复审发现）
+### 安装器 优化（高危 · Worker C 复审发现）
 
 - `uninstall`/`install` 的 `assertDestOutsideSource` 守卫被符号链接绕过：`path.resolve` 不解析软链，
   `--to <软链指向包根>` 会跟随链接 `rmSync` 删掉包内技能源目录（已实测验证旧代码确会删源）
-- 修复：`bin/tms-skills.js` 改用 `realpath` 归一化比对（`realOrResolved()`：dest 不存在时向上找最深存在祖先），+25/−4
+- 修正：`bin/tms-skills.js` 改用 `realpath` 归一化比对（`realOrResolved()`：dest 不存在时向上找最深存在祖先），+25/−4
 - `scripts/test_installer_cli.js` 新增 case11/case12（uninstall/install 经软链指包根 → 拒绝、源目录完好），12 用例全过
 
 ### top-ppt-html 0.2.1（Worker C 复审发现 · 低危数据 bug）
@@ -939,7 +970,7 @@
 - **分发体积与性能**（Worker B）：无真问题。0.4.1 tarball 解包 29.1MB（0.3.9 18.4MB，
   +10.7MB 系封面示例画廊预期增量）；top10 大文件全合法素材；48 图标 PNG 最大 27.4KB 无异常；
   install 耗时 0.3s 不需优化；`sync_npm_files.js --check` 通过
-- 技能版本号保持：wechat-post / x-article 保持 0.1.0（纯 bug 修复按技能版本规则不 bump）；
+- 技能版本号保持：wechat-post / x-article 保持 0.1.0（纯 优化按技能版本规则不 bump）；
   cover 保持 0.2.0、ppt-html 保持 0.2.1、根包保持 0.4.1
 
 ## [0.4.0] - 2026-09-29
@@ -966,7 +997,7 @@
 
 - 内置原创图标包 `assets/icons/`：48 SVG + 48 PNG + `index.json` 映射，7 个默认图标兜底；`scripts/check_icons.py`（`--strict`）做图标一致性门禁；`references/icons.md` 文档化
 - 3 种 layout variant：bento-grid / timeline / 2-col-feature（`references/layout-variants.md`）；`references/style-pack.md` 风格包文档化
-- `validate_report.py` 新增内容覆盖率检查（<95% WARN）；随门禁修复 6 个真实丢字 bug
+- `validate_report.py` 新增内容覆盖率检查（<95% WARN）；随门禁修正 6 个真实丢字 bug
 - `scripts/layout-constants.json` 加 adaptiveText 弹性文本规则；HTML/PPTX 弹性适配减少溢出截断
 
 ## [0.3.9] - 2026-09-29
@@ -980,10 +1011,10 @@
 
 - TODO 注释 6 命中 → 0 真遗留（均为有意为之：文档纪律说明/scaffold 指导注释/校验正则/示例代称）
 - 死代码：全仓 Python + top-ppt-html JS 逐函数交叉 grep，零死函数；12 个 CLI 参数逐个验证全部在用
-- 跨技能一致性修复：19 处错误信息半角冒号 `错误:` → 全角 `错误：`（多数派 47 处）；`validate_report.py` 加 `-h/--help` 早退（exit 0），与其他 argparse CLI 一致
+- 跨技能一致性修正：19 处错误信息半角冒号 `错误:` → 全角 `错误：`（多数派 47 处）；`validate_report.py` 加 `-h/--help` 早退（exit 0），与其他 argparse CLI 一致
 - 重复逻辑（仅记录，不重构）：`esc()` HTML 转义三处逐字相同、`read_frontmatter()` 跨技能同构、`load_constants()` 各自实现——均为四技能同构门禁的有意设计
 
-### 对抗输入测试（第十一轮 Worker B：5 真崩溃全部修复）
+### 对抗输入测试（第十一轮 Worker B：5 真崩溃全部修正）
 
 - `bin/tms-skills.js`：`--to` 指向已存在文件时 `mkdirSync` 抛未捕获堆栈 → try/catch 干净报错 exit 1
 - `md2wechat.py`：`resolve_image` 的 `shutil.copy2`/`os.makedirs` 未捕获 OSError（磁盘满/目录当图片）→ 干净报错 exit 1
@@ -994,33 +1025,33 @@
 ### 文档一致性（第十一轮 Worker C）
 
 - 审计结论抽查 5 处全部为真（architecture 归一化/SKILL.md 13KB 预算/cover 触发词/ip-fun 原位垫色块补丁/footer 移出 content 标记）
-- SKILL.md vs --help 漂移修复 1 处：wechat-post SKILL.md 注释声称 `--workspace` 参数，全仓无此参数 → 改为 `--base`
+- SKILL.md vs --help 漂移修正 1 处：wechat-post SKILL.md 注释声称 `--workspace` 参数，全仓无此参数 → 改为 `--base`
 - README 示例 10/10 实跑通过（/tmp 干净目录，本地包安装）
 
 ## [0.3.8] - 2026-09-29
 
 > **本版未发布**（未打 tag、未推 npm；0.3.8 全部内容已并入 0.3.9）。
 > 根包 0.3.6 → **0.3.8**（patch）；4 个技能 `version` 保持不动（top-ppt-html 0.1.19，其余 0.1.0）。
-> 本轮只动 top-ppt-html + 文档：渲染产出目检修复（A）+ PPTX 双引擎保真修复 11 bug（B）+ 文档修正（C）。
+> 本轮只动 top-ppt-html + 文档：渲染产出目检修正（A）+ PPTX 双引擎保真修正 11 bug（B）+ 文档修正（C）。
 
-### 模板 footer 修复（第十轮 Worker A：渲染产出目检）
+### 模板 footer 修正（第十轮 Worker A：渲染产出目检）
 
-- `top-ppt-html/assets/templates/{presentation,research,architecture}.html`：`<footer>` 移出 `__TOPPPT_CONTENT_START__`/`__TOPPPT_CONTENT_END__` 标记之外——此前自动渲染取 content 区间时会连带删除页脚，目检确认已修复。
+- `top-ppt-html/assets/templates/{presentation,research,architecture}.html`：`<footer>` 移出 `__TOPPPT_CONTENT_START__`/`__TOPPPT_CONTENT_END__` 标记之外——此前自动渲染取 content 区间时会连带删除页脚，目检确认已修正。
 
-### PPTX 双引擎保真修复（第十轮 Worker B：PPTX 实检，11 bug 全部像素复验）
+### PPTX 双引擎保真修正（第十轮 Worker B：PPTX 实检，11 bug 全部像素复验）
 
 - `top-ppt-html/scripts/build_pptx.js` + `assets/pptx-export.js`（双端同规则）：
-  - 图表数据标签小数位：按模型数值实际小数位（上限 2 位）生成 format code，修复小数标签被截断
+  - 图表数据标签小数位：按模型数值实际小数位（上限 2 位）生成 format code，修正小数标签被截断
   - hbar 条形图：类目轴自下而上绘制，反转数据使首项居顶；单系列颜色按数据点分配（跟随数据归属，与 A 通道一致）
   - streamgraph 退化：相邻 ribbon quad 沿走向微叠 0.02in，消除拼接处抗锯齿发丝缝
   - boxplot：min 标签默认移到须线帽下方，不再被组标签带压住叠印
-  - marimekko：单元格归一化兼容裸数值或 `[标签,数值]` 对（裸数值沿用旧行为），修复 NaN 崩坏
-  - pyramid：标题列宽按层内宽比例（labelFrac≈0.3）分配，顶层窄时改单框混排，修复窄层标题/说明叠印
+  - marimekko：单元格归一化兼容裸数值或 `[标签,数值]` 对（裸数值沿用旧行为），修正 NaN 崩坏
+  - pyramid：标题列宽按层内宽比例（labelFrac≈0.3）分配，顶层窄时改单框混排，修正窄层标题/说明叠印
   - KPI：第 4 个起的支撑指标不再静默截断——容量按最小允许行高计算、行高按全部指标自适应压缩，超容显式告警
-  - donut 图例：百分比列 x（`donut.legendPctX` 5.3 → 10.8）右移，修复图例数值被圆环覆盖
+  - donut 图例：百分比列 x（`donut.legendPctX` 5.3 → 10.8）右移，修正图例数值被圆环覆盖
   - table：内容高度逐格预估、超高全表收字号，字号触底仍装不下则显式告警（不再撑高行压脚注）
   - exhibit 徽标：纯编号自动补 `Exhibit ` 前缀（与 HTML 视觉一致），已带前缀的不重复
-  - sankey/streamgraph note：note 与 footnote 均参与 `chartBottom` 结算，修复 note 重叠
+  - sankey/streamgraph note：note 与 footnote 均参与 `chartBottom` 结算，修正 note 重叠
 - `top-ppt-html/scripts/layout-constants.json`：`donut.legendPctX` 5.3 → 10.8（单源），已由 `sync_runtime.py` 同步至 `pptx-export.js`、画廊、`templates/*.html`、示例的内联副本与 `__TOPPPT_RUNTIME_SHA__` 戳
 
 ### 文档修正（第十轮 Worker C）
@@ -1194,9 +1225,9 @@
 - `references/cover-styles.md` 新增**原创铁律**：prompt 配方是设计语言，
   禁止照抄任何第三方封面的文案与形象；8 风格示例小节同步换为本轮原创标题。
 
-### topmind-wechat-post：全面优化 + 4 处修复
+### topmind-wechat-post：全面优化 + 4 处修正
 
-- `scripts/md2wechat.py` 修复：**行内图片绕过图片管线**（现统一经管线解析、复制到
+- `scripts/md2wechat.py` 修正：**行内图片绕过图片管线**（现统一经管线解析、复制到
   `images/`、登记上传清单、可被 `--embed-images` 内嵌）；分隔线不再触发自家合规
   WARN（改用块级 `<section>` 居中，视觉一致）；标题手写序号剥离支持大写数字
   （壹贰叁肆伍陆柒捌玖拾）；图片 `title` 属性（`![a](x "t")`）不再导致整段源码泄漏。
@@ -1205,9 +1236,9 @@
 - README（中/英）：新增 9 行"最小示例"（输入→输出片段）+ `md2wechat` 参数表。
 - `negative_tests.py` 5→8 项，全过。
 
-### topmind-x-article：全面优化 + 12 处转换 bug 修复
+### topmind-x-article：全面优化 + 12 处转换 优化
 
-- `scripts/md2x.py` 修复 12 处：标题/引用/表格内行内标记残留、引用式链接与图片
+- `scripts/md2x.py` 修正 12 处：标题/引用/表格内行内标记残留、引用式链接与图片
   （`[文字][ref]`/`![alt][img]` 及定义行）、URL 含括号断裂、`\` 转义符残留、
   Setext 标题残留、带空格分割线（`* * *`）不识别、代码块内 `---` 误判分割线、
   文首 `---` 被 frontmatter 误吞、BOM 头、文档以代码块开头时首行缩进丢失。
@@ -1236,7 +1267,7 @@
 - 根 README（中/英）、cover README（中/英）、cover SKILL.md 嵌入总览图（GitHub 绝对 URL）
   + 8 风格一行式索引；用法"6 选 1"→"8 选 1"。
 
-### bug 修复
+### 优化
 
 - topmind-wechat-post `scripts/md2wechat.py`：本地图片文件缺失时未登记进"图片上传清单"
   （用户按清单补图会漏传）；现登记 `⚠ 本地文件缺失` 行并计入"图片 N 张"计数。
@@ -1268,7 +1299,7 @@
 - 各技能 README（中/英）与 SKILL.md 对齐：cover 新增风格库与示例图章节、用法改"步骤 0 选风格"；
   x-article 转换规则补"分隔线→空行"。
 
-### bug 修复
+### 优化
 
 - topmind-x-article `scripts/md2x.py`：`---` / `***` / `___` 分隔线转**空行**（原逻辑误当 frontmatter 吞掉）；
   `***粗斜体***` 先去三重星号再处理 `**` / `__` / `*`，不再残留星号。
@@ -1298,12 +1329,12 @@
 
 ## [0.1.19] - 2026-09-28
 
-### 排版修复 · 大纲篇章化 · 参考资料去假 · 图标真导出 · PPTX 高保真增强
+### 排版修正 · 大纲篇章化 · 参考资料去假 · 图标真导出 · PPTX 高保真增强
 
 > 源起：2026-09-28 用户复盘五类问题（顶栏重叠 / 卡片不齐 / 大纲罗列页标题 / 参考资料占位 / PPTX 格式错乱），并要求「业界怎么解决的，不要闭门造车」。本次对照 Slidev `pptx-editable` / PptxGenJS / think-cell 混合通道模式系统整改。
 
 #### A. HTML 排版硬伤
-- **顶栏副标题压住右侧工具钮**：`.brand__txt` 此前无基础样式，flex `min-width:auto` 钉死整行文字宽，省略号永不触发。补 `min-width:0; overflow:hidden`，`.brand` / `.bar__in` / `.nav` 收缩链修复；≤1360px 自动收起副标题。
+- **顶栏副标题压住右侧工具钮**：`.brand__txt` 此前无基础样式，flex `min-width:auto` 钉死整行文字宽，省略号永不触发。补 `min-width:0; overflow:hidden`，`.brand` / `.bar__in` / `.nav` 收缩链修正；≤1360px 自动收起副标题。
 - **卡片高度不一致**：`.card` 改 flex 列 + 底对齐；`.g-quad` / `.g-half` / `.g-*--equal` 强制等高；`.g-half` 提升进 `engine.css` 并改 `align-items:stretch`（此前 research 专属且 `start` 违反「同构同高」契约）；纯卡片栅格不再误用 `.a-start`。
 
 #### B. 大纲 = 章节大纲（3–7 章），不是页目录

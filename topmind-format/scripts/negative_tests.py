@@ -170,7 +170,7 @@ def main() -> None:
             ai = t / "ai.txt"
             ai.write_text("总的来说，这次更新不仅更快，更稳定，堪称更快、更强、更智能的重磅升级\n\n#AI\n", encoding="utf-8")
             r = run_quiet([str(lint), str(ai)], t)
-            check("lint：AI 套话报 W9、首行过长报 W10", "W9" in r.stdout and "W10" in r.stdout, r.stdout[-300:])
+            check("lint：AI 套话报 W9、首行过长给 H21（快讯 --kind news 才报 W10）", "W9" in r.stdout and "H21" in r.stdout, r.stdout[-300:])
             lg = t / "long.txt"
             lg.write_text("长文标题\n\n理想的 agent 就三件事，用三个词概括。\n\n" + "这一段写得太长了，" * 14 + "\n\n- 列表项不算段落\n", encoding="utf-8")
             r = run_quiet([str(lint), str(lg), "--long"], t)
@@ -188,8 +188,8 @@ def main() -> None:
             pu = t / "punct.txt"
             pu.write_text("太快了！！\n\n真的吗？？\n\n一——二——三——四\n\n好！好！好！\n", encoding="utf-8")
             r = run_quiet([str(lint), str(pu)], t)
-            check("lint：标点连用、破折号 / 感叹号过多报 W17", r.stdout.count("W17") >= 3, r.stdout[-300:])
-            check("lint：短文「！！」一处只给 H2 提示", r.stdout.count("H2") == 1, r.stdout[-300:])
+            check("lint：标点连用、破折号过多报 W17", r.stdout.count("W17") >= 2, r.stdout[-300:])
+            check("lint：短文「！！」和感叹号偏多只给 H2 提示", r.stdout.count("[H2]") == 2, r.stdout[-300:])
             okx = t / "legit.txt"
             okx.write_text("测试还在进行中，结果下周出。\n\n这就是我用的配置。\n\n据 IDC 报告，分析人士认为出货量 6 月回升 12%。\n\n可能是 A，也可能是 B。\n\n是不是该换了？我也说不准。\n\n这个 API 很稳，文档写得清楚。\n\nThe launch is not ready yet. We delayed it by two weeks.\n", encoding="utf-8")
             r = run_quiet([str(lint), str(okx), "--strict"], t)

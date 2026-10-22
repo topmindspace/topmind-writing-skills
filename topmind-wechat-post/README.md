@@ -1,13 +1,20 @@
-# topmind-wechat-post · 公众号创作技能
+# topmind-wechat-post · 公众号长文
 
 [English](./README.en.md) | 中文
 
-公众号文章全生命周期：单源文章文件夹、审校改写、质量三关（默认组合 topmind-revise）、状态同步、按需出微信内联排版与发布清单。
+**从选题到发布清单，一篇公众号长文的完整流程。** 单源文章文件夹、骨架里先写「我的判断」、质量三关（事实 / 逻辑 / 去 AI 味，默认组合 `topmind-revise`）、图片内嵌的微信排版（粘贴即带图）、交付前的图文预览、发布清单和状态同步。
 
-一篇长文一个文件夹 `<文章名>/`，唯一源稿 `<文章名>.md`（Obsidian 里直接能看），图片按出现顺序放 `images/`；
-公众号 HTML 只在需要时生成到 `out/`。旧的 `YYYY-MM-DD-名/公众号稿.md` 交付包只读兼容，不自动迁移。
+- 版本：**v0.3.19**
 
-- 版本：**v0.3.18**（随 `@topmindspace/topmind-writing-skills@0.8.47` 发布）
+你可以这样说：「写公众号」「公众号排版」「公众号定稿」「出公众号发布清单」。
+
+亮点：
+
+- **先有判断**：骨架必填 3–5 条判断，每条写依据和读者会怎么反驳；方法论、架构、对比类文章至少一张自制图。
+- **粘贴即带图**：`md2wechat.py --embed-images`，图片 base64 内嵌，手写小标题序号原样保留；「·」列表逐行分开。
+- **图文预览**：`--preview` 按手机宽度截出 `out/预览.png`，交付前先看一遍。
+
+一篇长文一个文件夹 `<文章名>/`，唯一源稿 `<文章名>.md`（Obsidian 里直接能看），图片按出现顺序放 `images/`；公众号 HTML 只在需要时生成到 `out/`。旧的 `YYYY-MM-DD-名/公众号稿.md` 交付包只读兼容，不自动迁移。
 
 ## 安装
 
@@ -27,7 +34,7 @@ A=<专题>/标题
 # 结构体检：frontmatter、标题一致、图片存在且按出现顺序编号、无 ::: / callout / ![[ ]]
 python3 scripts/check_article.py $A
 
-# 排版体检 + 自动修复（新源稿里的 ::: 容器报错）
+# 排版体检 + 自动修正（新源稿里的 ::: 容器报错）
 python3 scripts/lint-wechat.py --input $A/标题.md --fix
 
 # 去 AI 味（装了 topmind-revise 时由它跑）：W 每条有结论，H 只供判断；总分目标 ≥85
@@ -35,7 +42,7 @@ python3 scripts/de_ai_lint.py $A/标题.md --genre long
 python3 scripts/scan_ai_flavor.py $A/标题.md
 
 # 按需：Markdown → 全内联 HTML 到 $A/out/（必加 --embed-images，否则粘贴丢图）
-python3 scripts/md2wechat.py --input $A/标题.md --embed-images
+python3 scripts/md2wechat.py --input $A/标题.md --embed-images --preview
 
 # 状态同步：只改 frontmatter，目录名不变
 python3 scripts/sync-status.py --set 定稿 $A --apply

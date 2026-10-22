@@ -900,7 +900,7 @@ def render_table_cards(head, body, theme):
 def render_hr(theme):
     # 宽度用百分比：公众号端 px 固定值在不同屏宽下表现不一致。
     # 不用 display:inline-block：audit_inline 会把它判为 WARN，而这是生成器
-    # 自己的输出、用户无从修复——自检永远带一条洗不掉的 WARN 等于没有自检。
+    # 自己的输出、用户无从修正——自检永远带一条洗不掉的 WARN 等于没有自检。
     # 块级 section + margin:0 auto 居中，视觉与原来完全一致。
     return ('<section style="margin:32px 0;">'
             '<section style="width:12%%;height:2px;background:%s;'
@@ -1305,8 +1305,12 @@ def convert_blocks(lines, md_path, out_dir, theme, ctx):
 
         buf = [stripped]
         i += 1
+        dot_item = stripped.startswith("·")
         while i < n:
             cur = lines[i].strip()
+            # 「·」开头的行是纯文本列表项：每行单独成段，不和上下行并成一段
+            if dot_item or cur.startswith("·"):
+                break
             if (not cur or HEADING_RE.match(cur) or HR_RE.match(cur)
                     or CONTAINER_RE.match(cur) or cur.startswith(">")
                     or cur.startswith("|") or is_list_item(lines[i])
@@ -1314,7 +1318,8 @@ def convert_blocks(lines, md_path, out_dir, theme, ctx):
                 break
             buf.append(cur)
             i += 1
-        out.append(render_paragraph(" ".join(buf), theme))
+        nxt_dot = i < n and lines[i].strip().startswith("·")
+        out.append(render_paragraph(" ".join(buf), theme, tight=dot_item and nxt_dot))
         if toc_at is None:
             toc_at = len(out)
 
@@ -1767,6 +1772,39 @@ def write_manifest(out_dir, slug, title, assets, diagrams, theme, footnotes,
 
 # ---------------------------------------------------------------- main
 
+
+def preview_png(html_path, png_path, width=430):
+    """无头 Chrome 把页面截成长图（手机宽度），有 Pillow 时裁掉底部空白。成功返回路径，否则 None。"""
+    chrome = os.environ.get("CHROME_PATH") if os.path.isfile(os.environ.get("CHROME_PATH", "")) else None
+    for c in ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+              "/Applications/Chromium.app/Contents/MacOS/Chromium"):
+        if not chrome and os.path.isfile(c):
+            chrome = c
+    for name in ("google-chrome", "chromium", "chromium-browser", "msedge"):
+        if not chrome:
+            chrome = shutil.which(name)
+    if not chrome:
+        return None
+    cmd = [chrome, "--headless=new", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
+           "--force-device-scale-factor=2", "--window-size=%d,16000" % width,
+           "--screenshot=%s" % png_path, "file://" + os.path.abspath(html_path)]
+    try:
+        subprocess.run(cmd, capture_output=True, text=True, timeout=180)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if not os.path.isfile(png_path):
+        return None
+    try:
+        from PIL import Image, ImageChops
+        im = Image.open(png_path).convert("RGB")
+        bg = Image.new("RGB", im.size, im.getpixel((im.size[0] - 2, im.size[1] - 2)))
+        box = ImageChops.difference(im, bg).getbbox()
+        if box:
+            im.crop((0, 0, im.size[0], min(im.size[1], box[3] + 40))).save(png_path)
+    except Exception:
+        pass
+    return png_path
+
 def main():
     ap = argparse.ArgumentParser()
     # 不设 required=True：--list-themes 需要能在不带输入文件时单独运行。
@@ -1797,6 +1835,8 @@ def main():
     ap.add_argument("--auto-number", action="store_true",
                     help="二级标题一律剥离手写序号、由排版层重新编号（旧行为）；"
                          "默认：稿里写了「一、」这类序号就原样保留")
+    ap.add_argument("--preview", action="store_true",
+                    help="图文预览：用无头 Chrome 把生成的页面截成 <out-dir>/预览.png（手机宽度），交付前先看一遍")
     args = ap.parse_args()
 
     if args.list_themes:
@@ -1898,6 +1938,9 @@ def main():
     else:
         print("合规自检 : ✓ 无告警（标签/属性/宽度/对齐 全部通过）")
     print("清单     : %s" % manifest)
+    if args.preview:
+        shot = preview_png(html_path, os.path.join(args.out_dir, "预览.png"))
+        print("图文预览 : %s" % (shot or "未生成（没找到 Chrome / Chromium，可设 CHROME_PATH）"))
     if embed_stats:
         print("图片内嵌 : ✓ %d 张 / %.0f KB（base64 后约 %.1f MB）"
               % (embed_stats["count"], embed_stats["bytes"] / 1024,

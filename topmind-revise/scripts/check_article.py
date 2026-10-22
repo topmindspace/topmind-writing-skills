@@ -4,6 +4,11 @@
 
     python3 check_article.py <文章名>/<文章名>.md [--json]
     python3 check_article.py <文章名>/                      # 传文件夹也行
+    python3 check_article.py 30-短文/<日期-主题>/公众号短文.md   # 短文文件夹也行（见下面「短文文件夹」）
+
+短文文件夹：文件名是「公众号短文.md」，或路径里有「30-短文/」时按短文检查——
+    不要求文件名 = 标题（E2 只比 H1 和 frontmatter title），不要求封面和 tags；
+    没有 frontmatter 或缺 title / date / status 只报 W7，不报 E1。
 
 E 级（必须清零，有任何一条退出码 1）：
     E1 frontmatter 缺字段（title / date / status / tags / cover 五个都要有）
@@ -23,6 +28,7 @@ W 级（逐条给结论）：
     W6 subtitle（可选）写了但和标题一样，或超过 40 字
     H1 updated_at 写了但没有时区（如 2026-10-18T17:00:00，应写成 +08:00 或 Z 结尾）；
        多环境字段 updated_at / updated_env / updated_by 都是可选的，缺了不报
+    W7 短文文件夹缺 frontmatter 或缺 title / date / status（建议补上，方便归档和多环境协作）
     W18 自制图没标清楚：图注（alt）或紧跟的「来源：」行要写「自制」和数据来源
         （与 de_ai_lint / lint_x_post 的 W18 同一口径）
 """
@@ -44,6 +50,14 @@ SOURCE_LINE_RE = re.compile(r"^来源[：:]")
 PLACEHOLDER_NAME_RE = re.compile(r"待补|占位|placeholder", re.I)
 SCREENSHOT_NAME_RE = re.compile(r"截图|screenshot", re.I)
 FINAL_STATUS = ("定稿", "已发布")
+SHORT_STEMS = ("公众号短文", "X短文")
+SHORT_REQUIRED = ("title", "date", "status")
+
+
+def is_short_article(md_path):
+    stem = os.path.splitext(os.path.basename(md_path))[0]
+    parts = os.path.normpath(md_path).split(os.sep)
+    return stem in SHORT_STEMS or "30-短文" in parts
 
 
 def parse_frontmatter(lines):
@@ -68,13 +82,19 @@ def check(md_path):
         text = f.read()
     lines = text.split("\n")
 
+    short = is_short_article(md_path)
     fm, body_start = parse_frontmatter(lines)
     if fm is None:
-        errors.append((1, "E1", "缺 frontmatter（需要 title / date / status / tags / cover）"))
+        if short:
+            warns.append((1, "W7", "短文没有 frontmatter：建议补 title / date / status，方便归档和多环境协作"))
+        else:
+            errors.append((1, "E1", "缺 frontmatter（需要 title / date / status / tags / cover）"))
         fm = {}
     else:
-        missing = [k for k in REQUIRED if k not in fm]
-        if missing:
+        missing = [k for k in (SHORT_REQUIRED if short else REQUIRED) if k not in fm]
+        if missing and short:
+            warns.append((1, "W7", "短文 frontmatter 缺字段：%s" % "、".join(missing)))
+        elif missing:
             errors.append((1, "E1", "frontmatter 缺字段：%s" % "、".join(missing)))
         ua = fm.get("updated_at", "")
         if ua and not TZ_RE.search(ua):
@@ -127,14 +147,14 @@ def check(md_path):
     title = fm.get("title")
     if h1 is None:
         errors.append((1, "E2", "缺 H1 标题（# 文章名）"))
-    names = {"H1": h1, "frontmatter title": title, "文件名": stem}
+    names = {"H1": h1, "frontmatter title": title} if short else {"H1": h1, "frontmatter title": title, "文件名": stem}
     present = {k: v for k, v in names.items() if v}
     if len(set(present.values())) > 1:
         errors.append((h1_line or 1, "E2", "标题不一致：%s" % "；".join(
             "%s=%s" % (k, v) for k, v in present.items())))
 
-    final = fm.get("status", "") in FINAL_STATUS
-    if "cover" in fm:
+    final = fm.get("status", "") in FINAL_STATUS and not short
+    if "cover" in fm and (fm.get("cover") or not short):
         cv = fm.get("cover", "")
         if not cv:
             (errors if final else warns).append(
@@ -224,7 +244,11 @@ def resolve(path):
         cand = os.path.join(path, name + ".md")
         if os.path.isfile(cand):
             return cand
-        mds = [f for f in os.listdir(path) if f.endswith(".md") and f != "素材来源.md"]
+        cand = os.path.join(path, "公众号短文.md")
+        if os.path.isfile(cand):
+            return cand
+        skip = {"素材来源.md", "骨架.md", "交付说明.md", "README.md"}
+        mds = [f for f in os.listdir(path) if f.endswith(".md") and f not in skip]
         if len(mds) == 1:
             return os.path.join(path, mds[0])
         raise FileNotFoundError("文件夹里找不到 <文章名>.md：%s" % path)

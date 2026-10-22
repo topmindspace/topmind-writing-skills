@@ -3,12 +3,12 @@ name: topmind-wechat-post
 description: "管一篇公众号文章从选题/底稿到发布清单的完整生命周期：单源文章文件夹 <文章名>/<文章名>.md、审校改写、质量三关（默认组合 topmind-revise：事实/逻辑/去AI味，含改稿保真溯源审计）、状态同步；用户要公众号版时再按需出微信内联 HTML 与发布清单到 out/。不代发。Use when 写公众号、写公众号文章、公众号长文、公众号排版、微信排版、公众号定稿、发公众号、公众号交付包、公众号发布清单、wechat、mp format。Do NOT use for 公众号短文与快讯（300–800 字，→ topmind-briefs）、X 帖子与段子（→ topmind-viral-posts；派生的 X 短帖交付一段可复制纯文本，链接、原图另发）、X 纯文本格式化与转段子（→ topmind-format）、X 长文（→ topmind-x-article）、封面与头图（→ topmind-cover）、长图与海报（→ topmind-poster）、只改错别字、小红书/知乎、纯网页发布、单独改稿与去 AI 味（→ topmind-revise）、通用长文写作（→ topmind-write）。"
 license: MIT
 metadata:
-  version: "0.3.18"
+  version: "0.3.19"
   action_category: "write"
   triggers: "公众号, 写公众号, 微信排版, 公众号排版, 公众号稿, 公众号长文, 排版这篇文章, 定稿, 发公众号, 公众号交付, wechat, mp format, 写公众号文章, 公众号排版定稿, 公众号发布清单"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-18"
+  updated: "2026-10-22"
 ---
 
 # topmind-wechat-post · 公众号创作技能
@@ -38,7 +38,7 @@ metadata:
 - [references/information-design.md](references/information-design.md)：内容 → 形式决策表、篇幅和密度、去啰嗦的判断法
 - 措辞和口吻在这两层之上，见 [references/core-voice.md](references/core-voice.md)
 
-长文：先写骨架（每节要点 + 形式 + 图表计划 + 字数），再写正文。
+长文：先写骨架（我的判断 + 每节要点 + 形式 + 图表计划 + 字数），再写正文。
 
 ## 语言：默认中文
 
@@ -58,13 +58,13 @@ metadata:
 | `scripts/sync-status.py` | 状态 ⇄ 字数（新结构只改 frontmatter；旧交付包保留 `-released` 改名） |
 | `scripts/sync-mapping.py` | 映射一致性（frontmatter + 目录 + 可选 notes + topic 总表），新旧结构都认 |
 | `scripts/push-to-topstream.py` | 可选回推：公众号稿降级为纯 Markdown notes |
-| `scripts/lint-wechat.py` | 排版体检 + 自动修复（中英文间距、段长、AI 腔…）；源稿出现 `:::` 报错（旧交付包 `公众号稿.md` 只告警） |
+| `scripts/lint-wechat.py` | 排版体检 + 自动修正（中英文间距、段长、AI 腔…）；源稿出现 `:::` 报错（旧交付包 `公众号稿.md` 只告警） |
 | `scripts/md2wechat.py` | Markdown → 全内联 HTML 到 `out/`；**必加 `--embed-images`**；手写小标题序号原样保留 |
 | `scripts/de_ai_lint.py` | 去 AI 味检查（公众号稿默认用它）：W 警告（W9、W14–W21）+ H 提示（语境词等，只供判断）；规则见 `references/de-ai-rules.md` |
 | `scripts/lint_x_post.py` | 派生 X 版时的 X 稿检查：无 Markdown 列表/标题/加粗，正文无 URL / 来源行 / 配图说明；去 AI 味部分复用 `de_ai_lint.py`（`--md` 等同 `de_ai_lint.py`） |
 | `scripts/count_words.py` | 统一口径字数（改前 / 改后、单段最长） |
 | `scripts/revise_check.py` | 改稿保真比对（数字、引语、专名、确定性词）+ 过度改稿检查 |
-| `scripts/info_design_hints.py` | （共享脚本）信息设计提示 I1–I8，只供判断；`lint-wechat.py`、`de_ai_lint.py` 也会附带显示 |
+| `scripts/info_design_hints.py` | （共享脚本）信息设计提示 I1–I9，只供判断；`lint-wechat.py`、`de_ai_lint.py` 也会附带显示 |
 | `scripts/scan_ai_flavor.py` | 中文去 AI 味打分入口：默认跑随包 `scan_ai_flavor_builtin.py`（词面分）；`$TOPMIND_AI_SCAN` 指向外部扫描脚本时转发过去；`--which` 查实际执行哪份 |
 | `scripts/audit-provenance.py` | （共享脚本）**改稿保真审计**：双向逐段溯源（本稿→源稿 / 源稿→本稿），抓悄悄扩写与被落下的段。有源稿时定稿必跑 |
 | `scripts/wechat_paths.py` | 路径解析模块（被上面脚本导入）：不写死个人路径、类别编号与年份 |
@@ -169,7 +169,7 @@ lint、排版、同步状态（`-released` 改名逻辑只对旧包生效）；`
 
 ## 质量三关（定稿前必过）
 
-写稿前先填文章文件夹里的 `骨架.md`：主要信息、读者、每节要点 / 形式 / 图表计划 / 字数（方法见 [`references/information-design.md`](references/information-design.md) 第一、二节）。形式在骨架里定下来，写的时候才不会默认写成段落；写完回头对一遍骨架。再找图、记来源（[`references/image-sourcing.md`](references/image-sourcing.md)，信源清单放文章文件夹的 `素材来源.md`，不进本仓库）。**默认组合 `topmind-revise`**：三关由它执行（`mode=embed genre=long sources=<文章名>/素材来源.md`），它把终稿和三行摘要回给本技能、完整报告落 `out/改稿报告.md`；没装就按 [`references/revision-workflow.md`](references/revision-workflow.md) 手动走：⓪ 结构 → 事实 → 逻辑 → 删冗余 → 去 AI 味 → 措辞原则对照（[`references/core-voice.md`](references/core-voice.md)）→ 排版 → 保真审计 → 过度改稿检查，每轮先备份、报改前 / 改后字数（`scripts/count_words.py`）。
+写稿前先填文章文件夹里的 `骨架.md`：主要信息、读者、**我的判断（必填，3–5 条，每条写依据和读者会怎么反驳）**、每节要点 / 形式 / 图表计划 / 素材与判断的比例 / 字数（方法见 [`references/information-design.md`](references/information-design.md) 第一、二节）。全文主线是这几条判断，素材给判断作证；一节很长却没有一句判断，`info_design_hints.py` 会提示 I9。方法论、架构、对比类文章至少规划 1 张自制图（架构、光谱、演进或流程），图源 HTML 放 `raw/自制图源/`，导出 PNG 放 `images/`，图注写「自制」和依据。形式在骨架里定下来，写的时候才不会默认写成段落；写完回头对一遍骨架。再找图、记来源（[`references/image-sourcing.md`](references/image-sourcing.md)，信源清单放文章文件夹的 `素材来源.md`，不进本仓库）。**默认组合 `topmind-revise`**：三关由它执行（`mode=embed genre=long sources=<文章名>/素材来源.md`），它把终稿和三行摘要回给本技能、完整报告落 `out/改稿报告.md`；没装就按 [`references/revision-workflow.md`](references/revision-workflow.md) 手动走：⓪ 结构 → 事实 → 逻辑 → 删冗余 → 去 AI 味 → 措辞原则对照（[`references/core-voice.md`](references/core-voice.md)）→ 排版 → 保真审计 → 过度改稿检查，每轮先备份、报改前 / 改后字数（`scripts/count_words.py`）。
 
 ### 关 1 · 事实
 
@@ -229,12 +229,13 @@ python3 scripts/revise_check.py <备份>/<文章名>.md <文章名>.md   # 改�
 用户要公众号版时才跑（产物缺省进 `<文章名>/out/`，`--slug` 缺省文件名，`--asset-root` 缺省文章文件夹）：
 
 ```bash
-python3 scripts/md2wechat.py --input <文章名>/<文章名>.md --embed-images \
+python3 scripts/md2wechat.py --input <文章名>/<文章名>.md --embed-images --preview \
   [--theme assets/themes/minimal-ink.json]
 # 旧交付包：--input <包>/公众号稿.md --out-dir <包> --slug <slug> --asset-root <素材根>
 ```
 
 1. **永远 `--embed-images`**，否则粘贴丢图（相对路径被序列化成 file://）  
+   **图文预览（交付前必做）**：`--preview` 用无头 Chrome 把页面按手机宽度截成 `out/预览.png`；交付前自己先看一遍（图序、图注、列表、表格），交付说明里附上预览图。没有 Chrome 时脚本会提示，改用浏览器打开 HTML 自己看。  
 2. **图片 basename 一致（硬约束）**：正文引用名 = `images/` 目标名；禁止两套同名图共处  
 3. 合规自检出现 `✗` 改生成器，不要手改 HTML  
 4. **配图位置**：图片必须紧跟它证明的那段文字

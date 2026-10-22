@@ -11,7 +11,9 @@ X 的普通帖子不渲染 Markdown。本脚本检查 X 稿，并可把常见 Ma
     python3 lint_x_post.py X稿.txt --fix --style emoji --out X稿.fixed.txt   # 列表改 🔹 / 1️⃣
     python3 lint_x_post.py 回复.txt --genre reply  # 文体：long / short / duanzi / reply / title
     python3 lint_x_post.py X发布稿.txt --long      # 长文兜底稿：不查话题标签位置和字数
-    python3 lint_x_post.py 段子.txt --duanzi       # 段子体：出现任何 emoji（含列表符号、人设点缀）记 W13
+    python3 lint_x_post.py 段子.txt --duanzi       # 段子体：出现任何 emoji（含列表符号、人设点缀）记 W13，行间没空行记 W23
+    python3 lint_x_post.py 关系帖.txt --duanzi --kind ops   # 关系帖（互关 / 打卡）：允许行动号召，W22 豁免
+    python3 lint_x_post.py 快讯.txt --kind news    # 快讯：首行超过约 30 字记 W10（其他短帖只提示 H21）
     python3 lint_x_post.py 公众号稿.md --md        # Markdown 稿只查去 AI 味 / 长段落 / 自制图标注
     cat X稿.txt | python3 lint_x_post.py -         # 从标准输入读取
 
@@ -23,7 +25,7 @@ X 的普通帖子不渲染 Markdown。本脚本检查 X 稿，并可把常见 Ma
   E8 代码围栏 ```（多半是把交付代码块的围栏一起复制进来了）；E9 删除线 ~~文字~~；--fix 会去掉 E8/E9 符号。
 --long（x-article 的 X发布稿.txt 长文兜底稿）允许文内链接，不查 E10–E12。
 警告（不影响退出码，--strict 时算失败）：点缀表情过多（W8）、疑似 AI 套话（W9，含排比、「不仅…更…」、空泛形容等）、
-首行过长不像钩子（W10）、超过约 1000 字（W7，短文上限，更长的写成 X Article）、连续多个空行（W11）、正文里混入其他非发布内容（W12：说明 / 内部标签 / 帖序号等）、
+快讯首行过长（W10，需 --kind news；其他短帖只提示 H21）、超过约 1000 字（W7，短文上限，更长的写成 X Article）、连续多个空行（W11）、正文里混入其他非发布内容（W12：说明 / 内部标签 / 帖序号等）、
 段子体出现 emoji（W13，需 --duanzi）、长文单段超过约 110 字（W14，需 --long）。
 W9 同时查公式化计数标签（「xx三个词」「xx一句话」「xx五个分支」「三件事」），短文、长文都查。
 去 AI 味结构检查（规则表 references/de-ai-rules.md，短文、长文、--md 都查）：
@@ -32,7 +34,9 @@ W9 同时查公式化计数标签（「xx三个词」「xx一句话」「xx五�
   W17 标点腔（破折号 / 感叹号过多、！！ ？！ 连用）；W18 自制图图注没写「自制」和数据来源（--long / --md 的 ![]() 行）。
   --md：Markdown 稿只查内容类警告，不查 Markdown 语法。
 去 AI 味规则在同目录 de_ai_lint.py（本脚本 import），另有 W19「人名说：」、W20 过渡句、W21 复述图片，
-以及 H1–H12 提示（语境词、新闻式精确、对仗收句等）：提示只供判断，不计入 --strict，也不要求改。
+社交短帖模式（de-ai-rules 第五节）：W22 套路互动钩子结尾、W23 段子体行间没空行、W24 类比腔（reply / duanzi）、
+W25 英文网文模板（reply）、W26 回复超过 40 字；以及 H1–H21 提示（语境词、新闻式精确、对仗收句、编经历、口径词、
+英文小词、播报模板、标题动词和口径等）：提示只供判断，不计入 --strict，也不要求改。
 短文分点不强制 emoji：🔹 / 1️⃣ 等 emoji 符号，或「1）」「·」「【小标题】」等纯文本方式都可以；只禁止会被当成 Markdown 的 - * + 1.。
 
 退出码：有错误 → 1；加 --strict 时警告也算失败（提示不算）；其余 → 0。
@@ -171,7 +175,8 @@ def lint_post(start: int, lines: list[str], long_mode: bool, duanzi: bool = Fals
     return errs, warns
 
 
-def lint_post_full(start: int, lines: list[str], long_mode: bool, duanzi: bool = False, genre: str | None = None):
+def lint_post_full(start: int, lines: list[str], long_mode: bool, duanzi: bool = False, genre: str | None = None,
+                   kind: str = "post", sources_text: str = ""):
     """返回 (errors, warnings, hints)。genre 缺省按 long_mode / duanzi 推断。"""
     if genre is None:
         genre = "long" if long_mode else ("duanzi" if duanzi else "short")
@@ -280,9 +285,10 @@ def lint_post_full(start: int, lines: list[str], long_mode: bool, duanzi: bool =
             decor += len(EMOJI_RE.findall(rest_ln))
         if decor > MAX_DECOR_EMOJI:
             warns.append((start, "W8", f"点缀表情 {decor} 个（列表符号不计），建议 1–3 个，避免杂乱"))
-        first = next((ln for ln in lines if ln.strip()), "")
-        if genre in ("short", "duanzi") and x_weight(first) > HOOK_MAX_WEIGHT:
-            warns.append((start, "W10", f"首行加权字数约 {x_weight(first)}，超过 {HOOK_MAX_WEIGHT}（约 30 个汉字）：首行一句简单的话题陈述，约 30 字内"))
+        fw, fh = D.first_line_hits(lines, start, genre, kind)
+        warns.extend(fw)
+        hints.extend(fh)
+        hints.extend(D.sources_hits(lines, start, sources_text))
         n = sum(1 for ch in URL_RE.sub("", "\n".join(ln for ln in lines if not PLACEHOLDER_RE.match(ln))) if not ch.isspace())
         if n > CHAR_LIMIT:
             warns.append((start, "W7", f"约 {n} 字，超过短文的 {CHAR_LIMIT} 字左右；这么长的内容写成长文（X Article）"))
@@ -294,12 +300,12 @@ def lint_post_full(start: int, lines: list[str], long_mode: bool, duanzi: bool =
                 if n > LONG_PARA_MAX:
                     warns.append((start + off, "W14", f"这一段约 {n} 字，超过 {LONG_PARA_MAX} 字：拆成短段，或改成「概要 + 列表」，能用图说明的就删字"))
     warns.extend(struct_hits(lines, start))
-    pw, ph = D.punct_split(lines, start, long_mode)
+    pw, ph = D.punct_split(lines, start, long_mode, genre)
     warns.extend(pw)
     hints.extend(ph)
     if long_mode:
         warns.extend(image_label_hits(lines, start))
-    vw, vh = D.voice_hits(lines, start, genre)
+    vw, vh = D.voice_hits(D.mask_mentions(lines), start, genre, None, kind)
     warns.extend(vw)
     hints.extend(vh)
     hints.sort(key=lambda h: (h[0], int(h[1][1:])))
@@ -363,6 +369,8 @@ def main() -> int:
     ap.add_argument("--genre", choices=list(D.GENRES), help="文体：long / short / duanzi / reply / title；缺省按 --long / --md / --duanzi 推断")
     ap.add_argument("--no-hints", action="store_true", help="不打印 H 级提示")
     ap.add_argument("--strict", action="store_true", help="警告也算失败（H 级提示永远不算）")
+    ap.add_argument("--kind", choices=list(D.KINDS), default="post", help="帖子用途：post（默认）/ news（快讯）/ ops（关系帖，允许行动号召）")
+    ap.add_argument("--sources", help="素材来源文件：标题动词和口径对照（H20）")
     ap.add_argument("--md", action="store_true", help="Markdown 稿只查内容：去 AI 味（W9、W14–W21、H 提示）、自制图标注（W18）；不查 Markdown 语法")
     args = ap.parse_args()
     if args.genre == "duanzi":
@@ -381,6 +389,13 @@ def main() -> int:
         print(f"已写出 {args.out}")
         args.files = [args.out]
 
+    src_text = ""
+    if args.sources:
+        try:
+            src_text = Path(args.sources).read_text(encoding="utf-8-sig")
+        except (OSError, UnicodeDecodeError) as e:
+            print(f"错误：无法读取 {args.sources}（{e}）", file=sys.stderr)
+            return 2
     total_e = total_w = total_h = 0
     for f in args.files:
         try:
@@ -389,7 +404,7 @@ def main() -> int:
             print(f"错误：无法读取 {f}（{e}）", file=sys.stderr)
             return 2
         if args.md:
-            warns, hints = D.analyze(text, "long", markdown=True)
+            warns, hints = D.analyze(text, "long", markdown=True, sources_text=src_text)
             if args.no_hints:
                 hints = []
             for no, code, msg in warns:
@@ -400,7 +415,7 @@ def main() -> int:
             total_h += len(hints)
             continue
         for idx, (start, lines) in enumerate(split_posts(text, args.long), 1):
-            errs, warns, hints = lint_post_full(start, lines, args.long, args.duanzi, args.genre)
+            errs, warns, hints = lint_post_full(start, lines, args.long, args.duanzi, args.genre, args.kind, src_text)
             if args.no_hints:
                 hints = []
             label = "" if args.long else f"#帖{idx} "

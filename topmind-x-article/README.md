@@ -1,11 +1,19 @@
-# topmind-x-article · X 长文一键发布
+# topmind-x-article · X 长文
 
 [English](./README.en.md) | 中文
 
-一篇长文只有一份源稿 `<文章名>/<文章名>.md`：默认先过 topmind-revise、交付这份 Markdown；
-要发 X 时再按需派生"复制 → 粘贴 → 发"的 X 长文（Article）发布包到 `out/`。
+**一份 Markdown 源稿，一键复制到 X 文章编辑器。** 先写骨架和「我的判断」，再写正文；写完默认过一遍 `topmind-revise`。要发 X 时派生一键复制 HTML：配图按文档顺序内嵌、「来源：」行变图注、表格可以自动转成图，交付前先出一张图文预览自己看。
 
-- 版本：**v0.4.24**（随 `@topmindspace/topmind-writing-skills@0.8.47` 发布）
+- 版本：**v0.4.25**
+
+你可以这样说：「写 X 长文」「出一键复制版」「X 文章排版」「推特长文」。
+
+亮点：
+
+- **骨架先行**：主要信息、读者、我的判断（3–5 条，带依据和反驳）、每节素材与判断的比例；一节只有素材没有判断，脚本会提示。
+- **自制图**：方法论、架构、对比类文章至少一张，把自己的判断画出来。
+- **表格转图**：`--tables-as-images`，X 粘贴不了的表格按顺序变成图。
+- **图文预览**：`--preview` 生成 `out/预览.png`，交付前先看一遍。
 
 ## 安装
 
@@ -23,7 +31,7 @@ python3 scripts/article_scaffold.py --title "文章名"
 python3 scripts/check_article.py 文章名/
 
 # 1. 按需：一键复制 HTML（首选），产物 文章名/out/X长文.html
-python3 scripts/md2x-html.py 文章名/文章名.md
+python3 scripts/md2x-html.py 文章名/文章名.md --tables-as-images --preview   # 预览图 out/预览.png
 # 直接读源稿的 ![]() 按文档顺序嵌图，封面缺省读 frontmatter 的 cover；
 # 禁止手工拼 --images 列表（文件名排序 ≠ 文档顺序，曾导致整段配图错位）。
 # 浏览器打开 X长文.html → 点页顶「一键复制全文」→ 粘贴进 X Article 编辑器正文

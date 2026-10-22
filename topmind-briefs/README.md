@@ -1,63 +1,94 @@
-# topmind-briefs · 干货短文（公众号 + X 双平台）
+# topmind-briefs · 短文（X + 公众号）
 
 [English](./README.en.md) | 中文
 
-一件事，讲完就停。干货向短文：数据榜单、论文解读、新品速递。短文不是长文——**默认不出 HTML**：
-工作流：核实一手信源 → 找原帖原图 → 写内容（去 AI 味、首行钩子）→ 排版（合理分段、合理列表）。
-X 版交付一段可直接复制的纯文本（emoji 可选），**链接（含来源）、原图、配图另发**，不和正文混在一起；公众号版约 300–800 字 Markdown。
-没有原图时先问要不要配图（`topmind-cover`）；链接那一条写明来源名称、发布时间与 URL。
+**一件事，讲完就停。** 快讯、预告、新品、羊毛、榜单、论文、实测、观点一句话，九种内容类型各有各的首行和收尾。X 版是一段可以直接复制的纯文本，一眼就看到事实和亮点；链接、原图、口径提醒另发。公众号版 300–800 字 Markdown。
 
-- 版本：**v0.2.26**（随 `@topmindspace/topmind-writing-skills@0.8.47` 发布）
-
-## 安装
+- 版本：**v0.2.27**
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-briefs
 ```
 
-## 用法
+你可以这样说：「发个快讯」「来篇短的」「写条预告」「有个羊毛帮我发一条」「这个榜单换第一了」「讲讲这篇论文」「公众号和 X 各一版」。
 
-```bash
-# 检查 X 版：无 Markdown 残留；正文无 URL / 来源行 / 配图说明（E10–E12）；去 AI 味（W9）
-python3 scripts/lint_x_post.py X短文.txt
-# 只动排版不改字：统一分段、列表改「·」「1）」（--bullets emoji 改 🔹 / 1️⃣），链接与来源行拿出来另列
-python3 scripts/format_text.py X短文.txt --mode short --out X短文.txt
+## 九种内容类型
+
+| 类型 | 适用 | 首行怎么写 | 收尾 |
+|---|---|---|---|
+| 快讯（首发） | 官宣、上线，刚发生 | 是什么 + 最狠的一个数，比读者认识的对手 | 「...」或不收 |
+| 快讯（晚到） | 首发窗口已过 | 换角度：实测、算账、求证 | 「...」 |
+| 预告 / 传闻 | 预告、灰度、文档里出现 | 「要来了？！」，动词照口径 | 「？！」 |
+| 新品 / 工具 | 好用的新东西 | 真疑问或一句真心推荐 | 「...」 |
+| 羊毛 / 优惠 | 限时、免费 | 一句话说能马上拿到什么 | 不收 |
+| 榜单 / 数据 | 排名变化、评测 | 谁第一、领先多少 | 不收 |
+| 论文 | 新方法、新结论 | 一句结论 | 不收 |
+| 实测 | 自己跑过 | 结果一句（翻车、快、贵） | 自嘲或一个真问题 |
+| 观点一句话 | 立人设的干货 | 一句内行的轻判断 | 判断本身 |
+
+## 示例（原创，名称和数字虚构）
+
+**快讯（首发）**
+
+```text
+某模型低调上线新版：编程评测 31 → 42，价格不变
+
+网页、App、接口已全量切换，权重开源。
+
+几项关键提升：
+
+1）编程评测：31 → 42
+2）推理评测：37 → 43
+3）智能体评测：74 → 77，比某知名闭源模型高 3 分
+
+单任务成本两毛钱出头...
 ```
 
-交付格式：正文一段纯文本（一条消息）→ 链接一条（来源名称｜发布时间｜URL）→ 图片一条（1–2 张原图或询问是否配图）→（可选）公众号版 Markdown。
+另发：`官方发布帖｜2026-10-17 16:00（UTC+8）｜链接`、`[图1] 官方评测表`、口径提醒「分数是厂商自测」。
 
-用户明确要 HTML 时才用（脚本随包自带，唯一真源在仓库 `shared/scripts/`）：
+**预告**
 
-```bash
-python3 scripts/md2x-html.py X短文.md --out X短文.html --images-from 公众号短文.md
-python3 scripts/md2wechat.py --input 公众号短文.md --out-dir 交付 --slug 短名 --embed-images --no-toc
+```text
+某编辑器的后台 agent 要来了？！
+
+设置里已经能看到开关，点了没反应，官方还没说哪天上...
 ```
 
-工作流细节见 [SKILL.md](./SKILL.md)；emoji 体系见 [references/emoji-system.md](./references/emoji-system.md)。
+**实测**
 
-## X 版格式与话题标签
+```text
+让三个模型各写一个贪吃蛇，只有一个能跑起来
 
-X 不渲染 Markdown，X 版不用 `- ` 列表、`#` 标题和 `**加粗**`：分点可用 emoji（🔹 并列、1️⃣ 步骤、✅/❌ 对比）或纯文本（「1）」「·」【小标题】），
-emoji 不强制，同帖一套、每条一行、最多两层。公众号稿继续用 Markdown 列表；X 稿由公众号稿派生，只允许排版差异，内容一致。
-X 版末尾附 0–2 个话题标签（正文最后一行，公众号稿不加）。规则见 [references/x-post-format.md](./references/x-post-format.md)
-与 [references/platform-specs.md](./references/platform-specs.md)。
+另外两个，一个蛇不会转弯，一个吃到食物直接退出...
 
-```bash
-# 检查 X 版：无 Markdown 列表/标题/加粗，话题标签在末行；加 --fix --out 自动改写
-python3 scripts/lint_x_post.py X短文.md
+难道是我提示词写得不对？
 ```
 
-## 内容类型
+更多见 [references/examples.md](./references/examples.md) 和 [`examples/`](./examples/)。
 
-- 数据榜单型 / 榜单速报型 / 论文解读型 / 机制讲解型（见 SKILL.md，四种常用结构）
-- 运营约定：只起草不代发、数字必有来源、厂商数字标口径、不洗稿
+## 几条关键做法
+
+- **一眼快餐**：X 正文只留事实、关键数字、亮点；「官方称」「按图估读」这类查证过程写进交付说明的口径提醒。
+- **口径照实**：预告不写成发布，灰度不写成官宣。
+- **时效**：首发窗口以分钟计；晚了就换角度，别重复别人已经发过的那句。
+- **一个事件多角度连发**：性能一条、价格一条，每条一个主角。
+- **配图**：图本身就是信息时才配（跑分、截图、价格卡、榜单）；没有原图先问要不要配图。
+- **话题标签**：默认不带，要带最多 2 个。
+
+## 交付和检查
+
+交付顺序：正文（一段纯文本）→ 链接（来源名称｜发布时间｜URL）→ 图片（1–2 张原图）→ 口径提醒 →（可选）公众号版 Markdown。
+
+```bash
+python3 scripts/lint_x_post.py X短文.txt --kind news          # 快讯
+python3 scripts/check_article.py <短文文件夹>/                 # 短文文件夹体检
+python3 scripts/format_text.py X短文.txt --mode short --out X短文.txt   # 只动排版不改字
+```
+
+用户明确要 HTML 时才出：`md2x-html.py`（X 一键复制）、`md2wechat.py --embed-images --no-toc --preview`（公众号排版 + 预览图）。
 
 ## 何时不用
 
-现成文字格式化 / 转段子 → `topmind-format`；X 长文 → `topmind-x-article`；公众号长文 → `topmind-wechat-post`；
-引流互动型短帖与段子 → `topmind-viral-posts`；单独出长图/海报 → `topmind-poster`；
-封面/头图 → `topmind-cover`；发帖 → `topmind-x`（须用户确认）。
+段子 → `topmind-viral-posts`；现成文字只排版 → `topmind-format`；X 长文 → `topmind-x-article`；公众号长文 → `topmind-wechat-post`；长图 → `topmind-poster`；封面 → `topmind-cover`；发帖 → `topmind-x`（须你确认）。
 
-## 原创示例
-
-我们自己写的示例输出见 [`examples/`](./examples/)（虚构或中性题材，不收录任何第三方原文）。
+示例全部自己写，不收录任何第三方原文。

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.4 (2026-10-22)
+
+- 快审清单：首行、口径、社交短帖模式 S01–S10、删尾测试、回复与转发点评（两个口吻）、精炼、作者样本
+- 新增 `samples=` 参数和随包脚本 `post_type_report.py`（作者往期帖子的习惯摘要）；`calibration-drill.md` 新增「用数据校准」
+- 随包 `core-voice.md` 扩到 V40，`de-ai-rules.md` 新增 S01–S10，`info_design_hints.py` 新增 I9
+
 ## 0.1.2 (2026-10-18)
 
 - 新增 ⓪ 结构复查和 `depth` 参数：默认 light 只诊断 + 低风险结构改动（并列段转列表、对照转表格、删重复段），`depth=structure` 才重排章节

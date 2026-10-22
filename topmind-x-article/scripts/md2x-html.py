@@ -22,7 +22,9 @@
   （对应 X 的"标题/副标题"两级）
 - `- ` / `1. ` → ul/ol；`**x**` → strong；`` `x` `` → code（X 粘贴后变纯文本）；
   `---` → hr（X 粘贴可能丢弃，需手动 Insert → 分割线，见 references/x-html-format.md）
-- GFM 表格 → ul.xtable（X 粘贴会丢弃 <table>，转列表保内容）
+- GFM 表格 → ul.xtable（X 粘贴会丢弃 <table>，转列表保内容）；加 --tables-as-images 时改成表格图片
+  （无头 Chrome 截图后内嵌，X 粘贴能保住表格的样子；找不到浏览器时退回列表并提示）
+- --preview：再把生成的页面截成一张长图 out/预览.png，交付时给用户看图文效果
 - 普通行的行首缩进（≥2 个空格或全角空格）保留为 &nbsp;，emoji 项目符号的二级条目不会被吞缩进
 - frontmatter（--- ... ---）跳过，只取 title / cover / subtitle；subtitle（可选）只在页顶预览里给出（no-paste，
   X 文章没有副标题栏，可以拿去当推文文案），不进复制内容
@@ -48,7 +50,10 @@ import base64
 import html
 import os
 import re
+import shutil
+import subprocess
 import sys
+import tempfile
 
 CSS = """
 :root { color-scheme: light; }
@@ -327,6 +332,77 @@ HTML_TMPL = """<!DOCTYPE html>
 COVER_FNAME = "cover-1500x600.png"
 
 
+TABLE_MODE = {"images": False, "chrome": None, "count": 0, "tmp": None}
+TABLE_IMG_CSS = (
+    "body{margin:0;padding:24px;background:#fff;font-family:-apple-system,'PingFang SC','Noto Sans CJK SC',"
+    "'Microsoft YaHei',sans-serif;}table{border-collapse:collapse;font-size:18px;line-height:1.5;color:#0f1419;}"
+    "th,td{border:1px solid #cfd9de;padding:10px 16px;text-align:left;vertical-align:top;}"
+    "th{background:#f7f9fa;font-weight:700;}tr:nth-child(even) td{background:#fbfcfd;}"
+)
+
+
+def find_chrome():
+    """无头浏览器：CHROME_PATH 环境变量，或 PATH 里的 google-chrome / chromium。找不到返回 None。"""
+    env = os.environ.get("CHROME_PATH")
+    if env and os.path.isfile(env):
+        return env
+    for c in ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+              "/Applications/Chromium.app/Contents/MacOS/Chromium"):
+        if os.path.isfile(c):
+            return c
+    for name in ("google-chrome", "chromium", "chromium-browser", "msedge"):
+        found = shutil.which(name)
+        if found:
+            return found
+    return None
+
+
+def chrome_shot(chrome, html_path, png_path, width, height=4000):
+    """无头 Chrome 截图，再按内容裁掉底部和右侧空白（有 Pillow 才裁）。成功返回 True。"""
+    cmd = [chrome, "--headless=new", "--no-sandbox", "--disable-gpu", "--disable-gpu-sandbox",
+           "--hide-scrollbars", "--force-device-scale-factor=2", "--window-size=%d,%d" % (width, height),
+           "--screenshot=%s" % png_path, "file://" + os.path.abspath(html_path)]
+    try:
+        subprocess.run(cmd, capture_output=True, text=True, timeout=180)
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    if not os.path.isfile(png_path):
+        return False
+    try:
+        from PIL import Image, ImageChops
+        im = Image.open(png_path).convert("RGB")
+        bg = Image.new("RGB", im.size, im.getpixel((im.size[0] - 2, im.size[1] - 2)))
+        box = ImageChops.difference(im, bg).getbbox()
+        if box:
+            pad = 24
+            im.crop((0, 0, min(im.size[0], box[2] + pad), min(im.size[1], box[3] + pad))).save(png_path)
+    except Exception:
+        pass
+    return True
+
+
+def table_to_image(rows):
+    """把一张表渲染成 PNG，返回 data URI；失败返回 None（调用方退回列表）。"""
+    chrome = TABLE_MODE["chrome"]
+    if not chrome:
+        return None
+    TABLE_MODE["count"] += 1
+    n = TABLE_MODE["count"]
+    tmp = TABLE_MODE["tmp"]
+    head, rest = rows[0], rows[1:]
+    th = "".join("<th>%s</th>" % inline_md(c) for c in head)
+    trs = "".join("<tr>%s</tr>" % "".join("<td>%s</td>" % inline_md(c) for c in r) for r in rest)
+    page = ("<!doctype html><html><head><meta charset='utf-8'><style>%s</style></head>"
+            "<body><table><thead><tr>%s</tr></thead><tbody>%s</tbody></table></body></html>") % (TABLE_IMG_CSS, th, trs)
+    hp = os.path.join(tmp, "table-%02d.html" % n)
+    pp = os.path.join(tmp, "table-%02d.png" % n)
+    with open(hp, "w", encoding="utf-8") as f:
+        f.write(page)
+    if not chrome_shot(chrome, hp, pp, 1200, 2400):
+        return None
+    return data_uri(pp)
+
+
 def data_uri(path):
     try:
         with open(path, "rb") as f:
@@ -478,7 +554,10 @@ def md_to_html(md_text, images, cover):
             cells = [c.strip() for c in r.strip().strip("|").split("|")]
             rows.append(cells)
         rows = [r for r in rows if not all(re.fullmatch(r":?-+:?", c or "-") for c in r)]
-        if rows:
+        uri = table_to_image(rows) if (rows and TABLE_MODE["images"]) else None
+        if uri:
+            out.append('<p><img src="%s" alt="表格"></p>' % uri)
+        elif rows:
             out.append('<ul class="xtable">')
             for j, r in enumerate(rows):
                 cells = " ｜ ".join(inline_md(c) for c in r)
@@ -655,6 +734,10 @@ def main():
                          "禁止手工拼 --images 顺序（曾因此出现配图错位）")
     ap.add_argument("--cover", default=None,
                     help="封面图路径（1500×600，5:2）；缺省读 frontmatter 的 cover（相对 md 所在目录）")
+    ap.add_argument("--tables-as-images", action="store_true",
+                    help="表格渲染成图片内嵌（X Article 不渲染表格；需要无头 Chrome，找不到时退回列表）")
+    ap.add_argument("--preview", action="store_true",
+                    help="另存一张图文预览长图 out/预览.png（需要无头 Chrome），交付时给用户看效果")
     args = ap.parse_args()
 
     if not os.path.isfile(args.md):
@@ -738,7 +821,19 @@ def main():
     m = re.search(r"^#\s+(.+)$", "\n".join(body_lines), re.M)
     title = m.group(1).strip() if m else "X长文"
 
+    n_tables = sum(1 for ln in md_text.split("\n") if re.match(r"^\s*\|?\s*:?-{3,}", ln.strip()) and "|" in ln)
+    if args.tables_as_images and n_tables:
+        TABLE_MODE["chrome"] = find_chrome()
+        TABLE_MODE["images"] = True
+        TABLE_MODE["tmp"] = tempfile.mkdtemp(prefix="md2x-tables-")
+        if not TABLE_MODE["chrome"]:
+            print("警告：找不到无头浏览器（设 CHROME_PATH），表格退回列表写法", file=sys.stderr)
     body = md_to_html(md_text, images, args.cover)
+    if TABLE_MODE["tmp"]:
+        shutil.rmtree(TABLE_MODE["tmp"], ignore_errors=True)
+    if n_tables and not args.tables_as_images:
+        body = ('<div class="cover-note no-paste">本文有 %d 个表格：X 长文不渲染表格，粘贴后会变成列表。'
+                '要保留表格的样子，加 --tables-as-images 重新生成。</div>\n' % n_tables) + body
     subtitle = frontmatter_value(md_text, "subtitle")
     if subtitle:
         body = ('<div class="cover-note no-paste" id="subtitlebox">副标题（不进复制内容，可用作推文文案）：%s</div>\n'
@@ -759,6 +854,13 @@ def main():
         print("写入失败：%s" % e, file=sys.stderr)
         sys.exit(1)
     print("已生成：%s" % args.out)
+    if args.preview:
+        chrome = find_chrome()
+        prev = os.path.join(out_dir, "预览.png")
+        if chrome and chrome_shot(chrome, args.out, prev, 800, 16000):
+            print("图文预览：%s" % prev)
+        else:
+            print("警告：没生成图文预览（找不到无头浏览器，设 CHROME_PATH）", file=sys.stderr)
 
 
 if __name__ == "__main__":

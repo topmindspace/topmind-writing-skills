@@ -1,12 +1,20 @@
-# topmind-wechat-post · WeChat Article Authoring
+# topmind-wechat-post · WeChat long-form
 
 **[中文](./README.md)** | English
 
-Full lifecycle for WeChat articles: single-source article folder, review & rewrite, three quality gates (run by topmind-revise by default), status sync, on-request WeChat inline typography, and publish checklist.
+**The whole path of a WeChat article, from topic to publish checklist.** Single-source article folder, "my judgments" in the skeleton, three quality gates (facts / logic / de-AI, run by `topmind-revise`), WeChat layout with embedded images (paste and the images come along), a preview image before delivery, publish checklist and status sync.
 
-One long-form article = one folder `<title>/` with a single source `<title>.md` (readable as-is in Obsidian) and images numbered in order of appearance under `images/`; WeChat HTML is generated into `out/` only when needed. Legacy `YYYY-MM-DD-name/公众号稿.md` packages stay readable and are not migrated automatically.
+- Version: **v0.3.19**
 
-- Version: **v0.3.18** (ships with `@topmindspace/topmind-writing-skills@0.8.47`)
+Say: "写公众号", "公众号排版", "公众号定稿", "出公众号发布清单".
+
+Highlights:
+
+- **Judgments first**: 3–5 required judgments with basis and likely pushback; method, architecture and comparison pieces get at least one diagram of your own.
+- **Paste with images**: `md2wechat.py --embed-images` inlines images as base64; hand-written heading numbers are kept; 「·」 lists render one item per line.
+- **Preview**: `--preview` renders `out/预览.png` at phone width.
+
+One article = one folder `<title>/` with a single source `<title>.md`; WeChat HTML goes to `out/` only when needed. Legacy `YYYY-MM-DD-name/公众号稿.md` packages stay readable.
 
 ## Install
 
@@ -34,7 +42,7 @@ python3 scripts/de_ai_lint.py $A/标题.md --genre long
 python3 scripts/scan_ai_flavor.py $A/标题.md
 
 # On request: Markdown → fully inline HTML into $A/out/ (--embed-images is mandatory, or pasted images go missing)
-python3 scripts/md2wechat.py --input $A/标题.md --embed-images
+python3 scripts/md2wechat.py --input $A/标题.md --embed-images --preview
 
 # Status sync: frontmatter only, folder name unchanged
 python3 scripts/sync-status.py --set 定稿 $A --apply

@@ -1,40 +1,48 @@
-# topmind-format · X Plain-Text Formatter
+# topmind-format · X plain-text formatting
 
-**[中文](./README.md)** | English
+English | [中文](./README.md)
 
-Lays out existing text for X: **duanzi mode** (one sentence per line, a blank line between every line, no emoji at all, bullets without symbols) or **short-post mode** (paragraphing; lists become 「·」/「1）」 or, optionally, emoji bullets; title emoji and motifs are optional). Layout only — the words are never changed; a fidelity check enforces it. Links, source lines and image notes are pulled out of the body so it stays one copy-ready plain-text block; links and images are sent separately.
+**Layout only, not a single character changed.** Turns existing text into something readable on X: duanzi layout, brief layout, or several alternative openings stitched into full posts. A fidelity check fails if any character changes; links, source lines and image notes are pulled out to be delivered separately.
 
-- Version: **v0.1.11** (ships with `@topmindspace/topmind-writing-skills@0.8.47`)
-
-## Install
+- Version: **v0.1.12**
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-format
 ```
 
-## Usage
+Say: "转段子", "排一下版", "格式化成短文", "加空行", "我想了几个开头，帮我拼成完整的帖子".
 
-```bash
-python3 scripts/format_text.py input.txt --mode duanzi --split   # duanzi rejects --open / --close / --title-emoji
-python3 scripts/format_text.py input.txt --mode short --links-out links.txt   # links / source lines saved to send separately
-python3 scripts/format_text.py input.txt --mode short --bullets emoji --title-emoji 🆕   # emoji optional
-python3 scripts/lint_x_post.py output.txt
+## Three modes
+
+| You say | Result |
+|---|---|
+| Duanzi | One sentence per line, blank line between; all emoji and bullet symbols removed |
+| Brief | Sensible paragraphs; lists become 「·」「1）」 (or 🔹 / 1️⃣); Markdown quote markers removed |
+| Stitch openings | Each opening replaces the first paragraph; each result is fidelity-checked |
+
+## Example (original, in Chinese)
+
+```text
+今天把周报写完了，
+
+结果发现写的是上周的。
+
+白干两小时，谁懂？
 ```
 
-Emoji rules (short posts only): [references/emoji-system.md](./references/emoji-system.md). X layout rules: [references/x-post-format.md](./references/x-post-format.md).
-
-## Scope
-
-Writing jokes from scratch → `topmind-viral-posts`; writing briefs → `topmind-briefs`; X long-form → `topmind-x-article`; WeChat layout → `topmind-wechat-post`; posting → `topmind-x` (needs user confirmation).
-
-## Development
+## Scripts
 
 ```bash
-python3 scripts/audit_skill.py
-python3 scripts/package_skill.py --check
-python3 scripts/negative_tests.py
+python3 scripts/format_text.py in.txt --mode duanzi --split
+python3 scripts/format_text.py in.txt --mode short --links-out links.txt
+python3 scripts/format_text.py in.txt --mode duanzi --variants openings.txt   # alternatives separated by ---
+python3 scripts/lint_x_post.py out.txt
 ```
 
-## Original examples
+The de-AI lint still runs, but this skill never rewrites: hits go into the change notes for you to decide; rewrites go to `topmind-revise`.
 
-Sample outputs written by us (fictional or neutral topics, no third-party text) are in [`examples/`](./examples/).
+## When not to use
+
+Write a duanzi from scratch → `topmind-viral-posts`; a brief → `topmind-briefs`; X long-form → `topmind-x-article`; WeChat layout → `topmind-wechat-post`; posting → `topmind-x` (with your confirmation).
+
+More in [`examples/`](./examples/); all self-written.

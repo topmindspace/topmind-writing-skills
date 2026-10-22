@@ -1,66 +1,90 @@
-# topmind-viral-posts · X Viral Short Posts
+# topmind-viral-posts · X duanzi
 
-**[中文](./README.md)** | English
+English | [中文](./README.md)
 
-Short, real, hooked — read in 3 seconds, impossible not to like/comment/follow. 18 post types plus hook × body × closer combinations, summarised from common high-engagement writing patterns in the Chinese X community (all examples are original). Posts default to "duanzi" layout (one sentence per line, a blank line between lines), original images first, plus a hashtag set and classification tags. Existing text → `topmind-format`.
+**One sentence per line, zero emoji, read in three seconds.** 12 topical patterns plus 2 relationship patterns, each with topics, hook, structure, ending, counter-examples and original samples. Decide who you want in the replies, then pick a pattern. The skill writes in Chinese by default.
 
-- Version: **v0.3.18** (ships with `@topmindspace/topmind-writing-skills@0.8.47`)
-
-## Install
+- Version: **v0.3.19**
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-viral-posts
 ```
 
-## 18 Types
+Say: "来条段子", "不懂就问", "写个群聊体", "来条卧槽体", "蹭一下这个热点", "写条互关帖".
 
-| Type | Hook | Image | Default tags (purpose · tone · hashtag) |
+## 14 patterns
+
+| Pattern | In one line | Typical opening | Replies you want |
 |---|---|---|---|
-| Tips & advice | "Mistakes beginners make" | Slogan graphic / landscape | persona, growth · crisp · #新手指南 |
-| Follow-for-follow | Direct ask + follow-back promise | Pet / portrait | follow-back · humble · #蓝V互关 #follow |
-| Self-deprecating humor | Concrete numbers + contrast | Funny pet / fantasy | engagement, daily · self-mocking · #涨粉日记 |
-| Interactive question | Either-or / soul question | Slogan graphic / landscape | engagement · curious · topic word |
-| Daily check-in | Small wins + blessings | Landscape / pet | daily · warm · #日拱一卒 |
-| Newcomer intro | Personification + ask for follows | Pet / portrait | follow-back, growth · humble · #新人报到 |
-| Trending news | Real news + playful take | Official image / screenshot | news, traffic · restrained · event name |
-| Hot take | Counter-intuitive claim | Slogan graphic | engagement, traffic · contrarian · #暴论 |
-| Stats show-off | Concrete number + contrast/progress | Dashboard screenshot / chart | persona, growth · sincere · #数据复盘 |
-| Sincere friending | "No follow-and-drop" trust signal | Lifestyle photo | follow-back · sincere · #真诚交友 |
-| Relatable gripe | Platform pain point + self-mockery | Meme / pet | engagement, daily · self-mocking · #创作者日常 |
-| Practical tip | Useful tip + why it works | Infographic | persona, traffic · crisp · #运营技巧 |
-| Hard-won lesson | Beginner trap + vivid metaphor | Slogan graphic / landscape | persona · humble · #新手指南 |
-| Execution checklist | Daily numbers + period | Checklist infographic | growth, persona · crisp · #执行清单 |
-| Fun fact reveal | "Here's a fun fact:" + counter-intuitive mechanism | Slogan graphic / none | follow-back, traffic · curious · #蓝V互关 |
-| Gap sprint | Exact follower count + "only N to go" | Own profile screenshot | growth, follow-back · self-mocking · #涨粉日记 |
-| Contrast pair | "Them: / Me:" lines + self-mocking punchline | Pet / meme | engagement, daily · self-mocking · #创作者日常 |
-| Self Q&A | "People keep asking:" + one-line answer | Slogan graphic / none | persona, engagement · crisp · #运营心得 |
+| A1 Genuine question | Play dumb, ask what you really don't know | "Doesn't anyone use…?" | Experts explaining |
+| A2 Leak check | Clue + last time + a guess | "XX is about to ship?!" | More clues, guesses |
+| A3 Outage check | Ask "is it down?" right away | "Is XX down?" | "Me too" + jokes |
+| A4 Whoa | Real reaction + a converted number | "Whoa, I did the math" | Shock, reposts |
+| A5 TIL | "I only just learned…" | "TIL…" | "Me neither" |
+| A6 Group chat | One line per company, "xx:" | "Today in the XX group:" | Riffs, one more company |
+| A7 Series | Same protagonist, Day N | Column name + Day N | Bets, advice |
+| A8 Do the math | Your own numbers in money and time | "One XX ate N% of my quota" | Their own bills |
+| A9 Light take | Grant one side, add an insider take | "True, but…" | Taking sides |
+| A10 Absurd self-roast | A shared pain as an absurd scene | "I thought … was the limit" | Relating, stories |
+| A11 Product twist | Real product + scene + action twist | A daily-life scene | Riffs |
+| A12 Trend remix | A familiar meme on new news | "The X edition of…" | Riffs, sides |
+| B1 Relationship | Follow-backs, newcomers, check-ins, milestones | Real progress | Follows, hellos |
+| B2 Mutual help | Asking for or giving invite codes | A real need | Codes |
 
-## Tags
+Full breakdown in [references/patterns.md](./references/patterns.md), including a mapping from the old type list.
 
-Every post carries two kinds of tags:
+## Examples (original, in Chinese)
 
-- **Hashtags**: 1–3 per post, on the last line of the body; no synonym stacking, nothing that invites engagement farming or sensitive topics.
-- **Classification tags**: type / purpose / platform / tone, listed in the "tags" item of the output, never in the post body.
+**A4 Whoa**
 
-See [references/tags-and-topics.md](./references/tags-and-topics.md) for the full vocabulary and rules.
+```text
+卧槽，算完我人傻了
 
-## Plain-text formatting for X
+某公司一个新机房要放 20 万张卡
 
-X does not render Markdown, so X drafts never use `- ` lists, `#` headings or `**bold**`. Duanzi posts use no emoji at all: bullets get no symbol, one item per line separated by blank lines; the short-post version of hot-news posts follows short-post rules (emoji or plain markers like 「1）」/「·」; emoji optional). Each post body is one copy-ready plain-text block; **links (including sources), original images and generated images are sent separately**. When a WeChat draft is turned into an X draft, only the layout may change; the content stays the same. See [references/x-post-format.md](./references/x-post-format.md).
+按一张卡一台电脑算，差不多是一个小县城每家一台
 
-```bash
-# Check an X draft: no Markdown list/heading/bold, hashtags on the last line; add --fix --out to rewrite
-python3 scripts/lint_x_post.py x-draft.txt --duanzi   # W13 on any emoji in a duanzi post; E10–E12 on URLs, source lines or image notes in the body
+我这边还在为一个月 20 块的订阅犹豫...
 ```
 
-## Images
+**A11 Product twist**
 
-Generated via `topmind-cover`, 5 image banks: portraits / pets (cats first) / landscapes / fantasy / slogan graphics. X single image 1200×675.
+```text
+让某编辑器的 agent 帮我整理仓库
 
-## Usage
+它扫了一遍
 
-See [SKILL.md](./SKILL.md) for workflow, [references/patterns.md](./references/patterns.md) for case breakdowns.
+说有个文件三个月没人动过
 
-## Original examples
+建议删掉
 
-Sample outputs written by us (fictional or neutral topics, no third-party text) are in [`examples/`](./examples/).
+我点了确认
+
+然后它自己的配置文件就没了
+```
+
+More in [`examples/`](./examples/).
+
+## Key practices
+
+- **Duanzi layout**: one sentence per line, a blank line between lines, no emoji, no bullet symbols.
+- **Endings**: "..." for a pause, a question the author genuinely can't answer, or an action twist; no boilerplate "what do you think?" bait. Delete-the-tail test: if the post is better without the last half-line, cut it.
+- **Hashtags**: none by default on topical posts, at most 2; relationship and mutual-help posts take 1–3. Internal tags (type, replies wanted, platform, tone) go in the delivery notes.
+- **Images by pattern**: most patterns are text-only; leak, outage and math posts take one screenshot when it is the evidence; relationship posts use your own profile or dashboard. No original image → ask first, then `topmind-cover`.
+- **Posts with facts**: verify sources first; links and images are delivered separately, no verification notes in the body.
+- **Replies and quote posts**: pick up the other person's point, then add one thing of your own; two versions in different tones.
+
+## Checks
+
+```bash
+python3 scripts/lint_x_post.py duanzi.txt --duanzi   # emoji in a duanzi → W13
+python3 scripts/lint_x_post.py ops.txt --kind ops     # relationship / mutual-help posts
+```
+
+E errors must be zero; each W warning needs a decision; H hints are for judgment only.
+
+## When not to use
+
+News, rankings and launches → `topmind-briefs`; X long-form → `topmind-x-article`; layout only → `topmind-format`; posting → `topmind-x` (with your confirmation).
+
+All samples are self-written with fictional names and numbers; no third-party text is included.

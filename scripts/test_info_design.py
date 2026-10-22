@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""信息设计提示（I1–I8）回归测试：test_lint_rules.py 会调用，CI 与 Release 都跑。
+"""信息设计提示（I1–I9）回归测试：test_lint_rules.py 会调用，CI 与 Release 都跑。
 
 两组样例，全部是通用虚构示例：
   SHOULD_REPORT      应报指定 I 编号。
@@ -43,6 +43,7 @@ SHOULD_REPORT = [
     ("I6", doc(P150 + "这是一段很长的开头。")),
     ("I6", doc("你有没有想过，笔记到底该放在哪里？", P40)),
     ("I7", doc(LEAD.strip(), "## 二、现在", P150, P150.replace("某", "这款"), P150.replace("新版", "测试版"))),
+    ("I9", doc(LEAD.strip(), "## 二、三家的做法\n\n" + P150 + "\n\n" + P150.replace("某", "另一款") + "\n\n" + P150.replace("某", "第三款"))),
 ]
 BUDGET_CASE = doc(LEAD.strip(), "![图](images/01.png)", P150, "- 一\n- 二", P150.replace("某", "这款"), "| a | b |\n|---|---|\n| 1 | 2 |",
                   P150.replace("新版", "测试版"), "![图](images/02.png)", P150.replace("本地", "硬盘"))
@@ -85,6 +86,9 @@ def main() -> int:
         fails.append("漏报 I8：预算 400 字的稿子写了 700 多字")
     if "I8" in codes(BUDGET_CASE, budget=700):
         fails.append("误报 I8：在预算 30% 以内")
+    judged = doc(LEAD.strip(), "## 二、三家的做法\n\n" + P150 + "\n\n" + P150.replace("某", "另一款") + "\n\n大概率明年三家都会默认只存本地。")
+    if "I9" in codes(judged):
+        fails.append("误报 I9：这一节有判断句")
     for banned, text in SHOULD_NOT_REPORT:
         got = codes(text)
         bad = got if banned is None else got & banned

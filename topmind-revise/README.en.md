@@ -1,47 +1,80 @@
-# topmind-revise · Revision and quality check
+# topmind-revise · Revision and quality checks
 
 English | [中文](./README.md)
 
-Makes a draft shorter, more accurate and closer to the author's own voice, and proves the facts survived the edit. Works for long-form articles, short posts, one-liners, replies and titles. Use it on its own, or let `topmind-wechat-post` and `topmind-x-article` call it by default when they write long-form pieces.
+**Shorter, more accurate, more like you, and provably no facts broken.** Works on long-form, briefs, duanzi, replies, quote posts and titles; standalone, or called by `topmind-wechat-post` and `topmind-x-article` when they finish a draft.
 
-- Version: **v0.1.3** (ships with `@topmindspace/topmind-writing-skills@0.8.47`)
-
-## Install
+- Version: **v0.1.4**
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-revise
 ```
 
-## Modes
+Say: "改稿", "去 AI 味", "精简一下", "检查一下这篇", "看看这条回复", "起个标题", "按我以前的帖子改".
 
-| Mode | What it does |
-|---|---|
-| audit | Runs the checks and writes a revision report; the draft is untouched |
-| revise | Backs up first, edits, writes back, and attaches the report |
-| embed | Called by the long-form skills; returns the final draft plus a three-line summary |
-| quick | Titles, short posts, replies and summaries: one rewrite, at most two alternatives |
+## Four modes
 
-Pipeline: ⓪ structure → facts → logic → cut redundancy → de-AI → voice check → layout → fidelity check → over-edit check.
+| You say | Mode | Result |
+|---|---|---|
+| Check / QA / where does it sound like AI | audit | Report: hits, suggested fixes, unverified items; draft untouched |
+| Revise / tighten / de-AI / apply my notes | revise | Back up, edit, write back, plus a report |
+| (called by a long-form skill) | embed | Final draft + three-line summary; full report on disk |
+| Title / this brief / this reply | quick | Quick checklist, one revised version (two tones for replies) |
+
+## Example: before → after (original)
+
+```text
+重磅！某编辑器 3.0 发布，AI 编程迎来新纪元！
+
+更新内容：
+🔹 补全更快
+🔹 支持本地模型
+🔹 插件市场改版
+
+这不仅是一次更新，更是开发方式的变革。
+
+#AI编程
+```
+
+```text
+某编辑器 3.0 发布，可以接本地模型了
+
+更新内容：
+· 补全更快
+· 支持本地模型
+· 插件市场改版
+
+#AI编程
+```
+
+Why: newsreader hype removed, the "not just X but Y" construction and the uplifting closer cut, and the first line now carries the change readers care about. No fact changed. More in [`examples/`](./examples/).
+
+## Flow
+
+⓪ structure → ① facts → ② logic → ③ cut redundancy → ④ de-AI → ⑤ voice check → ⑥ layout → ⑦ fidelity audit → ⑧ over-editing check.
+
+Quick checklist (briefs, duanzi, replies): first line, caliber, social patterns S01–S10, delete-the-tail test, replies pick up the other person's point first, keep two-character words intact, compare with the author's samples.
 
 ```bash
-python3 scripts/de_ai_lint.py draft.md                    # W warnings + H hints
-python3 scripts/count_words.py before.md after.md
+python3 scripts/de_ai_lint.py draft.md
+python3 scripts/lint_x_post.py brief.txt --kind news
 python3 scripts/revise_check.py before.md after.md --report report.md
+python3 scripts/post_type_report.py my_posts.jsonl --samples-out habits.md   # with your own post history
 ```
 
 ## Rule layers
 
 | Layer | File | Covers |
 |---|---|---|
-| 0 · Principles | [references/social-writing-principles.md](./references/social-writing-principles.md) | know what to say, conclusion first, form follows content, … |
-| 1 · Information design | [references/information-design.md](./references/information-design.md) | basis for the ⓪ structure review: content → form table, length and density, I1–I8 hints |
-| 2 · Voice | [references/core-voice.md](./references/core-voice.md) | ten wording principles + V01–V33 examples; short posts sound like an ordinary person still learning |
-| 3 · Review | this skill + [references/de-ai-rules.md](./references/de-ai-rules.md) | rewrite boundaries + structural patterns (Z / E / P), run through [references/revision-workflow.md](./references/revision-workflow.md) with a report |
+| Principles | [references/social-writing-principles.md](./references/social-writing-principles.md) | Know the message, lead with it, form follows content |
+| Information design | [references/information-design.md](./references/information-design.md) | Structure diagnosis: skeleton, my judgments, content → form, I1–I9 hints |
+| Voice | [references/core-voice.md](./references/core-voice.md) | Ten wording principles + V01–V40 examples |
+| Review | this skill + [references/de-ai-rules.md](./references/de-ai-rules.md) | Rewrite boundaries, long-form patterns, social S01–S10; report via [revision-workflow.md](./references/revision-workflow.md) |
 
 ## Guarding against over-editing
 
-Every change must map to a rule code or an author note; paragraphs with no hits stay as they are; `revise_check.py` flags the run when more than 30% of clean paragraphs were rewritten.
+Every edit cites a rule or an author note; untouched paragraphs stay untouched; each W warning needs a decision, H hints are for judgment; `revise_check.py` flags when more than 30% of rewritten paragraphs had no hit. With author samples, sentence length and punctuation follow the samples.
 
-## Not for
+## When not to use
 
-Writing from scratch (use the writing skills), layout-only formatting (`topmind-format`), covers and images (`topmind-cover` / `topmind-poster`), or publishing.
+Writing from scratch → `topmind-wechat-post` / `topmind-x-article` / `topmind-briefs` / `topmind-viral-posts`; layout only → `topmind-format`; images → `topmind-cover` / `topmind-poster`. This skill never posts.

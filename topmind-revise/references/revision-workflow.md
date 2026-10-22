@@ -1,7 +1,7 @@
 # revision-workflow.md · 改稿流程（改稿 · 去 AI 味 · 质量三关 · 保真审计）
 
 > **执行者**：装了 `topmind-revise` 时，改稿、质检由它执行（长文技能写完默认调用它的嵌入模式）；没装时，briefs、viral-posts、x-article、wechat-post 按本文件手动走一遍，效果一致。
-> 规则来源：`core-voice.md`（场景规则 V01–V33）、`de-ai-rules.md`（结构模式与改写边界）。
+> 规则来源：`core-voice.md`（场景规则 V01–V40）、`de-ai-rules.md`（结构模式与改写边界）。
 > 每一轮都**先备份、记字数**，改完再记一次字数，交付时报「改前 → 改后」。
 
 ## 每轮开始

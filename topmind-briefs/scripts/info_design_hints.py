@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""info_design_hints.py — 信息设计提示（I1–I8，只提示，不判卷）。
+"""info_design_hints.py — 信息设计提示（I1–I9，只提示，不判卷）。
 
     python3 info_design_hints.py 稿子.md [--budget 2000] [--type essay] [--json]
 
@@ -15,6 +15,7 @@
   I6 首段太长（超过 120 字），或首段没有交底（没有数字、以问句收住）
   I7 某一节（##）超过 400 字却全是段落
   I8 超出骨架里写的篇幅预算 30% 以上（读同目录 骨架.md 的「篇幅：约 N 字」，或 --budget）
+  I9 某一节（##）超过 400 字，却一句判断都没有（大概率 / 预计 / 意味着 / 我的判断 / 说白了…）：素材罗列
 
 frontmatter 写 `type: essay`（随笔、故事）时不提示 I1、I2、I7。
 """
@@ -28,6 +29,7 @@ from pathlib import Path
 CODES = {
     "I1": "连续纯文字", "I2": "图表列表少", "I3": "并列项可转列表", "I4": "对照可转表格",
     "I5": "重复表达", "I6": "首段没交底", "I7": "长节全是段落", "I8": "超篇幅预算",
+    "I9": "素材罗列",
 }
 ESSAY_EXEMPT = {"I1", "I2", "I7"}
 
@@ -37,6 +39,9 @@ LEAD_MAX = 120
 SECTION_MIN = 400
 REPEAT_MIN = 8
 BUDGET_OVER = 0.30
+# I9：判断句的标志词。一节里一个都没有，多半是在罗列素材（方法论、架构、对比类长文要有自己的判断）
+JUDGE_RE = re.compile(r"大概率|预计|意味着|我的判断|我判断|我认为|我觉得|说白了|其实是|关键是|换句话说|所以|因此|应该|不如|值得|建议|更适合|看起来|多半|未必|恐怕|结论")
+I9_EXEMPT_RE = re.compile(r"参考|来源|附录|延伸阅读|致谢|术语|名词")
 
 _SYMBOLS_RE = re.compile(r"[\s*\-#>\[\]()`|]")
 _URL_RE = re.compile(r"\]\([^)]*\)|https?://\S+")
@@ -244,14 +249,18 @@ def analyze(text, essay=False, budget=None):
             hits.append((lead[1], "I6", "首段没有数字也没有结论、以问句或省略号收住：读者看完开头还不知道这篇要说什么"))
 
     # I7 长节全是段落
-    sec, sec_no = [], None
+    sec, sec_no, sec_title = [], None, ""
     for b in body + [("heading", 0, "## end")]:
         if b[0] == "heading" and b[2].startswith("## "):
             if sec_no and sec:
                 chars = sum(vlen(x[2]) for x in sec if x[0] == "text")
                 if chars > SECTION_MIN and not any(x[0] in ELEMENTS for x in sec):
                     hits.append((sec_no, "I7", f"这一节约 {chars} 字，全是段落：至少放一张图、一个列表或表格，或拆成两节"))
-            sec, sec_no = [], b[1]
+                all_chars = sum(vlen(str(x[2])) for x in sec)
+                if (all_chars > SECTION_MIN and not I9_EXEMPT_RE.search(sec_title)
+                        and not any(JUDGE_RE.search(str(x[2])) for x in sec)):
+                    hits.append((sec_no, "I9", f"这一节约 {all_chars} 字，没有一句判断：素材之外，写一句你怎么看（骨架「我的判断」）"))
+            sec, sec_no, sec_title = [], b[1], b[2]
         elif sec_no:
             sec.append(b)
 
@@ -279,7 +288,7 @@ def check_file(path, essay=False, budget=None):
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="信息设计提示 I1–I8（只提示，不进 --strict）")
+    ap = argparse.ArgumentParser(description="信息设计提示 I1–I9（只提示，不进 --strict）")
     ap.add_argument("files", nargs="+")
     ap.add_argument("--budget", type=int, help="篇幅预算（字）；缺省读同目录 骨架.md")
     ap.add_argument("--type", choices=["essay"], help="随笔 / 故事：不提示 I1、I2、I7")

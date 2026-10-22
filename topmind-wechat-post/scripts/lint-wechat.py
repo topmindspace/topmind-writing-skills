@@ -119,7 +119,7 @@ def pangu_scan(line):
 
     否则图片/链接目标里的中文会被误报：文件名出现 `Argon官方` 这类中英混排片段时，
     会被当成缺空格命中 PANGU_B，而 --fix 保护的正是这一段、根本不会改它 ——
-    告警永远清不掉，用户会以为正文不合规。检测与修复必须用同一套屏蔽规则。
+    告警永远清不掉，用户会以为正文不合规。检测与修正必须用同一套屏蔽规则。
     """
     masked = line
     for pattern, _ in PROTECT:
@@ -312,7 +312,7 @@ def lint(path, max_para, max_item, asset_root=None, legacy=False):
                      % h1_count)
 
     if cjk_missing:
-        warns.append("中英文/数字之间缺空格（盘古之白）约 %d 处，用 --fix 自动修复"
+        warns.append("中英文/数字之间缺空格（盘古之白）约 %d 处，用 --fix 自动修正"
                      % cjk_missing)
 
     # 不再检查「标记覆盖率」和「加粗 ≤5 处」：那是旧的 ++下划线++ 两层强调体系，
@@ -381,7 +381,7 @@ def main():
     ap.add_argument("--max-para", type=int, default=110)
     ap.add_argument("--max-item", type=int, default=70)
     ap.add_argument("--asset-root", default="")
-    ap.add_argument("--fix", action="store_true", help="自动修复中英文之间的空格")
+    ap.add_argument("--fix", action="store_true", help="自动修正中英文之间的空格")
     ap.add_argument("--warn-only", action="store_true")
     ap.add_argument("--legacy", action="store_true",
                     help="旧交付包（公众号稿.md）只读兼容：::: 容器不报错")
@@ -390,14 +390,14 @@ def main():
     if args.fix:
         changed = fix_cjk(args.input)
         if changed:
-            print("已修复中英文间距 %d 行：" % len(changed))
+            print("已修正中英文间距 %d 行：" % len(changed))
             for num, old, new in changed[:8]:
                 print("  L%d  %s" % (num, old.strip()[:52]))
                 print("   →  %s" % new.strip()[:52])
             if len(changed) > 8:
                 print("  … 其余 %d 行" % (len(changed) - 8))
         else:
-            print("中英文间距无需修复")
+            print("中英文间距无需修正")
         print("")
 
     (errors, warns, info, total, strong, headings,

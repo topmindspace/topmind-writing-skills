@@ -112,6 +112,7 @@
       "topmind-x-article"
     ],
     "scripts/check_article.py": [
+      "topmind-briefs",
       "topmind-wechat-post",
       "topmind-x-article",
       "topmind-revise"
@@ -156,6 +157,11 @@
       "topmind-wechat-post",
       "topmind-x-article",
       "topmind-revise"
+    ],
+    "scripts/post_type_report.py": [
+      "topmind-briefs",
+      "topmind-revise",
+      "topmind-viral-posts"
     ]
   }
 }

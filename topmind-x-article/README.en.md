@@ -1,11 +1,19 @@
-# topmind-x-article · One-Click X Long-Form Publishing
+# topmind-x-article · X long-form
 
 **[中文](./README.md)** | English
 
-One long-form article has a single source `<title>/<title>.md`: by default it goes through topmind-revise and the Markdown is the deliverable;
-when you want to post on X, a "copy → paste → publish" X long-form (Article) package is derived into `out/` on request.
+**One Markdown source, one click into the X Article editor.** Skeleton and "my judgments" first, then the body; `topmind-revise` runs by default when the draft is done. For X, a one-click copy HTML is derived: images embedded in document order, "来源：" lines become captions, tables can become images, and a preview image is rendered so you check it before delivery.
 
-- Version: **v0.4.24** (ships with `@topmindspace/topmind-writing-skills@0.8.47`)
+- Version: **v0.4.25**
+
+Say: "写 X 长文", "出一键复制版", "X 文章排版", "推特长文".
+
+Highlights:
+
+- **Skeleton first**: message, reader, my judgments (3–5, with basis and likely pushback), material-to-judgment ratio per section; a section that is all material gets a hint.
+- **Own diagrams**: method, architecture and comparison pieces get at least one diagram of your view.
+- **Tables as images**: `--tables-as-images` turns tables X can't paste into images, in order.
+- **Preview**: `--preview` renders `out/预览.png` before delivery.
 
 ## Install
 
@@ -23,7 +31,7 @@ python3 scripts/article_scaffold.py --title "My article"
 python3 scripts/check_article.py "My article/"
 
 # 1. On request: one-click-copy HTML (preferred) → My article/out/X长文.html
-python3 scripts/md2x-html.py "My article/My article.md"
+python3 scripts/md2x-html.py "My article/My article.md" --tables-as-images --preview   # preview: out/预览.png
 # reads the source's ![]() lines and embeds images in document order; the cover defaults to frontmatter `cover`;
 # never hand-assemble --images (filename sort order != document order —
 # this once misplaced a whole section's images).

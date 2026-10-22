@@ -65,6 +65,23 @@ SHOULD_PASS = [
     ("duanzi", "我让某 agent 帮我整理这个月的开销\n\n它问我要不要取消三个用不上的订阅\n\n结果第一个取消的就是它自己"),
     ("duanzi", "老板：你这周产出呢\n\n我：agent 在跑"),
     ("duanzi", "两家又同一天发布新模型\n\n最开心的是做评测的博主"),
+    # 高浏览真帖的写法（全部改写过，不放原文）：真疑问、扒料求证、群聊体、卧槽体、引用原话、「？！」首末行、长首行
+    ("short", "难道没人用 Nova 的手机版吗？\n\n不用折腾网络，免费模型也够多\n\n真心推荐，随手用用挺方便..."),
+    ("short", "一直没想明白\n\n这么多模型免费挂着，平台到底靠什么赚钱？"),
+    ("short", "某编辑器里旧入口全指到新版本了，看样子就差官宣\n\n就是希望价格别太离谱！"),
+    ("short", "今日模型群：\n\n青鸟：新版本上线了，价格没动\n\nNova：我们也上线了，价格动了\n\n用户：我只想知道今天哪家不排队"),
+    ("short", "这算翻车吗？\n\n某模型画小猫骑车，第一次车在走，猫没动\n\n第二次猫动了，但腿不动！"),
+    ("short", "某模型出现在别人的代码提交里了...\n\n测试配置里的裁判模型换成了它\n\n挑战才过半，压轴大招要来了？！"),
+    ("short", "某厂回应「一半算力在拍短剧」\n\n说只有 10% 左右花在视频上\n\n那剩下的 90% 到底在干嘛啊？"),
+    ("short", "昨天某工具被攻击了两天，防守的模型干到一半还罢工了。\n\n今天就冒出一个安全专用模型！\n\n这时间点也太巧了吧...！！！"),
+    ("short", "没人觉得看着某模型的输出速度飙起来，也是挺有意思的一件事吗\n\n刚才看到上了 300，有种在电脑上坐高铁的感觉\n\n兄弟们最高到过多少？"),
+    ("short", "卧槽，算完我人傻了\n\n某公司一个机房要放 20 万张卡\n\n我这边还在为一个月 20 块的订阅犹豫..."),
+    ("short", "某模型低调上线，评测全面上涨，价格不变\n\n网页、App、接口已全量切换，权重开源。\n\n1）编程评测：31 → 42\n2）推理评测：37 → 43"),
+    ("duanzi", "让 Nova 帮我砍掉用不上的订阅\n\n它翻完账单列了三个\n\n我说都退了吧\n\n它先把自己退订了"),
+    ("duanzi", "就差 37 个破 4000\n\n路过的朋友帮冲一把，评论我都会回\n\n#蓝V互关 #follow"),
+    ("reply", "等一个手机版"),
+    ("reply", "香，我昨天刚把剪辑软件卸了"),
+    ("short", "我押今晚十一点，有人押明天的吗？"),
     # 讨论词本身、展示反例：不报 W
     ("long", "有人把「不是…而是」当万能句式，其实多数时候删掉前半句就行。"),
     ("long", "改前：综上所述，这次升级值得一试。\n\n改后：这次升级值得一试。"),
@@ -111,11 +128,19 @@ SHOULD_WARN = [
     ("long", "如图所示，增长很快。", "W21"),
     ("short", "老板说：你这周产出呢", "W19"),
     ("duanzi", "我妈说：那我找谁", "W19"),
-    ("short", "太快了！！！", "W17"),
+    ("long", "太快了！！！", "W17"),
     ("short", "第一行\n\n真的吗？？", "W17"),
     ("long", "这一段写得太长了，" * 14, "W14"),
     ("long", "![自制流量图](images/01-x.png)", "W18"),
     ("long", "![趋势](images/01-自制-x.png)\n\n下一段正文。", "W18"),
+    ("short", "某编辑器 3.0 上线了\n\n价格没变\n\n你会换吗？", "W22"),
+    ("duanzi", "我才知道定时帖改一次就重排\n\n你们还知道哪些冷知识？", "W22"),
+    ("short", "两家同一天降价\n\n你们怎么看？", "W22"),
+    ("duanzi", "让 agent 清理警告\n它把规则关了", "W23"),
+    ("reply", "跟带新人先给手册一个道理", "W24"),
+    ("reply", "说白了就是抢入口", "W24"),
+    ("reply", "Apparently this is the new normal", "W25"),
+    ("reply", "这个比喻挺好，以后剪辑软件真要变文物了，我身边已经好几个人卸了在用新的，速度快了很多还免费，没理由不换吧", "W26"),
 ]
 
 SHOULD_HINT = [
@@ -138,6 +163,21 @@ SHOULD_HINT = [
     ("long", "## 一、起因\n\n正文。\n\n## 过程\n\n正文。", "H13"),
     ("long", "## 二、现在：大厂纷纷跟进，谁先？\n\n正文。", "H13"),
     ("long", "# 去AI味这件事\n\n去 AI 味要看场景。", "H14"),
+    ("short", "太快了！！！", "H2"),
+    ("reply", "这个比喻挺好，以后剪辑软件真要变文物了，我身边已经好几个人卸了在用新的", "H15"),
+    ("short", "某模型上线\n\n官方称评测全面上涨", "H17"),
+    ("short", "额度今天又 reset 了", "H18"),
+    ("reply", "我的土办法是先跑一遍小样", "H16"),
+    ("short", "\U0001F6A8重磅！某模型发布\n\n🔹 更快\n🔹 更便宜\n🔹 更聪明", "H19"),
+    ("short", "某工具在 X 上的第一条长帖，讲了自己这一年怎么把团队从十个人做到一百个人", "H21"),
+]
+
+# 关系帖（--kind ops）允许行动号召；快讯（--kind news）首行过长报 W10
+KIND_CASES = [
+    ("duanzi", "ops", "就差 37 个破 4000\n\n评论区聊聊你们都怎么涨粉的", None),
+    ("duanzi", "post", "就差 37 个破 4000\n\n评论区聊聊你们都怎么涨粉的", "W22"),
+    ("short", "news", "某模型低调发布上线，评测得分全面上涨，价格不变，网页、App、接口都已经切换", "W10"),
+    ("short", "post", "某模型低调发布上线，评测得分全面上涨，价格不变，网页、App、接口都已经切换", None),
 ]
 
 fails: list[str] = []
@@ -195,12 +235,26 @@ def main() -> int:
                            capture_output=True, text=True)
         if '"hints"' not in r.stdout:
             fails.append("de_ai_lint --json 输出缺 hints")
-    # 信息设计提示 I1–I8 的回归测试一起跑（只提示、不进 --strict）
+    # 信息设计提示 I1–I9 的回归测试一起跑（只提示、不进 --strict）
     r = subprocess.run([sys.executable, str(ROOT / "scripts" / "test_info_design.py")], capture_output=True, text=True)
     print(r.stdout.strip())
     if r.returncode != 0:
         fails.append("test_info_design 未通过")
-    total = len(SHOULD_PASS) + len(SHOULD_WARN) + len(SHOULD_HINT) + len(SHOULD_NOT_HINT)
+    for genre, kind, text, code in KIND_CASES:
+        w, _h = D.analyze(text, genre, markdown=False, kind=kind)
+        codes = {c for _, c, _ in w}
+        if code and code not in codes:
+            fails.append(f"漏报 {code}（{genre} / {kind}）：{text[:30]!r} → {sorted(codes)}")
+        if not code and codes:
+            fails.append(f"误报 W（{genre} / {kind}）：{text[:30]!r} → {sorted(codes)}")
+    # H20：标题动词和口径对不上（需素材来源文本）
+    _w, h = D.analyze("某模型正式发布\n\n上下文翻倍", "short", markdown=False, sources_text="官方预告｜10 月 20 日")
+    if "H20" not in {c for _, c, _ in h}:
+        fails.append("漏报 H20：标题写正式发布，来源是预告")
+    _w, h = D.analyze("某模型要来了？！\n\n上下文翻倍", "short", markdown=False, sources_text="官方预告｜10 月 20 日")
+    if "H20" in {c for _, c, _ in h}:
+        fails.append("误报 H20：标题已按预告口径写")
+    total = len(KIND_CASES) + len(SHOULD_PASS) + len(SHOULD_WARN) + len(SHOULD_HINT) + len(SHOULD_NOT_HINT)
     if fails:
         print("\n".join("  ✗ " + x for x in fails))
         print(f"[test_lint_rules] {len(fails)} 项失败（共 {total} 条样例）")

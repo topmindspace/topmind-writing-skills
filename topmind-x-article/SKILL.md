@@ -3,12 +3,12 @@ name: topmind-x-article
 description: "X 长文（Article）发布：默认组合 topmind-revise 改稿，交付单源 <文章名>/<文章名>.md（Obsidian 直接看）；要发 X 时再按需派生 out/X长文.html（富文本一键复制+配图内嵌）与 out/X发布稿.txt（纯文本兜底；长文可保留文内链接，派生 X 短帖时链接、原图另发）+ 封面图 + 发布清单，由用户人工点发布。Use when X 长文、发 X 文章、写 X 文章、X article、长文发 X、写 X 长文、X 文章排版、推特长文、twitter 长文、Twitter Article。Do NOT use for 短推文、短帖、快讯与段子写稿（→ topmind-viral-posts 或 topmind-briefs）、现成文字格式化与转段子（→ topmind-format）、把短帖发出去（→ topmind-x，须用户确认）、公众号文章（→ topmind-wechat-post）、只要封面或头图（→ topmind-cover）、单独改稿、去 AI 味与质检（→ topmind-revise）。"
 license: MIT
 metadata:
-  version: "0.4.24"
+  version: "0.4.25"
   action_category: "write"
   triggers: "X 长文, 发 X 文章, 写 X 文章, X article, 长文发 X, X 发长文, X 文章排版, 转纯文本, X 纯文本, X发布稿, 发 article, 一键复制, 写 X 长文, X 长文发布, 推特长文, twitter 长文, Twitter Article"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-18"
+  updated: "2026-10-22"
 ---
 
 # topmind-x-article · X 长文
@@ -46,10 +46,11 @@ Obsidian 里直接能看；用户要发 X 时，再从它派生发布包到 `out
 0. **建文件夹、写稿、改稿（默认组合 topmind-revise，先于任何转换）**：
    - 新文章先建文件夹：`python3 scripts/article_scaffold.py --title "文章名" [--base 目录]`，
      得到 `<文章名>/<文章名>.md` + `images/ cover/ raw/ out/ 参考/` + `骨架.md` + `素材来源.md`（多环境字段和 `参考/` 用法见 references/workspace.md 第 5 条）；已存在就报错，不覆盖。
-   - **先写骨架**：填 `骨架.md`（主要信息、读者、每节要点 / 形式 / 图表计划 / 字数，方法见 `references/information-design.md` 第一、二节）。并列要点、步骤、对照、数据先在骨架里定成列表 / 表格 / 图，写完正文回头对一遍。X 长文不渲染 Markdown 表格的场景按决策表最后一列处理。
+   - **先写骨架**：填 `骨架.md`（主要信息、读者、**我的判断（必填，3–5 条，每条写依据和读者会怎么反驳）**、每节要点 / 形式 / 图表计划 / 素材与判断的比例 / 字数，方法见 `references/information-design.md` 第一、二节）。全文的主线是这几条判断，素材是给判断作证的；一节很长却没有一句判断，`info_design_hints.py` 会提示 I9。并列要点、步骤、对照、数据先在骨架里定成列表 / 表格 / 图，写完正文回头对一遍。X 长文不渲染 Markdown 表格的场景按决策表最后一列处理。
    - **先找图再写字**：按 `references/image-sourcing.md` 找官方 / 原帖 / 第三方原图，按出现顺序存成
      `images/01-xxx.png`、`02-xxx.png`，正文直接写 `![说明](images/01-xxx.png)`，出处写在图片下一行
      「来源：……」，同时记进私有 `素材来源.md`（不进本仓库）。自制图只作兜底，只用于有出处的数据，图注或「来源：」行写「自制」和数据来源（W18）。
+   - **方法论、架构、对比类文章至少 1 张自制图**：把你自己的判断画出来（架构图、光谱图、演进图、流程图），图源 HTML 放 `raw/自制图源/`，导出 PNG 放 `images/`，可以交给 `topmind-poster` 渲染；图注写「自制」和依据。
    - 小标题想要序号就手写「一、」「二、」，不用 `:::` 容器、callout、`![[ ]]`。
    - **改稿交给 `topmind-revise`**（`mode=embed genre=long sources=<文章名>/素材来源.md`）：
      它按 core-voice 改写、跑 `de_ai_lint.py` / `revise_check.py` / `count_words.py`，把终稿和三行摘要
@@ -66,6 +67,8 @@ Obsidian 里直接能看；用户要发 X 时，再从它派生发布包到 `out
    # → <文章名>/out/X长文.html；封面缺省读 frontmatter 的 cover
    ```
    直接读源稿里的 `![]()`，按文档顺序嵌图，不需要再派生 `X长文.md`，也不手工拼 `--images`。
+   - **表格**：X 文章编辑器粘贴不了表格。稿子里有表格时加 `--tables-as-images`，每个表格渲染成一张图按顺序嵌进去（需要本机有 Chrome / Chromium，没有时自动降级成分行列表并给出提示）；不加时页顶会提示「表格粘贴后会丢」。
+   - **图文预览（交付前必做）**：加 `--preview` 生成 `out/预览.png`，整篇按 X 的版式渲染一遍。交付前自己先看一遍预览，图序、图注、表格图、列表都对，再交给用户；交付说明里附上预览图。
    单文件 HTML：内联样式 + 配图 base64 内嵌。浏览器打开后点页顶
    「一键复制全文」，富文本（含格式）进剪贴板，去 X 文章编辑器粘贴。
    转换规则见 `references/x-html-format.md`。
@@ -97,7 +100,8 @@ Obsidian 里直接能看；用户要发 X 时，再从它派生发布包到 `out
 4. **发布清单**：按 `references/publish-checklist.md` 逐项过。
 5. **发布**：用户在 X Article 编辑器粘贴全文、上传封面与配图（按 `[图N]` 编号），
    人工点发布。**API 不发长文**（topmind-x 的 xurl 只覆盖短推文）。
-6. **收尾**：frontmatter 的 `status` 改「已发布」；记录发布时间与链接；全文抓回核对一遍（标题、数字、图序）。
+6. **交付清单**：`<文章名>.md`（默认）；按需 `out/X长文.html`、`out/X发布稿.txt`；`out/预览.png`（出 HTML 时必附）；封面；信源清单另列。
+7. **收尾**：frontmatter 的 `status` 改「已发布」；记录发布时间与链接；全文抓回核对一遍（标题、数字、图序）。
 
 ## 目录约定
 

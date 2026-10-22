@@ -22,7 +22,7 @@
 | `### 标题` | `<h3 style="16px/600">` | S | |
 | `#### 标题` | `<h4 style="15px/600">` | S | |
 | 段落 | `<p style="margin:0 0 {para_gap};line-height:{line_height};letter-spacing:0.5px;text-align:left;word-break:break-word">` | S | `text-align` 只允许 left/center/right |
-| `---` | 嵌套 `<section>`：外层 `margin:32px 0`，内层 `<section style="width:12%;height:2px;background:accent;margin:0 auto">` | S | 宽度用百分比，块级 `margin:0 auto` 居中，**不用 `display:inline-block`**：那是生成器自己的输出，用户无从修复，inline-block 会在合规自检里留下一条洗不掉的 WARN |
+| `---` | 嵌套 `<section>`：外层 `margin:32px 0`，内层 `<section style="width:12%;height:2px;background:accent;margin:0 auto">` | S | 宽度用百分比，块级 `margin:0 auto` 居中，**不用 `display:inline-block`**：那是生成器自己的输出，用户无从修正，inline-block 会在合规自检里留下一条洗不掉的 WARN |
 | `> 引用` | `<section>` + `background:surface` + 大圆角（无衬条，MD3 优雅） | S | **不用 `<blockquote>`**：微信有原生引用样式会覆盖我们的配色 |
 | `- 项` / `1. 项` | `<ul>`/`<ol>` + `<li>`，支持嵌套 | S | 圆点颜色取 accent |
 | ```` ```lang ```` | `<section background:code_bg>` → 语言标签 `<section>` → 代码体 `<section style="white-space:pre-wrap;word-break:break-all">` | S | **不用 `<pre>`**；详见「代码块」 |

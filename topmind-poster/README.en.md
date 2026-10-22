@@ -4,7 +4,9 @@
 
 Rankings, infographics, monthly-report long images, posters — plus the "one image per section" workflow for splitting a long article into N shareable images. Text is 100% controllable, diffable, and iterable.
 
-- Version: **v0.1.8** (ships with `@topmindspace/topmind-writing-skills@0.8.47`)
+- Version: **v0.1.9**
+
+Say: "出张长图", "做个榜单图", "一张图讲清楚", "把这篇拆成分段图".
 
 ## Install
 

@@ -1,14 +1,14 @@
 ---
 name: topmind-format
-description: "X 纯文本格式化：用户贴一段现成文字，只改排版、不改字。转段子 → 每句一行、行与行之间空一行，完全不用 emoji（去掉点缀与列表符号，分点一条一行）；格式化成短文 → 合理分段换行、合理列表（「·」「1）」或 emoji，emoji 不强制，用就按 TopMind 体系）。保留原文事实与措辞，自带保真校验脚本；交付一段可直接复制的纯文本，原文里的链接（含来源）、原图、配图拿出来另发，不混进正文；没有原图时询问是否配图。只交付不代发。Use when 转段子、改成段子格式、段子格式、格式化、格式化一下、格式化成短文、排一下版、整理格式、加空行、分行、加 emoji、X 排版、format。Do NOT use for 从零写段子、涨粉帖（→ topmind-viral-posts）、从零写干货短文、快讯（→ topmind-briefs）、X 长文（→ topmind-x-article）、公众号排版与公众号 HTML（→ topmind-wechat-post）、封面（→ topmind-cover）、改写措辞、去 AI 味改稿与质检（→ topmind-revise）、把帖子发出去（→ topmind-x，须用户确认）。"
+description: "X 纯文本格式化：用户贴一段现成文字，只改排版、不改字。转段子 → 每句一行、行与行之间空一行，完全不用 emoji（去掉点缀与列表符号，分点一条一行）；格式化成短文 → 合理分段换行、合理列表（「·」「1）」或 emoji，emoji 不强制，用就按 TopMind 体系）。保留原文事实与措辞，自带保真校验脚本；交付一段可直接复制的纯文本，原文里的链接（含来源）、原图、配图拿出来另发，不混进正文；没有原图时询问是否配图；几个开头可选时拼成几条完整成品（--variants）；引用块、转发点评按 X 的样子排。只交付不代发。Use when 转段子、改成段子格式、段子格式、格式化、格式化一下、格式化成短文、排一下版、整理格式、加空行、分行、加 emoji、X 排版、format。Do NOT use for 从零写段子、涨粉帖（→ topmind-viral-posts）、从零写干货短文、快讯（→ topmind-briefs）、X 长文（→ topmind-x-article）、公众号排版与公众号 HTML（→ topmind-wechat-post）、封面（→ topmind-cover）、改写措辞、去 AI 味改稿与质检（→ topmind-revise）、把帖子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.1.11"
+  version: "0.1.12"
   action_category: "write"
-  triggers: "转段子, 改成段子, 段子格式, 格式化, 格式化一下, 格式化成短文, 排一下版, 整理格式, 加空行, 分行, 加 emoji, X 排版, format"
+  triggers: "转段子, 改成段子, 段子格式, 格式化, 格式化一下, 格式化成短文, 排一下版, 整理格式, 加空行, 分行, 加 emoji, X 排版, 几个开头, 备选开头, 拼成成品, format"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-18"
+  updated: "2026-10-22"
 ---
 
 # topmind-format · X 纯文本格式化
@@ -65,6 +65,7 @@ metadata:
    python3 scripts/format_text.py 原文.txt --mode short --bullets emoji --title-emoji 🆕 --out 短文.txt   # 选用 emoji 时
    python3 scripts/lint_x_post.py 短文.txt
    python3 scripts/lint_x_post.py 段子.txt --duanzi
+   python3 scripts/format_text.py 原文.txt --mode duanzi --variants 开头备选.txt   # 几个开头可选时
    ```
 
    `format_text.py` 先把 URL、来源行、配图行拿出正文（打印到标准错误的「另发」清单，`--links-out` 另存），再做原文保真校验（去掉空白、列表符号与 emoji 后逐字比对），改动了字就报错；
@@ -72,12 +73,14 @@ metadata:
    `lint_x_post.py` 检查 Markdown 残留、符号混用、表情数量、正文里的 URL / 来源行 / 配图说明（E10–E12）、混入的说明（W12）、AI 套话（W9）、中英文结构套话（W15 / W16）、标点腔（W17）、「人名说：」/ 过渡句 / 复述图片（W19–W21）、段子里的 emoji（`--duanzi`，W13），另给 H 级提示（语境词、话题标签过多等）；段子体的单个行间空行不报错。
    **去 AI 味检查必跑，但本技能不改字**：W 警告的命中按 [references/de-ai-rules.md](references/de-ai-rules.md) 写进改动说明，交给用户决定；H 提示只是语境判断（场景规则见 [references/core-voice.md](references/core-voice.md)），不写进「建议改」。用户明确要求改写时，建议转 `topmind-revise`（只改表达，不改事实）。
    **可转列表 / 表格的地方只报告**：`python3 scripts/info_design_hints.py 原文.md` 给出 I3（并列项可转列表）、I4（对照可转表格）、I1（连续纯文字）等提示，判断方法见 [references/information-design.md](references/information-design.md)。短文体里原文已经是并列分点的照常转「·」「1）」；原文是一段话但内容像列表的，不替用户拆，在改动说明里写「第 N 段可以拆成列表」，由用户决定。
+   **几个开头可选时**：用户给了两三个开头（或首行）让挑，不要只列开头，把每个开头和正文拼成一条完整成品。备选开头写进一个文件，用一行 `---` 隔开，跑 `--variants`：脚本用每个备选替换正文第一段，各自做保真校验，输出用 `---` 分隔的几条成品，每条单独交付一个 `text` 块。
+   **引用块与转发点评**：原文里的 Markdown 引用（`> `）去掉标记、文字单独成段（脚本自动处理）；转发点评只排作者自己写的那几句，被转发的原帖不排进正文，原帖链接放进另发的链接消息。
 5. **交付**（按 [references/x-delivery-contract.md](references/x-delivery-contract.md)）：正文一条（格式化结果，一个独立 `text` 块）→ 链接一条（原文里拿出来的 URL / 来源行，没有就写「用户提供，未附来源」）→ 图片一条（用户给了就列 1–2 张，没有就写「未找到原图」并问要不要配图）→ 改动说明（排版改动、加了哪些 emoji、挪出了哪些链接、发现的疑似错字）。多条帖子每条一块。
 
 ## 边界（硬约束：不改字）
 
 - **不改字**：错别字、口头禅、粗口、标点都保留；看到明显错字或事实可疑处，在交付说明里提一句，由用户决定改不改。
-- **不加事实**：不补数据、不补来源、不加话题标签；原文缺来源时，在交付说明里提醒「这条有数据但没来源」。
+- **不加事实**：不补数据、不补来源、不加话题标签（原文有标签照留，超过 2 个在说明里提一句）；原文缺来源时，在交付说明里提醒「这条有数据但没来源」。
 - **不用 Markdown**：X 稿里没有 `- ` 列表、`#` 标题、`**加粗**`、`> 引用`、`~~删除线~~`、代码围栏；话题标签保留在最后一行。交付前跑 `lint_x_post.py`，错误清零。
 - **只交付不代发**：发帖走 `topmind-x`，须用户确认。
 
@@ -95,17 +98,17 @@ metadata:
 输入：
 
 ```text
-就差96个破3000了，兄弟们今天能不能帮我冲一下？关注我的评论区留言，我挨个回！
+今天把周报写完了，结果发现写的是上周的。白干两小时，谁懂？
 ```
 
 段子体输出：
 
 ```text
-就差96个破3000了，
+今天把周报写完了，
 
-兄弟们今天能不能帮我冲一下？
+结果发现写的是上周的。
 
-关注我的评论区留言，我挨个回！
+白干两小时，谁懂？
 ```
 
 带分点的段子体（输入有 `- ` 列表）：
@@ -118,4 +121,22 @@ metadata:
 中午发原创
 
 睡前回访新关注
+```
+
+几个开头拼成成品（`--variants`，开头备选文件里用 `---` 隔开）：
+
+```text
+今天把周报写完了，
+
+结果发现写的是上周的。
+
+白干两小时，谁懂？
+
+---
+
+周报写了两小时，
+
+结果发现写的是上周的。
+
+白干两小时，谁懂？
 ```

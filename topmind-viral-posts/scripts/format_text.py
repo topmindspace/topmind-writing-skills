@@ -11,6 +11,10 @@
     python3 format_text.py 原文.txt --mode short --links-out 链接.txt   # 另存从正文里拿出来的链接 / 来源行 / 配图行
     python3 format_text.py 原文.txt --mode duanzi --out 段子.txt
     cat 原文.txt | python3 format_text.py - --mode duanzi
+    python3 format_text.py 原文.txt --mode short --variants 开头备选.txt   # 多个开头 → 拼成多条完整成品，每条之间一行 ---
+
+--variants：开头备选文件里每个开头之间用单独一行 --- 隔开。原文第一段（第一个空行之前）被逐个替换成备选开头，
+其余部分不动，输出几条完整成品（第一条是原文自己的开头），条与条之间一行 ---（lint_x_post.py 会按 --- 分条检查）。
 
 规则见 references/emoji-system.md 与 references/x-post-format.md。
 交付规约（x-delivery-contract.md）：正文是一段可直接复制的纯文本，链接、原图、配图另发。
@@ -35,6 +39,8 @@ UL_RE = re.compile(r"^(\s*)[-*+]\s+(\S.*)$")
 OL_RE = re.compile(r"^(\s*)(\d{1,2})[.)、]\s*(\S.*)$")
 SENT_RE = re.compile(r"(?<=[。！？!?…])(?=[^。！？!?…」”’）)\s])")
 EMOJI_RE = re.compile(r"[\U0001F100-\U0001F2FF\U0001F300-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\u2190-\u21FF\u25AA\u25AB\u2022\u20E3\uFE0F\u2460-\u2473]")
+QUOTE_RE = re.compile(r"^\s*>\s?")  # Markdown 引用标记：X 不渲染，去掉标记、保留文字
+
 KEYCAPS = ["0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 
 
@@ -42,6 +48,7 @@ def skeleton(text: str) -> str:
     """保真比对用：去空白、emoji、Markdown 列表标记与序号标记。"""
     out = []
     for ln in text.splitlines():
+        ln = QUOTE_RE.sub("", ln)
         m = UL_RE.match(ln)
         if m:
             ln = m.group(2)
@@ -110,6 +117,7 @@ def duanzi(text: str, split: bool) -> list[str]:
     原文里的 emoji（含人设点缀、情绪表情）一并去掉。"""
     lines: list[str] = []
     for raw in text.splitlines():
+        raw = QUOTE_RE.sub("", raw)
         if not raw.strip():
             continue
         m, o = UL_RE.match(raw.rstrip()), OL_RE.match(raw.rstrip())
@@ -131,7 +139,7 @@ def short(text: str, style: str = "plain") -> list[str]:
     out: list[str] = []
     blank = False
     for raw in text.splitlines():
-        ln = raw.rstrip()
+        ln = QUOTE_RE.sub("", raw).rstrip()
         if not ln.strip():
             if out and not blank:
                 out.append("")
@@ -176,6 +184,7 @@ def main() -> int:
     ap.add_argument("--bullets", choices=["plain", "emoji"], default="plain", help="短文体 Markdown 列表改写方式：plain（· / 1），默认）或 emoji（🔹 / 1️⃣）")
     ap.add_argument("--links-out", help="把从正文拿出的链接 / 来源行 / 配图行写进这个文件（另发用）")
     ap.add_argument("--out", help="输出文件；省略则打印到标准输出")
+    ap.add_argument("--variants", help="开头备选文件（每个开头之间一行 ---）：拼成多条完整成品，每条之间一行 ---")
     args = ap.parse_args()
 
     try:
@@ -191,13 +200,27 @@ def main() -> int:
         print("错误：段子体完全不用 emoji，不接受 --title-emoji / --open / --close（点缀只用于 --mode short）", file=sys.stderr)
         return 2
     body, extra = split_links(text)
-    lines = duanzi(body, args.split) if args.mode == "duanzi" else short(body, args.bullets)
-    lines = decorate(lines, args.title_emoji, args.open_e, args.close_e)
-    result = "\n".join(lines) + "\n"
-
-    if skeleton(result) != skeleton(body):
-        print("错误：原文保真校验未通过（格式化改动了文字）", file=sys.stderr)
-        return 1
+    bodies = [body]
+    if args.variants:
+        try:
+            vt = Path(args.variants).read_text(encoding="utf-8-sig")
+        except (OSError, UnicodeDecodeError) as e:
+            print(f"错误：无法读取 {args.variants}（{e}）", file=sys.stderr)
+            return 2
+        heads = [v.strip("\n") for v in re.split(r"(?m)^\s*---\s*$", vt) if v.strip()]
+        parts = re.split(r"\n\s*\n", body.strip("\n"), maxsplit=1)
+        rest = parts[1] if len(parts) > 1 else ""
+        bodies += [h + ("\n\n" + rest if rest else "") + "\n" for h in heads]
+    outs = []
+    for b in bodies:
+        lines = duanzi(b, args.split) if args.mode == "duanzi" else short(b, args.bullets)
+        lines = decorate(lines, args.title_emoji, args.open_e, args.close_e)
+        res = "\n".join(lines) + "\n"
+        if skeleton(res) != skeleton(b):
+            print("错误：原文保真校验未通过（格式化改动了文字）", file=sys.stderr)
+            return 1
+        outs.append(res)
+    result = "\n---\n\n".join(o.rstrip("\n") + "\n" for o in outs) if len(outs) > 1 else outs[0]
     if extra:
         if args.links_out:
             Path(args.links_out).write_text("\n".join(extra) + "\n", encoding="utf-8")

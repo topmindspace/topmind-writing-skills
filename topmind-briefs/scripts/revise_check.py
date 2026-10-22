@@ -215,7 +215,7 @@ REPORT_TMPL = """# 改稿报告
 - [ ] 篇幅在预算内（有骨架.md 时对照）
 - 结构改动：（light 默认只做低风险改动；重排章节写建议或注明 depth=structure）
 
-脚本提示（info_design_hints.py，I1–I8，只供判断）：
+脚本提示（info_design_hints.py，I1–I9，只供判断）：
 
 {design}
 
@@ -257,7 +257,7 @@ REPORT_TMPL = """# 改稿报告
 
 
 def design_summary(before_path: str, after_path: str) -> dict:
-    """改前 / 改后的信息设计提示（I1–I8，只提示）；同目录没有 info_design_hints.py 时为空。"""
+    """改前 / 改后的信息设计提示（I1–I9，只提示）；同目录没有 info_design_hints.py 时为空。"""
     try:
         import info_design_hints as IDH
     except ImportError:
