@@ -3,12 +3,12 @@ name: topmind-viral-posts
 description: "X 段子 / 爆款短篇：12 类话题段子（不懂就问、扒料求证、故障求证、卧槽体、冷知识、群聊对话、连续剧、算账、站边轻判断、荒诞自嘲、产品反转、借热点）+ 2 类关系帖（互关打卡、互助求码），每类写清适用题材、钩子、结构、收尾、反例和自写示例；动笔前先定「想让哪种人来评论」；段子体排版（一句一行、行间空一行、不用 emoji、对话写「xx：」、反转落在动作上）；真疑问可以问，套路互动钩子不用；话题标签默认不带、最多 2 个；配图按类型定，段子默认纯文字；回复和转发点评口吻；每条交付一段可直接复制的纯文本，链接、原图另发。只起草不代发。Use when 段子、写段子、引流段子、爆款短篇、爆款短文、不懂就问、冷知识段子、卧槽体、群聊体、连续剧、扒料、涨粉帖、互关帖、X 短帖、热点段子、蹭热点、新人报到、打卡帖、回复口吻、话题标签、viral post。Do NOT use for 把现成文字转段子或排版（→ topmind-format）、X 长文（→ topmind-x-article）、公众号文章（→ topmind-wechat-post）、快讯、新品、榜单、羊毛等干货短文（→ topmind-briefs）、封面（→ topmind-cover）、长图海报（→ topmind-poster）、单独改稿与去 AI 味（→ topmind-revise）、把帖子发出去（→ topmind-x，须用户确认）。"
 license: MIT
 metadata:
-  version: "0.3.19"
+  version: "0.3.20"
   action_category: "write"
   triggers: "引流段子, 段子, 写段子, 不懂就问, 冷知识段子, 卧槽体, 群聊体, 连续剧段子, 扒料, 故障帖, 冲粉帖, 爆款短篇, 爆款短文, 涨粉帖, 涨粉短帖, 涨粉段子, 互关帖, 互关求粉, X 短帖, 热点段子, 蹭热点, 新人报到, 打卡帖, 回复口吻, 话题标签, hashtag, traffic post, viral post, X 引流"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-22"
+  updated: "2026-10-24"
 ---
 
 # topmind-viral-posts · X 段子 / 爆款短篇
@@ -28,7 +28,7 @@ metadata:
 
 ## 类型总表
 
-| 类型 | 一句话 | 典型钩子 | 想要的评论 |
+| 类型 | 特点 | 典型钩子 | 想要的评论 |
 |---|---|---|---|
 | A1 不懂就问 | 装傻式真疑问 | 难道没人…吗？/ 一直没想明白 | 懂行的人来解释 |
 | A2 扒料求证 | 线索 + 上次结果 + 猜测问句 | XX 要上新了？！ | 补线索、猜结果 |

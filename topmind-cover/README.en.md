@@ -4,7 +4,7 @@
 
 A reusable skill for generating cover art for X long-form posts and WeChat articles. Goal: **striking, eye-catching, theme-focused**.
 
-- Version: **v0.4.16**
+- Version: **v0.4.17**
 
 Say: "做个封面", "公众号头图", "X 长文头图", "X 短文封面".
 

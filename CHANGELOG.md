@@ -1,3 +1,13 @@
+## [0.8.49] - 2026-10-24
+
+> 根包 0.8.48 → **0.8.49**（patch）；技能版本：topmind-briefs 0.2.27 → 0.2.28、topmind-cover 0.4.16 → 0.4.17、topmind-viral-posts 0.3.19 → 0.3.20、topmind-wechat-post 0.3.19 → 0.3.20。其余技能不变。
+
+### 优化
+
+- 根 README 中英文对齐，安装与技能说明从使用者角度重写；topmind-briefs、topmind-viral-posts 的 README 同步。
+- 几处说明改得更直白：短文开头写法、风格表与段子表的表头、设计规范与主题映射的要点句、WARN 的含义。
+- CHANGELOG 去掉内部备注，只涉及发布流程与 CI 的条目压成一行。
+
 ## [0.8.48] - 2026-10-22
 
 > 全面优化：段子重组为 12 + 2 种写法，短文按 9 种内容类型写，去 AI 味规则新增社交短帖模式和问句口径条目，长文骨架先写「我的判断」并在交付前出图文预览；根 README 和各技能 README 改为能力优先。
@@ -345,7 +355,7 @@
 
 - **topmind-briefs**：短文不是长文，默认不出 HTML——X 版是一段纯文本，公众号版是 Markdown；HTML 脚本只在用户明确要求时使用。新增「尊重原始信息」铁律与交付格式，交付时写明信息来源、发布时间、来源链接与图片来源。
 - **配图口径统一**：原图优先；没有原图时封面可选（不再默认配封面）。`x-post-format.md`、briefs、viral-posts、cover 的「X 短文封面」场景说明同步。
-- **topmind-viral-posts**：类型从 14 扩到 18（新增冷知识揭秘、差额冲刺、反差对照、自问自答），新增「段子体排版」（一句一行、行间空行）与「组合玩法（钩子 × 主体 × 收尾）」两节、8 种常用组合；示例按用户提供的两条参考帖改写（未复制第三方截图与账号信息）；表情规则接入 emoji 体系。
+- **topmind-viral-posts**：类型从 14 扩到 18（新增冷知识揭秘、差额冲刺、反差对照、自问自答），新增「段子体排版」（一句一行、行间空行）与「组合玩法（钩子 × 主体 × 收尾）」两节、8 种常用组合；示例改为原创（不含第三方截图与账号信息）；表情规则接入 emoji 体系。
 
 ### 优化
 
@@ -460,44 +470,19 @@
 
 > 根包 0.8.24 → **0.8.25**（patch）；各技能版本不变。
 
-> - 优化：**npm 包不再带 package-lock.json**。0.8.24 的 npm 包里有 6 个锁文件：briefs、cover、wechat-post、x-article 提交在仓库里的 4 个，
->   以及技能门禁在 poster、viral-posts 下临时生成的 2 个。6 个技能都没有 npm 依赖，这些锁文件里没有锁定任何包，用户按目录安装也用不上
-> - 优化：技能门禁（`scripts/ci_skill_gates.sh`、`scripts/run_skill_gates.js install`）在技能没有运行时依赖时跳过 `npm install`，不再生成临时锁文件；
->   以后有依赖时，有锁文件用 `npm ci --omit=dev`，没有则用 `npm install --omit=dev --no-package-lock`
-> - 优化：删除仓库里 4 个空锁文件，`.gitignore` 忽略 `package-lock.json`（以后某个技能加了依赖，按注释为它加例外后提交）；
->   `scripts/sync_npm_files.js` 为每个技能生成 `!<skill>/package-lock.json` 排除项，`package.json` `files` 同步更新
-> - 优化：`scripts/check_npm_pack.js` 增加拦截 `package-lock.json`、`npm-shrinkwrap.json`、`node_modules/`
-> - 优化：CI 与 Release 的 `setup-node` 去掉 `cache: npm`（没有依赖可缓存，原先指向的 `topmind-briefs/package-lock.json` 已删除）
-> - 本地验证：全部门禁与打包步骤之后 `npm pack --dry-run`：123 → 117 个文件，锁文件 6 → 0；临时放入锁文件并去掉排除项时，`check_npm_pack.js` 报错退出
+> - 优化：npm 包不再附带空的 `package-lock.json`；其余为发布流程与 CI 调整，无用户可见变化
 
 ## [0.8.24] - 2026-10-08
 
 > 根包 0.8.23 → **0.8.24**（patch）；各技能版本不变。
 
-> - 优化：**npm 包不再带 Release 打包产物**。Release 流程在 `npm publish` 之前运行 `package_skill.py`，会在各技能下生成
->   `dist/`（`<skill>.zip` 与 `<skill>.manifest.json`），0.8.23 的 npm 包因此多带了 briefs / poster / viral-posts 的 6 个文件（约 111 KB）。
->   `scripts/sync_npm_files.js` 现在为每个发现到的技能生成 `!<skill>/dist/` 排除项，`package.json` `files` 同步更新；
->   这些产物仍作为 GitHub Release 附件发布
-> - 优化：新增 `scripts/check_npm_pack.js`（`npm run check:pack`），按 `npm pack --dry-run` 的实际文件清单检查，
->   出现 `dist/`、`release-assets/`、`__pycache__/`、`*.pyc` 即失败。Release 在打包之后、建 Release 之前运行；
->   CI `Skill package gates` 先按 Release 同口径真实打包再运行，问题在推送 main 时就能发现
-> - 优化：GitHub Actions 改用 Node 24 运行时的版本：`actions/checkout` v4 → v7、`actions/setup-node` v4 → v7、`actions/setup-python` v5 → v7、
->   `softprops/action-gh-release` v2 → v3；ci / release / deprecate-npm-2x 的 `node-version` 20 → 24（本地 Node 24 跑全部门禁与打包步骤通过）
-> - 优化：`runs-on` 由 `ubuntu-latest` 固定为 `ubuntu-24.04`：GitHub 在 2026-10-19 至 11-19 期间把 `ubuntu-latest` 逐步切到 Ubuntu 26.04，先停在当前已验证的镜像，切 26.04 另行验证后再改
-> - 本地验证：打包 6 个技能后 `npm pack --dry-run`：127 → 121 个文件，tarball 2,188,530 B → 2,090,653 B，
->   解包 2,842,215 B → 2,731,152 B，`dist/` 文件 6 → 0。完整走一遍 Release 步骤时为 123 个文件：技能门禁会在
->   poster、viral-posts 下临时生成无依赖的 `package-lock.json`（各约 200 B），随包发布，不影响使用
+> - 优化：npm 包不再附带 Release 打包产物（`dist/`），这些文件仍作为 GitHub Release 附件发布；其余为发布流程与 CI 调整
 
 ## [0.8.23] - 2026-10-08
 
 > 根包 0.8.22 → **0.8.23**（patch）；各技能版本不变。0.8.22 已打 tag 但未生成 Release、未发布 npm，其全部内容随 0.8.23 一并发布（见下方 0.8.22 条目）。
 
-> - 优化：**Release 打包不受运行时缓存影响**。`package_skill.py`（shared 真源 + 6 份副本）新增 `IGNORE_RES`，
->   `__pycache__/`、`*.pyc`、`*.pyo`、`.DS_Store` 在校验与打包时都直接跳过，不再判为「不应进包的文件」；
->   `scripts/_*`、`.env` 等仍按原规则拦截
-> - 优化：`release.yml` 在 job 级设置 `PYTHONDONTWRITEBYTECODE=1`，负向测试运行脚本时不写字节码缓存，打包与 npm 包保持干净
-> - 优化：CI `Skill package gates` 在负向测试之后追加「Release packaging check」，按 Release 同口径逐技能跑 `package_skill.py --check`，
->   打包问题在推送 main 时就能发现，不必等到打 tag
+> - 发布流程与 CI 调整，无用户可见变化
 
 ## [0.8.22] - 2026-10-08
 
@@ -510,7 +495,7 @@
 >     找不到时回落内置 `scan_ai_flavor_builtin.py` 并在 stderr 提示缺姿态维度（0.8.43 起改为环境变量 `$TOPMIND_AI_SCAN` 指定）
 >   - `md2wechat.py` 两版逐段比对：本仓 1801 行版本已包含旧版全部能力，并多出括号 URL、嵌套围栏、行内图片管线、
 >     原子写、坏输入干净报错等处理，保留本仓版本；旧版独有的左衬条样式、自我介绍签名行、minimal-ink 默认主题
->     是 2026-10-01/02 按用户要求去掉的，不恢复
+>     此前已去掉，不恢复
 >   - references 合入：`workflow.md` 补溯源审计步骤与 `word_count` 口径说明，`writing-quality.md` 补作者姿态分与清单文档误判说明
 > - 优化：**去掉写死的路径、类别编号与年份**。新增 `scripts/wechat_paths.py`，`new-article / sync-status / sync-mapping / push-to-topstream`
 >   共用：`--base` → `TOPMIND_WECHAT_BASE` → `--workspace` / `TOPMIND_WORKSPACE` 下按名称发现「长文」类别（兼容「创作」「专题」）
@@ -558,7 +543,7 @@
 >   含「一段一图」分段图批量出图工作流（生成器 + 渲染器）
 > - 新增 `scripts/render_poster.py`：一条命令跑完截图 → 扫底 → 裁切，支持批量、自动加大窗口重试、`--chrome` / `CHROME_PATH` 指定浏览器
 > - 新增 `references/layout-recipes.md`：画布尺寸 / 字号层级 / 浅底深底配色 / 栅格 / 进度条 / 常用版式模板
-> - 沉淀 7 个实测坑：macOS 沙箱下必须 `--no-sandbox`、柱状图填充整条消失（`<span>` 需 `display:block`）、
+> - 记录 7 条实测经验：macOS 沙箱下必须 `--no-sandbox`、柱状图填充整条消失（`<span>` 需 `display:block`）、
 >   裁切基准色不能取左上角（顶部装饰层会污染）、PNG 重采样反而变大、`str.format()` 拼 CSS 报 KeyError 等
 > - 定位说明：本技能只管**出图那一环**；封面走 `topmind-cover`，PPTX 走 `top-ppt-html`
 > - README 技能表补齐 **topmind-viral-posts**（英文版此前缺）、校正各技能版本号与安装器版本
@@ -567,15 +552,15 @@
 
 > 根包 0.8.18 → **0.8.19**（patch）；技能：topmind-viral-posts 0.3.0 → **0.3.1**（patch，纯运营 7 型并入）。
 
-> - topmind-viral-posts 新增 **8-14 型纯运营吸粉模板**（暴论型/数据晒单型/真诚交友型/吐槽共鸣型/干货技巧型/经验忠告型/执行清单型），基于 2026-10-03 用户提供的 10 张 X 爆款截图深度拆解
+> - topmind-viral-posts 新增 **8-14 型纯运营吸粉模板**（暴论型/数据晒单型/真诚交友型/吐槽共鸣型/干货技巧型/经验忠告型/执行清单型）
 > - 新增 **Hashtag 矩阵**（#蓝V互关 #follow #真诚交友 #浇朋友 黄金组合）与 **圈内用语词典**（浇朋友/蓝朋友/出摊/串门/上岸）
-> - 8-14 型为纯 X 运营/吸粉内容，不蹭新闻热点；双份真源合并，本地 skills/ 目录的 0.2.0 内容已并入正式仓库
+> - 8-14 型为纯 X 运营/吸粉内容，不蹭新闻热点
 
 ## [0.8.18] - 2026-10-03
 
 > 根包 0.8.17 → **0.8.18**（patch）；技能：topmind-wechat-post 0.3.1 → **0.3.2**（patch，衬条禁令铁律）。
 
-> - design.md 设计要点新增 **禁止顶部/侧边衬条和颜色条铁律**（用户明确）：用浅色调色板区分区块，不用硬色条；MD3 真风格 = 浅色调色块 + 圆角 + 柔和阴影 + 标签药丸
+> - design.md 设计要点新增 **禁止顶部/侧边衬条和颜色条铁律**：用浅色调色板区分区块，不用硬色条；MD3 真风格 = 浅色调色块 + 圆角 + 柔和阴影 + 标签药丸
 
 ## [0.8.17] - 2026-10-03
 
@@ -583,7 +568,7 @@
 
 > - design.md 新增 **MD3 卡片规范**：禁止 matplotlib 做信息图，走 HTML+CSS → Playwright 截图 → PNG 路线；卡片不要衬条，表格式图表用浅色风格
 > - writing-quality.md 事实关新增 **第三方图片核实三问**：数字是否过于整齐、时间是否对得上、总量是否对得上
-> - writing-quality.md 文字关新增 **去AI味补充清单**（用户亲口）："不是…是…"对比句式、一句话总结、真正的、过度简洁、中立措辞
+> - writing-quality.md 文字关新增 **去AI味补充清单**："不是…是…"对比句式、一句话总结、真正的、过度简洁、中立措辞
 
 ## [0.8.16] - 2026-10-03
 
@@ -669,7 +654,7 @@
 > 根包 0.8.6 → **0.8.7**（patch）；技能：topmind-briefs 0.2.4 → **0.2.5**、
 > topmind-x-article 0.4.5 → **0.4.6**、topmind-wechat-post 0.2.8 → **0.2.9**（patch）。
 >
-> - 全仓：writing-principles.md 第五节新增"很老"→"可以追溯很早之前"（用户亲口改稿）。
+> - 全仓：writing-principles.md 第五节新增"很老"→"可以追溯很早之前"。
 
 ## [0.8.6] - 2026-10-02
 
@@ -697,7 +682,7 @@
 > topmind-x-article 0.4.2 → **0.4.3**、topmind-cover 0.4.0 → **0.4.1**（均为 patch）。
 >
 > - wechat-post：`references/writing-principles.md` 新增第五节"措辞偏好"
->   （2026-10-02 用户亲手改稿确立：不用噱头式导语/"一句话"伪简洁/绝对化断言/
+>   （不用噱头式导语/"一句话"伪简洁/绝对化断言/
 >   "我的判断"/"全文的题眼"/"同一份报告"/"坑"字/看不懂的梗；断言留余地、
 >   简洁不取巧、评论腔删掉）；SKILL.md 实战沉淀追加 v2 措辞整改、PIL 结尾
 >   总结插图做法、topmind-cover 封面流程
@@ -1181,8 +1166,7 @@
 
 ### topmind-cover：6 张样张版式级重设计（差异化纠偏）
 
-- 用户指出第四轮样张仍是"翻版"（版式结构照搬 7 张参考封面，只换文案形象）。
-  本轮按**版式级标准**重做：只保留抽象原则（标题是视觉重心/信息分层/留白呼吸感），
+- 上一轮样张的版式结构与参考封面过于接近，本轮按**版式级标准**重做：只保留抽象原则（标题是视觉重心/信息分层/留白呼吸感），
   6 张重设计（gan-huo 居中构图+深炭灰暖橙、big-type 单行超大书法字+奶油亮底、
   brand-launch 深海军蓝+荧光绿、tutorial-steps 横向时间线+墨色题字、
   ip-fun 数字改右下角印章+橙黄暖色、news-flash 纯黑单色+纸纹+俯视静物大改），
@@ -1258,7 +1242,7 @@
   教程步骤（`tutorial-steps`）/ IP 趣味（`ip-fun`）/ 资讯快报（`news-flash`）/
   极简留白（`minimal`，保留）/ 杂志编辑（`magazine`，保留），
   每种含适用场景、构图公式、配色 hex、标题写法规范（4~8 字、数字/关键词彩色突出）、
-  中英 prompt 配方、避坑；删除旧 6 风格。
+  中英 prompt 配方、常见问题；删除旧 6 风格。
 - `assets/examples/` 样张全部重制：**16 张**（8 风格 × 1200×675 主图 + 900×383 公众号中央裁剪版）
   + `overview.png`（8 宫格总览图），逐张目检（标题逐字准确、无乱码、中央 60% 安全区），
   7 次返工均为"底部元素超出安全区"；旧 12 张移除。
@@ -1282,7 +1266,7 @@
 
 - `references/cover-styles.md` 扩为 **6 种风格库**：震撼大字报（`big-poster`）/ 科技未来感（`tech-future`）/
   杂志编辑风（`magazine`）/ 极简留白（`minimal`）/ 国潮插画（`guochao`）/ 赛博故障艺术（`cyber-glitch`），
-  每种含适用场景、配色 hex、字体建议、中英 prompt 配方、避坑。
+  每种含适用场景、配色 hex、字体建议、中英 prompt 配方、常见问题。
 - `assets/examples/` 新增 **12 张示例图**（6 风格 × 1200×675 主图 + 900×383 公众号中央裁剪版，共约 6.4MB），
   附 `assets/examples/README.md`（清单 + 安全区说明 + 复用声明），随 npm 包发布。
 - SKILL.md 工作流新增"**步骤 0 选风格**"（三步必做：按题材 6 选 1 → 看示例图 → 按配方组 prompt）。
@@ -1293,7 +1277,7 @@
 
 - top-ppt-html / topmind-wechat-post 的 SKILL.md `description` 改**第三人称**（降误触发）；
   topmind-cover `description` 同步微调（"一次配齐"→"全流程覆盖"），`triggers` 新增 `缩略图` / `thumbnail`。
-- topmind-wechat-post：站外取源坑与回推命令串收敛到 `references/workflow.md`，SKILL.md 只留索引；
+- topmind-wechat-post：站外取源注意事项与回推命令收敛到 `references/workflow.md`，SKILL.md 只留索引；
   新增跨技能路由索引（封面配图 → topmind-cover，X 长文 → topmind-x-article）；
   二级标题序号由排版层自动生成（不再手写）。
 - 各技能 README（中/英）与 SKILL.md 对齐：cover 新增风格库与示例图章节、用法改"步骤 0 选风格"；
@@ -1314,7 +1298,7 @@
   交付包 / 审校改写 / 质量三关（事实·逻辑·去 AI 味 ≥85）/ 状态同步 / 微信内联排版（`md2wechat --embed-images`）/ 发布清单。
   适配点：frontmatter 去 topmind-pack 专有键（`degradation`/`action_category`/`entrypoint`），
   跨 skill 引用改为通用表述，`writing-quality.md` 改用技能自带 `scan_ai_flavor.py`
-  （原引用本机私有路径），`md2wechat.py` 缺失输入改干净报错（原 Traceback）。
+  （不再依赖技能外的脚本），`md2wechat.py` 缺失输入改干净报错（原 Traceback）。
 - **topmind-x-article `0.1.0`**：X 长文一键发布。`md2x.py` 把 Markdown 转可直接粘贴进
   X Article 编辑器的纯文本（标题→纯文本行、加粗/斜体去标记、链接→`文字（url）`、
   图片→`[图N]`+文末配图清单、表格→"项：值"列表）；`references/publish-checklist.md`
@@ -1424,7 +1408,7 @@
 ### Craft · 结论条去 AI 味：取消左侧 accent 装饰轨
 
 #### 设计决策（硬原则）
-- **结论条无 left rail**：用户明确拒绝结论条左侧色条为 AI-flavored chrome。`.sowhat` / PPTX `soWhatBar()` 改为 **MD3 tonal surface 满铺**（`accent-soft` + 细描边）+ 舒适字阶 / `line-height:1.65` / 内边距 `--sp-5`/`--sp-6`；**禁止**竖色条、霓虹边、装饰 chip 当强调。
+- **结论条无 left rail**：结论条不用左侧色条。`.sowhat` / PPTX `soWhatBar()` 改为 **MD3 tonal surface 满铺**（`accent-soft` + 细描边）+ 舒适字阶 / `line-height:1.65` / 内边距 `--sp-5`/`--sp-6`；**禁止**竖色条、霓虹边、装饰 chip 当强调。
 - 写入 `design-system` §去 AI 味、`content-rules`、`components-atoms`、`SKILL`、`layout-constants.aiFlavor.visual.forbidConclusionLeftRail`。
 - 同类收口 `.note` 同步去掉左轨，改 tonal 细描边；`.flagbar`（待核实）保留细强调（功能态，非结论装饰）。
 
@@ -1661,7 +1645,7 @@
 
 ### top-ppt-html · Presentation Craft（Mode A 工艺）
 
-- **P0-1 图表多样性（用户明确保留）**：**不降** `minTypes.presentation`（仍为 **4**）；registry/advanced 图种保留。纪律改为「按内容选型拉开多样」+ 禁反模式（简单全幅 / 极偏 donut / 为过门禁硬上冷门图）；playbook §五 / layout-qa 同步。
+- **P0-1 图表多样性（保留）**：**不降** `minTypes.presentation`（仍为 **4**）；registry/advanced 图种保留。纪律改为「按内容选型拉开多样」+ 禁反模式（简单全幅 / 极偏 donut / 为过门禁硬上冷门图）；playbook §五 / layout-qa 同步。
 - **P0-2 default-surface**：升为 Mode A / Fast 演示主读面（12 页型 + 8 核图 + V1–V4；P5–P12/advanced 按需）；SKILL L2 索引指向。
 - **P0-3 layout-qa 默认**：`validate_report --strict` 在 presentation 下自动 `--layout-qa`；`quality_gate` 同口径；B/C 不强制。
 - **P0-4 主张标题**：Mode A action/claim title（禁话题标签）写入 content-rules / modes；校验 WARN。

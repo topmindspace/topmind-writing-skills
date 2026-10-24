@@ -12,7 +12,7 @@
 - 包：<https://www.npmjs.com/package/@topmindspace/topmind-writing-skills>
 - 仓库：<https://github.com/topmindspace/topmind-writing-skills>
 
-当前线：安装器 **0.8.48** · 技能 topmind-cover **0.4.16** · topmind-wechat-post **0.3.19** · topmind-x-article **0.4.25** · topmind-briefs **0.2.27** · topmind-viral-posts **0.3.19** · topmind-format **0.1.12** · topmind-revise **0.1.4** · topmind-poster **0.1.9**（整仓同 tag 发版；见 CHANGELOG）。
+当前线：安装器 **0.8.49** · 技能 topmind-cover **0.4.17** · topmind-wechat-post **0.3.20** · topmind-x-article **0.4.25** · topmind-briefs **0.2.28** · topmind-viral-posts **0.3.20** · topmind-format **0.1.12** · topmind-revise **0.1.4** · topmind-poster **0.1.9**（整仓同 tag 发版；见 CHANGELOG）。
 公众号技能的唯一真源是本仓 `topmind-wechat-post`；topmind-skills 4.15.2 起删除了旧的 `topmind-wechat`。
 演示技能已独立为 `topmind-presentation`（仓库 `topmind-presentation`），不在本仓发布线内。
 
@@ -38,7 +38,7 @@ npm 上的旧包 `@topmindspace/tms-skills` **2.0.0–2.1.1 已弃用**（仓库
 
 ## 版本策略（务必遵守）
 
-**整仓同 tag**：`git tag vX.Y.Z` 的 `X.Y.Z` = 根 `package.json` 的 `version`（即安装器 version，如当前 v0.8.48）；tag 号不代表任何技能版本。**各技能 `version` 独立演进**（如 topmind-x-article 0.4.0、topmind-cover 0.3.0），不与 tag 号绑定。
+**整仓同 tag**：`git tag vX.Y.Z` 的 `X.Y.Z` = 根 `package.json` 的 `version`（即安装器 version，如当前 v0.8.49）；tag 号不代表任何技能版本。**各技能 `version` 独立演进**（如 topmind-x-article 0.4.0、topmind-cover 0.3.0），不与 tag 号绑定。
 
 | 包 | 事实源 | 规则 |
 |----|--------|------|
@@ -46,7 +46,7 @@ npm 上的旧包 `@topmindspace/tms-skills` **2.0.0–2.1.1 已弃用**（仓库
 | 技能 | 各 `<skill-id>/package.json` 的 `version`，与 `SKILL.md` frontmatter 的 `metadata.version` 同值 | 独立 semver；只随技能自身实质变更 bump |
 
 - **默认只升 patch**（从最小位升）；minor 只在新增技能等明显扩展时用。
-- **建议**：版本号只在准备发版的那次提交里升，日常改动先写 CHANGELOG。0.8.17–0.8.20 曾升了号却没打 tag，npm 从 0.8.16 直接跳到 0.8.21；升了号就尽快发版，或在 CHANGELOG 注明未发布。
+- **建议**：版本号只在准备发版的那次提交里升，日常改动先写 CHANGELOG；升了号就尽快发版，或在 CHANGELOG 注明未发布。
 - **major 仅用于破坏性变更**：技能 id、CLI 名、注入标记、安装路径、不兼容模型字段。
 - **禁止**无实质变更时跳大版本；禁止用版本号表达心情。
 - npm 版本发布后不可覆盖；有变更就要新号。

@@ -4,7 +4,7 @@ English | [中文](./README.md)
 
 **One thing, then stop.** News, previews, launches, deals, rankings, papers, hands-on results and one-line takes: nine content types, each with its own opening and ending. The X version is one block of plain text you can paste straight in, facts and highlight at a glance; links, original images and caliber notes are delivered separately. The WeChat version is 300–800 characters of Markdown. Writes in Chinese by default.
 
-- Version: **v0.2.27**
+- Version: **v0.2.28**
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-briefs

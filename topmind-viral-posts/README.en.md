@@ -4,7 +4,7 @@ English | [中文](./README.md)
 
 **One sentence per line, zero emoji, read in three seconds.** 12 topical patterns plus 2 relationship patterns, each with topics, hook, structure, ending, counter-examples and original samples. Decide who you want in the replies, then pick a pattern. The skill writes in Chinese by default.
 
-- Version: **v0.3.19**
+- Version: **v0.3.20**
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-viral-posts

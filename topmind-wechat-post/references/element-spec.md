@@ -156,4 +156,4 @@ px 固定宽度；`white-space:pre/nowrap`；`position/float/transform/opacity`�
 `border-radius`（可能被丢，属优雅降级）、图片 `width:100%`、`id` 属性、
 `<img width="...">` 属性
 
-WARN 不是「可以忽略」，而是「已知风险，需确认是否可接受」。
+WARN 表示「已知风险，需确认是否可接受」，不能直接忽略。

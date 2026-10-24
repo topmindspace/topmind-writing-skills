@@ -4,7 +4,7 @@
 
 **The whole path of a WeChat article, from topic to publish checklist.** Single-source article folder, "my judgments" in the skeleton, three quality gates (facts / logic / de-AI, run by `topmind-revise`), WeChat layout with embedded images (paste and the images come along), a preview image before delivery, publish checklist and status sync.
 
-- Version: **v0.3.19**
+- Version: **v0.3.20**
 
 Say: "写公众号", "公众号排版", "公众号定稿", "出公众号发布清单".
 

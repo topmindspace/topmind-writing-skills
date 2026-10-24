@@ -4,7 +4,7 @@
 
 **一件事，讲完就停。** 快讯、预告、新品、羊毛、榜单、论文、实测、观点一句话，九种内容类型各有各的首行和收尾。X 版是一段可以直接复制的纯文本，一眼就看到事实和亮点；链接、原图、口径提醒另发。公众号版 300–800 字 Markdown。
 
-- 版本：**v0.2.27**
+- 版本：**v0.2.28**
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-briefs

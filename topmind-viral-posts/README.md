@@ -4,7 +4,7 @@
 
 **一句一行、零 emoji、三秒看完的 X 短帖。** 12 种话题段子 + 2 种关系帖，每种都有适用题材、钩子、结构、收尾、反例和原创示例。先想清楚想让哪种人来评论，再挑写法。
 
-- 版本：**v0.3.19**
+- 版本：**v0.3.20**
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-viral-posts
