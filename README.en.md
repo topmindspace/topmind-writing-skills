@@ -28,7 +28,7 @@ npx @topmindspace/topmind-writing-skills list                          # see all
 
 ## What it writes
 
-| Category | Skill | In one line | Say |
+| Category | Skill | What it does | Say |
 |---|---|---|---|
 | Duanzi | [`topmind-viral-posts`](./topmind-viral-posts/) | One sentence per line, zero emoji, 14 patterns | "来条段子", "不懂就问", "写个群聊体" |
 | Briefs | [`topmind-briefs`](./topmind-briefs/) | One thing, then stop: news, previews, launches, deals, rankings, papers, hands-on | "发个快讯", "来篇短的", "写条预告" |
@@ -43,7 +43,7 @@ npx @topmindspace/topmind-writing-skills list                          # see all
 
 Decide **who you want in the replies**, then pick a pattern:
 
-| Pattern | In one line | Typical opening | Replies you want |
+| Pattern | What it is | Typical opening | Replies you want |
 |---|---|---|---|
 | A1 Genuine question | Play dumb, ask what you really don't know | "Doesn't anyone use…?" | Experts explaining |
 | A2 Leak check | Clue + last time + a guess | "XX is about to ship?!" | More clues, guesses |
@@ -172,6 +172,8 @@ The persona is **an ordinary person still learning**: talks about what they saw 
 
 ### Scripts hint, people decide
 
+Run these inside the skill folder (for example `topmind-briefs/` or `topmind-revise/`):
+
 ```bash
 python3 scripts/lint_x_post.py X短文.txt --kind news   # news brief
 python3 scripts/lint_x_post.py 段子.txt --duanzi        # duanzi
@@ -232,7 +234,7 @@ topmind-writing-skills/
 - Pushing main is visible on GitHub immediately; a `vX.Y.Z` tag creates a Release and publishes to npm. Each skill's version lives in its own `SKILL.md` and the [CHANGELOG](./CHANGELOG.md).
 - See [docs/PUBLISHING.md](./docs/PUBLISHING.md) · [docs/ci.md](./docs/ci.md).
 
-> The business presentation skill now lives in its own repo: [`topmind-presentation`](https://github.com/topmindspace/topmind-presentation).
+For business presentations, install [`topmind-presentation`](https://github.com/topmindspace/topmind-presentation) separately.
 
 </details>
 

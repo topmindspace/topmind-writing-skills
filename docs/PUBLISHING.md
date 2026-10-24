@@ -88,7 +88,7 @@ CI/Release 细节见 [`docs/ci.md`](./ci.md)。
      （tag 号是安装器版本 ≠ 任何技能版本，见上文版本策略）。
    - 门禁 → 技能 zip → GitHub Release。
    - `npm publish`：先查 registry，版本已存在则跳过；**`NPM_TOKEN` 缺失 → 显式失败**（拒绝发无 npm 包的 Release）；
-     publish 命中 **E409 / 版本冲突 → 显式失败**（说明打 tag 前没 bump 版本；禁止复用 tag 号）。
+     publish 报 E409 / 版本冲突时再查一次 registry：已可见算成功，不可见则**失败**（打 tag 前没 bump 版本；禁止复用 tag 号）。
    - prune Releases（留最近 2 个；git tags 保留不删）。
 6. 验证：`npm view @topmindspace/topmind-writing-skills version`
 

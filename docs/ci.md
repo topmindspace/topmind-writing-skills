@@ -45,13 +45,14 @@ npm run check && npm run audit && npm run privacy
 Release 的 publish 步骤：
 
 1. 无 `NPM_TOKEN` → **显式失败**（拒绝发无 npm 包的 Release）
-2. `npm publish` 返回 **E409 / 版本冲突** → **显式失败**（说明打 tag 前没 bump 版本；禁止复用 tag 号）
-3. 其它错误 → 失败
+2. 该版本已在 npm 上 → 跳过发布，视为成功（同一 tag 重跑不会失败）
+3. `npm publish` 报 E409 / 版本冲突 → 再查一次 registry：版本已可见算成功；不可见则失败，提示先 bump 版本再打新 tag
+4. 其它错误 → 失败
 
 ## 重跑
 
 - PR / push：GitHub Actions → 对应 workflow → **Re-run failed jobs** / **Re-run all jobs**
-- 发版：修好后推新 commit + 新 tag（npm 版本不可覆盖；已发布号走上面的幂等路径）
+- 发版：修好后推新 commit + 新 tag（npm 版本不可覆盖；同一 tag 重跑时，已发布的版本会被跳过）
 - 本地：修完再跑 `bash scripts/ci_skill_gates.sh`，确认 exit 0 再推
 
 ## 硬约束（不为过 CI 而削弱）

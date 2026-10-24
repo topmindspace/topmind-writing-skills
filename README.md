@@ -28,7 +28,7 @@ npx @topmindspace/topmind-writing-skills list                          # 看全�
 
 ## 能写什么
 
-| 类别 | 技能 | 一句话 | 你可以这样说 |
+| 类别 | 技能 | 用途 | 你可以这样说 |
 |---|---|---|---|
 | 段子 | [`topmind-viral-posts`](./topmind-viral-posts/) | 一句一行、零 emoji 的 X 短帖，14 种写法 | 「来条段子」「不懂就问」「写个群聊体」 |
 | 短文 | [`topmind-briefs`](./topmind-briefs/) | 一件事讲完就停：快讯、预告、新品、羊毛、榜单、论文、实测 | 「发个快讯」「来篇短的」「写条预告」 |
@@ -39,13 +39,13 @@ npx @topmindspace/topmind-writing-skills list                          # 看全�
 | 封面 | [`topmind-cover`](./topmind-cover/) | X 和公众号封面：22 种风格、标题逐字核对 | 「做个封面」「头图」 |
 | 长图 | [`topmind-poster`](./topmind-poster/) | HTML → 高清长图 / 海报 / 信息图，文字数字逐字正确 | 「出张长图」「做个榜单图」 |
 
-> **短文** = X 纯文本帖，1000 字以内都行；**长文** = X Article 或公众号长文；**段子** = 一句一行、行间空一行的短帖。
+**短文** = X 纯文本帖，1000 字以内都行；**长文** = X Article 或公众号长文；**段子** = 一句一行、行间空一行的短帖。
 
 ## 段子：14 种写法
 
 先想清楚**想让哪种人来评论**，再挑写法：
 
-| 写法 | 一句话 | 典型开头 | 想要的评论 |
+| 写法 | 特点 | 典型开头 | 想要的评论 |
 |---|---|---|---|
 | A1 不懂就问 | 装傻式真疑问 | 难道没人…吗？ | 懂行的人来解释 |
 | A2 扒料求证 | 线索 + 上次结果 + 猜测 | XX 要上新了？！ | 补线索、猜结果 |
@@ -72,7 +72,7 @@ npx @topmindspace/topmind-writing-skills list                          # 看全�
 | 快讯（晚到） | 换角度：实测、算账、求证 | 「...」 |
 | 预告 / 传闻 | 「要来了？！」，动词照口径 | 「？！」 |
 | 新品 / 工具 | 真疑问或一句真心推荐 | 「...」 |
-| 羊毛 / 优惠 | 一句话说能马上拿到什么 | 不收 |
+| 羊毛 / 优惠 | 直说能马上拿到什么 | 不收 |
 | 榜单 / 数据 | 谁第一、领先多少 | 不收 |
 | 论文 | 一句结论 | 不收 |
 | 实测 | 结果一句（翻车、快、贵） | 自嘲或一个真问题 |
@@ -190,6 +190,8 @@ Nova：我们也上线了，价格动了
 
 ### 脚本只提示，人来判断
 
+在对应技能目录里运行（如 `topmind-briefs/`、`topmind-revise/`）：
+
 ```bash
 python3 scripts/lint_x_post.py X短文.txt --kind news   # 快讯
 python3 scripts/lint_x_post.py 段子.txt --duanzi        # 段子
@@ -250,7 +252,7 @@ topmind-writing-skills/
 - push main 后 GitHub 立即可见；打 tag `vX.Y.Z` 自动出 Release 并发布 npm。每个技能的版本号写在它自己的 `SKILL.md` 和 [CHANGELOG](./CHANGELOG.md) 里。
 - 详见 [docs/PUBLISHING.md](./docs/PUBLISHING.md) · [docs/ci.md](./docs/ci.md)。
 
-> 正式商务演示技能已独立成仓库：[`topmind-presentation`](https://github.com/topmindspace/topmind-presentation)。
+正式商务演示用 [`topmind-presentation`](https://github.com/topmindspace/topmind-presentation)，单独安装。
 
 </details>
 
