@@ -1,62 +1,33 @@
-# topmind-poster · HTML → 高清长图 PNG
+# topmind-poster · 长图与信息图
 
 [English](./README.en.md) | 中文
 
-榜单、信息图、月报长图、海报，以及「一段一图」的分段图批量出图。文本 100% 可控、可 diff、可迭代。
+HTML/CSS 输出精确文本、数据与可编辑源文件，实际看图验证。
 
-- 版本：**v0.1.9**
-
-你可以这样说：「出张长图」「做个榜单图」「一张图讲清楚」「把这篇拆成分段图」。
-
-## 安装
+## 使用
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-poster
 ```
 
-## 为什么不用图片生成模型
+安装后直接告诉 agent 你要的结果、读者和已有材料；明确要一稿就直接给成品，探索任务再比较方向。完整能力、流程与脚本说明见 [SKILL.md](./SKILL.md)。
 
-榜单 / 信息图里有大量精确文本、数字、品牌名。图片生成模型会改字、糊字、编造数字。**这类图必须走「HTML 排版 → 无头浏览器截图」**。封面是例外——封面没有密集文本，走 `topmind-cover` 的生图路线。
+## 方法与样张
 
-## 能做什么
+[创作方法与样张](./references/creative-practice.md) 给同素材不同写法和看参考的方法。模板、口吻、篇幅、emoji 与视觉风格是选项；事实准确、授权、隐私与输出完整性继续核对。当前用户要求和作者样本优先。
 
-| 场景 | 产物 |
-|---|---|
-| 榜单 / 分级榜 / 信息图 | 一张竖版长图（1080 或 1180 宽，2× 高清） |
-| 月报 / 周报长图 | 同上，可含图表卡片 |
-| 一篇长文配 N 张图 | 分段图：一段一图，逐张可单独转发 |
-| 已有 HTML | 直接导出高清 PNG 并自动裁掉底部空白 |
+## 常用脚本
 
-## 用法
-
-最省事的一条命令：
+在本技能目录运行；示例文件名替换为实际路径：
 
 ```bash
 python3 scripts/render_poster.py poster.html -o poster.png
 ```
 
-脚本做完整三步：调无头 Chrome 2× 截图 → 按背景色扫底 → 裁掉底部空白。批量出分段图：
+风格提示按上下文判断，不要求警告清零或达到词面分数；平台与目录协议在采用相关导出工具时核对。生成预览需当前环境具备相应浏览器与依赖，未验证时如实说明。
 
-```bash
-python3 scripts/render_poster.py build/*.html --out-dir images/ --width 1180
-```
+## 交付
 
-手写流程、参数含义、以及 7 个实测注意点（沙箱参数、柱状图填充消失、背景取色点、PNG 重采样反而变大等）见 [SKILL.md](./SKILL.md)。版式配方见 [references/layout-recipes.md](./references/layout-recipes.md)。
+交当前请求所需的文本或文件，说明重要取舍和未核实项。需要图片、HTML 或完整报告时再扩展对应环节；本技能不执行对外发布。
 
-## 依赖
-
-- 无头浏览器：Chrome / Chromium / Edge（`--chrome` 指定，或设 `CHROME_PATH`）
-- `Pillow`（裁切用）：`python3 -m pip install --user Pillow`
-
-## 边界
-
-- **不做**文章封面 → `topmind-cover`
-- **不做**多页演示 / PPTX → `topmind-presentation`
-- **不做**纯数据图表 SVG → `svg-infographic-kit`
-- **不做**文章正文排版 → `topmind-wechat-post` / `topmind-x-article`
-
-本技能负责出图那一环：它们写好文章，本技能把其中一段做成能单独转发的图。
-
-## 原创示例
-
-我们自己写的示例输出见 [`examples/`](./examples/)（虚构或中性题材，不收录任何第三方原文）。
+MIT License。仓库维护、安装选项与版本说明见 [合集说明](https://github.com/topmindspace/topmind-writing-skills)。

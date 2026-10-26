@@ -1,9 +1,11 @@
 # 封面范式库（整张生成用）
 
+> 使用范围：本页是可拆用的配方与样例，参数描述某种具体效果，不是所有封面的通用要求。当前用户要求、真实素材、核字与实际裁切优先。可删槽位、改构图、用纯色或无人物；整张生成与后期叠字并列选择，只读当前方向需要的章节。
+
 > 用法：选一个范式，把模板里的 `{占位}` 换成具体内容，再在末尾接上「通用排版尾句」，整段英文交给生图模型，让它把字和场景一起画出来。出图后按 `design-system.md` 第九节「中文字生图规约」逐字核对，错字按那一节的方法修正。
 > 这些范式是我们自己归纳的抽象规律（构图、字的处理、配色、隐喻），不对应任何具体作品；用的时候换成自己的主题、主角和配色。
 
-## 通用排版尾句（每条 prompt 都要接上）
+## 可选排版尾句（按方案删改）
 
 ```text
 Typography rules: the headline text is exactly "{title}" in Simplified Chinese characters exactly as given, no extra, missing or altered characters, no traditional characters; the subtitle is exactly "{subtitle}". Hierarchy: one headline (about 25-45% of image height, heavy weight), one subtitle line (about 10% of image height), {tagline}all text aligned to {align}, inside a 6% safe margin, high contrast against its background. Only one accent color, used on 1-3 key characters. All letters share the scene's light direction, shadows and perspective. Keep all text within the central horizontal band of the image (it will be cropped to 5:2). Clean composition with one focal point and generous negative space, no other text, no watermark, no logo, no UI gibberish. Wide 16:9.

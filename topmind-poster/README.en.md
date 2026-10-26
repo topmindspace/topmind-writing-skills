@@ -1,12 +1,8 @@
-# topmind-poster · HTML → High-Res Long Image PNG
+# topmind-poster
 
-**[中文](./README.md)** | English
+English | [中文](./README.md)
 
-Rankings, infographics, monthly-report long images, posters — plus the "one image per section" workflow for splitting a long article into N shareable images. Text is 100% controllable, diffable, and iterable.
-
-- Version: **v0.1.9**
-
-Say: "出张长图", "做个榜单图", "一张图讲清楚", "把这篇拆成分段图".
+Build editable HTML/CSS posters, long images, rankings, diagrams and section illustrations, then render accurate high-resolution PNGs. Choose a layout that fits the material and inspect the actual image. Chinese is the default language; current user instructions and author samples take priority. See [SKILL.md](./SKILL.md) for the capability, workflow and tools.
 
 ## Install
 
@@ -14,49 +10,18 @@ Say: "出张长图", "做个榜单图", "一张图讲清楚", "把这篇拆成�
 npx @topmindspace/topmind-writing-skills install topmind-poster
 ```
 
-## Why not an image generation model
+## How it works
 
-Rankings and infographics carry dense precise text, numbers and brand names. Image models mangle characters, blur glyphs and invent figures. **These images must go through "HTML layout → headless browser screenshot"**. Covers are the exception — they have no dense text, so they use the generative route in `topmind-cover`.
+Read actual references and relevant [specimens](./references/creative-practice.md). Explore distinct directions when that helps the task; deliver one complete result when the request is clear. Voice, length, emoji, structure and visual styles are choices rather than universal gates. Facts, attribution, privacy, authorization and usable output still matter.
 
-## What it does
+## Tools
 
-| Scenario | Output |
-|---|---|
-| Rankings / tiers / infographics | One vertical long image (1080 or 1180 wide, 2× retina) |
-| Monthly / weekly report long image | Same, may contain chart cards |
-| N images for one long article | Section images: one image per section, each shareable alone |
-| Existing HTML | Export high-res PNG directly, auto-trimmed bottom whitespace |
-
-## Usage
-
-One command does it all:
+Run from this skill directory, using actual input paths:
 
 ```bash
 python3 scripts/render_poster.py poster.html -o poster.png
 ```
 
-The script runs three steps: headless Chrome 2× screenshot → scan the bottom by background color → crop the whitespace. Batch mode for section images:
+Style diagnostics are contextual suggestions, not a quality score. Platform conversion and directory requirements apply when using the corresponding tools. Check actual previews and disclose unverified steps.
 
-```bash
-python3 scripts/render_poster.py build/*.html --out-dir images/ --width 1180
-```
-
-Manual workflow, parameter semantics and 7 battle-tested pitfalls (sandbox flags, invisible bar fills, background sampling point, PNG resampling getting *larger*, …) live in [SKILL.md](./SKILL.md). Layout recipes are in [references/layout-recipes.md](./references/layout-recipes.md).
-
-## Requirements
-
-- Headless browser: Chrome / Chromium / Edge (`--chrome`, or `CHROME_PATH`)
-- `Pillow` (for cropping): `python3 -m pip install --user Pillow`
-
-## Boundaries
-
-- **Not** article covers → `topmind-cover`
-- **Not** multi-page decks / PPTX → `topmind-presentation`
-- **Not** pure data-chart SVG → `svg-infographic-kit`
-- **Not** article body layout → `topmind-wechat-post` / `topmind-x-article`
-
-This skill owns the rendering step: they write the article, this skill turns a section of it into a standalone shareable image.
-
-## Original examples
-
-Sample outputs written by us (fictional or neutral topics, no third-party text) are in [`examples/`](./examples/).
+Deliver the requested text or artifacts; these skills do not publish externally. MIT License. See the [collection](https://github.com/topmindspace/topmind-writing-skills) for installation options and maintenance.

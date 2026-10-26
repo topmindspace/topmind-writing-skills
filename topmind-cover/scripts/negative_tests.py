@@ -107,7 +107,7 @@ def main() -> None:
             check("引擎：缺场景图干净报错", r.returncode == 1 and "Traceback" not in r.stderr, r.stderr[:100])
             def chk(layers):
                 f = t2 / "c.json"; f.write_text(json.dumps({"layers": layers}, ensure_ascii=False), encoding="utf-8")
-                return subprocess.run([sys.executable, str(ENGINE), "--check", str(f)], capture_output=True, text=True)
+                return subprocess.run([sys.executable, str(ENGINE), "--check", "--strict", str(f)], capture_output=True, text=True)
             main = {"type": "text", "role": "main", "text": "标题", "size": 0.3}
             r = chk([main, {"type": "text", "role": "label", "text": "小字", "size": 0.035}])
             check("引擎：标签字号低于 6% 被拦下", r.returncode == 1 and "低于下限" in r.stdout, r.stdout[:120])
@@ -119,6 +119,15 @@ def main() -> None:
             check("引擎：旋转没写 reason 被拦下", r.returncode == 1 and "reason" in r.stdout, r.stdout[:120])
             r = chk([main] + [{"type": "deco", "kind": "star", "x": 0.5, "y": 0.5}] * 3)
             check("引擎：装饰超过 2 个被拦下", r.returncode == 1 and "上限 2 个" in r.stdout, r.stdout[:120])
+            # 默认允许作者的风格选择；严格模板检查仅显式启用。
+            custom = t2 / "custom.json"
+            custom.write_text(json.dumps({"layers": [dict(main, rotate=18),
+                {"type": "text", "role": "label", "text": "小字", "size": 0.035}]}), encoding="utf-8")
+            relaxed = subprocess.run([sys.executable, str(ENGINE), "--check", str(custom)], capture_output=True, text=True)
+            check("引擎：默认设计提示不卡住自定义排版", relaxed.returncode == 0 and "建议" in relaxed.stdout, relaxed.stdout[:160])
+            empty = t2 / "empty.json"; empty.write_text('{"layers": []}', encoding="utf-8")
+            invalid = subprocess.run([sys.executable, str(ENGINE), "--check", str(empty)], capture_output=True, text=True)
+            check("引擎：空图层仍干净报错", invalid.returncode == 1 and "Traceback" not in invalid.stderr)
             r = chk([main, {"type": "text", "role": "sub", "text": "副标题", "size": 0.1}])
             check("引擎：合规层级通过", r.returncode == 0, r.stdout[:120])
             for sp in sorted((ROOT / "assets" / "title-specs").glob("*.json")):
@@ -149,17 +158,8 @@ def main() -> None:
     check("组合库：每个组合都有英文模板", cb.count("```text") >= nc and "central horizontal band" in cb)
     check("组合库：不含第三方网址", "http" not in cb)
 
-    # 9. 不得出现参考来源：第三方站点名、创作者账号、来源 / 灵感致谢、资料网址清单
-    import re as _re2
-    base = ROOT.parent if (ROOT.parent / "shared").is_dir() else ROOT
-    bad = _re2.compile(r"xarticles|x\.com/(?!i/)[A-Za-z0-9_]+/(?:status|article)|inspired by|learned from|灵感来自|参考帖|参考了|借鉴自|调研来源|^## 来源\s*$|^出处：|公开封面合集|uisdc|nngroup|huashu|alchaincyf|noahduck", _re2.I | _re2.M)
-    hits = []
-    for f in base.rglob("*"):
-        if f.suffix not in (".md", ".json", ".txt") or "node_modules" in f.parts or f.name == "CHANGELOG.md" or f.name.startswith("LICENSE"):
-            continue
-        for m in bad.finditer(f.read_text(encoding="utf-8", errors="ignore")):
-            hits.append(f"{f.relative_to(base)}: {m.group(0)}")
-    check("全仓：不出现参考来源、站点名、账号或致谢语", not hits, "; ".join(hits[:5]))
+    # 公开参考与署名可以保留；私人路径、密钥等由仓库 ci_privacy_scan.py 检查。
+    # 不再把创作者账号、来源链接或致谢本身当作泄漏。
 
     if fails:
         print(f"\n[negative_tests] {len(fails)} 项失败")

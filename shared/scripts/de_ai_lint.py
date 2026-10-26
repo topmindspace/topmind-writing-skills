@@ -341,9 +341,9 @@ def phrase_hits(lines: list[str], start: int):
     hits = sorted({m.group(0) for m in AI_RE.finditer("\n".join(lines))})
     if not hits:
         return []
-    msg = "疑似 AI 套话：" + " / ".join(hits[:4]) + "；改成平实说法或删掉"
+    msg = "疑似 AI 套话：" + " / ".join(hits[:4]) + "；检查是否空泛、重复或与作者声音不符，合理时保留"
     if any(NOT_BUT_RE.fullmatch(h) for h in hits):
-        msg += "（「不是…而是」优先改成「其实是…」）"
+        msg += "（对照关系有助于辨析时保留，无需机械换词）"
     return [(start, "W9", msg)]
 
 
@@ -359,14 +359,14 @@ def struct_hits(lines: list[str], start: int):
                 continue
             seen[name] = seen.get(name, 0) + 1
             if seen[name] <= MAX_PER_RULE:
-                out.append((start + off, "W15", f"中文结构套话「{name}」：{m.group(0).strip()[:24]}；按 de-ai-rules.md 改写"))
+                out.append((start + off, "W15", f"中文结构套话「{name}」：{m.group(0).strip()[:24]}；结合上下文判断，可保留或参考 de-ai-rules.md 尝试其他写法"))
         for name, rx in EN_STRUCT_RE:
             m = rx.search(body)
             if not m:
                 continue
             seen[name] = seen.get(name, 0) + 1
             if seen[name] <= MAX_PER_RULE:
-                out.append((start + off, "W16", f"英文结构套话「{name}」：{m.group(0).strip()[:32]}；按 de-ai-rules.md 改写"))
+                out.append((start + off, "W16", f"英文结构套话「{name}」：{m.group(0).strip()[:32]}；结合上下文判断，可保留或参考 de-ai-rules.md 尝试其他写法"))
     return out
 
 
@@ -470,18 +470,18 @@ def voice_hits(lines: list[str], start: int, genre: str, raw: list[str] | None =
                 add(hints, no, "H1", f"语境词「{m.group(0)}」：{tip}（core-voice {ref}）")
         if SAY_COLON_RE.match(body):
             if genre in ("duanzi", "short", "reply"):
-                add(warns, no, "W19", "「人名说：」改成「人名：」（core-voice V13）")
+                add(warns, no, "W19", "发现「人名说：」：正常归因可以保留；核对引语与转述性质（core-voice V13）")
             else:
                 add(hints, no, "H12", "引语可写成「人名：中文意思」（core-voice V13）")
         m = TRANSITION_RE.search(body)
         if m:
-            add(warns, no, "W20", f"过渡句 / 引导语「{m.group(0)}」：小标题本身就是过渡，删掉（core-voice V07）")
+            add(warns, no, "W20", f"过渡句 / 引导语「{m.group(0)}」：判断是否帮助衔接；重复时可删，必要转折可保留（core-voice V07）")
         m = IMG_RETELL_RE.search(body)
         if m:
-            add(warns, no, "W21", f"复述图片「{m.group(0)}」：图自己会说话，删掉或只点出图里看不出的（core-voice V15）")
+            add(warns, no, "W21", f"复述图片「{m.group(0)}」：检查是否增加解读或帮助扫读、无障碍理解，有用时保留（core-voice V15）")
         m = I_THINK_RE.search(body)
         if m and genre in ("long", "short"):
-            add(hints, no, "H3", f"「{m.group(0)}」：观点句用「大概率」「预计」直接说（core-voice V08）")
+            add(hints, no, "H3", f"「{m.group(0)}」：可表达作者立场；与事实分清，确定性按依据保持（core-voice V08）")
         m = NEWS_PRECISION_RE.search(body)
         ma = ABOUT_NUM_RE.search(body)
         if ma and not (ABOUT_MAG_RE.search(ma.group(0)) or COMPARE_RE.search(body)):
@@ -490,7 +490,7 @@ def voice_hits(lines: list[str], start: int, genre: str, raw: list[str] | None =
             m = ma = None
         if m or ma:
             frag = (m or ma).group(0).strip()
-            add(hints, no, "H4", f"「{frag}」：不是新闻稿，数字不必写「约 / 左右」，对比给对象和定语（core-voice V12）")
+            add(hints, no, "H4", f"「{frag}」：核对来源精度；近似值保留「约 / 左右」，对比写清对象和条件（core-voice V12）")
         elif CJK_RE.search(body) and THOUSANDS_RE.search(body):
             add(hints, no, "H4", f"千分位「{THOUSANDS_RE.search(body).group(0)}」：中文正文写「12 万」这类（core-voice V12）")
         m = PARALLEL_CLOSE_RE.search(body)
@@ -503,7 +503,7 @@ def voice_hits(lines: list[str], start: int, genre: str, raw: list[str] | None =
                 add(hints, no, "H5", f"短对仗收句「{sp.group(1)}，{sp.group(2)}」：收尾换成平实说法或生活化类比（core-voice V05 / V10）")
         m = FILLER_INFO_RE.search(body)
         if m and genre != "long":
-            add(hints, no, "H8", f"「{m.group(0)}」：不增加信息量，删掉（core-voice V22）")
+            add(hints, no, "H8", f"「{m.group(0)}」：检查是否交代了未确认状态或关键范围，必要限定应保留（core-voice V22）")
         elif m and m.group(0).startswith("据"):
             add(hints, no, "H8", f"「{m.group(0)}」：点名具体媒体，或不写（core-voice V22）")
         if (genre == "title" or off == first) and TITLE_PREACH_RE.search(body) and not GENUINE_Q_RE.search(body):
@@ -513,7 +513,7 @@ def voice_hits(lines: list[str], start: int, genre: str, raw: list[str] | None =
         if genre in ("reply", "duanzi"):
             m = ANALOGY_RE.search(body)
             if m:
-                add(warns, no, "W24", f"类比腔「{m.group(0).strip()[:16]}」：换成自己的做法或一个具体场景（de-ai-rules S02）")
+                add(warns, no, "W24", f"类比腔「{m.group(0).strip()[:16]}」：比较类比是否帮助理解；不贴切时尝试具体解释（de-ai-rules S02）")
         if genre in ("reply", "short", "duanzi"):
             m = OWN_EXP_RE.search(body)
             if m:
@@ -521,11 +521,11 @@ def voice_hits(lines: list[str], start: int, genre: str, raw: list[str] | None =
             if CJK_RE.search(body):
                 m = EN_SMALL_RE.search(body)
                 if m:
-                    add(hints, no, "H18", f"中文帖夹英文小词「{m.group(0)}」：换成中文说法（core-voice V38）")
+                    add(hints, no, "H18", f"中文帖夹英文小词「{m.group(0)}」：按读者习惯保留或换成中文说法（core-voice V38）")
         if genre == "short":
             m = CALIBER_RE.search(body)
             if m:
-                add(hints, no, "H17", f"「{m.group(0)}」：X 短文正文不写查证过程和口径，挪进交付说明的口径提醒（core-voice V39）")
+                add(hints, no, "H17", f"「{m.group(0)}」：影响读者理解的归因与口径保留正文；纯查证过程可另列（core-voice V39）")
         if genre in ("reply", "short") and not CJK_RE.search(body):
             m = EN_TEMPLATE_RE.search(body)
             if m:
@@ -537,7 +537,7 @@ def voice_hits(lines: list[str], start: int, genre: str, raw: list[str] | None =
     if genre == "short":
         tags = HASHTAG_RE.findall("\n".join(lines))
         if len(tags) > SHORT_TAGS_MAX:
-            add(hints, start, "H11", f"话题标签 {len(tags)} 个：段子和短文默认不带，要带最多两个，宽泛词 + 主题词（core-voice V27）")
+            add(hints, start, "H11", f"话题标签 {len(tags)} 个：按作者与活动需求选择，过多时检查阅读负担（core-voice V27）")
     if genre in ("short", "reply"):
         items = [ln for ln in lines if LIST_EMOJI_RE.match(ln)]
         decor = sum(len(EMOJI_RE.findall(ln)) for ln in lines if not LIST_EMOJI_RE.match(ln))
@@ -550,19 +550,19 @@ def voice_hits(lines: list[str], start: int, genre: str, raw: list[str] | None =
         off, ln = body_lines[-1]
         m = HOOK_END_RE.search(ln)
         if m:
-            add(warns, start + off, "W22", f"套路互动钩子结尾「{m.group(0)}」：删掉；要问就问自己真拿不准的（core-voice V34，de-ai-rules S06）")
+            add(warns, start + off, "W22", f"套路互动钩子结尾「{m.group(0)}」：判断是否服务当前互动目标；有效邀请可以保留（core-voice V34，de-ai-rules S06）")
     if genre == "duanzi":
         for (o1, _), (o2, _) in zip(body_lines, body_lines[1:]):
             if o2 == o1 + 1:
-                add(warns, start + o2, "W23", "段子体行间没空行：一句一行，行与行之间空一行")
+                add(warns, start + o2, "W23", "段子行距紧凑：可按节拍加空行；紧凑对话也可保留")
                 break
     if genre == "reply":
         n = sum(1 for ch in "".join(ln for _, ln in body_lines) if not ch.isspace())
         if CJK_RE.search("".join(ln for _, ln in body_lines)):
             if n > REPLY_WARN_MAX:
-                add(warns, start, "W26", f"回复约 {n} 字，超过 {REPLY_WARN_MAX} 字：回复是聊天，不是点评，留态度和你自己的东西（core-voice V37）")
+                add(warns, start, "W26", f"回复约 {n} 字，超过 {REPLY_WARN_MAX} 字：检查交流是否需要这么多解释；有用的完整回答可以保留（core-voice V37）")
             elif n > REPLY_HINT_MAX:
-                add(hints, start, "H15", f"回复约 {n} 字：中文回复默认 {REPLY_HINT_MAX} 字以内（core-voice V37）")
+                add(hints, start, "H15", f"回复约 {n} 字：按交流目标决定长度，{REPLY_HINT_MAX} 字仅为旧参考线（core-voice V37）")
     if genre == "short" and body_lines:
         alarm = any(ALARM_EMOJI_RE.search(ln) for _, ln in body_lines)
         breaking = any(BREAKING_RE.search(ln) for _, ln in body_lines[:2])
@@ -595,7 +595,7 @@ def sources_hits(lines: list[str], start: int, sources_text: str):
     head = lines[first]
     m = RELEASE_VERB_RE.search(head)
     p = PREVIEW_SRC_RE.search(sources_text)
-    if m and p and not re.search(r"[？?]", head):
+    if m and p:
         return [(start + first, "H20", f"标题 / 首行写「{m.group(0)}」，素材来源里标着「{p.group(0)}」：动词跟着口径走（core-voice V40）")]
     return []
 

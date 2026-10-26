@@ -1,27 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""format_text.py — 把一段文字格式化成 X 段子体或短文体，只动排版，不改字。
+"""X 文本格式化，默认保留文字、链接和有表达作用的表情。
 
-用法：
-    python3 format_text.py 原文.txt --mode duanzi              # 段子体：每句一行，行与行之间空一行；完全不用 emoji，分点只去掉符号
-    python3 format_text.py 原文.txt --mode duanzi --split      # 同上，并按句末标点（。！？!?）拆句
-    python3 format_text.py 原文.txt --mode short               # 短文体：合并多余空行，Markdown 列表 → 「·」/「1）」纯文本列表
-    python3 format_text.py 原文.txt --mode short --bullets emoji   # Markdown 列表 → 🔹 / 1️⃣ emoji 列表（emoji 不强制，可选）
-    python3 format_text.py 原文.txt --mode short --title-emoji 🆕 --open 🐔 --close 🌱   # 点缀只用于短文体，可选
-    python3 format_text.py 原文.txt --mode short --links-out 链接.txt   # 另存从正文里拿出来的链接 / 来源行 / 配图行
-    python3 format_text.py 原文.txt --mode duanzi --out 段子.txt
-    cat 原文.txt | python3 format_text.py - --mode duanzi
-    python3 format_text.py 原文.txt --mode short --variants 开头备选.txt   # 多个开头 → 拼成多条完整成品，每条之间一行 ---
-
---variants：开头备选文件里每个开头之间用单独一行 --- 隔开。原文第一段（第一个空行之前）被逐个替换成备选开头，
-其余部分不动，输出几条完整成品（第一条是原文自己的开头），条与条之间一行 ---（lint_x_post.py 会按 --- 分条检查）。
-
-规则见 references/emoji-system.md 与 references/x-post-format.md。
-交付规约（x-delivery-contract.md）：正文是一段可直接复制的纯文本，链接、原图、配图另发。
-所以两种模式都会把 URL、来源行（来源：/ 出处：/ 原帖：…）、配图行（配图：/ [图1]…）从正文里拿出来，
-打印到标准错误的「另发」清单里（或用 --links-out 写进文件），正文里不留。
-每次输出前做「原文保真」校验：去掉空白、列表符号、emoji 和上述拿出来的链接 / 来源 / 配图行后，与原文逐字一致；不一致即报错（退出码 1）。
-只用 Python 标准库。
+--mode short 合并多余空行并转换常见 Markdown 列表；--mode duanzi 按节拍分行。
+--split 可拆句；--strip-emoji 仅在需要去表情时使用；--separate-links 可将链接、
+来源和图片说明另列（--links-out 保存）。--variants 拼接用户提供的备选开头。
+逐字校验忽略空白、列表符号和 emoji，因此仍需人工核对符号语义。
 """
 from __future__ import annotations
 
@@ -111,28 +95,26 @@ def to_bullet(ln: str, style: str = "plain") -> str | None:
     return None
 
 
-def duanzi(text: str, split: bool) -> list[str]:
-    """段子体：一句一行、行间空一行，完全不用 emoji。
-    分点条目去掉列表符号（Markdown 标记与 emoji 符号都去掉），一条一行、靠行间空行区分；--split 不拆列表条目。
-    原文里的 emoji（含人设点缀、情绪表情）一并去掉。"""
+def duanzi(text: str, split: bool, remove_emoji: bool = False) -> list[str]:
+    """按节拍换行；默认保留表情和表达正反 / 方向的 emoji 符号。"""
     lines: list[str] = []
+    clean = strip_emoji if remove_emoji else lambda value: value.strip()
     for raw in text.splitlines():
         raw = QUOTE_RE.sub("", raw)
         if not raw.strip():
             continue
         m, o = UL_RE.match(raw.rstrip()), OL_RE.match(raw.rstrip())
         if m or o or BULLET_RE.match(raw):
-            item = m.group(2) if m else (o.group(3) if o else BULLET_RE.sub("", raw, count=1))
-            lines.append(strip_emoji(item))
+            # emoji 项目标记可能表达正反，保留；显式去表情时才删除。
+            item = m.group(2) if m else (o.group(3) if o else raw)
+            if remove_emoji:
+                item = BULLET_RE.sub("", item, count=1)
+            lines.append(clean(item))
         elif split:
-            lines += [strip_emoji(p) for p in SENT_RE.split(raw.strip()) if strip_emoji(p)]
+            lines += [clean(part) for part in SENT_RE.split(raw.strip()) if clean(part)]
         else:
-            lines.append(strip_emoji(raw))
-    lines = [ln for ln in lines if ln]
-    out: list[str] = []
-    for ln in lines:
-        out += [ln, ""]
-    return out[:-1]
+            lines.append(clean(raw))
+    return "\n\n".join(line for line in lines if line).split("\n")
 
 
 def short(text: str, style: str = "plain") -> list[str]:
@@ -178,10 +160,12 @@ def main() -> int:
     ap.add_argument("src", help="原文文件，- 表示标准输入")
     ap.add_argument("--mode", choices=["duanzi", "short"], required=True)
     ap.add_argument("--split", action="store_true", help="段子体：按句末标点拆句")
-    ap.add_argument("--title-emoji", help="短文体：标题 emoji（须与标题关键词对应）")
+    ap.add_argument("--title-emoji", help="标题 emoji，按作者要求添加")
     ap.add_argument("--open", dest="open_e", help="开头人设点缀，如 🐔 🐱")
     ap.add_argument("--close", dest="close_e", help="结尾人设点缀，如 🌱 🌸")
     ap.add_argument("--bullets", choices=["plain", "emoji"], default="plain", help="短文体 Markdown 列表改写方式：plain（· / 1），默认）或 emoji（🔹 / 1️⃣）")
+    ap.add_argument("--strip-emoji", action="store_true", help="明确需要纯文字时去掉 emoji；默认保留，注意核对符号含义")
+    ap.add_argument("--separate-links", action="store_true", help="将链接、来源与图片说明移到另发清单；默认保留")
     ap.add_argument("--links-out", help="把从正文拿出的链接 / 来源行 / 配图行写进这个文件（另发用）")
     ap.add_argument("--out", help="输出文件；省略则打印到标准输出")
     ap.add_argument("--variants", help="开头备选文件（每个开头之间一行 ---）：拼成多条完整成品，每条之间一行 ---")
@@ -196,10 +180,7 @@ def main() -> int:
         print("错误：原文为空", file=sys.stderr)
         return 2
 
-    if args.mode == "duanzi" and (args.title_emoji or args.open_e or args.close_e):
-        print("错误：段子体完全不用 emoji，不接受 --title-emoji / --open / --close（点缀只用于 --mode short）", file=sys.stderr)
-        return 2
-    body, extra = split_links(text)
+    body, extra = split_links(text) if args.separate_links else (text, [])
     bodies = [body]
     if args.variants:
         try:
@@ -213,7 +194,9 @@ def main() -> int:
         bodies += [h + ("\n\n" + rest if rest else "") + "\n" for h in heads]
     outs = []
     for b in bodies:
-        lines = duanzi(b, args.split) if args.mode == "duanzi" else short(b, args.bullets)
+        lines = duanzi(b, args.split, args.strip_emoji) if args.mode == "duanzi" else short(b, args.bullets)
+        if args.strip_emoji:
+            lines = [strip_emoji(line) for line in lines]
         lines = decorate(lines, args.title_emoji, args.open_e, args.close_e)
         res = "\n".join(lines) + "\n"
         if skeleton(res) != skeleton(b):

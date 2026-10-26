@@ -51,12 +51,12 @@ def check(text, is_main=True):
     elif is_main and n > 8: out.append(("中", f"主标题 {n} 个汉字，建议 ≤ 8"))
     elif not is_main and n > 14: out.append(("中", f"副标题 {n} 个汉字，建议 ≤ 14"))
     for c in dict.fromkeys(han):
-        if c in CONFUSABLE: out.append(("中", f"「{c}」易写成「{'」「'.join(CONFUSABLE[c])}」：出图后重点核对，连错两次换同义词"))
-        if is_trad(c): out.append(("高", f"「{c}」是繁体字：封面一律用简体"))
-        elif level(c) == 2: out.append(("中", f"「{c}」不是一级常用字，模型容易写错：能换就换常用字"))
-        elif level(c) == 0: out.append(("高", f"「{c}」是生僻字（不在 GB2312）：换字，或改走脚本叠字"))
+        if c in CONFUSABLE: out.append(("中", f"「{c}」易写成「{'」「'.join(CONFUSABLE[c])}」：出图后重点核对，或用后期排版保留原文"))
+        if is_trad(c): out.append(("高", f"「{c}」是繁体字：保留作者语言选择，必要时用后期排版"))
+        elif level(c) == 2: out.append(("中", f"「{c}」不是一级常用字，模型容易写错：核字，或用后期排版保留原字"))
+        elif level(c) == 0: out.append(("高", f"「{c}」是生僻字（不在 GB2312）：核字，或改走脚本叠字保留原字"))
     sym = [c for c in text if c in PUNCT or ord(c) > 0x1F000]
-    if sym: out.append(("中", f"含 {''.join(dict.fromkeys(sym))}：标点和 emoji 常被漏写或画乱，能删就删"))
+    if sym: out.append(("中", f"含 {''.join(dict.fromkeys(sym))}：标点和 emoji 常被漏写或画乱，按作者意图保留并核对"))
     return out
 
 

@@ -119,15 +119,15 @@ def main() -> None:
             src = t / "in.txt"
             src.write_text("说个冷知识：\n收益看互动权重。哪怕10万浏览，收益也可能很低。\n蓝V互关，评论区报到！！\n", encoding="utf-8")
             r = run_quiet([str(fmt), str(src), "--mode", "duanzi", "--split", "--open", "🐱", "--close", "🌱"], t)
-            check("段子体：拒绝 --open/--close 点缀（退出码=2）", r.returncode == 2 and "Traceback" not in (r.stderr or ""))
+            check("段子体：接受作者指定首尾点缀", r.returncode == 0 and "🐱" in r.stdout and "🌱" in r.stdout)
             src.write_text("说个冷知识 🐱：\n收益看互动权重。哪怕10万浏览，收益也可能很低。\n蓝V互关，评论区报到！！😂\n", encoding="utf-8")
-            r = run_quiet([str(fmt), str(src), "--mode", "duanzi", "--split"], t)
+            r = run_quiet([str(fmt), str(src), "--mode", "duanzi", "--split", "--strip-emoji"], t)
             out = r.stdout
             lines = out.rstrip("\n").split("\n")
             check("段子体：退出码=0", r.returncode == 0, r.stderr[-200:])
             check("段子体：每行之间都隔一个空行",
                   len(lines) >= 5 and all((ln == "") == (i % 2 == 1) for i, ln in enumerate(lines)), repr(out[:200]))
-            check("段子体：原文 emoji 全部去掉", "🐱" not in out and "😂" not in out, repr(out[:200]))
+            check("显式 --strip-emoji：去掉原文表情", "🐱" not in out and "😂" not in out, repr(out[:200]))
             md = t / "md.txt"
             md.write_text("三处变化\n\n\n- 更快\n- 更省\n1. 先装\n\n#AI\n", encoding="utf-8")
             r = run_quiet([str(fmt), str(md), "--mode", "short"], t)
@@ -140,7 +140,7 @@ def main() -> None:
                   and r.stdout.startswith("🆕 三处变化"), r.stdout[-200:])
             lk = t / "lk.txt"
             lk.write_text("新版发布\n补全更快了。\n来源：官方日志 https://example.com/log\n详情见官网 https://example.com\n[图1] 截图\n#AI\n", encoding="utf-8")
-            r = run_quiet([str(fmt), str(lk), "--mode", "short", "--links-out", str(t / "links.txt")], t)
+            r = run_quiet([str(fmt), str(lk), "--mode", "short", "--separate-links", "--links-out", str(t / "links.txt")], t)
             links = (t / "links.txt").read_text(encoding="utf-8") if (t / "links.txt").exists() else ""
             check("链接 / 来源行 / 配图行拿出正文、另存另发",
                   r.returncode == 0 and "http" not in r.stdout and "来源：" not in r.stdout and "[图1]" not in r.stdout
@@ -154,10 +154,10 @@ def main() -> None:
             dz = t / "dz.txt"
             dz.write_text("今天打卡\n\n🔹 回评论\n\n冲 🐔\n", encoding="utf-8")
             r = run_quiet([str(lint), str(dz), "--duanzi"], t)
-            check("lint --duanzi：段子出现 emoji 报 W13", "W13" in (r.stdout + r.stderr), (r.stdout + r.stderr)[-200:])
+            check("lint --duanzi：段子 emoji 仅提示 H22", "H22" in (r.stdout + r.stderr), (r.stdout + r.stderr)[-200:])
             src2 = t / "src2.txt"
             src2.write_text("新版发布\n\n来源：官方 https://example.com/a\n\n配图：官方截图\n\n#AI\n", encoding="utf-8")
-            r = run_quiet([str(lint), str(src2)], t)
+            r = run_quiet([str(lint), str(src2), "--separate-links"], t)
             out2 = r.stdout + r.stderr
             check("lint：正文有 URL / 来源行 / 配图说明报 E10 / E11 / E12（退出码 1）",
                   r.returncode == 1 and "E10" in out2 and "E11" in out2 and "E12" in out2, out2[-300:])

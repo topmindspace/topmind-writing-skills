@@ -18,19 +18,21 @@ npx @topmindspace/topmind-writing-skills install topmind-viral-posts   # install
 npx @topmindspace/topmind-writing-skills list                          # see all
 ```
 
-## How it differs from "AI, write me a post"
+## More choices, concrete references
 
-- **Pick the type first.** 14 ways to write a duanzi (one-line-per-sentence post) and 9 content types for briefs, each with its own opening, structure and ending.
-- **Glanceable.** The X body keeps facts, numbers and the highlight. Verification notes, caliber notes, links and original images are delivered separately, so the body copies straight into X.
-- **De-AI with scripts.** Boilerplate phrases, newsreader tone, engagement-bait endings, fake first-hand claims and punctuation tics get flagged line by line; you decide what to change.
-- **Long-form starts with judgments.** The skeleton requires "my judgments" up front; material backs them up instead of piling up.
-- **Facts stay put.** Revision changes wording, never numbers, quotes or certainty; every edit cites a rule.
+- Read actual references and visible specimens, then adapt their methods to the current material.
+- Explore a few distinct directions when useful; deliver one finished result for a clear one-result request.
+- Treat voice, length, emoji, openings and visual style as choices. Current user intent and author samples guide them.
+- Preserve necessary attribution, approximation and uncertainty in public copy. Facts, privacy, authorization and usable output remain concrete boundaries.
+- Linters offer context-sensitive signals, not a style score to maximize. Writing quality still needs real author or reader evaluation.
+
+See the [practice and specimens](./shared/references/creative-practice.md) and [audit](./docs/creative-skills-audit.md).
 
 ## What it writes
 
 | Category | Skill | What it does | Say |
 |---|---|---|---|
-| Duanzi | [`topmind-viral-posts`](./topmind-viral-posts/) | One sentence per line, zero emoji, 14 patterns | "来条段子", "不懂就问", "写个群聊体" |
+| Duanzi | [`topmind-viral-posts`](./topmind-viral-posts/) | X humor and conversational posts; 14 optional patterns | "来条段子", "不懂就问", "写个群聊体" |
 | Briefs | [`topmind-briefs`](./topmind-briefs/) | One thing, then stop: news, previews, launches, deals, rankings, papers, hands-on | "发个快讯", "来篇短的", "写条预告" |
 | Long-form · X | [`topmind-x-article`](./topmind-x-article/) | X Article: single-source Markdown → one-click copy HTML + preview image | "写 X 长文", "出一键复制版" |
 | Long-form · WeChat | [`topmind-wechat-post`](./topmind-wechat-post/) | WeChat articles: three quality gates, inline-image layout, publish checklist | "写公众号", "公众号排版" |
@@ -76,7 +78,7 @@ Each pattern has topics, hook, structure, ending, counter-examples and original 
 | Hands-on | The result (broke, fast, pricey) | Self-roast or a real question |
 | One-line take | An insider's light judgment | The judgment |
 
-The first-post window is measured in minutes; if you're late, change the angle. Previews and launches are separate posts. See [topmind-briefs](./topmind-briefs/SKILL.md).
+These are optional directions, not fixed openings or endings. Keep preview and launch states distinct; add a fresh angle when useful. See [topmind-briefs](./topmind-briefs/SKILL.md).
 
 ## Examples
 
@@ -112,7 +114,7 @@ Nova：我们也上线了，价格动了
 单任务成本两毛钱出头...
 ```
 
-Links, the official chart and caliber notes ("scores are vendor-reported") go to the author separately, not into the body.
+Keep necessary vendor attribution and uncertainty in the copy. Detailed sources and charts can be listed separately; useful links may stay in the body.
 
 **De-AI · before → after**
 
@@ -140,21 +142,21 @@ Removed the newsreader hype, the "not just X but Y" construction and the uplifti
 
 More: [duanzi](./topmind-viral-posts/examples/) · [briefs](./topmind-briefs/examples/) · [format](./topmind-format/examples/) · [revise](./topmind-revise/examples/) · [X article](./topmind-x-article/examples/) · [WeChat](./topmind-wechat-post/examples/) · [poster](./topmind-poster/examples/) · [cover](./topmind-cover/assets/examples/)
 
-## Long-form: judgments first, material second
+## Long-form: choose a structure that fits
 
 One folder per article, created by `article_scaffold.py`:
 
 ```text
 <title>/
 ├─ <title>.md     the only source
-├─ 骨架.md        message, reader, my judgments (required), per-section form and figures
+├─ 骨架.md        message, reader, main thread and evidence (optional), per-section form and figures
 ├─ 素材来源.md    where every image and number came from (not published)
 ├─ images/  cover/  raw/自制图源/
 └─ out/           X HTML, WeChat HTML, 预览.png (rebuildable)
 ```
 
-- **My judgments**: 3–5, each with its basis and the likely pushback. A long section with no judgment gets a "material dump" hint.
-- **Own diagrams**: method, architecture and comparison pieces get at least one diagram of your own view.
+- **Main thread**: claims and counterexamples for opinion, scenes for stories, tasks and steps for tutorials; no fixed number of judgments.
+- **Diagrams**: originals and custom diagrams are options when they improve understanding; no figure quota.
 - **Preview**: render `out/预览.png` before delivery; tables X can't paste can become images.
 
 ## Rules: principles first
@@ -165,10 +167,10 @@ All skills share layered rules (single source `shared/references/`, copied into 
 |---|---|---|
 | Principles | `social-writing-principles.md` | Know the message, lead with it, new info every line, form follows content, originals first, reader's side |
 | Information design | `information-design.md` | Skeleton first, content → form (list / table / figure / paragraph), length and density |
-| Voice | `core-voice.md` | Ten wording principles; V01–V40 show them in titles, openings, numbers, questions, replies, duanzi |
+| Voice | `core-voice.md` | Contextual V01–V40 options for titles, openings, numbers, questions, replies and humor |
 | Review | `de-ai-rules.md` + `topmind-revise` | De-AI patterns (long-form + social S01–S10), rewrite boundaries, fidelity audit |
 
-The persona is **an ordinary person still learning**: talks about what they saw and tried, no lectern, says so when unsure.
+The voice follows the current request, author samples, audience and genre; it is not one fixed persona.
 
 ### Scripts hint, people decide
 
@@ -182,8 +184,8 @@ python3 scripts/de_ai_lint.py article.md --genre long  # long-form
 
 | Level | Meaning | Required |
 |---|---|---|
-| E error | Markdown leftovers; URLs / source lines / image notes in the body | Must be zero |
-| W warning | Boilerplate, engagement-bait endings, forced analogies, English template lines, punctuation tics, over-long replies… | Each needs a decision: fix or justify |
+| E format issue | Likely marker leftovers and image placeholders; URL/source enforcement only with `--separate-links` | Check actual formatting and semantic exceptions |
+| W editorial signal | Patterns, length, literal lists and inline links | Use context; valid choices need no written justification |
 | H hint / I1–I9 | Context words, long first line, caliber notes in the body, newsreader template; information design (long runs, list candidates, material dumps…) | For judgment only, never in `--strict` |
 
 If you have your own post data, `post_type_report.py` shows which openings, endings and types work for you and writes a habits summary for revision; the data stays on your machine.

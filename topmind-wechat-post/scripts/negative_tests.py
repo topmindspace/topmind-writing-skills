@@ -155,8 +155,8 @@ def main() -> None:
               r2.stdout[-300:])
         skel = td / "脚手架样例" / "骨架.md"
         sk = skel.read_text(encoding="utf-8") if skel.is_file() else ""
-        check("scaffold 生成骨架.md（主要信息 / 读者 / 每节形式与图表计划），源稿里不写骨架",
-              all(k in sk for k in ("主要信息", "读者", "形式", "图表计划", "字数")) and "骨架" not in sm, sk[:200])
+        check("scaffold 把非空策划笔记与发布源稿分开保存",
+              skel.is_file() and bool(sk.strip()) and "骨架" not in sm, sk[:200])
         (td / "脚手架样例" / "脚手架样例.md").write_text(sm.replace("subtitle: ", "subtitle: 脚手架样例"), encoding="utf-8")
         r2 = run("check_article.py", [str(td / "脚手架样例")])
         check("check_article：subtitle 和标题一样 → W6", r2.returncode == 0 and "W6" in r2.stdout, r2.stdout[-200:])

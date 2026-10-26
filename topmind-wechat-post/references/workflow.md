@@ -81,7 +81,7 @@ python3 scripts/sync-status.py --set 定稿 <专题>/<文章名> --apply
 A=<专题>/<文章名>
 python3 scripts/check_article.py $A                       # 结构：E 级清零
 python3 scripts/de_ai_lint.py $A/<文章名>.md --genre long  # 去 AI 味：W 每条有结论，H 只供判断（装了 topmind-revise 时由它跑）
-python3 scripts/scan_ai_flavor.py $A/<文章名>.md          # 总分 ≥85；配了 $TOPMIND_AI_SCAN 且给姿态分时也 ≥85
+python3 scripts/scan_ai_flavor.py $A/<文章名>.md          # 词面诊断参考，不设定稿分数门槛
 python3 scripts/lint-wechat.py --input $A/<文章名>.md
 python3 scripts/sync-mapping.py --no-topstream
 python3 scripts/sync-status.py

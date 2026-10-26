@@ -47,10 +47,13 @@ def main() -> None:
     extra = [k for k in top_keys if k not in allowed]
     check(not extra, f"frontmatter 顶层只用规范字段（多出：{', '.join(extra) or '无'}）")
 
-    check("When NOT to use" in text or "何时不用" in text, "含 When NOT to use / 何时不用")
-
-    has_workflow = bool(re.search(r"工作流|Workflow|用法|Usage", text))
-    check(has_workflow, "含工作流/用法说明")
+    # 入口形式由技能决定；审计真实元数据与内容，不要求写固定标题或禁用清单。
+    check(fm_match is not None, "frontmatter 可读取")
+    name_match = re.search(r'^name:\s*([^\n]+)', fm_text, re.M)
+    declared_name = name_match.group(1).strip().strip('\"\'') if name_match else ""
+    check(bool(re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", declared_name)), "name 是有效技能标识")
+    body = text[fm_match.end():].strip() if fm_match else ""
+    check(bool(body), "技能正文非空（用途与流程另由实际任务评估）")
 
     fm = re.match(r"^---\r?\n([\s\S]*?)\r?\n---", text)
     desc = ""
@@ -62,8 +65,7 @@ def main() -> None:
             dm = re.search(r"^description:\s*>\-\s*\n((?:[ \t]+.*\n?)+)", fm.group(1), re.M)
             if dm:
                 desc = " ".join(l.strip() for l in dm.group(1).splitlines())
-    check("Use when" in desc or "用" in desc, "description 含使用场景")
-    check("Do NOT use" in desc or "不用" in desc, "description 含不适用场景")
+    check(bool(desc), "description 非空；能力与路由质量由任务评测判断")
     check(len(desc) <= 1024, f"description ≤1024（实 {len(desc)}）")
 
     if errors:

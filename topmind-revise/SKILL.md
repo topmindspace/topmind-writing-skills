@@ -1,171 +1,65 @@
 ---
 name: topmind-revise
-description: "改稿与质检：改稿、精简、去 AI 味、质量三关（事实 / 逻辑 / 去 AI 味）与保真审计，长文、短文、段子、回复、标题都能用。四种模式：只审不改（出改稿报告）、改稿（先备份再写回）、嵌入（topmind-wechat-post / topmind-x-article 写长文时默认调用，只回终稿）、快审（标题、短文、段子、回复、转发点评，带短帖 S01–S10 清单）。可以给作者的往期帖子做样本，按样本校准。规则来自共享的写作原则（第 0 层）、信息设计（第 1 层）、core-voice（第 2 层措辞原则）和 de-ai-rules（结构模式 + 改写边界）；脚本分 W 警告 / H 提示两级，I1–I9 信息设计只作提示；防过度改稿：没命中的段落不动，每处改动对应规则编号。Use when 改稿、帮我改改、精简、润色、去 AI 味、去AI味、AI 味太重、改得像人写的、审稿、质检、质量检查、三关、保真审计、按我的意见改、改标题、起标题、写摘要、revise、de-AI、proofread。Do NOT use for 从零写一篇新文章（→ topmind-wechat-post / topmind-x-article / topmind-briefs / topmind-viral-posts）、只排版不改字（→ topmind-format）、出 HTML 或排版导出（→ topmind-x-article / topmind-wechat-post）、封面与配图（→ topmind-cover / topmind-poster）、发布。"
+description: "审查、润色、精简或重写已有稿件，按用户目标选择修改深度，核对事实与作者声音。支持长文、短帖、回复、标题和只审不改；纯排版用 topmind-format，平台导出用对应长文技能。"
 license: MIT
 metadata:
-  version: "0.1.4"
+  version: "0.1.5"
   action_category: "write"
   triggers: "改稿, 帮我改改, 改回复, 看看这条回复, 改转发点评, 按我以前的帖子改, 改一下这篇, 精简, 润色, 去 AI 味, 去AI味, AI 味太重, 改得像人写的, 审稿, 质检, 质量检查, 三关, 事实核查这篇, 保真审计, 按我的意见改, 改标题, 起标题, 写摘要, 检查一下这篇, revise, edit this draft, proofread, de-AI, make it sound human, quality check"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-22"
+  updated: "2026-10-26"
 ---
 
 # topmind-revise · 改稿与质检
 
-把一篇稿子改得更短、更准、更像作者本人，并且能证明没改坏事实。可以单独用，也可以被写作技能组合调用。
+让稿子更贴近作者想表达的内容。先理解修改目标，再决定动结构、补解释、压冗余还是只修局部；成效由读者是否理解、事实是否准确、作者是否认可来判断。
 
-```
-声明 + 备份 → ⓪ 结构 → ① 事实 → ② 逻辑 → ③ 删冗余 → ④ 去 AI 味 → ⑤ 措辞原则对照 → ⑥ 排版 → ⑦ 保真审计 → ⑧ 过度改稿检查 → 报告
-```
+## 选择合适深度
 
-## 先读：写作原则与信息设计
-
-本技能建立在两份共享文件上，动笔前先读：
-
-- [references/social-writing-principles.md](references/social-writing-principles.md)：8 条社交媒体写作原则（先想清楚、结论先行、每句都有新信息、形式跟内容走、简单清楚、原图优先、站在读者那边、真实有分寸）
-- [references/information-design.md](references/information-design.md)：内容 → 形式决策表、篇幅和密度、去啰嗦的判断法
-- 措辞和口吻在这两层之上，见 [references/core-voice.md](references/core-voice.md)
-- 事实关遇到研究类稿子（对比、综述、数据汇总）：[references/research-mode.md](references/research-mode.md)
-
-改稿：先做结构诊断（⓪），再改措辞；去 AI 味模式表只在改稿和自查时读。
-
-## 语言：默认中文
-
-- **默认中文**：改稿、报告、候选标题都用中文；只有用户明确说要英文时才用英文。
-- 英文稿按同一流程走，结构模式用 `references/de-ai-rules.md` 第三节。
-
-## 四种模式
-
-| 模式 | 用户怎么说 | 行为 | 产出 |
-|---|---|---|---|
-| `audit` 只审不改 | 「检查一下」「质检」「看看哪里 AI 味」 | 跑三关和脚本，不动原稿 | 改稿报告：命中、建议改法、未核实条目 |
-| `revise` 改稿 | 「改稿」「精简」「去 AI 味」「按我的意见改」 | 先备份到新时间戳目录，再改，写回原文件 | 改后稿 + 改稿报告（对话里给要点） |
-| `embed` 嵌入 | 被 topmind-wechat-post / topmind-x-article 调用 | 步骤、备份、报告和 revise 完全一样；只有对话里的交付更短 | 终稿 + 三行摘要（字数前后、未核实条数、保留的提示）；完整报告照样落盘 |
-| `quick` 快审 | 标题、短文、段子、回复、摘要 | 一次通读 + 脚本，给一个改后版本，最多附 2 个候选 | 文本 + 一行理由 |
-
-**revise 和 embed 的边界**：用户直接说「改稿」就是 revise，哪怕稿子是长文技能写的；长文技能在写作流程里自动调用才是 embed。两者都先备份、都落盘完整报告，embed 的报告头写「模式：embed（调用方：xx）」。用户看了三行摘要想要细节时，打开 `out/改稿报告.md` 即可，不用换模式重跑。
-
-## 参数（调用方或用户可以给）
-
-| 参数 | 取值 | 默认 |
+| 模式 | 何时用 | 交付 |
 |---|---|---|
-| `genre` 文体 | long / short / duanzi / reply / title / summary / release | 按文件和长度推断：`.md` 或超过约 1000 字当 long |
-| `reader` 读者 | 大众 / 有背景 / 专业 | 有背景（懂基础概念） |
-| `heat` 时机 | 首发热点 / 真里程碑 / 后续迭代 / 热度一般 | 不确定时问作者（决定强势还是诚恳，见 `core-voice.md` V20） |
-| `notes` 作者意见 | 作者的修改意见原话 | 无；有就优先，作者改过的说法就是标准答案 |
-| `sources` 素材来源 | 私有 `素材来源.md` 的路径 | 稿子同目录下自动找 |
-| `source_draft` 源稿 | 改写前的源稿路径 | 无；有就加跑段落级保真审计 |
-| `samples` 作者样本 | 作者往期帖子（JSONL / CSV）或 `post_type_report.py --samples-out` 生成的习惯摘要 | 无；有就按样本的句长、开头、收尾、标点习惯校准，优先于通用规则 |
-| `depth` 结构改动深度 | light / structure | light：⓪ 只诊断，外加低风险的结构改动（并列段转列表、对照转表格、删重复段）；structure：允许重排小节、合并拆分章节、按骨架重组 |
+| `audit` | 用户只要检查 | 具体问题、证据与建议，不改原稿 |
+| `revise` | 用户要求改稿、润色、精简 | 改后稿与关键改动理由 |
+| `embed` | 写作技能成稿后的自查 | 完成稿；重要疑点另说 |
+| `quick` | 短帖、标题、回复、局部修改 | 一份可用版本，必要时加备选 |
 
-## 工作流
+默认中文，用户要求与原文语言优先。`genre`、`reader`、`notes`、`samples`、`sources`、`source_draft`、`depth` 可作上下文，不要求用户逐项填参数。只改措辞就局部处理；全面重写或结构整改的授权已包含对应结构调整，不重复请求许可。
 
-0. **声明与备份**：先说「技能 topmind-revise · 模式 · 文体」；revise / embed 模式把稿子和配图复制到新的带时间戳目录（不覆盖旧备份）：长文文章文件夹固定放 `<文章文件夹>/raw/备份-YYYYMMDD-HHMMSS/`，单个短文件放同目录的 `备份-YYYYMMDD-HHMMSS-<稿名>/`。再跑 `python3 scripts/count_words.py 稿子.md` 记改前字数。
-1. **⓪ 结构复查**（方法见 `references/information-design.md`）：先不看措辞，回答四个问题——主要信息是什么、在不在开头；每节要点能不能一句话说出；哪些内容的形状适合列表 / 表格 / 图却写成了段落；哪里重复、哪里超出篇幅预算。有 `骨架.md` 就对着它看；先跑 `python3 scripts/info_design_hints.py 稿子.md` 拿 I 提示做线索（只供判断）。结论写进报告「信息设计诊断」。默认 `depth=light`：只做低风险的结构改动（并列段转列表、对照转表格、删重复段），重排章节先列建议交作者；`depth=structure` 时才动章节顺序和拆合。随笔类稿子（type: essay）整篇段落是正常的，不按「段落太多」诊断。
-2. **① 事实**（细则见 `references/fact-check.md`）：承重事实（数字、排名、日期、引语、「第一」）逐条对素材来源，上一版的数字全部重核；有一手信源但未完全确认的热点，短文可直陈加「？！」；纯传闻不写；「第一」核实不了就换说法；引语逐字照录、语气不升级；否定结论换一种查法再查一遍。查不到的列进「未核实条目」交给作者，不替作者决定。
-3. **② 逻辑**：结论是否靠前；长文结构「过去一句 + 图、现在汇总加分析、未来判断 + 一条支撑事实」；定性准不准；对比有对象、有定语；同一事实全文同值、同一事物一个叫法（写法也统一）；导语、小结和后文对得上，没有以偏概全。
+## 看参考，找真正的问题
 
-   事实关和逻辑关靠人工判断，改稿报告骨架里有一份「人工检查」清单，逐项勾过再交付。
-4. **③ 删冗余**：删不言自明的引导语、复述图的句子、小节过渡句、无效信息、段段小结。直白但啰嗦的句子只删多余部分，不整句推倒。
-5. **④ 去 AI 味**：按 `references/de-ai-rules.md` 走，先守改写边界；强信号见一次就改，弱信号叠在一起才改，语境词（H 提示）按 `references/core-voice.md` 的场景判断要不要留。
+有作者样本就实际读几段，辨认其句长、幽默、术语、情绪与叙事习惯；一篇样本说明一种场景，不自动成为所有体裁的标准。[创作方法与样张](references/creative-practice.md) 展示同一素材的多种成立方式。
 
-   ```bash
-   python3 scripts/de_ai_lint.py 稿子.md                  # 长文：W 警告 + H 提示
-   python3 scripts/lint_x_post.py 短文.txt                # 短文 / 段子 / 回复：再加 X 格式检查
-   python3 scripts/lint_x_post.py 段子.txt --duanzi
-   ```
+先通读再看 lint。把“读者会误解什么、哪里断了、哪里重复”说具体，而不是从某个词推断“像 AI”。选择 [口吻经验](references/core-voice.md)、[信息设计](references/information-design.md) 或 [修改流程](references/revision-workflow.md) 的相关部分即可。
 
-6. **⑤ 措辞原则对照**：按文体抽查 `references/core-voice.md` 的十条措辞原则和速查表（标题、开头、收尾、数字、引用、来源行、列表、emoji……）；短文、段子、回复的口吻像还在学习的普通人，不像讲台上的专家。
-7. **⑥ 排版**：长文 Markdown（图紧跟它证明的文字，一段 2–3 句，小标题「序号、阶段：概括」）；短文纯文本；段子一句一行、行间空一行；回复一行。
-8. **⑦ 保真审计**：
+## 改稿方法
 
-   ```bash
-   python3 scripts/revise_check.py 备份/稿子.md 稿子.md --report 改稿报告.md
-   python3 scripts/audit-provenance.py --draft 稿子.md --source 源稿.md   # 有源稿时
-   ```
+1. 对现有文件实质修改前保留可恢复版本：已有版本控制、用户指定备份或时间戳副本都可以。聊天里的短文本可直接给改后稿。
+2. 看主线与结构。资讯可以结论先行，故事可以从场景进入，教程可以按操作展开。改动深度跟用户目标走。
+3. 核对承重事实、论证与归因；优先核动态、新增、存疑或被改动的内容。保留范围、近似值和确定性；查不到的明确列出，见 [fact-check.md](references/fact-check.md)。
+4. 尝试更合适的表达。可以删重复，也可以补必要解释；类比、问句、第一人称、长句、对仗都有适用场景。有效段落保留，合理改动无需命中规则编号。
+5. 回读改前改后：事实、态度和引用是否被改坏，读者是否更容易理解，作者是否还认得自己的声音。重要取舍给一句理由；小改无需逐条报告。
 
-   `revise_check.py` 比对数字、日期、引语、英文专名、确定性词（可能 / 预计 / 已经 / 据传…）的消失和新增；数字、引语的每处变化都要有依据。
-9. **⑧ 过度改稿检查**：同一脚本统计「没有任何 W 命中却被改写」的段落占比，超过 30% 提示「可能改过头」，逐段确认或恢复原文。结构复查、事实关、逻辑关和作者意见带来的改动不算过度改稿：在改动表里把依据写成「⓪ 结构」「① 事实」「② 逻辑」「作者意见」，再跑 `revise_check.py 备份/稿子.md 稿子.md --declare out/改稿报告.md`，这些段落会单独列出、不计入比例。
-10. **报告**（模板见 `references/report-template.md`）：字数改前 → 改后；信息设计诊断；改动表（骨架已按段落 diff 预填原文 / 改后，补依据）；保留未改的命中（骨架已列出改后稿全部 W 和 H，W 写理由，H 写一句判断，不能写「无」却还有命中）；人工检查清单；未核实条目。
-
-完整流程与完成标准见 `references/revision-workflow.md`。
-
-### 快审清单（短文、段子、回复、转发点评）
-
-`quick` 模式不走完整十步，按这份清单过一遍，再跑 `lint_x_post.py`（快讯加 `--kind news`，运营帖加 `--kind ops`）：
-
-1. **首行**：只看首行能拿到信息吗？快讯是不是「是什么 + 最狠一个数」？（V05）
-2. **口径**：X 正文有没有查证过程、「官方称」「按图估读」？挪进口径提醒（V39）。预告有没有写成发布（V40）？
-3. **短帖模式 S01–S10**（`de-ai-rules.md` 第五节）：套路互动尾巴、播报腔、假装亲历、空泛比喻、英文模板句、警报 emoji、标签堆砌……命中就改。
-4. **收尾**：删尾测试——删掉最后半句更好就删；套路问句换成「...」或作者真拿不准的问题（V10、V34）。
-5. **回复与转发点评**（V37）：先接住对方的点，再补一条自己的信息或经验；不复述原帖，不写「说得好」「学到了」；一行到三行；给两个口吻不同的版本让作者挑。
-6. **精炼**：不砍双音词、不夹没必要的英文小词（V38）。
-7. **作者样本**：有 `samples` 时，对照样本的句长和标点习惯，改后版本不能比样本更「像 AI」。
-
-样本怎么来：作者导出自己的往期帖子（JSONL 或 CSV，每行一条，有文本字段即可），跑
+## 检查工具
 
 ```bash
-python3 scripts/post_type_report.py 我的帖子.jsonl --samples-out 样本习惯.md
+python3 scripts/de_ai_lint.py 稿子.md
+python3 scripts/lint_x_post.py 短帖.txt
+python3 scripts/revise_check.py 改前.md 改后.md --report 改稿报告.md
+python3 scripts/audit-provenance.py --draft 改后.md --source 源稿.md
+python3 scripts/count_words.py 稿子.md
 ```
 
-得到一份习惯摘要（常用开头、收尾、句长、话题标签和配图习惯），把路径传给 `samples=`。帖子和摘要都是作者的私有文件，不进本仓库。
+`revise_check.py` 的事实变化与改动比例是复查线索，不证明事实错误或过度修改；全面改写本来就可能改动很多无 lint 命中的段落。`--declare 报告.md` 可记录结构、事实、作者意见等依据。段落级溯源适合同构派生稿；重组、多源综述改用主张与数字逐项核对。
 
-## 防过度改稿（硬约束）
+[de-ai-rules.md](references/de-ai-rules.md) 是需要定位问题时的诊断表，所有写法信号都需要上下文。W/H/I 不要求清零，分数不作定稿门槛。格式破损、缺图等实际问题修复后再交付。
 
-1. 每处改动对应一条规则编号（Z / P / V）或一句作者意见；说不出来就恢复原文。
-2. 没有命中的段落原样保留。
-3. 不追求字数一定变短：变短是删冗余的结果，不是目标。
-4. 不动：引语原文、专名、术语、讨论某个词本身的句子、作者故意的口语和括号里的自我纠正。
-5. 有作者以前的稿子时，句长、用词、标点习惯跟样本走，优先于通用规则。
-6. W 警告不要求「清零」，要求每条有结论；H 提示只供判断，不要求改。
-7. 结构改动也要说得出依据（写「⓪ 结构」加一句诊断）；默认只做低风险的结构改动，重排章节要 `depth=structure` 或作者同意。转列表、转表格时原句的事实和措辞照搬，不顺手改写。
+## 报告与作者校准
 
-## 被其他技能调用时
+简单改稿给结果和一两句重要说明。长文全面审校、多源整合或用户要审计时，写完整报告：主要改动、事实依据、未核实项、保留的取舍；[report-template.md](references/report-template.md) 可按需取用。
 
-| 调用方 | 默认 | 调用约定 |
-|---|---|---|
-| topmind-wechat-post | 默认组合：成稿后由本技能执行质量三关 | `mode=embed genre=long sources=<文章目录>/素材来源.md` |
-| topmind-x-article | 默认组合：工作流第 0 步 | 同上 |
-| topmind-briefs / topmind-viral-posts | 不默认调用；直接按共享的 `core-voice.md` 写，跑 lint | 用户说「改稿 / 过一遍」时：`mode=revise genre=short` 或 `mode=quick genre=duanzi` |
-| topmind-format | 不调用；只报告命中、不改字 | 用户要改写时建议转本技能 |
-| topmind-cover | 不调用 | 用户要改封面文案时：`mode=quick genre=title` |
+作者要校准风格时，可按 [calibration-drill.md](references/calibration-drill.md) 做匿名候选对比：保持素材、篇幅与事实相同，给作者选并说明喜欢什么。未经真实选择不声称质量提高。只在用户要求记录时沉淀带场景与例外的偏好。
 
-- 嵌入模式交回：终稿文本 + 三行摘要；完整报告写到文章目录（例如 `out/改稿报告.md`），改稿报告和素材来源都是作者的私有文件，不进本仓库。
-- 本技能单独安装也能用；调用方没装本技能时，按它随包的 `revision-workflow.md` 手动走一遍，效果一致。
+更多改前改后见 [examples.md](references/examples.md) 和 `examples/`。作者帖子统计可用 `scripts/post_type_report.py`，不把相关性当成因果或爆款保证。
 
-## 脚本
-
-| 脚本 | 用途 |
-|---|---|
-| `scripts/de_ai_lint.py` | 去 AI 味检查：W 警告（强信号）+ H 提示（语境词）；长文 Markdown 另附 I 级信息设计提示；`--genre`、`--json`、`--no-hints`、`--no-design`、`--strict`（I、H 永远不算失败） |
-| `scripts/info_design_hints.py` | 信息设计提示 I1–I9（连续纯文字、图表列表少、可转列表 / 表格、重复、首段没交底、长节全是段落、超出 `骨架.md` 篇幅预算）；⓪ 结构复查时先跑，只供判断；`type: essay` 不提示 I1、I2、I7 |
-| `scripts/lint_x_post.py` | X 短文 / 段子 / 回复的格式检查（E 级），去 AI 味部分复用 `de_ai_lint.py` |
-| `scripts/count_words.py` | 统一口径的字数统计（改前 / 改后、单段最长） |
-| `scripts/revise_check.py` | 保真比对（按次数比，不只看有没有）+ 过度改稿检查（`--declare` 排除已登记的事实 / 逻辑 / 作者意见改动）+ 报告骨架（预填改动表和全部剩余命中；长文附改前 / 改后的 I 提示，填进「信息设计诊断」） |
-| `scripts/audit-provenance.py` | 有源稿时的双向逐段溯源审计 |
-| `scripts/post_type_report.py` | 作者往期帖子的类型和习惯统计（开头、收尾、类型、长度、话题标签、配图，按中位数算相对表现）；`--samples-out` 生成习惯摘要给 `samples=` 用；只读作者自己的数据，结果不进仓库 |
-| `scripts/check_article.py` | 文章文件夹体检（长文 `<文章名>/<文章名>.md`；短文文件夹 `公众号短文.md` / `X短文.txt` 放宽文件名和封面要求）：frontmatter、标题一致、图片存在且按出现顺序编号、无容器 / callout / `![[ ]]`；草稿期还没补的占位截图（文件名带「待补 / 占位 / 截图」或登记在素材来源里）只给 W4，定稿时才算错；改稿移动段落或图片后跑一次 |
-
-这些脚本的唯一真源在仓库 `shared/scripts/`，本目录是逐字节副本。
-
-## 风格校准（可选）
-
-作者想让规则更贴近自己的写法时，可以做一轮「对练」：AI 出候选、作者答选择和理由，冲突记下来，下一轮复测，最后用整篇验收。方法见 `references/calibration-drill.md`。校准结果写进作者自己的私有规则文件，不改本仓库的共享规则。
-
-## 示例
-
-改前 / 改后对照（虚构示例）见 `references/examples.md` 和 `examples/`。
-
-## When NOT to use
-
-- 从零写一篇新文章 → `topmind-wechat-post`（公众号长文）、`topmind-x-article`（X 长文）、`topmind-briefs`（短文）、`topmind-viral-posts`（段子）
-- 只排版、不改字 → `topmind-format`
-- 出 HTML、排版导出 → `topmind-x-article` / `topmind-wechat-post`
-- 封面、配图、长图 → `topmind-cover` / `topmind-poster`
-- 只改一两个错别字 → 直接改
-- 发布 → 本技能只改稿，不代发
-
-## 外部依赖
-
-无。规则文件和脚本都随包自带，只用 Python 标准库。
+独立使用无需外部技能；格式化用 `topmind-format`，平台导出用 `topmind-wechat-post` / `topmind-x-article`。本技能改稿，不执行发布。

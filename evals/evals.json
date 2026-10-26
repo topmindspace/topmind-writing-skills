@@ -1,101 +1,755 @@
 {
   "_doc": "路由评测骨架：每个技能至少 3 条，其中至少 1 条负例（target_skill 是本技能，但 expected_skill 指向别的技能或 null）。按 Anthropic 最佳实践「先有评测再写文档」与 topmind-presentation 的 trace 格式设计；目前只做结构校验（scripts/check_evals.js），尚未在真实宿主里执行打分。",
   "pack": "topmind-writing-skills",
-  "external_skills": ["topmind-write", "topmind-x", "topmind-capture", "topmind-presentation", "topmind-research"],
+  "external_skills": [
+    "topmind-write",
+    "topmind-x",
+    "topmind-capture",
+    "topmind-presentation",
+    "topmind-research"
+  ],
   "evals": [
-    {"id": "wechat-1", "target_skill": "topmind-wechat-post", "prompt": "把这篇 Markdown 排成公众号版，图片要能直接粘贴进后台。", "expected_skill": "topmind-wechat-post", "expected_behavior": "跑 md2wechat.py 并带 --embed-images，产出 <slug>-公众号版.html 与图片上传清单，不代发。"},
-    {"id": "wechat-2", "target_skill": "topmind-wechat-post", "prompt": "这篇公众号稿可以定稿了，帮我过一遍三关然后改状态。", "expected_skill": "topmind-wechat-post", "expected_behavior": "事实/逻辑/文字三关（装了 topmind-revise 就以嵌入模式执行，没装按 revision-workflow.md 手动走）；有源稿时跑 audit-provenance.py；用 sync-status.py --set 定稿 改状态，不手改目录名。"},
-    {"id": "wechat-3", "target_skill": "topmind-wechat-post", "prompt": "新建一个公众号交付包，题目是《本周 AI 发布盘点》。", "expected_skill": "topmind-wechat-post", "expected_behavior": "new-article.py；路径按 --base / TOPMIND_WECHAT_BASE / TOPMIND_WORKSPACE 解析，解析不到就要求用户给目录，不猜路径。"},
-    {"id": "wechat-neg-1", "target_skill": "topmind-wechat-post", "prompt": "帮我把这篇长文润色一下，先不管发哪里。", "expected_skill": "topmind-revise", "expected_behavior": "现成长文的润色、改稿归 topmind-revise（改稿与质检），不进公众号技能。"},
-    {"id": "x-article-1", "target_skill": "topmind-x-article", "prompt": "把这篇稿子做成 X 长文发布包，要能一键复制。", "expected_skill": "topmind-x-article", "expected_behavior": "产出 X长文.html + X发布稿.txt + 发布清单，用户人工点发布。"},
-    {"id": "x-article-2", "target_skill": "topmind-x-article", "prompt": "X 长文的配图顺序要和公众号版一致。", "expected_skill": "topmind-x-article", "expected_behavior": "用 --images-from 公众号稿.md 派生图片顺序，不手工拼 --images。"},
-    {"id": "x-article-3", "target_skill": "topmind-x-article", "prompt": "推特长文怎么发？给我准备好材料。", "expected_skill": "topmind-x-article", "expected_behavior": "准备发布包，不通过 API 发长文。"},
-    {"id": "x-article-neg-1", "target_skill": "topmind-x-article", "prompt": "写一条涨粉短帖。", "expected_skill": "topmind-viral-posts", "expected_behavior": "短帖写稿走 viral-posts；x-article 不接。"},
-    {"id": "briefs-1", "target_skill": "topmind-briefs", "prompt": "根据这张最新的模型榜单写个快讯，公众号和 X 各一版。", "expected_skill": "topmind-briefs", "expected_behavior": "一件事一张图，按「信源 → 原图 → 内容 → 排版」；X 正文是一段可复制纯文本（不含 URL / 来源行）、公众号版单独 markdown 块（默认不出 HTML），数字有一手来源，链接与原图另发，只交付不发布。"},
-    {"id": "briefs-2", "target_skill": "topmind-briefs", "prompt": "来篇短的，讲讲这篇论文的核心结论。", "expected_skill": "topmind-briefs", "expected_behavior": "论文解读型短文，推测显式标注。"},
-    {"id": "briefs-3", "target_skill": "topmind-briefs", "prompt": "新品速递：这款新手机的关键参数整理成短文。", "expected_skill": "topmind-briefs", "expected_behavior": "新品速递，厂商数字标口径。"},
-    {"id": "briefs-neg-1", "target_skill": "topmind-briefs", "prompt": "写个互关帖，要有钩子、能涨粉。", "expected_skill": "topmind-viral-posts", "expected_behavior": "引流互动型走 viral-posts。"},
-    {"id": "viral-1", "target_skill": "topmind-viral-posts", "prompt": "写几条 X 引流段子，配图优先用官方原图。", "expected_skill": "topmind-viral-posts", "expected_behavior": "短句分行带互动钩子；原图逐图确认可用并保留来源。"},
-    {"id": "viral-2", "target_skill": "topmind-viral-posts", "prompt": "蹭一下今天的热点，写个爆款短篇。", "expected_skill": "topmind-viral-posts", "expected_behavior": "热点资讯型模板，只起草不代发。"},
-    {"id": "viral-3", "target_skill": "topmind-viral-posts", "prompt": "帮我写一条涨粉帖。", "expected_skill": "topmind-viral-posts", "expected_behavior": "涨粉型模板。"},
-    {"id": "viral-neg-1", "target_skill": "topmind-viral-posts", "prompt": "把这条帖子直接发到我的 X 账号。", "expected_skill": "topmind-x", "expected_behavior": "发帖走 topmind-x 连接器，且须用户确认后才发；viral-posts 不发帖。"},
-    {"id": "cover-1", "target_skill": "topmind-cover", "prompt": "给这篇公众号文章做个封面，要醒目。", "expected_skill": "topmind-cover", "expected_behavior": "选风格→出 1500×600 主图 + 900×383 公众号裁剪版，默认至少 2 版。"},
-    {"id": "cover-2", "target_skill": "topmind-cover", "prompt": "X 长文需要一张头图。", "expected_skill": "topmind-cover", "expected_behavior": "X 主尺寸 1500×600。"},
-    {"id": "cover-3", "target_skill": "topmind-cover", "prompt": "做个 thumbnail，主题是开源模型周报。", "expected_skill": "topmind-cover", "expected_behavior": "封面流程，关键信息不编造。"},
-    {"id": "cover-neg-1", "target_skill": "topmind-cover", "prompt": "把这份榜单做成一张竖版长图。", "expected_skill": "topmind-poster", "expected_behavior": "长图/信息图走 poster。"},
-    {"id": "poster-1", "target_skill": "topmind-poster", "prompt": "把这个 HTML 渲染成 2× 高清 PNG，自动裁掉底部空白。", "expected_skill": "topmind-poster", "expected_behavior": "render_poster.py 渲染 + 裁白。"},
-    {"id": "poster-2", "target_skill": "topmind-poster", "prompt": "做一张月报长图，太长就拆成几张。", "expected_skill": "topmind-poster", "expected_behavior": "长图 + 分段。"},
-    {"id": "poster-3", "target_skill": "topmind-poster", "prompt": "一张图讲清楚这三个模型的区别。", "expected_skill": "topmind-poster", "expected_behavior": "单张信息图，文字数字逐字正确。"},
-    {"id": "poster-neg-1", "target_skill": "topmind-poster", "prompt": "把这份季度汇报做成 12 页可编辑 PPTX。", "expected_skill": "topmind-presentation", "expected_behavior": "多页演示/PPTX 走 presentation。"},
-    {"id": "briefs-4", "target_skill": "topmind-briefs", "prompt": "写个公众号短文加 X 版，讲讲这个榜单的变化，X 版要带话题标签。", "expected_skill": "topmind-briefs", "expected_behavior": "双版交付：公众号版 300–800 字用 Markdown 列表、单独成块（可有文内链接）；X 版正文一段可复制纯文本，分点用 emoji 或「1）」「·」（不用 - / 1.），末行 0–2 个话题标签，不含 URL；链接、原图另发；只交付不发布。"},
-    {"id": "briefs-5", "target_skill": "topmind-briefs", "prompt": "把这篇公众号短文改成 X 版，X 不支持 markdown 列表。", "expected_skill": "topmind-briefs", "expected_behavior": "由公众号稿派生 X 稿：Markdown 列表改成纯文本列表（🔹 / 1️⃣ 或「·」「1）」，emoji 不强制），文内链接挪到另发的链接消息；只改排版、内容一致；跑 lint_x_post.py 确认无 Markdown 列表、标题、加粗，无 E10–E12。"},
-    {"id": "briefs-6", "target_skill": "topmind-briefs", "prompt": "发个快讯：这款模型降价了，价格对比整理一下。", "expected_skill": "topmind-briefs", "expected_behavior": "快讯：首行「是什么 + 最狠一个数」，比读者认识的对手；数字有一手来源，厂商口径写进交付说明的口径提醒、不进 X 正文；一张核心图，链接与图另发。"},
-    {"id": "briefs-neg-2", "target_skill": "topmind-briefs", "prompt": "写一篇 3000 字的公众号长文，深度分析这个行业，要排版成微信格式。", "expected_skill": "topmind-wechat-post", "expected_behavior": "公众号长文与完整交付包走 wechat-post；briefs 只做 300–800 字短文。"},
-    {"id": "briefs-neg-3", "target_skill": "topmind-briefs", "prompt": "写个段子蹭一下今天的热点，带话题标签。", "expected_skill": "topmind-viral-posts", "expected_behavior": "段子、热点引流帖走 viral-posts。"},
-    {"id": "briefs-neg-4", "target_skill": "topmind-briefs", "prompt": "把这个榜单做成一张竖版长图。", "expected_skill": "topmind-poster", "expected_behavior": "单独出长图走 poster。"},
-    {"id": "viral-4", "target_skill": "topmind-viral-posts", "prompt": "写 3 条互关帖，每条带话题标签和分类标签。", "expected_skill": "topmind-viral-posts", "expected_behavior": "每条输出含正文、配图、「标签」项：话题标签 1–3 个（末行，互关类含 #蓝V互关 #follow）+ 内部分类（类型/用途/平台/语气）。"},
-    {"id": "viral-5", "target_skill": "topmind-viral-posts", "prompt": "这条段子里有三个要点，X 不支持 markdown 列表，帮我排版。", "expected_skill": "topmind-viral-posts", "expected_behavior": "段子体完全不用 emoji：分点不加任何符号，一条一行、行间空行；不用 - 或 1.、不加粗；跑 lint_x_post.py --duanzi（无 W13）。"},
-    {"id": "viral-6", "target_skill": "topmind-viral-posts", "prompt": "来条热点段子，带上合适的 hashtag 建议。", "expected_skill": "topmind-viral-posts", "expected_behavior": "热点资讯型：先核对来源再段子化；hashtag 只用事件/产品通用名，传闻不用会被当作已证实的标签。"},
-    {"id": "viral-neg-2", "target_skill": "topmind-viral-posts", "prompt": "写一篇 X 长文，3000 字，要一键复制发布。", "expected_skill": "topmind-x-article", "expected_behavior": "X 长文走 x-article；viral-posts 只做短帖。"},
-    {"id": "viral-neg-3", "target_skill": "topmind-viral-posts", "prompt": "做一条榜单快讯，数据要有来源，公众号和 X 各一版。", "expected_skill": "topmind-briefs", "expected_behavior": "信息密度型快讯、数据榜单走 briefs。"},
-    {"id": "viral-neg-4", "target_skill": "topmind-viral-posts", "prompt": "做一张本周发布盘点的竖版长图。", "expected_skill": "topmind-poster", "expected_behavior": "长图、海报走 poster。"},
-    {"id": "x-article-4", "target_skill": "topmind-x-article", "prompt": "把这篇长文转成 X发布稿.txt，列表别用 markdown 符号。", "expected_skill": "topmind-x-article", "expected_behavior": "md2x.py 默认把 - / 1. 转成 emoji 项目符号（最多两层），代码块不动；可用 lint_x_post.py --long 自检；X长文.html 的原生列表不受影响。"},
-    {"id": "x-article-5", "target_skill": "topmind-x-article", "prompt": "写 X 文章，要能一键复制进 X Article 编辑器。", "expected_skill": "topmind-x-article", "expected_behavior": "X 长文发布包：X长文.html + X发布稿.txt + 发布清单，人工点发布。"},
-    {"id": "x-article-neg-2", "target_skill": "topmind-x-article", "prompt": "写一条 X 快讯，带数据榜单，一帖就行。", "expected_skill": "topmind-briefs", "expected_behavior": "短帖快讯走 briefs；x-article 只接 X 长文。"},
-    {"id": "x-article-neg-3", "target_skill": "topmind-x-article", "prompt": "把这篇文章排成公众号格式，图片要内嵌。", "expected_skill": "topmind-wechat-post", "expected_behavior": "公众号排版走 wechat-post。"},
-    {"id": "wechat-4", "target_skill": "topmind-wechat-post", "prompt": "写公众号，题目是《本周 AI 工具盘点》，要完整的发布清单。", "expected_skill": "topmind-wechat-post", "expected_behavior": "公众号长文全流程：交付包、质量三关、排版、发布清单。"},
-    {"id": "wechat-neg-2", "target_skill": "topmind-wechat-post", "prompt": "来篇公众号短文，500 字讲清楚这个新品的关键参数。", "expected_skill": "topmind-briefs", "expected_behavior": "300–800 字的公众号短文走 briefs。"},
-    {"id": "wechat-neg-3", "target_skill": "topmind-wechat-post", "prompt": "给这篇公众号文章做个头图。", "expected_skill": "topmind-cover", "expected_behavior": "封面、头图走 cover。"},
-    {"id": "wechat-neg-4", "target_skill": "topmind-wechat-post", "prompt": "写条涨粉段子发 X。", "expected_skill": "topmind-viral-posts", "expected_behavior": "X 段子、涨粉帖走 viral-posts。"},
-    {"id": "cover-4", "target_skill": "topmind-cover", "prompt": "公众号头图，风格要醒目，标题《开源模型周报》。", "expected_skill": "topmind-cover", "expected_behavior": "封面流程：选风格、1500×600 主图 + 900×383 公众号裁剪版。"},
-    {"id": "cover-neg-2", "target_skill": "topmind-cover", "prompt": "给这周的 AI 榜单做个海报，数字要逐字正确。", "expected_skill": "topmind-poster", "expected_behavior": "带精确数字的海报走 poster。"},
-    {"id": "cover-neg-3", "target_skill": "topmind-cover", "prompt": "写个互关帖，要带话题标签。", "expected_skill": "topmind-viral-posts", "expected_behavior": "写稿走 viral-posts；cover 只在需要生图时被调用。"},
-    {"id": "poster-4", "target_skill": "topmind-poster", "prompt": "给文章做一张信息图配图，数字和型号要逐字正确。", "expected_skill": "topmind-poster", "expected_behavior": "HTML 排版 + 渲染，文字数字逐字正确。"},
-    {"id": "poster-neg-2", "target_skill": "topmind-poster", "prompt": "写个榜单快讯的文案，公众号和 X 各一版。", "expected_skill": "topmind-briefs", "expected_behavior": "榜单快讯文案走 briefs。"},
-    {"id": "poster-neg-3", "target_skill": "topmind-poster", "prompt": "给这篇文章做个封面。", "expected_skill": "topmind-cover", "expected_behavior": "单张封面走 cover。"},
-    {"id": "cover-xpost-1", "target_skill": "topmind-cover", "prompt": "给这条 X 短文配一张短帖封面，16:9 的。", "expected_skill": "topmind-cover", "expected_behavior": "走「X 短文封面」场景：按场景→风格→标题花式选型，16:9 生成，crop-cover.py --preset x-post 落盘 00-封面-X短文.png（1200×675），封面数字须在正文有出处。"},
-    {"id": "briefs-xsource-1", "target_skill": "topmind-briefs", "prompt": "写一篇 X 短文，讲今天编程榜单的变化，要带来源链接。", "expected_skill": "topmind-briefs", "expected_behavior": "先核实一手来源；X 正文一段可复制纯文本，不含 URL 和「来源：」行（用户要的来源链接单独一条另发：名称｜发布时间｜URL），厂商数字标厂商口径，末行话题标签；默认不出 HTML；1–2 张原图另发，无原图先问是否配图；lint_x_post 无 E10–E12，W9 处理完。"},
-    {"id": "viral-cover-1", "target_skill": "topmind-viral-posts", "prompt": "来 3 条热点段子，记得配图和来源。", "expected_skill": "topmind-viral-posts", "expected_behavior": "每条正文一段可复制纯文本、不含 URL 和来源行，来源链接另发一条、原图另发一条；段子体行间空行、零 emoji；无原图可选走 topmind-cover 出 16:9 图；去 AI 味，不写「不是 A 而是 B」「综上所述」。"},
-    {"id": "format-1", "target_skill": "topmind-format", "prompt": "帮我把这段话转段子，每句之间空一行。", "expected_skill": "topmind-format", "expected_behavior": "段子体：一句一行、行间空一行，不改字；完全不用 emoji（不加人设点缀，原文 emoji 去掉）；format_text.py 保真校验通过。"},
-    {"id": "format-2", "target_skill": "topmind-format", "prompt": "把下面这段格式化成短文，发 X 用。", "expected_skill": "topmind-format", "expected_behavior": "短文体：分段换行，Markdown 列表改「·」「1）」（或按需 🔹/1️⃣），emoji 可选、用就对应关键词，不加事实不改字，原文 URL 挪到另发清单，lint_x_post 无错误。"},
-    {"id": "format-3", "target_skill": "topmind-format", "prompt": "这条帖子排一下版，加点 emoji，别改内容。", "expected_skill": "topmind-format", "expected_behavior": "按短文体处理（段子体不加 emoji）；只动排版；emoji 可选，用就按 emoji-system.md 配额，原文表情保留；格式化结果是一段可复制纯文本，链接另发，改动说明另列。"},
-    {"id": "format-neg-1", "target_skill": "topmind-format", "prompt": "帮我写 3 条涨粉帖，主题是新号冷启动。", "expected_skill": "topmind-viral-posts", "expected_behavior": "从零写段子归 viral-posts，不走格式化技能。"},
-    {"id": "format-neg-2", "target_skill": "topmind-format", "prompt": "写一篇 X 短文，讲今天发布的新模型，带来源。", "expected_skill": "topmind-briefs", "expected_behavior": "从零写干货短文归 briefs，默认纯文本不出 HTML，正文一段可复制纯文本，来源链接（含发布时间）另发。"},
-    {"id": "viral-duanzi-1", "target_skill": "topmind-viral-posts", "prompt": "写个冷知识段子，结尾带蓝V互关。", "expected_skill": "topmind-viral-posts", "expected_behavior": "冷知识揭秘型 + 互关组合，段子体行间空行，机制说法核实或标传言，末行话题标签。"},
-    {"id": "viral-list-1", "target_skill": "topmind-viral-posts", "prompt": "写一条互关段子，列三条今天的打卡清单。", "expected_skill": "topmind-viral-posts", "expected_behavior": "段子体可以分点但不加任何符号、不用 emoji，不用 - / 1.，条目一条一行、行间空行；正文一段可复制纯文本，链接、配图另发，内部标签另列。"},
-    {"id": "viral-delivery-1", "target_skill": "topmind-viral-posts", "prompt": "来 3 条涨粉帖，带话题标签和配图建议。", "expected_skill": "topmind-viral-posts", "expected_behavior": "3 条帖子各自一个 text 正文块（话题标签在块内末行），块名写在块外；配图建议、内部分类标签、备选标签在所有正文块之后另列，不糅进正文；无原图先问是否配图。"},
-    {"id": "format-list-1", "target_skill": "topmind-format", "prompt": "把这段带 - 列表的文字转段子格式。", "expected_skill": "topmind-format", "expected_behavior": "format_text.py --mode duanzi：去掉 Markdown 列表符号且不加 emoji，条目一条一行、行间空行，保真校验通过；结果单独一个 text 块，改动说明另列。"},
-    {"id": "briefs-delivery-1", "target_skill": "topmind-briefs", "prompt": "写一条 X 短文快讯，附上信源和原图。", "expected_skill": "topmind-briefs", "expected_behavior": "按 x-delivery-contract：正文一条（可复制纯文本，含末行话题标签，不含 URL、「来源：」「配图：」等），链接一条（名称｜发布时间｜URL）、图片一条（1–2 张原图）另发；lint E10–E12 与 W12 为 0。"},
-    {"id": "viral-noemoji-1", "target_skill": "topmind-viral-posts", "prompt": "写一条涨粉段子，可爱一点，加点表情。", "expected_skill": "topmind-viral-posts", "expected_behavior": "段子体完全不用 emoji：不加 🐔/🐱/🌱 点缀和情绪表情，可爱感靠措辞；如用户坚持要表情，说明段子规则并建议改写成短文体；lint_x_post.py --duanzi 无 W13。"},
-    {"id": "format-duanzi-open-1", "target_skill": "topmind-format", "prompt": "转段子，开头加个🐱结尾加个🌱。", "expected_skill": "topmind-format", "expected_behavior": "说明段子体不用 emoji，format_text.py --mode duanzi 拒绝 --open/--close（返回 2）；输出零 emoji 的段子，若要点缀建议改用 --mode short。"},
-    {"id": "short-emoji-list-1", "target_skill": "topmind-briefs", "prompt": "写一条 X 短文，列三个新功能。", "expected_skill": "topmind-briefs", "expected_behavior": "短文分点用一套纯文本列表：emoji（🔹 / 1️⃣）或「1）」「·」【小标题】都可以，emoji 不强制、用就按 emoji-system.md；不用 - / 1.；lint_x_post.py 无错误。"},
-    {"id": "briefs-workflow-1", "target_skill": "topmind-briefs", "prompt": "有个传言说某厂下周发新模型，帮我写条 X 短文。", "expected_skill": "topmind-briefs", "expected_behavior": "先找一手来源（官方公告 / 当事人原帖）；只有二手爆料时标「据传 / 未证实」或建议暂缓；再找原帖原图，然后写内容、最后排版；正文不含 URL，链接与图另发。"},
-    {"id": "briefs-noemoji-1", "target_skill": "topmind-briefs", "prompt": "写条 X 短文讲这次更新，别加 emoji。", "expected_skill": "topmind-briefs", "expected_behavior": "短文 emoji 不强制：零 emoji 照样合格，分点用「1）」「·」或【小标题】，不用 - / 1.；首行钩子、具体数字、有观点收尾；lint_x_post.py 无错误、无 W9。"},
-    {"id": "briefs-deai-1", "target_skill": "topmind-briefs", "prompt": "这条 X 短文 AI 味太重了，帮我改得有吸引力点。", "expected_skill": "topmind-revise", "expected_behavior": "现成短文的去 AI 味改稿归 topmind-revise（mode=revise genre=short）：按 de-ai-rules.md 改写边界和 core-voice.md 短文条目改，只改表达不改事实；W 每条有结论，H 只供判断；交付一段纯文本，链接图片另发。"},
-    {"id": "format-links-1", "target_skill": "topmind-format", "prompt": "把这段带链接的文字格式化成短文，链接留着。", "expected_skill": "topmind-format", "expected_behavior": "格式化后正文不含 URL 和来源行：format_text.py 把链接 / 来源行拿出来，链接单独一条另发（不丢）；正文一段可复制纯文本，保真校验通过；说明里写明挪出了哪些链接。"},
-    {"id": "cover-5", "target_skill": "topmind-cover", "prompt": "给「本地部署开源大模型」这篇长文做封面，之前的封面太单调了，要场景丰富一点。", "expected_skill": "topmind-cover", "expected_behavior": "按 scene-builder 七层配方（隐喻 / 主角 / 与标题互动的动作 / 2–4 道具 / ≥3 层背景 / 光线）写场景，默认给 2–3 张方案卡（风格组合 + L1–L10 骨架 + 配色，四项至少换三项），标题 2–3 行大小对比 + 关键词强调；七项评分 ≥20 且无项 ≤2 才交付。"},
-    {"id": "cover-6", "target_skill": "topmind-cover", "prompt": "X 短文封面，标题有 12 个字还带生僻字，上次生图标题全是错字。", "expected_skill": "topmind-cover", "expected_behavior": "走双路径 B：16:9 场景图留干净标题区并禁止生成文字，再用 scripts/overlay-title.py 按 spec 叠多行标题（字号对比、变色、描边、胶囊）；或建议先把标题缩到 ≤10 字。"},
-    {"id": "cover-7", "target_skill": "topmind-cover", "prompt": "帮我做个头图，想放某位科技公司 CEO 的脸，主题是他的新品发布会。", "expected_skill": "topmind-cover", "expected_behavior": "不画可识别的真实人物长相；新闻事实类优先用官方原图，否则用 TopMind IP 或无人物的产品 / 场景隐喻；说明原因。"},
-    {"id": "cover-8", "target_skill": "topmind-cover", "prompt": "封面上的字太普通了，全是一种字体水平摆着，帮我把标题做得更有设计感。", "expected_skill": "topmind-cover", "expected_behavior": "按 references/design-system.md 做：先按主体位置选设计模式（P1–P6）和对齐线，定三级层级与字号（主 ≥ 画面高 20%、副 ≥ 9%、标签 ≥ 6%，主 ÷ 副 ≥ 1.6），一主一辅字体，重特效只给一个重点词，非水平处理写理由，装饰 ≤ 2；用 title-engine.py 写 spec，过 --check 与 --strict（对比度、安全区），再出 900×383 验证；按七项设计评分自检，而不是堆角度、透视和特效。"},
-    {"id": "cover-9", "target_skill": "topmind-cover", "prompt": "封面上加一行英文小字和一排标签，字小点没关系，显得高级。", "expected_skill": "topmind-cover", "expected_behavior": "说明小字在 900×383 和缩略图里看不清：标签不低于画面高 6%，英文装饰行最多一行且不低于 4.5%，删掉也不影响理解；信息多就删减而不是缩小，并给出调整后的层级方案。"},
-    {"id": "cover-10", "target_skill": "topmind-cover", "prompt": "做一张「大于一切：架构师的十二条军规」的长文封面，字要和场景融为一体。", "expected_skill": "topmind-cover", "expected_behavior": "走整张生成：先跑 check-title.py，指出「于」易写成「干」、标题超过 8 字，建议主标题缩短（如「架构十二条」）并把其余放副标题；从 cover-patterns.md 选范式（如 X1 材质巨字立地），英文 prompt 写死标题原文与 Simplified Chinese characters exactly as given、字的材质、光照一致、层级和对齐；出图后逐字核对，错字局部修正，整张重出最多 3 次，仍不对再走 title-engine 兜底。"},
-    {"id": "cover-11", "target_skill": "topmind-cover", "prompt": "给一篇讲独处的深度长文做封面，要优雅、有高级感，别太花。", "expected_skill": "topmind-cover", "expected_behavior": "从 cover-combos.md 选克制的组合（如 C18 杂志留白），主标题 ≤ 8 字、占画面高 25–45%，强调色只落 1–3 个字，字与场景同光同透视，文字留在中部水平带，留白充足；英文 prompt 写死标题原文与 Simplified Chinese characters exactly as given，出图逐字核对，最多重出 3 次。"},
-    {"id": "revise-1", "target_skill": "topmind-revise", "prompt": "这篇稿子 AI 味太重，帮我改稿，数字和引语别改坏。", "expected_skill": "topmind-revise", "expected_behavior": "revise 模式：先备份到新时间戳目录；⓪ 结构复查（只诊断 + 低风险结构改动）→ 事实 → 逻辑 → 删冗余 → 去 AI 味 → 核心经验对照 → 排版；跑 de_ai_lint.py 与 revise_check.py；改稿报告列改动依据（规则编号）、保留理由、未核实条目、字数前后。"},
-    {"id": "revise-2", "target_skill": "topmind-revise", "prompt": "帮我质检一下这篇长文，先别动原文，把问题列出来就行。", "expected_skill": "topmind-revise", "expected_behavior": "audit 模式：不改原稿；按三关和 de_ai_lint.py 出改稿报告，W 警告给建议改法，H 提示只列出，未核实条目交给作者。"},
-    {"id": "revise-structure", "target_skill": "topmind-revise", "prompt": "这篇长文大段文字看着太累，帮我改稿，能转列表、表格的地方转一下。", "expected_skill": "topmind-revise", "expected_behavior": "revise 模式，depth 默认 light：先备份；⓪ 结构复查先跑 info_design_hints.py 拿 I1–I9 提示做线索（只供判断），把并列段转列表、对照转表格、删重复段，原句事实和措辞照搬；重排章节只列建议（depth=structure 才动）；改动表依据写「⓪ 结构」，报告填「信息设计诊断」。"},
-    {"id": "revise-3", "target_skill": "topmind-revise", "prompt": "这条回复帮我改改，读着太客气了。", "expected_skill": "topmind-revise", "expected_behavior": "quick 模式、genre=reply：给一个一行的改后版本（态度 + 一点口语，不复述原帖），最多附 2 个候选和一行理由；不代发。"},
-    {"id": "revise-4", "target_skill": "topmind-revise", "prompt": "帮我从零写一篇公众号长文，讲本地优先的笔记工具。", "expected_skill": "topmind-wechat-post", "expected_behavior": "从零写新文章不归改稿技能：交给 topmind-wechat-post 写稿，成稿后再由它组合 topmind-revise 做质量三关。"},
-    {"id": "revise-5", "target_skill": "topmind-revise", "prompt": "这段话帮我格式化成短文，一个字都别改。", "expected_skill": "topmind-format", "expected_behavior": "只排版不改字归 topmind-format；改稿技能不介入。"},
-    {"id": "briefs-revise", "target_skill": "topmind-briefs", "prompt": "这条已经写好的快讯帮我改稿，去 AI 味，别加新内容。", "expected_skill": "topmind-revise", "expected_behavior": "改现成稿子归 topmind-revise（mode=revise genre=short）：守改写边界，W 每条有结论，交付纯文本，链接图片另发。"},
-    {"id": "x-article-revise", "target_skill": "topmind-x-article", "prompt": "写 X 长文，素材在这个目录，写完顺便把 AI 味过一遍。", "expected_skill": "topmind-x-article", "expected_behavior": "x-article 写稿；成稿后组合 topmind-revise（嵌入模式）做事实 / 逻辑 / 去 AI 味和保真审计，只交回终稿和三行摘要；没装 revise 时按随包 revision-workflow.md 手动走。"},
-    {"id": "wechat-revise", "target_skill": "topmind-wechat-post", "prompt": "写公众号文章，写完按质量三关再过一遍。", "expected_skill": "topmind-wechat-post", "expected_behavior": "wechat-post 写稿；质量三关由 topmind-revise 以嵌入模式执行（genre=long，sources=素材来源.md），完整改稿报告落在文章目录，不进公开仓库。"},
-    {"id": "viral-7", "target_skill": "topmind-viral-posts", "prompt": "来条不懂就问的段子，问问大家这个新编辑器值不值得换。", "expected_skill": "topmind-viral-posts", "expected_behavior": "A1 不懂就问：真疑问开头，一句一行、行间空一行、零 emoji；问题是作者真拿不准的，不用套路互动尾巴；默认不带话题标签。"},
-    {"id": "viral-8", "target_skill": "topmind-viral-posts", "prompt": "写个群聊体段子，几家厂商今天一起发新模型。", "expected_skill": "topmind-viral-posts", "expected_behavior": "A6 群聊对话：每行「角色：一句话」，最后一句给读者视角的反转；角色用虚构名或通用称呼。"},
-    {"id": "briefs-7", "target_skill": "topmind-briefs", "prompt": "发条预告：某模型下周要出新版，官方只说了上下文翻倍。", "expected_skill": "topmind-briefs", "expected_behavior": "预告类：动词照口径写（「要来了？！」），不写成已发布；直说还没公布的部分；口径写进口径提醒。"},
-    {"id": "briefs-8", "target_skill": "topmind-briefs", "prompt": "有个羊毛：某云今晚 GPU 一折，帮我发一条。", "expected_skill": "topmind-briefs", "expected_behavior": "羊毛类：一句话说能马上拿到什么，截止时间写清，一张图另发，不加收尾句和话题标签。"},
-    {"id": "format-variants-1", "target_skill": "topmind-format", "prompt": "我想了几个开头，帮我分别拼成完整的帖子让我挑。", "expected_skill": "topmind-format", "expected_behavior": "format_text.py --variants：每个开头替换正文第一段，各自保真校验，输出几条完整成品，每条单独一个 text 块；不改字。"},
-    {"id": "revise-reply-1", "target_skill": "topmind-revise", "prompt": "帮我看看这条回复，感觉有点 AI 味。", "expected_skill": "topmind-revise", "expected_behavior": "mode=quick genre=reply：按快审清单（V37 先接住对方再补自己的信息、S01–S10）给两个口吻不同的版本和一行理由。"},
-    {"id": "x-article-preview-1", "target_skill": "topmind-x-article", "prompt": "这篇 X 长文里有两个表格，出一键复制 HTML，先给我看看效果。", "expected_skill": "topmind-x-article", "expected_behavior": "md2x-html.py --tables-as-images --preview：表格转图按顺序嵌入，生成 out/预览.png 并附在交付说明里。"},
-    {"id": "wechat-judgment-1", "target_skill": "topmind-wechat-post", "prompt": "写一篇讲 agent 架构的公众号长文，先把骨架列出来。", "expected_skill": "topmind-wechat-post", "expected_behavior": "骨架含必填「我的判断」3–5 条（依据 + 读者会怎么反驳）、每节素材 / 判断比例，规划至少 1 张自制架构图（raw/自制图源/）。"}
+    {
+      "id": "wechat-1",
+      "target_skill": "topmind-wechat-post",
+      "prompt": "把这篇 Markdown 排成公众号版，图片要能直接粘贴进后台。",
+      "expected_skill": "topmind-wechat-post",
+      "expected_behavior": "直接从既有稿导出公众号 HTML 与上传清单，不额外改写；用 --embed-images 并实际核对预览。后台图片粘贴仍需实测，不能仅据内嵌承诺成功。"
+    },
+    {
+      "id": "wechat-2",
+      "target_skill": "topmind-wechat-post",
+      "prompt": "这篇公众号稿可以定稿了，帮我过一遍三关然后改状态。",
+      "expected_skill": "topmind-wechat-post",
+      "expected_behavior": "按请求核对事实、逻辑与表达；有源稿时选择适用的保真方法；实际完成后改为定稿。风格提示和词面分数不作门槛，不自动记已发布。"
+    },
+    {
+      "id": "wechat-3",
+      "target_skill": "topmind-wechat-post",
+      "prompt": "新建一个公众号交付包，题目是《本周 AI 发布盘点》。",
+      "expected_skill": "topmind-wechat-post",
+      "expected_behavior": "new-article.py；路径按 --base / TOPMIND_WECHAT_BASE / TOPMIND_WORKSPACE 解析，解析不到就要求用户给目录，不猜路径。"
+    },
+    {
+      "id": "wechat-neg-1",
+      "target_skill": "topmind-wechat-post",
+      "prompt": "帮我把这篇长文润色一下，先不管发哪里。",
+      "expected_skill": "topmind-revise",
+      "expected_behavior": "现成长文的润色、改稿归 topmind-revise（改稿与质检），不进公众号技能。"
+    },
+    {
+      "id": "x-article-1",
+      "target_skill": "topmind-x-article",
+      "prompt": "把这篇稿子做成 X 长文发布包，要能一键复制。",
+      "expected_skill": "topmind-x-article",
+      "expected_behavior": "产出 X长文.html + X发布稿.txt + 发布清单，用户人工点发布。"
+    },
+    {
+      "id": "x-article-2",
+      "target_skill": "topmind-x-article",
+      "prompt": "X 长文的配图顺序要和公众号版一致。",
+      "expected_skill": "topmind-x-article",
+      "expected_behavior": "用 --images-from 公众号稿.md 派生图片顺序，不手工拼 --images。"
+    },
+    {
+      "id": "x-article-3",
+      "target_skill": "topmind-x-article",
+      "prompt": "推特长文怎么发？给我准备好材料。",
+      "expected_skill": "topmind-x-article",
+      "expected_behavior": "准备发布包，不通过 API 发长文。"
+    },
+    {
+      "id": "x-article-neg-1",
+      "target_skill": "topmind-x-article",
+      "prompt": "写一条涨粉短帖。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "短帖写稿走 viral-posts；x-article 不接。"
+    },
+    {
+      "id": "briefs-1",
+      "target_skill": "topmind-briefs",
+      "prompt": "根据这张最新的模型榜单写个快讯，公众号和 X 各一版。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "核实最新榜单的来源、日期和口径，交 X 纯文本与公众号 Markdown；正文保留必要归因与限定。找图和起草可交替，已有用户图优先核对；不发布。"
+    },
+    {
+      "id": "briefs-2",
+      "target_skill": "topmind-briefs",
+      "prompt": "来篇短的，讲讲这篇论文的核心结论。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "论文解读型短文，推测显式标注。"
+    },
+    {
+      "id": "briefs-3",
+      "target_skill": "topmind-briefs",
+      "prompt": "新品速递：这款新手机的关键参数整理成短文。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "新品速递，厂商数字标口径。"
+    },
+    {
+      "id": "briefs-neg-1",
+      "target_skill": "topmind-briefs",
+      "prompt": "写个互关帖，要有钩子、能涨粉。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "引流互动型走 viral-posts。"
+    },
+    {
+      "id": "viral-1",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "写几条 X 引流段子，配图优先用官方原图。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "短句分行带互动钩子；原图逐图确认可用并保留来源。"
+    },
+    {
+      "id": "viral-2",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "蹭一下今天的热点，写个爆款短篇。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "热点资讯型模板，只起草不代发。"
+    },
+    {
+      "id": "viral-3",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "帮我写一条涨粉帖。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "涨粉型模板。"
+    },
+    {
+      "id": "viral-neg-1",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "把这条帖子直接发到我的 X 账号。",
+      "expected_skill": "topmind-x",
+      "expected_behavior": "发布任务交给可用的发布连接器；当前明确授权与目的地已具备时不重复索要许可，缺权限或工具时说明。写作技能本身不执行发布。"
+    },
+    {
+      "id": "cover-1",
+      "target_skill": "topmind-cover",
+      "prompt": "给这篇公众号文章做个封面，要醒目。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "读取文章与实际样张，完成醒目且贴题的封面，核字并检查公众号裁切。按用户数量交付，不强制至少两版。"
+    },
+    {
+      "id": "cover-2",
+      "target_skill": "topmind-cover",
+      "prompt": "X 长文需要一张头图。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "X 主尺寸 1500×600。"
+    },
+    {
+      "id": "cover-3",
+      "target_skill": "topmind-cover",
+      "prompt": "做个 thumbnail，主题是开源模型周报。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "封面流程，关键信息不编造。"
+    },
+    {
+      "id": "cover-neg-1",
+      "target_skill": "topmind-cover",
+      "prompt": "把这份榜单做成一张竖版长图。",
+      "expected_skill": "topmind-poster",
+      "expected_behavior": "长图/信息图走 poster。"
+    },
+    {
+      "id": "poster-1",
+      "target_skill": "topmind-poster",
+      "prompt": "把这个 HTML 渲染成 2× 高清 PNG，自动裁掉底部空白。",
+      "expected_skill": "topmind-poster",
+      "expected_behavior": "render_poster.py 渲染 + 裁白。"
+    },
+    {
+      "id": "poster-2",
+      "target_skill": "topmind-poster",
+      "prompt": "做一张月报长图，太长就拆成几张。",
+      "expected_skill": "topmind-poster",
+      "expected_behavior": "长图 + 分段。"
+    },
+    {
+      "id": "poster-3",
+      "target_skill": "topmind-poster",
+      "prompt": "一张图讲清楚这三个模型的区别。",
+      "expected_skill": "topmind-poster",
+      "expected_behavior": "单张信息图，文字数字逐字正确。"
+    },
+    {
+      "id": "poster-neg-1",
+      "target_skill": "topmind-poster",
+      "prompt": "把这份季度汇报做成 12 页可编辑 PPTX。",
+      "expected_skill": "topmind-presentation",
+      "expected_behavior": "多页演示/PPTX 走 presentation。"
+    },
+    {
+      "id": "briefs-4",
+      "target_skill": "topmind-briefs",
+      "prompt": "写个公众号短文加 X 版，讲讲这个榜单的变化，X 版要带话题标签。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "按请求交双版；X 带合适话题标签、公众号约 300–800 字。结构与符号按阅读选择，不默认封禁 - / 1.；必要归因留正文。"
+    },
+    {
+      "id": "briefs-5",
+      "target_skill": "topmind-briefs",
+      "prompt": "把这篇公众号短文格式化成 X 版，列表转成适合纯文本的写法。",
+      "expected_skill": "topmind-format",
+      "expected_behavior": "只做授权的平台呈现适配，保留事实与必要限定；纯文本列表按用户意图转换，正文 URL 可保留或另列，图片仍按源稿顺序核对。"
+    },
+    {
+      "id": "briefs-6",
+      "target_skill": "topmind-briefs",
+      "prompt": "发个快讯：这款模型降价了，价格对比整理一下。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "核对价格、计价单位、时间与比较条件；基线可为上一版或竞争品，选择读者有意义的比较。厂商口径与近似值留正文，不强制核心图或固定首行。"
+    },
+    {
+      "id": "briefs-neg-2",
+      "target_skill": "topmind-briefs",
+      "prompt": "写一篇 3000 字的公众号长文，深度分析这个行业，要排版成微信格式。",
+      "expected_skill": "topmind-wechat-post",
+      "expected_behavior": "公众号长文与完整交付包走 wechat-post；briefs 只做 300–800 字短文。"
+    },
+    {
+      "id": "briefs-neg-3",
+      "target_skill": "topmind-briefs",
+      "prompt": "写个段子蹭一下今天的热点，带话题标签。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "段子、热点引流帖走 viral-posts。"
+    },
+    {
+      "id": "briefs-neg-4",
+      "target_skill": "topmind-briefs",
+      "prompt": "把这个榜单做成一张竖版长图。",
+      "expected_skill": "topmind-poster",
+      "expected_behavior": "单独出长图走 poster。"
+    },
+    {
+      "id": "viral-4",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "写 3 条互关帖，每条带话题标签和分类标签。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "交三条完整关系帖，标签按请求安排；分类标签放块外。不编造粉丝数、承诺或收益，不强制所有关系帖使用固定话题标签。"
+    },
+    {
+      "id": "viral-5",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "这条段子里有三个要点，X 不支持 markdown 列表，帮我排一下版。",
+      "expected_skill": "topmind-format",
+      "expected_behavior": "仅排版，保留措辞、事实、表情语义；按节奏留白和分点，不因段子要求零 emoji。"
+    },
+    {
+      "id": "viral-6",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "来条热点段子，带上合适的 hashtag 建议。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "热点资讯型：先核对来源再段子化；hashtag 只用事件/产品通用名，传闻不用会被当作已证实的标签。"
+    },
+    {
+      "id": "viral-neg-2",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "写一篇 X 长文，3000 字，要一键复制发布。",
+      "expected_skill": "topmind-x-article",
+      "expected_behavior": "X 长文走 x-article；viral-posts 只做短帖。"
+    },
+    {
+      "id": "viral-neg-3",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "做一条榜单快讯，数据要有来源，公众号和 X 各一版。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "信息密度型快讯、数据榜单走 briefs。"
+    },
+    {
+      "id": "viral-neg-4",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "做一张本周发布盘点的竖版长图。",
+      "expected_skill": "topmind-poster",
+      "expected_behavior": "长图、海报走 poster。"
+    },
+    {
+      "id": "x-article-4",
+      "target_skill": "topmind-x-article",
+      "prompt": "把这篇长文转成 X发布稿.txt，列表别用 markdown 符号。",
+      "expected_skill": "topmind-x-article",
+      "expected_behavior": "md2x.py 选择 plain 列表输出，代码块保留；通读转换结果并核对图序。富文本 HTML 原生列表与纯文本分开处理。"
+    },
+    {
+      "id": "x-article-5",
+      "target_skill": "topmind-x-article",
+      "prompt": "写 X 文章，要能一键复制进 X Article 编辑器。",
+      "expected_skill": "topmind-x-article",
+      "expected_behavior": "X 长文发布包：X长文.html + X发布稿.txt + 发布清单，人工点发布。"
+    },
+    {
+      "id": "x-article-neg-2",
+      "target_skill": "topmind-x-article",
+      "prompt": "写一条 X 快讯，带数据榜单，一帖就行。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "短帖快讯走 briefs；x-article 只接 X 长文。"
+    },
+    {
+      "id": "x-article-neg-3",
+      "target_skill": "topmind-x-article",
+      "prompt": "把这篇文章排成公众号格式，图片要内嵌。",
+      "expected_skill": "topmind-wechat-post",
+      "expected_behavior": "公众号排版走 wechat-post。"
+    },
+    {
+      "id": "wechat-4",
+      "target_skill": "topmind-wechat-post",
+      "prompt": "写公众号，题目是《本周 AI 工具盘点》，要完整的发布清单。",
+      "expected_skill": "topmind-wechat-post",
+      "expected_behavior": "公众号长文全流程：交付包、质量三关、排版、发布清单。"
+    },
+    {
+      "id": "wechat-neg-2",
+      "target_skill": "topmind-wechat-post",
+      "prompt": "来篇公众号短文，500 字讲清楚这个新品的关键参数。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "300–800 字的公众号短文走 briefs。"
+    },
+    {
+      "id": "wechat-neg-3",
+      "target_skill": "topmind-wechat-post",
+      "prompt": "给这篇公众号文章做个头图。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "封面、头图走 cover。"
+    },
+    {
+      "id": "wechat-neg-4",
+      "target_skill": "topmind-wechat-post",
+      "prompt": "写条涨粉段子发 X。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "X 段子、涨粉帖走 viral-posts。"
+    },
+    {
+      "id": "cover-4",
+      "target_skill": "topmind-cover",
+      "prompt": "公众号头图，风格要醒目，标题《开源模型周报》。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "封面流程：选风格、1500×600 主图 + 900×383 公众号裁剪版。"
+    },
+    {
+      "id": "cover-neg-2",
+      "target_skill": "topmind-cover",
+      "prompt": "给这周的 AI 榜单做个海报，数字要逐字正确。",
+      "expected_skill": "topmind-poster",
+      "expected_behavior": "带精确数字的海报走 poster。"
+    },
+    {
+      "id": "cover-neg-3",
+      "target_skill": "topmind-cover",
+      "prompt": "写个互关帖，要带话题标签。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "写稿走 viral-posts；cover 只在需要生图时被调用。"
+    },
+    {
+      "id": "poster-4",
+      "target_skill": "topmind-poster",
+      "prompt": "给文章做一张信息图配图，数字和型号要逐字正确。",
+      "expected_skill": "topmind-poster",
+      "expected_behavior": "HTML 排版 + 渲染，文字数字逐字正确。"
+    },
+    {
+      "id": "poster-neg-2",
+      "target_skill": "topmind-poster",
+      "prompt": "写个榜单快讯的文案，公众号和 X 各一版。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "榜单快讯文案走 briefs。"
+    },
+    {
+      "id": "poster-neg-3",
+      "target_skill": "topmind-poster",
+      "prompt": "给这篇文章做个封面。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "单张封面走 cover。"
+    },
+    {
+      "id": "cover-xpost-1",
+      "target_skill": "topmind-cover",
+      "prompt": "给这条 X 短文配一张短帖封面，16:9 的。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "走「X 短文封面」场景：按场景→风格→标题花式选型，16:9 生成，crop-cover.py --preset x-post 落盘 00-封面-X短文.png（1200×675），封面数字须在正文有出处。"
+    },
+    {
+      "id": "briefs-xsource-1",
+      "target_skill": "topmind-briefs",
+      "prompt": "写一篇 X 短文，讲今天编程榜单的变化，要带来源链接。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "核实榜单来源与口径，交可复制正文及来源链接；链接位置按用途安排，必要厂商归因留正文。用户没要图片时不强制找图或询问配图。"
+    },
+    {
+      "id": "viral-cover-1",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "来 3 条热点段子，记得配图和来源。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "按请求交三条热点段子与图、来源；事实回源核对，保留归因与限定，表情与句式按效果选择。已授权配图就继续完成，无可用原图时可用明确标识的创作示意。"
+    },
+    {
+      "id": "format-1",
+      "target_skill": "topmind-format",
+      "prompt": "帮我把这段话转段子，每句之间空一行。",
+      "expected_skill": "topmind-format",
+      "expected_behavior": "按请求每句空一行，保留原措辞、事实、链接和表达性 emoji；不额外配图或重写。"
+    },
+    {
+      "id": "format-2",
+      "target_skill": "topmind-format",
+      "prompt": "把下面这段格式化成短文，发 X 用。",
+      "expected_skill": "topmind-format",
+      "expected_behavior": "合理分段和列表，保留措辞、事实、链接与表情；需要分离链接时才使用 --separate-links，不新增事实。"
+    },
+    {
+      "id": "format-3",
+      "target_skill": "topmind-format",
+      "prompt": "这条帖子排一下版，加点 emoji，别改内容。",
+      "expected_skill": "topmind-format",
+      "expected_behavior": "按请求加适量表情与排版，保留内容，不以品牌表情白名单限制作者；说明重要改动即可。"
+    },
+    {
+      "id": "format-neg-1",
+      "target_skill": "topmind-format",
+      "prompt": "帮我写 3 条涨粉帖，主题是新号冷启动。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "从零写段子归 viral-posts，不走格式化技能。"
+    },
+    {
+      "id": "format-neg-2",
+      "target_skill": "topmind-format",
+      "prompt": "写一篇 X 短文，讲今天发布的新模型，带来源。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "从零写干货短文归 briefs，默认纯文本不出 HTML，正文一段可复制纯文本，来源链接（含发布时间）另发。"
+    },
+    {
+      "id": "viral-duanzi-1",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "写个冷知识段子，结尾带蓝V互关。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "冷知识揭秘型 + 互关组合，段子体行间空行，机制说法核实或标传言，末行话题标签。"
+    },
+    {
+      "id": "viral-list-1",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "写一条互关段子，列三条今天的打卡清单。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "交一条含三条清单的完整互关段子；可选无符号、文字列表或表情，按内容与作者习惯，不强制多稿。"
+    },
+    {
+      "id": "viral-delivery-1",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "来 3 条涨粉帖，带话题标签和配图建议。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "交三条独立完成稿，话题标签按请求放正文，分类与配图建议放块外。仅要求建议时无需生图，也不追问是否配图。"
+    },
+    {
+      "id": "format-list-1",
+      "target_skill": "topmind-format",
+      "prompt": "把这段带 - 列表的文字转段子格式。",
+      "expected_skill": "topmind-format",
+      "expected_behavior": "format_text.py --mode duanzi：去掉 Markdown 列表符号且不加 emoji，条目一条一行、行间空行，保真校验通过；结果单独一个 text 块，改动说明另列。"
+    },
+    {
+      "id": "briefs-delivery-1",
+      "target_skill": "topmind-briefs",
+      "prompt": "写一条 X 短文快讯，附上信源和原图。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "交快讯、可靠信源和实际原图，正文保留必要归因和限定；没有实际找到图片就说明，不用生成图冒充原图。"
+    },
+    {
+      "id": "viral-noemoji-1",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "写一条涨粉段子，可爱一点，加点表情。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "尊重明确的可爱与表情要求，直接写一条带表情的段子，不以技能旧禁令劝退或换体裁；不保证流量。"
+    },
+    {
+      "id": "format-duanzi-open-1",
+      "target_skill": "topmind-format",
+      "prompt": "转段子，开头加个🐱结尾加个🌱。",
+      "expected_skill": "topmind-format",
+      "expected_behavior": "按请求段子排版并加 🐱 / 🌱，正文事实与措辞保持；脚本 --mode duanzi 支持 --open / --close，不因体裁拒绝。"
+    },
+    {
+      "id": "short-emoji-list-1",
+      "target_skill": "topmind-briefs",
+      "prompt": "写一条 X 短文，列三个新功能。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "交一条功能短文，列表采用清楚的符号或短段；emoji 按内容选，不强制名单与固定符号。"
+    },
+    {
+      "id": "briefs-workflow-1",
+      "target_skill": "topmind-briefs",
+      "prompt": "有个传言说某厂下周发新模型，帮我写条 X 短文。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "核对传言来源；缺少确认就在正文明确来源和未证实状态，或缩小结论。问号不能代替限定，不因纯文字稿没有图而停工。"
+    },
+    {
+      "id": "briefs-noemoji-1",
+      "target_skill": "topmind-briefs",
+      "prompt": "写条 X 短文讲这次更新，别加 emoji。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "按要求交零 emoji 的一条完成稿；篇幅、开头、收尾按信息需要，不额外加候选或要求 W 清零。"
+    },
+    {
+      "id": "briefs-deai-1",
+      "target_skill": "topmind-briefs",
+      "prompt": "这条 X 短文 AI 味太重了，帮我改得有吸引力点。",
+      "expected_skill": "topmind-revise",
+      "expected_behavior": "按用户目标修改现成短文，保留事实与作者声音，可选入口和节奏变化；合理修辞可以保留，不为清零机械换词。"
+    },
+    {
+      "id": "format-links-1",
+      "target_skill": "topmind-format",
+      "prompt": "把这段带链接的文字格式化成短文，链接留着。",
+      "expected_skill": "topmind-format",
+      "expected_behavior": "原文 URL 留在正文，逐字保留链接；默认格式化不分离来源，只有明确请求分离才转另发清单。"
+    },
+    {
+      "id": "cover-5",
+      "target_skill": "topmind-cover",
+      "prompt": "给「本地部署开源大模型」这篇长文做封面，之前的封面太单调了，要场景丰富一点。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "按用户想要更丰富场景的目标，看样张后选择具体主体、环境、动作等；元素按画面需要，不凑七层或固定道具数量，不以自评分数验收。"
+    },
+    {
+      "id": "cover-6",
+      "target_skill": "topmind-cover",
+      "prompt": "X 短文封面，标题有 12 个字还带生僻字，上次生图标题全是错字。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "优先采用稳定文字排版，保留用户长标题与生僻字，不先强制缩成 10 字；按 16:9 实际核字、裁切。"
+    },
+    {
+      "id": "cover-7",
+      "target_skill": "topmind-cover",
+      "prompt": "帮我做个头图，想放某位科技公司 CEO 的脸，主题是他的新品发布会。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "新闻主题可优先采用许可适合的真实官方人物素材，核对归属和场景；不要以库中人像偏好一概拒绝，也不生成假发布会证据。"
+    },
+    {
+      "id": "cover-8",
+      "target_skill": "topmind-cover",
+      "prompt": "封面上的字太普通了，全是一种字体水平摆着，帮我把标题做得更有设计感。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "看当前图和实际样张，从尺度、留白、字重、断行或材质等选择改法；普通水平字也可设计，不强制三级字、特效、旋转或评分。"
+    },
+    {
+      "id": "cover-9",
+      "target_skill": "topmind-cover",
+      "prompt": "封面上加一行英文小字和一排标签，字小点没关系，显得高级。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "尝试用户要求的小字与标签，实看目标尺寸的可读性与主题关系；必要时提出可见的替代布局，不用固定百分比直接拒绝。"
+    },
+    {
+      "id": "cover-10",
+      "target_skill": "topmind-cover",
+      "prompt": "做一张「大于一切：架构师的十二条军规」的长文封面，字要和场景融为一体。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "按用户完整标题与字景融合目标选可靠制作路径；实际核字与阅读、裁切，遇错字可局部修正或后期排版，不因风险字擅自改标题。"
+    },
+    {
+      "id": "cover-11",
+      "target_skill": "topmind-cover",
+      "prompt": "给一篇讲独处的深度长文做封面，要优雅、有高级感，别太花。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "从实际样张选择克制的方向，纯色、摄影、巨字、无人物等都可；直接完成所需一张，核字与实际裁切，不凑背景层或道具。"
+    },
+    {
+      "id": "revise-1",
+      "target_skill": "topmind-revise",
+      "prompt": "这篇稿子 AI 味太重，帮我改稿，数字和引语别改坏。",
+      "expected_skill": "topmind-revise",
+      "expected_behavior": "保留可恢复版本，按实际问题修改并核对数字、引语和确定性；重要改动说明目的，无需每处对应规则编号或对无问题词面强改。"
+    },
+    {
+      "id": "revise-2",
+      "target_skill": "topmind-revise",
+      "prompt": "帮我质检一下这篇长文，先别动原文，把问题列出来就行。",
+      "expected_skill": "topmind-revise",
+      "expected_behavior": "只审不改，列真实问题、证据和不确定项，风格现象只作备选建议，不将每个 W 当错误。"
+    },
+    {
+      "id": "revise-structure",
+      "target_skill": "topmind-revise",
+      "prompt": "这篇长文大段文字看着太累，帮我改稿，能转列表、表格的地方转一下。",
+      "expected_skill": "topmind-revise",
+      "expected_behavior": "按授权把适合的内容转为列表、表格，保留事实和语义；已有有效段落可留，结构调整按用户目标推进，不要求另填 depth 或重复审批。"
+    },
+    {
+      "id": "revise-3",
+      "target_skill": "topmind-revise",
+      "prompt": "这条回复帮我改改，读着太客气了。",
+      "expected_skill": "topmind-revise",
+      "expected_behavior": "quick 模式、genre=reply：给一个一行的改后版本（态度 + 一点口语，不复述原帖），最多附 2 个候选和一行理由；不代发。"
+    },
+    {
+      "id": "revise-4",
+      "target_skill": "topmind-revise",
+      "prompt": "帮我从零写一篇公众号长文，讲本地优先的笔记工具。",
+      "expected_skill": "topmind-wechat-post",
+      "expected_behavior": "从零写新文章不归改稿技能：交给 topmind-wechat-post 写稿，成稿后再由它组合 topmind-revise 做质量三关。"
+    },
+    {
+      "id": "revise-5",
+      "target_skill": "topmind-revise",
+      "prompt": "这段话帮我格式化成短文，一个字都别改。",
+      "expected_skill": "topmind-format",
+      "expected_behavior": "只排版不改字归 topmind-format；改稿技能不介入。"
+    },
+    {
+      "id": "briefs-revise",
+      "target_skill": "topmind-briefs",
+      "prompt": "这条已经写好的快讯帮我改稿，去 AI 味，别加新内容。",
+      "expected_skill": "topmind-revise",
+      "expected_behavior": "按请求修改现成快讯，不新增事实；表达、节奏可以调整，合理修辞不因 lint 命中被迫删除。"
+    },
+    {
+      "id": "x-article-revise",
+      "target_skill": "topmind-x-article",
+      "prompt": "写 X 长文，素材在这个目录，写完顺便把 AI 味过一遍。",
+      "expected_skill": "topmind-x-article",
+      "expected_behavior": "从实际素材写作并自查事实、逻辑与表达，可用共享流程或已安装 revise；报告按任务规模，不强制逐条 W 解释与完整报告。"
+    },
+    {
+      "id": "wechat-revise",
+      "target_skill": "topmind-wechat-post",
+      "prompt": "写公众号文章，写完按质量三关再过一遍。",
+      "expected_skill": "topmind-wechat-post",
+      "expected_behavior": "写作后按请求核对事实、逻辑、表达，必要时做保真检查；结果与重要未核实项清楚交代，不用词面分数决定定稿。"
+    },
+    {
+      "id": "viral-7",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "来条不懂就问的段子，问问大家这个新编辑器值不值得换。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "交一条符合作者真困惑的完成稿，可问题收尾；语气、表情、长度按具体任务，不强制零 emoji 或多备选。"
+    },
+    {
+      "id": "viral-8",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "写个群聊体段子，几家厂商今天一起发新模型。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "A6 群聊对话：每行「角色：一句话」，最后一句给读者视角的反转；角色用虚构名或通用称呼。"
+    },
+    {
+      "id": "briefs-7",
+      "target_skill": "topmind-briefs",
+      "prompt": "发条预告：某模型下周要出新版，官方只说了上下文翻倍。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "明确写成下周计划、官方已透露内容及尚未知范围，不把预告写成发布；正文保留归因，问号不代替状态。"
+    },
+    {
+      "id": "briefs-8",
+      "target_skill": "topmind-briefs",
+      "prompt": "有个羊毛：某云今晚 GPU 一折，帮我发一条。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "核实优惠、地区、机型、时区、截止和附加条件，交可用一条；入口链接可随文，图按价值与用户需求决定，不硬加标签与收尾。"
+    },
+    {
+      "id": "format-variants-1",
+      "target_skill": "topmind-format",
+      "prompt": "我想了几个开头，帮我分别拼成完整的帖子让我挑。",
+      "expected_skill": "topmind-format",
+      "expected_behavior": "format_text.py --variants：每个开头替换正文第一段，各自保真校验，输出几条完整成品，每条单独一个 text 块；不改字。"
+    },
+    {
+      "id": "revise-reply-1",
+      "target_skill": "topmind-revise",
+      "prompt": "帮我看看这条回复，感觉有点 AI 味。",
+      "expected_skill": "topmind-revise",
+      "expected_behavior": "先理解对话与作者声音，按请求给适合的修改与简短理由；长短跟交流目标，候选仅在比较有用时提供。"
+    },
+    {
+      "id": "x-article-preview-1",
+      "target_skill": "topmind-x-article",
+      "prompt": "这篇 X 长文里有两个表格，出一键复制 HTML，先给我看看效果。",
+      "expected_skill": "topmind-x-article",
+      "expected_behavior": "md2x-html.py --tables-as-images --preview：表格转图按顺序嵌入，生成 out/预览.png 并附在交付说明里。"
+    },
+    {
+      "id": "wechat-judgment-1",
+      "target_skill": "topmind-wechat-post",
+      "prompt": "写一篇讲 agent 架构的公众号长文，先把骨架列出来。",
+      "expected_skill": "topmind-wechat-post",
+      "expected_behavior": "按请求先列适合架构题的主线、依据、章节和可选图表；无需固定 3–5 条判断、素材比例或至少一张自制图。"
+    },
+    {
+      "id": "choice-one",
+      "target_skill": "topmind-briefs",
+      "prompt": "写一条 X 短文，直接给最终版，不要备选。素材：虚构工具页签新增离线索引，免费版一个索引，厂商 1 万份笔记测试中位耗时约 0.3 秒。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "只交一条，保持虚构性质、厂商归因和近似值；不凑图片、标签、备选或报告。"
+    },
+    {
+      "id": "choice-contrast",
+      "target_skill": "topmind-briefs",
+      "prompt": "用上面的页签练习素材写 X 短文，给我三种角度让我比较。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "三稿共享事实与虚构性质，分别改变信息入口 / 场景 / 取舍，不只是同义换词；不声称哪版盲选胜出。"
+    },
+    {
+      "id": "choice-style",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "写一条段子，紧凑两行，带一个🙂，用一点对仗。不要捏造我的经历。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "尊重两行、表情与对仗要求；使用可识别虚构或非亲历写法，不因旧模式库拒绝。"
+    },
+    {
+      "id": "choice-minimal",
+      "target_skill": "topmind-cover",
+      "prompt": "封面只要纯黑底白字，不要人物道具，也不要纸纹，标题保留原字，直接出一张。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "按请求完成一张实际封面，核字与展示尺寸，不补角色、道具、背景纹理或第二稿。"
+    },
+    {
+      "id": "choice-letter",
+      "target_skill": "topmind-wechat-post",
+      "prompt": "只把我这篇公众号随笔排版，保留缓慢开头和长段，不润色。",
+      "expected_skill": "topmind-wechat-post",
+      "expected_behavior": "直接排版，不触发选题与全面改稿；段长和无图只提示，不重写原文。"
+    },
+    {
+      "id": "choice-scope",
+      "target_skill": "topmind-revise",
+      "prompt": "全面改稿，章节可重排，很多段落虽然没命中 lint 但读着不顺。",
+      "expected_skill": "topmind-revise",
+      "expected_behavior": "按全面整改授权处理结构与节奏，无须规则编号或另要 depth 权限；核对事实，不以改动超过 30% 判失败。"
+    },
+    {
+      "id": "choice-render",
+      "target_skill": "topmind-x-article",
+      "prompt": "这个 X 长文已经定稿，只要一键复制 HTML，别再改文案。",
+      "expected_skill": "topmind-x-article",
+      "expected_behavior": "直接转换和实际预览；不做额外风格改写，图片顺序与占位流程核对。"
+    },
+    {
+      "id": "choice-poster",
+      "target_skill": "topmind-poster",
+      "prompt": "做一张无圆角无卡片的单栏信息图，标题和两条说明，不是数据榜单。",
+      "expected_skill": "topmind-poster",
+      "expected_behavior": "按用户结构完成实际图与源码；不强制双栏、阴影、数据来源报告。"
+    },
+    {
+      "id": "choice-fidelity",
+      "target_skill": "topmind-format",
+      "prompt": "转段子，保留✅和❌，原文：✅保留本地文件\n❌删除原始记录\n链接：https://example.com/archive",
+      "expected_skill": "topmind-format",
+      "expected_behavior": "保留正反符号、文字和 URL，不静默删除；只按节拍换行。"
+    },
+    {
+      "id": "choice-source",
+      "target_skill": "topmind-revise",
+      "prompt": "改稿：厂商称准确率约 80%，仅在内部样本测得，外部未确认。请简洁但保持事实。",
+      "expected_skill": "topmind-revise",
+      "expected_behavior": "保留归因、约、内部样本与未确认，不用“？！”替代。"
+    },
+    {
+      "id": "choice-reference",
+      "target_skill": "topmind-cover",
+      "prompt": "做封面，参考我给的图片，先看看它怎么排字，不要只报风格名。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "实际查看图片，提取可观察的字图关系，再用当前标题做可感知结果；图片不可访问时如实说明。"
+    },
+    {
+      "id": "choice-missing",
+      "target_skill": "topmind-briefs",
+      "prompt": "写 X 短文总结这个打不开的链接，我只给你摘录，不要猜全文。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "基于摘录明确范围，不声称看过全文；独立可核事实继续查，依赖原文的结论留待核实。"
+    }
   ]
 }

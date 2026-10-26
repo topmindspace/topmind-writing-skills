@@ -1,46 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""lint_x_post.py — X 纯文本帖检查：不含 Markdown 列表/标题/加粗，正文不含链接、来源行和配图说明。
+"""X 纯文本检查：格式完整性与可选择的编辑提示。
 
-X 的普通帖子不渲染 Markdown。本脚本检查 X 稿，并可把常见 Markdown 写法改成 X 写法。
-公众号稿不在检查范围内（公众号稿继续用 Markdown 列表）。规则见 references/x-post-format.md。
-
-用法：
-    python3 lint_x_post.py X稿.txt                 # 检查（一个文件里多条帖子用单独一行 --- 分隔）
-    python3 lint_x_post.py X稿.txt --fix --out X稿.fixed.txt   # 自动改写后输出到新文件（列表改「·」/「1）」）
-    python3 lint_x_post.py X稿.txt --fix --style emoji --out X稿.fixed.txt   # 列表改 🔹 / 1️⃣
-    python3 lint_x_post.py 回复.txt --genre reply  # 文体：long / short / duanzi / reply / title
-    python3 lint_x_post.py X发布稿.txt --long      # 长文兜底稿：不查话题标签位置和字数
-    python3 lint_x_post.py 段子.txt --duanzi       # 段子体：出现任何 emoji（含列表符号、人设点缀）记 W13，行间没空行记 W23
-    python3 lint_x_post.py 关系帖.txt --duanzi --kind ops   # 关系帖（互关 / 打卡）：允许行动号召，W22 豁免
-    python3 lint_x_post.py 快讯.txt --kind news    # 快讯：首行超过约 30 字记 W10（其他短帖只提示 H21）
-    python3 lint_x_post.py 公众号稿.md --md        # Markdown 稿只查去 AI 味 / 长段落 / 自制图标注
-    cat X稿.txt | python3 lint_x_post.py -         # 从标准输入读取
-
-交付规约（x-delivery-contract.md）：X 短文 / 段子的正文是一段可直接复制的纯文本，链接、原图、配图另发。
-因此普通帖（非 --long）里：
-  E10 正文出现 URL（含来源链接）——链接另发一条；
-  E11 正文出现来源行（来源： / 信源： / 出处： / 原帖： / 原文： / 链接： / via: / source:）——另发；
-  E12 正文出现配图说明（配图： / 原图： / 图注： / [图1] 占位）——图片另发；
-  E8 代码围栏 ```（多半是把交付代码块的围栏一起复制进来了）；E9 删除线 ~~文字~~；--fix 会去掉 E8/E9 符号。
---long（x-article 的 X发布稿.txt 长文兜底稿）允许文内链接，不查 E10–E12。
-警告（不影响退出码，--strict 时算失败）：点缀表情过多（W8）、疑似 AI 套话（W9，含排比、「不仅…更…」、空泛形容等）、
-快讯首行过长（W10，需 --kind news；其他短帖只提示 H21）、超过约 1000 字（W7，短文上限，更长的写成 X Article）、连续多个空行（W11）、正文里混入其他非发布内容（W12：说明 / 内部标签 / 帖序号等）、
-段子体出现 emoji（W13，需 --duanzi）、长文单段超过约 110 字（W14，需 --long）。
-W9 同时查公式化计数标签（「xx三个词」「xx一句话」「xx五个分支」「三件事」），短文、长文都查。
-去 AI 味结构检查（规则表 references/de-ai-rules.md，短文、长文、--md 都查）：
-  W15 中文结构套话（设问自答、揭晓式冒号、升华收尾、抽象拔高、铺垫过渡、进行+动词、对冲叠加、无出处权威、空洞期许、客服腔）；
-  W16 英文结构套话（not X but Y、not just…but、signpost opener、wrap-up filler、transition stack、inflated vocab、role inflation、hedge stack、chatbot residue、in today's…）；
-  W17 标点腔（破折号 / 感叹号过多、！！ ？！ 连用）；W18 自制图图注没写「自制」和数据来源（--long / --md 的 ![]() 行）。
-  --md：Markdown 稿只查内容类警告，不查 Markdown 语法。
-去 AI 味规则在同目录 de_ai_lint.py（本脚本 import），另有 W19「人名说：」、W20 过渡句、W21 复述图片，
-社交短帖模式（de-ai-rules 第五节）：W22 套路互动钩子结尾、W23 段子体行间没空行、W24 类比腔（reply / duanzi）、
-W25 英文网文模板（reply）、W26 回复超过 40 字；以及 H1–H21 提示（语境词、新闻式精确、对仗收句、编经历、口径词、
-英文小词、播报模板、标题动词和口径等）：提示只供判断，不计入 --strict，也不要求改。
-短文分点不强制 emoji：🔹 / 1️⃣ 等 emoji 符号，或「1）」「·」「【小标题】」等纯文本方式都可以；只禁止会被当成 Markdown 的 - * + 1.。
-
-退出码：有错误 → 1；加 --strict 时警告也算失败（提示不算）；其余 → 0。
-只用 Python 标准库。
+默认允许文字列表、正文链接、来源行和段子 emoji。普通 X 帖通常原样显示
+Markdown；围栏、加粗、图片占位等残留仍检查，特殊代码和引用由作者判断。
+--separate-links 仅在交付要求链接另列时启用 E10/E11。
+--strict 是主动选择的警告门禁，不是通用写作质量证明。
+--fix --out 新文件 可转换常用标记；长文兜底用 --long，Markdown 内容用 --md。
+只用 Python 标准库。规则见 references/x-post-format.md。
 """
 from __future__ import annotations
 
@@ -176,7 +143,7 @@ def lint_post(start: int, lines: list[str], long_mode: bool, duanzi: bool = Fals
 
 
 def lint_post_full(start: int, lines: list[str], long_mode: bool, duanzi: bool = False, genre: str | None = None,
-                   kind: str = "post", sources_text: str = ""):
+                   kind: str = "post", sources_text: str = "", separate_links: bool = False):
     """返回 (errors, warnings, hints)。genre 缺省按 long_mode / duanzi 推断。"""
     if genre is None:
         genre = "long" if long_mode else ("duanzi" if duanzi else "short")
@@ -199,12 +166,12 @@ def lint_post_full(start: int, lines: list[str], long_mode: bool, duanzi: bool =
             in_fence = not in_fence
             continue
         if duanzi and DUANZI_EMOJI_RE.search(ln):
-            warns.append((no, "W13", "段子体不用 emoji（含人设点缀和列表符号）：分点一条一行、靠行间空行区分"))
+            hints.append((no, "H22", "段子含 emoji：确认它的情绪或结构作用；作者有意使用时保留"))
         if not long_mode:
             if URL_RE.search(ln):
-                errs.append((no, "E10", "正文里有 URL：X 短文 / 段子的链接（含来源链接）另发一条，不和正文混在一起"))
+                (errs if separate_links else warns).append((no, "E10" if separate_links else "W29", "正文含 URL：可随文使用；只有要求链接分离的交付才移到附注"))
             if SOURCE_LINE_RE.match(ln):
-                errs.append((no, "E11", "正文里有来源行：来源 / 原帖链接另发，正文只放可发布的纯文本"))
+                (errs if separate_links else warns).append((no, "E11" if separate_links else "W30", "正文含来源行：按引用与阅读需要保留，或另列完整来源；必要归因留正文"))
             if IMAGE_LINE_RE.match(ln):
                 errs.append((no, "E12", "正文里有配图说明或图片占位：原图 / 配图另发"))
             elif NONPUB_RE.match(ln):
@@ -214,9 +181,9 @@ def lint_post_full(start: int, lines: list[str], long_mode: bool, duanzi: bool =
         if in_fence or (long_mode and indent_width(ln[: len(ln) - len(ln.lstrip())]) >= 4 and ln.strip()):
             continue
         if UL_RE.match(ln) and not SEP_RE.match(ln):
-            errs.append((no, "E1", "Markdown 无序列表（- * +）：X 不渲染，改用「·」「1）」或 🔹 等符号"))
+            warns.append((no, "W27", "文字列表（- * +）会原样显示；可保留，也可换成 · 或其他符号"))
         elif OL_RE.match(ln):
-            errs.append((no, "E2", "Markdown 有序列表（1. / 1)）：改用全角「1）」、① ② ③ 或 1️⃣ 2️⃣ 3️⃣"))
+            warns.append((no, "W28", "数字列表会原样显示；按读序保留，或换成 1）、① 等写法"))
         if HEADING_RE.match(ln):
             errs.append((no, "E3", "Markdown 标题（#）：X 不渲染，改成普通文字行"))
         if BOLD_RE.search(ln):
@@ -359,13 +326,14 @@ def fix_lines(lines: list[str], long_mode: bool, style: str = "emoji") -> list[s
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="X 纯文本帖检查：无 Markdown 列表/标题/加粗，正文不含链接/来源行/配图说明；去 AI 味分 W 警告 / H 提示")
+    ap = argparse.ArgumentParser(description="X 纯文本格式与编辑建议；文字列表、链接、来源和表情默认可保留")
     ap.add_argument("files", nargs="+", help="X 稿文件，- 表示标准输入")
     ap.add_argument("--long", action="store_true", help="长文兜底稿模式（X发布稿.txt）：整份当一篇，不查话题标签位置和字数")
     ap.add_argument("--fix", action="store_true", help="自动改写 Markdown 写法为 X 写法（需 --out；只处理单个文件）")
     ap.add_argument("--out", help="--fix 的输出文件")
     ap.add_argument("--style", choices=["plain", "emoji"], default="plain", help="--fix 的列表写法：plain（· / 1），默认）或 emoji（🔹 / 1️⃣）")
-    ap.add_argument("--duanzi", action="store_true", help="段子体模式：出现任何 emoji（含列表符号、人设点缀）记 W13")
+    ap.add_argument("--duanzi", action="store_true", help="段子体模式：emoji 仅作 H22 上下文提示")
+    ap.add_argument("--separate-links", action="store_true", help="交付明确要求链接另列时启用 E10/E11；默认只提示 W29/W30")
     ap.add_argument("--genre", choices=list(D.GENRES), help="文体：long / short / duanzi / reply / title；缺省按 --long / --md / --duanzi 推断")
     ap.add_argument("--no-hints", action="store_true", help="不打印 H 级提示")
     ap.add_argument("--strict", action="store_true", help="警告也算失败（H 级提示永远不算）")
@@ -415,7 +383,7 @@ def main() -> int:
             total_h += len(hints)
             continue
         for idx, (start, lines) in enumerate(split_posts(text, args.long), 1):
-            errs, warns, hints = lint_post_full(start, lines, args.long, args.duanzi, args.genre, args.kind, src_text)
+            errs, warns, hints = lint_post_full(start, lines, args.long, args.duanzi, args.genre, args.kind, src_text, args.separate_links)
             if args.no_hints:
                 hints = []
             label = "" if args.long else f"#帖{idx} "

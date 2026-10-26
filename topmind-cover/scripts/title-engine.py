@@ -474,8 +474,8 @@ def main():
     ap = argparse.ArgumentParser(description="多层花式标题合成")
     ap.add_argument("background", nargs="?"); ap.add_argument("spec", nargs="?")
     ap.add_argument("--out"); ap.add_argument("--size"); ap.add_argument("--list-fonts", action="store_true")
-    ap.add_argument("--check", action="store_true", help="只做静态检查（层级、字号下限、字体数、特效克制、装饰数），不出图")
-    ap.add_argument("--strict", action="store_true", help="出图后的设计检查（含安全区、对比度）不达标时退出码 2")
+    ap.add_argument("--check", action="store_true", help="只显示静态设计建议，不出图；--strict 可将模板建议作为门禁")
+    ap.add_argument("--strict", action="store_true", help="主动启用模板门禁：--check 有建议时退出 1；出图有设计建议时退出 2")
     a = ap.parse_args()
     if a.list_fonts:
         for k, (ps, _, w) in FONTS.items():
@@ -486,14 +486,19 @@ def main():
         if not path or not os.path.isfile(path): fail("--check 需要 spec.json")
         try: sp = json.load(open(path, encoding="utf-8"))
         except Exception as e: fail(f"spec 不是合法 JSON：{e}")
+        if not isinstance(sp, dict) or not isinstance(sp.get("layers"), list) or not sp["layers"]:
+            fail("spec 需要非空 layers 列表")
+        if any(not isinstance(layer, dict) for layer in sp["layers"]):
+            fail("layers 中每项需要是图层对象")
         probs = combo_check(sp)
-        for m in probs: print("不达标：" + m)
-        print("设计检查（静态）：" + ("通过" if not probs else f"{len(probs)} 项不达标")); sys.exit(1 if probs else 0)
+        for m in probs: print("设计建议：" + m)
+        print("设计检查（静态）：" + ("通过" if not probs else f"{len(probs)} 项建议，结合实际图判断")); sys.exit(1 if a.strict and probs else 0)
     if not (a.background and a.spec and a.out): fail("需要 <场景图> <spec.json> --out <输出>")
     if not os.path.isfile(a.background): fail(f"找不到场景图：{a.background}")
     try: spec = json.load(open(a.spec, encoding="utf-8"))
     except Exception as e: fail(f"spec 读取失败：{e}")
-    if not spec.get("layers"): fail("spec 缺少 layers")
+    if not isinstance(spec, dict) or not isinstance(spec.get("layers"), list) or not spec["layers"]: fail("spec 需要非空 layers 列表")
+    if any(not isinstance(layer, dict) for layer in spec["layers"]): fail("layers 中每项需要是图层对象")
     base = Image.open(a.background).convert("RGBA")
     if a.size or spec.get("size"):
         w, h = map(int, (a.size or spec["size"]).lower().split("x")); base = fit(base, (w, h))
@@ -523,7 +528,7 @@ def main():
     for text, role, cr, pr in qa:
         print(f"  [{role}] {text}：对比度 {cr:.2f}:1" if cr else f"  [{role}] {text}")
         bad += [f"「{text}」{p}" for p in pr]
-    for m in bad: print("不达标：" + m)
+    for m in bad: print("设计建议：" + m)
     print("设计检查：" + ("通过" if not bad else f"{len(bad)} 项不达标"))
     if bad and a.strict: sys.exit(2)
 

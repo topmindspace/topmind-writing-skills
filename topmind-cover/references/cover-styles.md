@@ -1,9 +1,11 @@
 # 封面风格库（22 种）
 
+> 使用范围：本页是可拆用的配方与样例，参数描述某种具体效果，不是所有封面的通用要求。当前用户要求、真实素材、核字与实际裁切优先。可删槽位、改构图、用纯色或无人物；整张生成与后期叠字并列选择，只读当前方向需要的章节。
+
 > 想自己写提示词直接丢给 AI 生图（不走技能流程）？看 [`cover-prompts.md`](./cover-prompts.md)——
 > 前 19 种风格的完整可拷贝提示词 + 全平台爆款封面流派调研（20～22 号风格的配方见本库对应章节）。
 
-> **原创（硬约束）**：本库示例图均为原创，只演示抽象设计原则（标题是视觉重心、信息分层、留白呼吸感、数字与关键词强调），不临摹任何第三方封面；复用时版式与配色不得与第三方封面构成实质相似——只学原则，不学版式。
+> **原创（硬约束）**：本库示例图均为原创，只演示抽象设计原则（标题是视觉重心、信息分层、留白呼吸感、数字与关键词强调），可以分析参考的构图、色彩与读序，使用当前内容形成新表达；独特标识、图片和品牌素材按许可使用。
 
 选风格先看题材，再看系列延续性。同一系列固定一个模板，只换主体与标题字。
 选风格三步走：**先选风格 → 看 `assets/examples/` 对应示例图 → 按本库配方组 prompt**。组 prompt 时，按下表套用 `cover-patterns.md` 的整张生成范式，让字和场景一起生成。
@@ -29,7 +31,7 @@
 
 prompt 配方为中英双语模板：`{TITLE}` 为标题文字占位符（短标题 4~8 字）、其余占位符见各风格说明。尺寸固定 1500×600、横构图 5:2。标题字逐字写进 prompt；生成后第一件事就是检查标题字。
 
-## 安全区（硬约束，所有风格通用）
+## 裁切安全区（按目标画幅核对）
 
 900×383 公众号版是从 1500×600 主图**中央裁剪**（左右各裁约 3%）；
 X 与公众号在手机端信息流里，左右边缘可能被平台图标/时间/转发按钮轻微遮挡：
@@ -38,12 +40,12 @@ X 与公众号在手机端信息流里，左右边缘可能被平台图标/时�
 垂直方向上下各预留 5%。
 怎么判断：把成图按 900×383 中央裁一次，再遮住左右各 10%，标题字和主体都还完整就过。
 
-## 原创（硬约束，所有风格通用）
+## 参考与原创表达
 
 本库的 prompt 配方沉淀的是**抽象设计原则**——标题是视觉重心、信息分层、
 留白与呼吸感、数字与关键词的强调手法——**不是任何具体版式**。
 **版式与配色也不得与第三方封面构成实质相似：只学原则，不学版式。**
-禁止照抄任何第三方封面的文案、形象、版式结构与配色组合——包括但不限于
+参考可以迁移版式组织与配色关系；避免冒充来源作品或挪用独特标识与素材。需要核对的材料包括
 标题文字、数字、品牌词、IP 形象、署名，以及"左文右图""底部标签条""两行撞色标题"
 这类可辨识的构图公式。`assets/examples/` 中的 55 张风格示例图（另附 overview.png）均为原创设计，
 其标题/数字/品牌/署名（如"深蓝 OS 2.0""提示词避坑指南""读书打卡计划""@书山有路"）
@@ -115,7 +117,7 @@ X 与公众号在手机端信息流里，左右边缘可能被平台图标/时�
   EN: Giant-type manifesto Chinese cover. Type scale: the title IS the image — one single-line oversized ink-black Chinese title "{TITLE}" (exact), spanning ~85% of frame width, glyph height 1/3 to 2/5 of the frame; {TYPE_STYLE} (ink-black calligraphy with gold #C9A227 edge accents / outlined hollow type / vertical type) — the letterforms carry the emotion; a small dark-gray declarative subtitle "{SUBTITLE}" below only annotates, at ~1/4 of the title size. Color system: full-bleed bright cream #FAF3E7 ground (extreme-light value, the calm of a manifesto); ink-black title; gold #C9A227 accents exactly one stroke or one character — the single emphasis on the page. Composition energy: one horizontal reading path — the giant title sweeps the frame (hook and theme in one) → the subtitle lands the read; the background keeps only whisper-faint gold geometric lines, everything yields to the title. Texture: the cream ground must carry fine paper grain plus dry-brush flying-white texture in the calligraphy strokes — a clean flat ground is forbidden. Text effects: all impact lives in the letterforms — at most 3 colors in the line: ① enlarge the hook word (e.g. the contrarian claim word) to 1.5× the other glyphs, keep the rest at base size, no line break; ② quantify the outline per {TYPE_STYLE}: the “gold calligraphy” option outlines only one stroke or one glyph in a gold #C9A227 hairline (outline width ≤ 1/5 of stroke width, no stroke merging); the “hollow outline” option uses 2px dark-gray outline with empty interior; ③ add one same-glyph layer behind the type in light ink-gray, offset 4px down-right, a single offset only, for a subtle 3D lift; outline plus 3D is already two effects — never add a drop shadow. No other text. All text clear of the 5% edge margins on left and right. Landscape 5:2, 1500×600.
   ```
   占位符：`{TYPE_STYLE}` 字形处理三选一（书法烫金 / 描边空心 / 竖排），
-  `{SUBTITLE}` 陈述句副标题（≤10 字，禁止问句）。
+  `{SUBTITLE}` 陈述句副标题（≤10 字，本配方选陈述句，其他方案可用问句）。
 - **绝不清单**：
   - 绝不两行撞色标题：本风格只做单行（或竖排），两行撞色是别人的版式。
   - 绝不暗黑背景：本风格必须是亮底，暗底直接变味。
@@ -215,7 +217,7 @@ X 与公众号在手机端信息流里，左右边缘可能被平台图标/时�
 - **设计语言（抽象原则）**：
   - 暖色氛围做主角情绪：整张的"热气"是第一眼记忆。
   - 标题顶部叠放压阵：深棕大字在上，IP 形象在下半部做记忆点舞台，
-    禁止左右对半分区。
+    本配方采用错位或上下结构；其他方案可用左右分区。
   - 数字收进角落印章：数据是注脚，不是标题。
   - 署名做边角点缀：竖排小字，不进主视觉流。
 - **配色故事**：橙黄暖色 `#FF9E2C → #FFC53D` 做主色（阳光、热闹）；
@@ -230,13 +232,13 @@ X 与公众号在手机端信息流里，左右边缘可能被平台图标/时�
   示例（虚构演示）："30天读书打卡"。
 - **prompt 配方**：
   ```
-  中文：IP 趣味风中文封面。字体量级：标题压阵——顶部叠放深棕色（#4A2C0A）超大粗黑中文标题"{TITLE}"（逐字准确），字高占画面 1/4~1/3；下方深棕色小字副标题"{SUBTITLE}"（≤12字）只做注解；标题与 IP 形象上下叠放，禁止左右对半分区。配色系统：橙黄暖色 #FF9E2C → #FFC53D 全幅主色（阳光热闹，走高饱和暖色）；深棕 #4A2C0A 标题在暖底上形成对比重心；右下角圆形印章内"{NUMBER}"小字（必须真实）用朱红 #E6392B，是全图唯一的跳色注脚。构图能量：一条对角线动线——顶部大标题（情绪钩子）→ 下半部原创趣味 IP 形象（{CHARACTER}，如戴贝雷帽的狐狸画家在画架前作画，暖色调，约占画面40%）做记忆点舞台 → 右下印章（数据注脚）收束；左下角竖排小字署名"{BYLINE}"做边角点缀，不进主视觉流。质感细节：暖色底必须加一层细腻纸纹颗粒 + 一团柔和的阳光光晕，拒绝塑料感平滑渲染。文字特效：潮玩感来自“贴纸+徽章”，全句颜色不超过 3 种——①标题里的关键词（如挑战词“接单”）原位下方垫一块深棕 #4A2C0A 实色矩形（色块在字下方、标题总字数不变，严禁把关键词复制一份做成独立元素），色块高度为字高的 1.2 倍，字换成米白色压在色块上、明暗对立；②标题字后方加一层同字形、朱红 #E6392B、向右下错位 4px 的字，只错位一层，做出徽章凸起的轻微立体感；色块与立体已是两种效果，不再加描边和阴影。除上述文字外无其他文字；所有文字避开左右各 5% 的边缘区域，横构图5:2，尺寸1500×600。
+  中文：IP 趣味风中文封面。字体量级：标题压阵——顶部叠放深棕色（#4A2C0A）超大粗黑中文标题"{TITLE}"（逐字准确），字高占画面 1/4~1/3；下方深棕色小字副标题"{SUBTITLE}"（≤12字）只做注解；标题与 IP 形象上下叠放，本配方采用错位或上下结构；其他方案可用左右分区。配色系统：橙黄暖色 #FF9E2C → #FFC53D 全幅主色（阳光热闹，走高饱和暖色）；深棕 #4A2C0A 标题在暖底上形成对比重心；右下角圆形印章内"{NUMBER}"小字（必须真实）用朱红 #E6392B，是全图唯一的跳色注脚。构图能量：一条对角线动线——顶部大标题（情绪钩子）→ 下半部原创趣味 IP 形象（{CHARACTER}，如戴贝雷帽的狐狸画家在画架前作画，暖色调，约占画面40%）做记忆点舞台 → 右下印章（数据注脚）收束；左下角竖排小字署名"{BYLINE}"做边角点缀，不进主视觉流。质感细节：暖色底必须加一层细腻纸纹颗粒 + 一团柔和的阳光光晕，拒绝塑料感平滑渲染。文字特效：潮玩感来自“贴纸+徽章”，全句颜色不超过 3 种——①标题里的关键词（如挑战词“接单”）原位下方垫一块深棕 #4A2C0A 实色矩形（色块在字下方、标题总字数不变，严禁把关键词复制一份做成独立元素），色块高度为字高的 1.2 倍，字换成米白色压在色块上、明暗对立；②标题字后方加一层同字形、朱红 #E6392B、向右下错位 4px 的字，只错位一层，做出徽章凸起的轻微立体感；色块与立体已是两种效果，不再加描边和阴影。除上述文字外无其他文字；所有文字避开左右各 5% 的边缘区域，横构图5:2，尺寸1500×600。
 
   EN: Fun-IP Chinese cover. Type scale: the title holds the fort — a stacked top dark-brown (#4A2C0A) extra-bold Chinese title "{TITLE}" (exact), glyph height 1/4 to 1/3 of the frame, with a small dark-brown subtitle "{SUBTITLE}" (max 12 characters) below as annotation only; title and IP character stack vertically — a left-right split layout is forbidden. Color system: warm orange-yellow #FF9E2C → #FFC53D full-bleed ground (sunny, high-saturation warmth); the dark-brown #4A2C0A title forms the contrast anchor on the warm ground; a small round seal bottom-right with "{NUMBER}" micro-text (must be factual) in vermilion #E6392B — the single accent footnote on the page. Composition energy: one diagonal reading path — top title (emotion hook) → an original playful IP character ({CHARACTER}, e.g. a beret-wearing fox painter at an easel, warm tones, ~40% of frame) staging the lower half as the memorable element → bottom-right seal (data footnote) closes the read; a small vertical byline "{BYLINE}" bottom-left as a corner garnish, kept out of the main visual flow. Texture: the warm ground must carry fine paper-grain plus a soft sunlight halo — plasticky smooth rendering is forbidden. Text effects: the collectible-toy feel comes from “sticker plus badge” — at most 3 colors in the line: ① slide a solid dark-brown #4A2C0A rectangle under the title's keyword in place (e.g. the challenge word; block sits beneath the glyphs, total character count unchanged — never duplicate the keyword as a separate element), block height 1.2× glyph height, off-white type over it with opposing light-dark contrast; ② add one same-glyph layer behind the title in vermilion #E6392B, offset 4px down-right, a single offset only, for a badge-like subtle 3D lift; block plus 3D is already two effects — never add outline or shadow. No other text. All text clear of the 5% edge margins on left and right. Landscape 5:2, 1500×600.
   ```
   占位符：`{SUBTITLE}` 副标题（≤12 字）、`{NUMBER}` 印章内数字（如"30天"，必须真实）、
   `{BYLINE}` 边角署名（如"@书山有路"）、`{CHARACTER}` 原创趣味 IP 形象描述，
-  必须与主题道具绑定（如绘画主题 → 狐狸画家 + 画架），不得照抄任何现有 IP 形象。
+  可与主题道具呼应（如绘画主题 → 狐狸画家 + 画架），不得照抄任何现有 IP 形象。
 - **绝不清单**：
   - 绝不左文右图对半分：标题与形象必须上下叠放/错位，禁止左右镜像分区。
   - 绝不巨型彩色数字做标题：数字只进印章，且必须在正文中有出处。

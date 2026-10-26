@@ -17,7 +17,7 @@
 bash scripts/ci_skill_gates.sh
 ```
 
-先跑一次仓库级的去 AI 味规则回归 `python3 scripts/test_lint_rules.py`（「不应报」的正常写法被误报、该报的没报、H 提示卡住了 `--strict`，都算失败），再对每个发现的技能目录依次：
+先跑一次仓库级的去 AI 味规则回归 `python3 scripts/test_lint_rules.py`（「不应报」的正常写法被误报、该报的没报、H 提示卡住了 `--strict`，都算失败），再跑 `python3 scripts/test_creative_contracts.py`，验证默认保真、显式转换、风格提示与实际格式错误的区别；随后对每个发现的技能目录依次：
 
 1. 有运行时依赖才装：有锁文件 `npm ci --omit=dev`，没有则 `npm install --omit=dev --no-package-lock`；目前各技能都没有依赖，这一步跳过，不生成锁文件
 2. `package_skill.py --check` + `audit_{styles,docs,skill,css}.py`
@@ -60,3 +60,7 @@ Release 的 publish 步骤：
 - 各技能 `audit_*.py` 定义的质量门禁（如去 AI 味、数字来源、配图校验）
 - `negative_tests.py` 的负向用例必须全绿
 - `scripts/test_lint_rules.py` 的「不应报」用例不许删来过 CI：误报就改规则，不改用例
+
+## 创作行为与质量评测
+
+`evals/evals.json` 包含路由、用户偏好、参考阅读和创作选择场景。`check_evals.js` 只验证用例结构与路由词，不执行模型，不证明写作质量。真实任务比较方法见 [审查报告](./creative-skills-audit.md)。
