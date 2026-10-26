@@ -3,7 +3,7 @@ name: topmind-x-article
 description: "创作或整理 X Article 长文，按需导出可复制 HTML、纯文本、封面与发布清单。保留单源稿与图文顺序，由用户在编辑器发布。普通短帖用 topmind-briefs 或 topmind-viral-posts，纯格式化用 topmind-format。"
 license: MIT
 metadata:
-  version: "0.4.26"
+  version: "0.4.27"
   action_category: "write"
   triggers: "X 长文, 发 X 文章, 写 X 文章, X article, 长文发 X, X 发长文, X 文章排版, 转纯文本, X 纯文本, X发布稿, 发 article, 一键复制, 写 X 长文, X 长文发布, 推特长文, twitter 长文, Twitter Article"
   author: "TopMindSpace"

@@ -3,7 +3,7 @@ name: topmind-wechat-post
 description: "创作、整理和排版公众号文章；从选题或底稿到 Markdown，按需导出内联 HTML、预览与上传清单。支持已有稿件直接排版；公众号短文用 topmind-briefs，独立改稿用 topmind-revise。"
 license: MIT
 metadata:
-  version: "0.3.21"
+  version: "0.3.22"
   action_category: "write"
   triggers: "公众号, 写公众号, 微信排版, 公众号排版, 公众号稿, 公众号长文, 排版这篇文章, 定稿, 发公众号, 公众号交付, wechat, mp format, 写公众号文章, 公众号排版定稿, 公众号发布清单"
   author: "TopMindSpace"

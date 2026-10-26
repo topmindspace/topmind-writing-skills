@@ -29,7 +29,7 @@ npm 上的旧包 `@topmindspace/tms-skills` **2.0.0–2.1.1 已弃用**（仓库
 | 优先级 | 命令 | 何时用 |
 |--------|------|--------|
 | **默认** | `npx @topmindspace/topmind-writing-skills install <skill-id>` | 日常 |
-| 升级 | `npx @topmindspace/topmind-writing-skills@latest install <skill-id>` | 默认升级：已装旧版直接覆盖（不备份）；同版本提示已是最新；已装更新需 `--force` |
+| 升级 | `npx @topmindspace/topmind-writing-skills@latest install <skill-id>` | 默认升级：先完整暂存再替换，失败保留旧版，成功后清理旧副本；同版本提示已是最新；已装更新需 `--force` |
 | 跟最新源 | `npx github:topmindspace/topmind-writing-skills install <skill-id>` | 要 HEAD |
 | 备选 | `git clone` + `node topmind-writing-skills/bin/topmind-writing-skills.js install <skill-id>` | 离线 |
 | 手工 | 解压 Release 的 `<skill-id>.zip` | 无 Node |
@@ -38,7 +38,7 @@ npm 上的旧包 `@topmindspace/tms-skills` **2.0.0–2.1.1 已弃用**（仓库
 
 ## 版本策略（务必遵守）
 
-**整仓同 tag**：`git tag vX.Y.Z` 的 `X.Y.Z` = 根 `package.json` 的 `version`（即安装器 version，如当前 v0.8.50）；tag 号不代表任何技能版本。**各技能 `version` 独立演进**（如 topmind-x-article 0.4.0、topmind-cover 0.3.0），不与 tag 号绑定。
+**整仓同 tag**：`git tag vX.Y.Z` 的 `X.Y.Z` = 根 `package.json` 的 `version`（即安装器 version，以根 package.json 的 version 为准）；tag 号不代表任何技能版本。**各技能 `version` 独立演进**（如 topmind-x-article 0.4.0、topmind-cover 0.3.0），不与 tag 号绑定。
 
 | 包 | 事实源 | 规则 |
 |----|--------|------|
@@ -79,9 +79,7 @@ CI/Release 细节见 [`docs/ci.md`](./ci.md)。
    git push origin main --tags
    ```
 
-   > **HTTPS 推送**（SSH 不可用时）：用一次性令牌做 Basic 认证：
-   > `git -c "http.extraHeader=Authorization: Basic <base64(x-access-token:TOKEN)>" push https://github.com/topmindspace/topmind-writing-skills.git main`
-   > 注意：GitHub git 接口只接受 Basic，不接受 `Bearer`；origin 是 SSH 地址时要显式给 HTTPS URL；令牌一次性使用，不入库。
+   使用既有 GitHub 登录或 credential helper 推送；不要把令牌拼进命令、文档或日志。只推送本次版本标签。
 
    Release workflow（`.github/workflows/release.yml`）按序执行：
    - **tag ↔ `package.json` 交叉校验**：`vX.Y.Z` 必须等于根 `package.json` 的 `version`，不一致直接失败

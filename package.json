@@ -1,6 +1,6 @@
 {
   "name": "@topmindspace/topmind-writing-skills",
-  "version": "0.8.50",
+  "version": "0.8.51",
   "description": "TopMindSpace 写作技能合集 — 通过 npm / npx 安装技能（公众号长文、X 长文、干货短文、X 引流短帖、改稿与质检、封面图、长图海报）。只出稿与发布包，不代发。",
   "license": "MIT",
   "author": "TopMindspace",
@@ -30,6 +30,8 @@
   },
   "files": [
     "bin",
+    "lib",
+    "runtime",
     "README.md",
     "README.en.md",
     "LICENSE",
@@ -78,7 +80,9 @@
     "check": "node scripts/run_skill_gates.js check",
     "privacy": "python3 scripts/ci_privacy_scan.py",
     "audit": "node scripts/run_skill_gates.js audit",
-    "package:skill": "node scripts/run_skill_gates.js package"
+    "package:skill": "node scripts/run_skill_gates.js package",
+    "test": "node --test tests/*.test.mjs",
+    "host:pack": "node scripts/build-host-pack.cjs"
   },
   "publishConfig": {
     "access": "public"

@@ -242,9 +242,23 @@ function install(skillId, targetRoot, { force = false, defaultTarget = false } =
       );
     }
     upgradedFrom = cmp > 0 ? installedVer || 'unknown' : null;
-    fs.rmSync(dest, { recursive: true, force: true });
   }
-  copyDir(src, dest);
+  const stage = fs.mkdtempSync(path.join(targetRoot, `.${skillId}-stage-`));
+  let previous = null;
+  try {
+    copyDir(src, stage);
+    if (fs.existsSync(dest)) {
+      previous = fs.mkdtempSync(path.join(targetRoot, `.${skillId}-previous-`));
+      fs.rmdirSync(previous);
+      fs.renameSync(dest, previous);
+    }
+    try { fs.renameSync(stage, dest); }
+    catch (error) { if (previous) { fs.renameSync(previous, dest); previous = null; } throw error; }
+    if (previous) { try { fs.rmSync(previous, { recursive: true, force: true }); } catch { console.warn(`Previous copy retained at: ${previous}`); } }
+  } catch (error) {
+    fs.rmSync(stage, { recursive: true, force: true });
+    die(`Install failed; the previous installed skill was retained. ${error.message}`);
+  } finally { fs.rmSync(stage, { recursive: true, force: true }); }
   // 安装摘要三行：装到哪里 / 装了什么版本 / 下一步。
   const toNote = defaultTarget ? '  (default, auto-detected — no --to given)' : '';
   const skillVer = readSkillVersion(dest) || 'unknown';

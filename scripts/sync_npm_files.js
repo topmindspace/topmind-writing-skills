@@ -13,7 +13,7 @@ const path = require('path');
 const { discoverSkills, ROOT } = require('./discover_skills');
 
 const PKG_PATH = path.join(ROOT, 'package.json');
-const BASE_FILES = ['bin', 'README.md', 'README.en.md', 'LICENSE', 'CHANGELOG.md'];
+const BASE_FILES = ['bin', 'lib', 'runtime', 'README.md', 'README.en.md', 'LICENSE', 'CHANGELOG.md'];
 // 不进 npm 包的大文件（样张留在 GitHub / Release zip）。npm 的 files 支持 "!" 排除。
 // cover 只保留 overview.png 供选风格；单风格样张 52MB 不随包下载。
 const EXCLUDE_FILES = [
