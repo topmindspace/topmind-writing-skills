@@ -88,22 +88,23 @@ def scan_text(text: str) -> dict:
     scale = min(1.0, max(0.4, (1000 / max(chars, 1)) ** 0.5))  # 长文按篇幅放宽，但不无限稀释
     lexical = round(sum(PENALTY.get(h["code"], 2) for h in hits) * scale)
     score = max(0, min(100, 100 - lexical - structural))
-    return {"score": score, "level": grade(score), "chars": chars, "lexical": lexical,
+    return {"advisory": True, "interpretation": "Heuristic pattern signal, not a quality grade or authorship detector", "score": score, "level": grade(score), "chars": chars, "lexical": lexical,
             "structural": structural, "notes": notes, "hits": hits}
 
 
 def grade(score: int) -> str:
     if score >= 85:
-        return "人话"
+        return "模式信号较少"
     if score >= 70:
-        return "轻微 AI 味"
+        return "有一些模式信号"
     if score >= 50:
-        return "明显 AI 味"
-    return "重度 AI 味"
+        return "模式信号较多"
+    return "模式信号密集"
 
 
 def render_markdown(r: dict, source: str) -> str:
-    md = ["## 去 AI 味扫描", "", f"- 文件：`{source}`", f"- **总分：{r['score']} / 100（{r['level']}）**",
+    md = ["## 去 AI 味扫描", "", f"- 文件：`{source}`", f"- **模式参考值：{r['score']} / 100（{r['level']}，兼容 score 字段）**",
+          "- 这是启发式诊断，不判定作者身份、作品好坏或是否定稿。",
           f"- 字数：{r['chars']}；句式扣分 -{r['lexical']}；结构扣分 -{r['structural']}", ""]
     if r["notes"]:
         md += ["### 结构信号"] + [f"- {n}" for n in r["notes"]] + [""]
@@ -121,7 +122,7 @@ def render_markdown(r: dict, source: str) -> str:
 
 
 def main(argv: list[str]) -> int:
-    ap = argparse.ArgumentParser(description="中文去 AI 味打分（内置实现）")
+    ap = argparse.ArgumentParser(description="中文句式模式诊断（内置实现，非质量或作者身份判断）")
     ap.add_argument("input", help="输入文件，- 表示标准输入")
     ap.add_argument("--json", action="store_true", help="输出 JSON")
     ap.add_argument("-o", "--output", help="输出文件（默认 stdout）")

@@ -9,7 +9,13 @@ test('independent host pack has stable identity, exact skill versions and isolat
   assert.deepEqual(a, b); assert.equal(a.snapshot.skills.length, 8);
   assert.equal(a.manifest.digest.length, 64);
   for (const action of WRITING_ACTIONS) assert.ok(a.snapshot.skills.some(s => s.id === action.id));
-  for (const id of a.snapshot.skills.map(s => s.id)) assert.ok(a.snapshot.resources[`${id}/SKILL.md`]);
+  for (const id of a.snapshot.skills.map(s => s.id)) {
+    assert.ok(a.snapshot.resources[`${id}/SKILL.md`]);
+    assert.ok(a.snapshot.resources[`${id}/scripts/knowledge.py`]);
+    const catalog = JSON.parse(a.snapshot.resources[`${id}/knowledge/index.json`]);
+    for (const entry of catalog.entries) assert.ok(a.snapshot.resources[`${id}/knowledge/${entry.path}`]);
+  }
+  assert.ok(a.snapshot.resources['topmind-cover/assets/examples/creative-atlas.html']);
   assert.ok(a.snapshot.resources['runtime/article-renderer.mjs']);
 });
 test('deliveries share source, keep facts, and apply platform links and tables', () => {

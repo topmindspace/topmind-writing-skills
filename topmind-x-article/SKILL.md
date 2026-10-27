@@ -3,17 +3,21 @@ name: topmind-x-article
 description: "创作或整理 X Article 长文，按需导出可复制 HTML、纯文本、封面与发布清单。保留单源稿与图文顺序，由用户在编辑器发布。普通短帖用 topmind-briefs 或 topmind-viral-posts，纯格式化用 topmind-format。"
 license: MIT
 metadata:
-  version: "0.4.27"
+  version: "0.4.29"
   action_category: "write"
   triggers: "X 长文, 发 X 文章, 写 X 文章, X article, 长文发 X, X 发长文, X 文章排版, 转纯文本, X 纯文本, X发布稿, 发 article, 一键复制, 写 X 长文, X 长文发布, 推特长文, twitter 长文, Twitter Article"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-26"
+  updated: "2026-10-27"
 ---
 
 # topmind-x-article · X 长文
 
 创作或整理 X Article，并按需导出可复制 HTML、纯文本、封面和发布清单。默认中文；从用户当前已有稿件接着做，保留明确的语言、结构和风格要求。
+
+## 按需借鉴与积累
+
+需要新方向、完整例子或相关经验时，用 [知识使用与增补](references/knowledge-library.md) 检索论点推进、证据与平台适配；先读摘要，再选相关卡片。可以混合、改造或采用库外思路，简单任务直接完成。知识不替代当前用户要求；新反馈先作为有范围的候选，不自动改长期规则。
 
 ## 写作与参考
 
@@ -42,7 +46,7 @@ python3 scripts/md2x.py <文章目录>/<文章名>.md
 ```
 
 - `out/X长文.html` 提供作者侧复制入口。全文复制带文字、格式和 `[图N]` 位置，配图需要在编辑器按位置粘贴或上传；不承诺一键带图。
-- 封面由 X 编辑器单独上传。标题填标题栏，源稿第一个 H1 不进正文剪贴板。
+- 封面由 X 编辑器单独上传；1500×600 是本包预设，按 [平台封面参考](references/platform-cover-specs.md) 核对当前裁切，不与账号主页 banner 混用。标题填标题栏，源稿第一个 H1 不进正文剪贴板。
 - 表格可用 `--tables-as-images`；没有 Chrome 时脚本会降级成分行列表，交付时说明结果。富文本列表和纯文本列表分开处理；纯文本 `--list-style plain|emoji|keep` 都可选。
 - 提示词代码块可在 X 编辑器用原生 Code 功能恢复读者侧复制按钮；当前导出链路见 [x-html-format.md](references/x-html-format.md)。
 - 打开 HTML 或生成预览逐张核对图文顺序、表格与复制结果。原始 PNG 与压缩内嵌图可能编码不同，核对其内容和映射，不能把所有文件的字节相同当通用要求。

@@ -3,17 +3,21 @@ name: topmind-viral-posts
 description: "创作 X 段子、互动短帖、关系帖、回复与转发点评；提供可直接使用的文案，支持作者样本与不同写法探索。信息型快讯用 topmind-briefs，现成文字只排版用 topmind-format，独立改稿用 topmind-revise。"
 license: MIT
 metadata:
-  version: "0.3.21"
+  version: "0.3.23"
   action_category: "write"
   triggers: "引流段子, 段子, 写段子, 不懂就问, 冷知识段子, 卧槽体, 群聊体, 连续剧段子, 扒料, 故障帖, 冲粉帖, 爆款短篇, 爆款短文, 涨粉帖, 涨粉短帖, 涨粉段子, 互关帖, 互关求粉, X 短帖, 热点段子, 蹭热点, 新人报到, 打卡帖, 回复口吻, 话题标签, hashtag, traffic post, viral post, X 引流"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-26"
+  updated: "2026-10-27"
 ---
 
 # topmind-viral-posts · X 段子与互动短帖
 
 写读者愿意接话的帖子：一个鲜活观察、一个反差、一句真问题，或者一次真实的关系互动。默认中文，风格跟当前用户与作者样本走。
+
+## 按需借鉴与积累
+
+需要新方向、完整例子或相关经验时，用 [知识使用与增补](references/knowledge-library.md) 检索幽默机制、生活观察、回复与转发；先读摘要，再选相关卡片。可以混合、改造或采用库外思路，简单任务直接完成。知识不替代当前用户要求；新反馈先作为有范围的候选，不自动改长期规则。
 
 ## 从可用素材里找方向
 

@@ -750,6 +750,146 @@
       "prompt": "写 X 短文总结这个打不开的链接，我只给你摘录，不要猜全文。",
       "expected_skill": "topmind-briefs",
       "expected_behavior": "基于摘录明确范围，不声称看过全文；独立可核事实继续查，依赖原文的结论留待核实。"
+    },
+    {
+      "id": "cover-xiaohongshu-sourced",
+      "target_skill": "topmind-cover",
+      "prompt": "做一张小红书图文封面，知识清单，1080×1440。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "按 3:4 完成构图、核字与输出；将像素标为用户规格 / 本包预设，不把商品课程的少字建议扩大成所有笔记禁字，不声称已验证平台展示。"
+    },
+    {
+      "id": "cover-douyin-context",
+      "target_skill": "topmind-cover",
+      "prompt": "做抖音图文封面，是普通知识分享，不挂商品。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "按普通图文用途设计，3:4 可作本包起点；不套商城、直播或商品主图规则，不编造官方统一规格与固定安全区。"
+    },
+    {
+      "id": "cover-wechat-square",
+      "target_skill": "topmind-cover",
+      "prompt": "公众号封面要宽图和方图，主角在左边。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "各比例直接从原图裁切，尝试保留左侧主体并实际检查；切字时重排，不从先裁好的宽图继续裁方图。"
+    },
+    {
+      "id": "cover-mall-rule-version",
+      "target_skill": "topmind-cover",
+      "prompt": "抖音商城封面能做纯文字吗？网上旧公告说不行。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "核验当前条款、版本与适用范围；说明公开资料版本冲突，不将旧公告扩大为当前全抖音统一禁令；缺少当前可读证据不武断承诺可用。"
+    },
+    {
+      "id": "cover-wechat-image-message",
+      "target_skill": "topmind-cover",
+      "prompt": "给公众号图片消息做一张封面，别套普通文章横图。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "识别图片消息用途，按当前入口与请求处理，不默认用 900×383 或声称它是微信强制上传尺寸。"
+    },
+    {
+      "id": "cover-portrait-landscape",
+      "target_skill": "topmind-cover",
+      "prompt": "同一篇文章做小红书和 X 长文封面，横竖各一版。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "复用主题与风格，分别安排构图，输出核字与裁切；不把一张横图中心裁成竖图当作保证合格，不虚构生图或后台预览成功。"
+    },
+    {
+      "id": "cover-routing-dense-pages",
+      "target_skill": "topmind-cover",
+      "prompt": "把这篇 2000 字教程排成小红书分段图，每页内容都要完整。",
+      "expected_skill": "topmind-poster",
+      "expected_behavior": "以精确文字和内容页为目标，使用 poster 分页与渲染；封面可另组合 cover，不将密集正文压成一张封面。"
+    },
+    {
+      "id": "knowledge-cover-explore",
+      "target_skill": "topmind-cover",
+      "prompt": "做封面，要优雅、有吸引力，给我一张你认为最合适的。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "从主题选择有具体字图关系的方向并交一张完成图；可检索相关知识，不强制多稿或所有知识卡。"
+    },
+    {
+      "id": "knowledge-cover-long-title",
+      "target_skill": "topmind-cover",
+      "prompt": "封面保留完整长标题“重新理解我们与工具的关系”，不要替我改短。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "按字意断行、字体与画幅组织，必要时后期叠字；不因八字或十二字阈值删标题。"
+    },
+    {
+      "id": "knowledge-cover-pure",
+      "target_skill": "topmind-cover",
+      "prompt": "做一张纯白底、细宋体、无人物的封面。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "尊重明确方向，以字距、尺度、位置和读序完成；不强加纹理、角色或巨字。"
+    },
+    {
+      "id": "knowledge-cover-learn",
+      "target_skill": "topmind-cover",
+      "prompt": "封面参考我给的图，请实际看字和图怎么配，再做自己的表达。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "实际查看参考，提取关系并据当前材料表达；不冒充来源作品，不只列风格名字。"
+    },
+    {
+      "id": "knowledge-brief-precision",
+      "target_skill": "topmind-briefs",
+      "prompt": "写短文：图中估读大约42分，来源是厂商自测，不要藏掉口径。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "正文保留约、估读与厂商归因，详细过程可另列；可借论文 / 新闻卡，不照抄示例数字。"
+    },
+    {
+      "id": "knowledge-viral-voice",
+      "target_skill": "topmind-viral-posts",
+      "prompt": "写条段子，冷静一点，不用问号结尾。",
+      "expected_skill": "topmind-viral-posts",
+      "expected_behavior": "用观察、错位或动作形成幽默，不强制互动钩子、省略号或热烈情绪。"
+    },
+    {
+      "id": "knowledge-wechat-story",
+      "target_skill": "topmind-wechat-post",
+      "prompt": "写公众号随笔，开头保留我给的故事铺垫，不要先塞三条结论。",
+      "expected_skill": "topmind-wechat-post",
+      "expected_behavior": "按真实素材延续叙事，经验只供参考；不强制先结论、观点条数或图片配额。"
+    },
+    {
+      "id": "knowledge-x-adapt",
+      "target_skill": "topmind-x-article",
+      "prompt": "写 X 长文，可以按读者重组公众号素材，事实与归因都要保留。",
+      "expected_skill": "topmind-x-article",
+      "expected_behavior": "按平台阅读任务适配入口和展开，保持数字与确定性，不要求逐字一致。"
+    },
+    {
+      "id": "knowledge-revise-preserve",
+      "target_skill": "topmind-revise",
+      "prompt": "改稿：这句“真正的难点不在模型，在数据清洗”是我的判断，请保留。",
+      "expected_skill": "topmind-revise",
+      "expected_behavior": "保留有意义的辨析与作者态度，不按词表删除；只修实际问题，不以警告清零定稿。"
+    },
+    {
+      "id": "knowledge-format-contract",
+      "target_skill": "topmind-format",
+      "prompt": "X 排版：只调空行，保留✅❌、链接和原句，不要用创作知识改字。",
+      "expected_skill": "topmind-format",
+      "expected_behavior": "保留语义符号、措辞、事实与URL；知识只帮助呈现选择，不扩大修改授权。"
+    },
+    {
+      "id": "knowledge-poster-density",
+      "target_skill": "topmind-poster",
+      "prompt": "做一组分段图，内容长就按语义分页，不要为了固定张数删信息。",
+      "expected_skill": "topmind-poster",
+      "expected_behavior": "选择合适的结构与视觉语气，分页保留语义、单位与来源，不固定每页字符数或图表配额。"
+    },
+    {
+      "id": "knowledge-candidate",
+      "target_skill": "topmind-cover",
+      "prompt": "把这次封面反馈存到我指定的私有知识包，只记录本次用途。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "写有场景和例外的candidate，保留反馈性质；不自动激活、不修改全局技能或公开私人稿件。"
+    },
+    {
+      "id": "knowledge-host-read",
+      "target_skill": "topmind-cover",
+      "prompt": "做封面，宿主不能执行Python，但能读取随包JSON和Markdown参考。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "按知识导航 / 目录摘要选择性读取卡片，采用宿主真实可用工具，不要求用户安装Python或假装已生图。"
     }
   ]
 }

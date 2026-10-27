@@ -3,17 +3,21 @@ name: topmind-format
 description: "把已有文字排成适合 X 的纯文本，保留措辞、事实、顺序与有表达作用的符号。支持短文、段子和多个已有开头的完整稿拼接。改写用 topmind-revise，从零写作用 topmind-briefs 或 topmind-viral-posts。"
 license: MIT
 metadata:
-  version: "0.1.13"
+  version: "0.1.15"
   action_category: "write"
   triggers: "转段子, 改成段子, 段子格式, 格式化, 格式化一下, 格式化成短文, 排一下版, 整理格式, 加空行, 分行, 加 emoji, X 排版, 几个开头, 备选开头, 拼成成品, format"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-26"
+  updated: "2026-10-27"
 ---
 
 # topmind-format · X 纯文本排版
 
 用户已有文字，只调整换行、空行和列表等呈现。保留事实、措辞、顺序、标点和有表达作用的 emoji；疑似错字可另提建议。用户同时要求润色时可组合 `topmind-revise`，按已授权范围完成。
+
+## 按需借鉴与积累
+
+需要新方向、完整例子或相关经验时，用 [知识使用与增补](references/knowledge-library.md) 检索排版节奏、符号语义与保真对照；先读摘要，再选相关卡片。可以混合、改造或采用库外思路，简单任务直接完成。知识不替代当前用户要求；新反馈先作为有范围的候选，不自动改长期规则。
 
 ## 版式选项
 

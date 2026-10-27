@@ -389,12 +389,30 @@ def role_of(l):
     return "main" if sz >= 0.2 else "sub" if sz >= 0.09 else "label"
 
 
+def validate_spec(spec):
+    """Validate rendering structure independently from optional design hints."""
+    if not isinstance(spec, dict) or not isinstance(spec.get("layers"), list) or not spec["layers"]:
+        fail("spec 需要非空 layers 列表")
+    for layer in spec["layers"]:
+        if not isinstance(layer, dict): fail("layers 中每项需要是图层对象")
+        layer_type = layer.get("type", "text")
+        if not isinstance(layer_type, str) or layer_type not in {"text", "deco", "occlude"}: fail("未知图层类型")
+        if layer.get("type", "text") == "text":
+            if not isinstance(layer.get("text"), str) or not layer["text"].strip(): fail("文字图层需要非空 text")
+            if "role" in layer and (not isinstance(layer["role"], str) or layer["role"] not in ROLE_MIN): fail("未知文字角色 role")
+            sizes = layer.get("sizes")
+            if sizes is not None and (not isinstance(sizes, list) or not sizes): fail("sizes 需要非空数值列表")
+            for size in [layer.get("size", 0.2)] + (sizes or []):
+                if isinstance(size, bool) or not isinstance(size, (int, float)) or not math.isfinite(size) or size <= 0:
+                    fail("字号需要有限的正数")
+
+
 def combo_check(spec):
     """静态检查：层级、字号下限、字体数量、特效克制、非水平处理须写理由、装饰数量。"""
     layers = spec.get("layers", [])
     texts = [l for l in layers if l.get("type", "text") == "text"]
     probs = []
-    if not texts: return ["没有文字图层"]
+    if not texts: return []
     roles = [role_of(l) for l in texts]
     for l, r in zip(texts, roles):
         if r not in ROLE_MIN: probs.append(f"「{l.get('text')}」role 只能是 main / sub / label / ornament"); continue
@@ -486,10 +504,7 @@ def main():
         if not path or not os.path.isfile(path): fail("--check 需要 spec.json")
         try: sp = json.load(open(path, encoding="utf-8"))
         except Exception as e: fail(f"spec 不是合法 JSON：{e}")
-        if not isinstance(sp, dict) or not isinstance(sp.get("layers"), list) or not sp["layers"]:
-            fail("spec 需要非空 layers 列表")
-        if any(not isinstance(layer, dict) for layer in sp["layers"]):
-            fail("layers 中每项需要是图层对象")
+        validate_spec(sp)
         probs = combo_check(sp)
         for m in probs: print("设计建议：" + m)
         print("设计检查（静态）：" + ("通过" if not probs else f"{len(probs)} 项建议，结合实际图判断")); sys.exit(1 if a.strict and probs else 0)
@@ -497,8 +512,7 @@ def main():
     if not os.path.isfile(a.background): fail(f"找不到场景图：{a.background}")
     try: spec = json.load(open(a.spec, encoding="utf-8"))
     except Exception as e: fail(f"spec 读取失败：{e}")
-    if not isinstance(spec, dict) or not isinstance(spec.get("layers"), list) or not spec["layers"]: fail("spec 需要非空 layers 列表")
-    if any(not isinstance(layer, dict) for layer in spec["layers"]): fail("layers 中每项需要是图层对象")
+    validate_spec(spec)
     base = Image.open(a.background).convert("RGBA")
     if a.size or spec.get("size"):
         w, h = map(int, (a.size or spec["size"]).lower().split("x")); base = fit(base, (w, h))
@@ -529,7 +543,7 @@ def main():
         print(f"  [{role}] {text}：对比度 {cr:.2f}:1" if cr else f"  [{role}] {text}")
         bad += [f"「{text}」{p}" for p in pr]
     for m in bad: print("设计建议：" + m)
-    print("设计检查：" + ("通过" if not bad else f"{len(bad)} 项不达标"))
+    print("设计检查：" + ("通过" if not bad else f"{len(bad)} 项模板提示，结合实际设计判断"))
     if bad and a.strict: sys.exit(2)
 
 

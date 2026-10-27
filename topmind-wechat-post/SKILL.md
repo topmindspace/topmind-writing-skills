@@ -3,17 +3,21 @@ name: topmind-wechat-post
 description: "创作、整理和排版公众号文章；从选题或底稿到 Markdown，按需导出内联 HTML、预览与上传清单。支持已有稿件直接排版；公众号短文用 topmind-briefs，独立改稿用 topmind-revise。"
 license: MIT
 metadata:
-  version: "0.3.22"
+  version: "0.3.24"
   action_category: "write"
   triggers: "公众号, 写公众号, 微信排版, 公众号排版, 公众号稿, 公众号长文, 排版这篇文章, 定稿, 发公众号, 公众号交付, wechat, mp format, 写公众号文章, 公众号排版定稿, 公众号发布清单"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-26"
+  updated: "2026-10-27"
 ---
 
 # topmind-wechat-post · 公众号文章
 
 从选题、底稿到可使用的公众号稿与发布包。默认中文，用户的目标、样本和篇幅要求优先；文章写法可用研究、教程、故事、评论或混合结构。
+
+## 按需借鉴与积累
+
+需要新方向、完整例子或相关经验时，用 [知识使用与增补](references/knowledge-library.md) 检索叙事、解释、决策主线与完整段落；先读摘要，再选相关卡片。可以混合、改造或采用库外思路，简单任务直接完成。知识不替代当前用户要求；新反馈先作为有范围的候选，不自动改长期规则。
 
 ## 从当前进度接着做
 
@@ -68,6 +72,6 @@ python3 scripts/md2wechat.py --input <文章目录>/<文章名>.md --embed-image
 
 ## 交付
 
-写作默认给 Markdown；需要发布包时再给 HTML、预览和上传清单，来源与重要疑点另列。封面按请求组合 `topmind-cover`，不强制每篇做两版。尚未发布时保留真实状态；用户确认发布后再记录“已发布”。本技能不执行对外发布或自动云端备份。
+写作默认给 Markdown；需要发布包时再给 HTML、预览和上传清单，来源与重要疑点另列。封面按请求组合 `topmind-cover`，不强制每篇做两版。普通文章宽图、方形小图与图片消息分别按 [平台封面参考](references/platform-cover-specs.md) 处理；900×383 是本包预设，各入口裁切和上传限制以当前编辑器为准。尚未发布时保留真实状态；用户确认发布后再记录“已发布”。本技能不执行对外发布或自动云端备份。
 
 按需参考：[口吻](references/core-voice.md)、[研究](references/research-mode.md)、[工作流](references/workflow.md)、[已知问题](references/known-pits.md)、[案例](references/case-notes.md)。短文用 `topmind-briefs`，X 长文用 `topmind-x-article`，独立改稿用 `topmind-revise`，信息图用 `topmind-poster`；有组合需求时继续完成相关环节。

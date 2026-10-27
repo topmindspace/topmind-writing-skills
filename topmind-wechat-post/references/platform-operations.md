@@ -2,6 +2,10 @@
 
 按需查阅目录、脚本与导出细节。写法与质量判断见 SKILL.md 和共享经验；平台技术限制与审美选择分开处理。
 
+## 封面与图文形态
+
+普通文章宽封面、方形小图、正文头图与公众号图片消息分别处理，见 [平台封面参考](platform-cover-specs.md)。900×383 是本包预设，不是已核实的统一上传限制；宽图、方图、列表与分享预览按当前编辑器检查。
+
 ## 脚本（真源）
 
 
@@ -14,14 +18,14 @@
 | `scripts/sync-mapping.py` | 映射一致性（frontmatter + 目录 + 可选 notes + topic 总表），新旧结构都认 |
 | `scripts/push-to-topstream.py` | 可选回推：公众号稿降级为纯 Markdown notes |
 | `scripts/lint-wechat.py` | 排版体检 + 自动修正（中英文间距、段长、AI 腔…）；源稿出现 `:::` 报错（旧交付包 `公众号稿.md` 只告警） |
-| `scripts/md2wechat.py` | Markdown → 全内联 HTML 到 `out/`；**必加 `--embed-images`**；手写小标题序号原样保留 |
+| `scripts/md2wechat.py` | Markdown → 全内联 HTML 到 `out/`；需要内嵌图片时加 `--embed-images`，粘贴后带图需实测；手写小标题序号原样保留 |
 | `scripts/de_ai_lint.py` | 去 AI 味检查（公众号稿默认用它）：W 警告（W9、W14–W21）+ H 提示（语境词等，只供判断）；规则见 `references/de-ai-rules.md` |
-| `scripts/lint_x_post.py` | 派生 X 版时的 X 稿检查：无 Markdown 列表/标题/加粗，正文无 URL / 来源行 / 配图说明；去 AI 味部分复用 `de_ai_lint.py`（`--md` 等同 `de_ai_lint.py`） |
+| `scripts/lint_x_post.py` | 派生 X 版时检查格式残留与图片占位；文字列表、正文链接和来源默认可保留，链接分离仅在显式选择时检查；去 AI 味部分复用 `de_ai_lint.py`（`--md` 等同 `de_ai_lint.py`） |
 | `scripts/count_words.py` | 统一口径字数（改前 / 改后、单段最长） |
 | `scripts/revise_check.py` | 改稿保真比对（数字、引语、专名、确定性词）+ 过度改稿检查 |
 | `scripts/info_design_hints.py` | （共享脚本）信息设计提示 I1–I9，只供判断；`lint-wechat.py`、`de_ai_lint.py` 也会附带显示 |
 | `scripts/scan_ai_flavor.py` | 中文去 AI 味打分入口：默认跑随包 `scan_ai_flavor_builtin.py`（词面分）；`$TOPMIND_AI_SCAN` 指向外部扫描脚本时转发过去；`--which` 查实际执行哪份 |
-| `scripts/audit-provenance.py` | （共享脚本）**改稿保真审计**：双向逐段溯源（本稿→源稿 / 源稿→本稿），抓悄悄扩写与被落下的段。有源稿时定稿必跑 |
+| `scripts/audit-provenance.py` | （共享脚本）**改稿保真审计**：双向逐段溯源（本稿→源稿 / 源稿→本稿），抓悄悄扩写与被落下的段。同构派生稿可用；全面重组时按主张与数字核对 |
 | `scripts/wechat_paths.py` | 路径解析模块（被上面脚本导入）：不写死个人路径、类别编号与年份 |
 
 ```bash
@@ -141,7 +145,7 @@ python3 scripts/md2wechat.py --input <文章名>/<文章名>.md --embed-images -
    嵌入图顺序=文档出现顺序（逐张解码与源文件比对）；每张图前后 6 行做主题关键词
    邻近检查，不通过则人工核对。
 5. **双版一致性校验**：同一选题出 X 版后，
-   必跑 X 内嵌图序列 vs 公众号内嵌图序列的逐字节/逐像素比对（X 去掉封面后应完全一致）。
+   核对 X 与公众号内嵌图的内容、映射与顺序；有压缩、重采样或平台裁切时不要求字节或像素完全相同，实际内容差异需说明。
    两版都直接读同一份 `<文章名>.md` 的 `![]()`，禁止手工拼 `--images`
    （曾因文件名排序 ≠ 文档顺序，导致 X 版从某一节起整段配图错位）；`check_article.py` 校验编号跟出现顺序一致。
 
@@ -161,7 +165,7 @@ python3 scripts/md2wechat.py --input <文章名>/<文章名>.md --embed-images -
 `md2wechat.py --list-themes` 看全部；`--theme genre:评测` 可按题材自动选。
 渲染规格见 [`references/element-spec.md`](element-spec.md) · 主题映射见 [`references/theme-map.md`](theme-map.md)。
 
-**平台硬约束速查**（详见 [`references/wechat-constraints.md`](wechat-constraints.md)）：禁 `div`/`pre`/`h1`/`figure`/`thead`/flex/float/gradient/shadow；表格 `table-layout` 不写 fixed；列数 ≥4 转卡片。
+**本包保守兼容策略**（平台行为变化时实际验证；详见 [`references/wechat-constraints.md`](wechat-constraints.md)）：禁 `div`/`pre`/`h1`/`figure`/`thead`/flex/float/gradient/shadow；表格 `table-layout` 不写 fixed；列数 ≥4 转卡片。
 
 ## 与 Desktop「公众号创作」
 

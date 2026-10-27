@@ -12,6 +12,7 @@
 from __future__ import annotations
 
 import shutil
+import re
 import subprocess
 import sys
 import tempfile
@@ -44,8 +45,15 @@ def main() -> None:
     # 1. 自包含：SKILL.md / references 不引用技能目录外的路径（单独安装也能用）
     outside = []
     for md in [ROOT / "SKILL.md", *sorted((ROOT / "references").glob("*.md"))]:
-        if md.is_file() and "](../" in md.read_text(encoding="utf-8"):
-            outside.append(md.relative_to(ROOT).as_posix())
+        if not md.is_file():
+            continue
+        for link in re.findall(r"\]\(([^)]+)\)", md.read_text(encoding="utf-8")):
+            if link.startswith(("https://", "http://", "mailto:", "#")):
+                continue
+            # ../knowledge is still inside a standalone skill; compare resolved paths.
+            target = (md.parent / link.split("#")[0]).resolve()
+            if not target.is_relative_to(ROOT.resolve()):
+                outside.append(f"{md.relative_to(ROOT).as_posix()}: {link}")
     check("不引用技能目录外的相对路径", not outside, "、".join(outside))
 
     # 1b. 共享版式文档随包自带（emoji 体系唯一真源 + 版式规律）

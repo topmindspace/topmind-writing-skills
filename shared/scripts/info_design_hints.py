@@ -181,7 +181,7 @@ def analyze(text, essay=False, budget=None):
     # I2 图表列表少
     elements = sum(1 for b in body if b[0] in ELEMENTS)
     if total >= CHARS_PER_ELEMENT * 2 and total / max(1, elements) > CHARS_PER_ELEMENT:
-        hits.append((body[0][1] if body else 1, "I2", f"全文约 {total} 字，图 / 表 / 列表 {elements} 个（参考：每 500–800 字一个）：哪些段落其实是数据、步骤或对比"))
+        hits.append((body[0][1] if body else 1, "I2", f"全文约 {total} 字，图 / 表 / 列表 {elements} 个：若有数据、步骤或对比可考虑换形式；纯文字也可成立，不设配图配额"))
 
     # I3 并列项
     ord_run = []
@@ -190,7 +190,7 @@ def analyze(text, essay=False, budget=None):
             ord_run.append(b)
         else:
             if len(ord_run) >= 2:
-                hits.append((ord_run[0][1], "I3", f"连续 {len(ord_run)} 段用「第一 / 首先」类开头：这是一个列表"))
+                hits.append((ord_run[0][1], "I3", f"连续 {len(ord_run)} 段用「第一 / 首先」类开头：若是并列信息可用列表；有叙事作用时保留"))
             ord_run = []
     for b in texts:
         done = False
@@ -228,7 +228,7 @@ def analyze(text, essay=False, budget=None):
             frag = a[m.a:m.a + m.size]
             if m.size >= REPEAT_MIN and len(CJK_RE.findall(frag)) >= 6 and norm[j][0] not in seen:
                 seen.add(norm[j][0])
-                hits.append((norm[j][0], "I5", f"和第 {norm[i][0]} 行重复「{frag[:16]}」：同一个意思说一遍就够"))
+                hits.append((norm[j][0], "I5", f"和第 {norm[i][0]} 行重复「{frag[:16]}」：检查重复是否帮助强调、续读或解释，没有作用再合并"))
     for k, b in enumerate(body):
         if b[0] == "heading" and b[2].startswith("##"):
             core = _strip_heading(b[2])
@@ -237,16 +237,16 @@ def analyze(text, essay=False, budget=None):
                 first = _norm(_clauses(nxt[2])[0]) if _clauses(nxt[2]) else ""
                 m = SequenceMatcher(None, core, first, autojunk=False).find_longest_match(0, len(core), 0, len(first))
                 if m.size >= max(4, int(len(core) * 0.8)):
-                    hits.append((nxt[1], "I5", f"首句复读小标题「{core[:12]}」：小标题已经说了，首句直接给新信息"))
+                    hits.append((nxt[1], "I5", f"首句复读小标题「{core[:12]}」：判断复述是否帮助进入本节，必要时保留或给新信息"))
 
     # I6 首段
     lead = next((b for b in body if b[0] in ("text", "list", "table", "image")), None)
     if lead and lead[0] == "text":
         n = vlen(lead[2])
         if n > LEAD_MAX:
-            hits.append((lead[1], "I6", f"首段 {n} 字：开头一两句先交底（结论或最关键的事实），细节往后放"))
+            hits.append((lead[1], "I6", f"首段 {n} 字：根据读者选择事实直给、故事或问题入口，不按字数自动改写"))
         elif not DIGIT_RE.search(lead[2]) and re.search(r"[？?]\s*$|[…]+\s*$", lead[2].strip()):
-            hits.append((lead[1], "I6", "首段没有数字也没有结论、以问句或省略号收住：读者看完开头还不知道这篇要说什么"))
+            hits.append((lead[1], "I6", "首段以问句或省略号收住且未命中数字：看它是否形成有效问题或叙事入口，不据此判定缺结论"))
 
     # I7 长节全是段落
     sec, sec_no, sec_title = [], None, ""
@@ -255,18 +255,18 @@ def analyze(text, essay=False, budget=None):
             if sec_no and sec:
                 chars = sum(vlen(x[2]) for x in sec if x[0] == "text")
                 if chars > SECTION_MIN and not any(x[0] in ELEMENTS for x in sec):
-                    hits.append((sec_no, "I7", f"这一节约 {chars} 字，全是段落：至少放一张图、一个列表或表格，或拆成两节"))
+                    hits.append((sec_no, "I7", f"这一节约 {chars} 字，全是段落：如果是比较或步骤，可考虑图、列表、表格或分节；连续论证与叙事可保留"))
                 all_chars = sum(vlen(str(x[2])) for x in sec)
                 if (all_chars > SECTION_MIN and not I9_EXEMPT_RE.search(sec_title)
                         and not any(JUDGE_RE.search(str(x[2])) for x in sec)):
-                    hits.append((sec_no, "I9", f"这一节约 {all_chars} 字，没有一句判断：素材之外，写一句你怎么看（骨架「我的判断」）"))
+                    hits.append((sec_no, "I9", f"这一节约 {all_chars} 字，未命中这份判断词表：按体裁看是否需要作者判断，事实汇编与教程不强加立场"))
             sec, sec_no, sec_title = [], b[1], b[2]
         elif sec_no:
             sec.append(b)
 
     # I8 篇幅预算
     if budget and total > budget * (1 + BUDGET_OVER):
-        hits.append((body[0][1] if body else 1, "I8", f"全文约 {total} 字，骨架预算 {budget} 字，超出 {total / budget - 1:.0%}：回头对一下哪一节写跑了"))
+        hits.append((body[0][1] if body else 1, "I8", f"全文约 {total} 字，骨架预算 {budget} 字，超出 {total / budget - 1:.0%}：复查预算是否仍适合当前任务，必要时调整预算或内容"))
 
     if essay:
         hits = [h for h in hits if h[1] not in ESSAY_EXEMPT]

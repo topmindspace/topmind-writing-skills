@@ -1,0 +1,18 @@
+{
+  "pattern": "按竖版重新构图的书籍感标题",
+  "layers": [
+    {
+      "type": "text",
+      "role": "main",
+      "text": "读慢一点",
+      "font": "song-regular",
+      "vertical": true,
+      "size": 0.12,
+      "fill": "#EEE8D7",
+      "x": 0.74,
+      "y": 0.19,
+      "anchor": "rt",
+      "tracking": 0.13
+    }
+  ]
+}

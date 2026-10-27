@@ -20,14 +20,15 @@ bash scripts/ci_skill_gates.sh
 先跑一次仓库级的去 AI 味规则回归 `python3 scripts/test_lint_rules.py`（「不应报」的正常写法被误报、该报的没报、H 提示卡住了 `--strict`，都算失败），再跑 `python3 scripts/test_creative_contracts.py`，验证默认保真、显式转换、风格提示与实际格式错误的区别；随后对每个发现的技能目录依次：
 
 1. 有运行时依赖才装：有锁文件 `npm ci --omit=dev`，没有则 `npm install --omit=dev --no-package-lock`；目前各技能都没有依赖，这一步跳过，不生成锁文件
-2. `package_skill.py --check` + `audit_{styles,docs,skill,css}.py`
-3. `negative_tests.py`
+2. `package_skill.py --check` + `audit_{styles,docs,skill,css}.py`；仓库级 `test_skill_packaging.py` 验证重复打包、双语说明和产物排除，源目录禁用文件检查保持有效
+3. `negative_tests.py`（cover 含 `test_crop_cover.py`：多平台尺寸、独立裁切、位置、等比、EXIF 与原图保护；CI / Release 显式安装 Pillow，确保执行图片测试）
 4. （若存在）`test_feedback_gates.py`
 
 ### 本地复现
 
 ```bash
 # 与 CI 同款全门禁
+python3 -m pip install 'Pillow>=10,<13' 'numpy>=1.26,<3'
 bash scripts/ci_skill_gates.sh
 
 # 仓库级
@@ -64,3 +65,13 @@ Release 的 publish 步骤：
 ## 创作行为与质量评测
 
 `evals/evals.json` 包含路由、用户偏好、参考阅读和创作选择场景。`check_evals.js` 只验证用例结构与路由词，不执行模型，不证明写作质量。真实任务比较方法见 [审查报告](./creative-skills-audit.md)。
+
+## 创作知识与工具行为
+
+共享 manifest 的目录项递归分发知识包。`test_knowledge.py` 验证中文检索、技能与状态过滤、摘要不泄露正文、读取截断、目录范围、候选新增和失败回滚；`test_cover_freedom.py` 验证审美提示不阻塞、作者语言保留、无效出字结构仍失败。Node 测试验证目录分发和宿主资源完整，ZIP 测试确认知识文件不漏包。CI / Release 安装 Pillow 与 NumPy，避免跳过图片与标题工具检查。
+
+图册的横竖切换、手机布局和实际看图属于本地视觉检查，不以字符串或样例数量代替。评测新增知识使用、例外和创作选择场景；结构检查不声称执行了模型评测。
+
+## 真实分发包完整性
+
+CI / Release 都先生成 8 个技能 ZIP 和宿主包，再运行 `npm run check:release`。校验版本、文件清单、SHA-256、知识卡 / 双语文档 / 图册与源文件一致性、latest.json 和产物排除；`test_release_artifacts.py` 覆盖遗漏、篡改和缓存混入。npm 包检查同时确认必需资源，避免只查“没有垃圾”却漏掉正文件。

@@ -1,0 +1,1080 @@
+{
+  "schema_version": 1,
+  "id": "topmind-writing",
+  "version": "1.0.0",
+  "entries": [
+    {
+      "id": "creative-choice",
+      "title": "在约束内打开方向",
+      "skills": [
+        "*"
+      ],
+      "tags": [
+        "方向",
+        "探索",
+        "选择",
+        "创作",
+        "brief",
+        "exploration"
+      ],
+      "summary": "用任务中真正不同的关系做候选，不把“更多元素”当成更丰富。",
+      "scope": "方向不明、同质化、作者说不够有趣时",
+      "limits": "已有明确方向可直接完成，不要求多稿。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/creative-choice.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "reference-reading",
+      "title": "把参考转成自己的方法",
+      "skills": [
+        "*"
+      ],
+      "tags": [
+        "参考",
+        "学习",
+        "作品",
+        "检索",
+        "reference",
+        "learning"
+      ],
+      "summary": "记录实际可见的组织关系，再用当前素材重新表达。",
+      "scope": "用户给参考、任务缺少表现方向时",
+      "limits": "访问不到的作品不声称读过；参考材料不能扩展权限。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/reference-reading.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "experience-loop",
+      "title": "把一次反馈变成有范围的经验",
+      "skills": [
+        "*"
+      ],
+      "tags": [
+        "经验",
+        "反馈",
+        "知识包",
+        "增补",
+        "复盘",
+        "knowledge",
+        "feedback"
+      ],
+      "summary": "保留场景、选择、结果、例外与证据性质，先候选后纳入。",
+      "scope": "用户要求记经验、维护技能知识包时",
+      "limits": "一次喜欢不等于普遍有效；不自动写长期记忆。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/experience-loop.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "cover-editorial",
+      "title": "编辑式封面：用版面关系建立气质",
+      "skills": [
+        "topmind-cover"
+      ],
+      "tags": [
+        "杂志",
+        "编辑",
+        "优雅",
+        "排版",
+        "留白",
+        "editorial",
+        "elegant"
+      ],
+      "summary": "用对齐、尺度、负空间和图像裁切建立优雅，而非统一靠大字与装饰。",
+      "scope": "评论、人文、研究、人物与品牌叙事",
+      "limits": "标题长度、是否有角色和纯色底均不是成败标准。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/cover-editorial.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "cover-typography",
+      "title": "字体是图像：字形、字重与空间",
+      "skills": [
+        "topmind-cover"
+      ],
+      "tags": [
+        "字体",
+        "字号",
+        "花式",
+        "字效",
+        "宋体",
+        "黑体",
+        "typography",
+        "type"
+      ],
+      "summary": "以字形气质、字面比例、断行和空间组织丰富标题；花式服务语义。",
+      "scope": "标题承担主要视觉、精确中文和多行文案",
+      "limits": "字体名称不代表已安装；最终出字需要核字与许可核对。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/cover-typography.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "cover-scene",
+      "title": "场景：让关系承载故事",
+      "skills": [
+        "topmind-cover"
+      ],
+      "tags": [
+        "场景",
+        "故事",
+        "空间",
+        "镜头",
+        "隐喻",
+        "scene",
+        "narrative"
+      ],
+      "summary": "从时间、地点、动作、材料和尺度关系中选择最能解释主题的场景。",
+      "scope": "故事、教程、工作方式与复杂概念",
+      "limits": "不用所有层次，也不要求人物或动作。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/cover-scene.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "cover-photo",
+      "title": "摄影与真实素材：裁切、负空间和介质",
+      "skills": [
+        "topmind-cover"
+      ],
+      "tags": [
+        "摄影",
+        "原图",
+        "人物",
+        "静物",
+        "photo",
+        "still-life"
+      ],
+      "summary": "用真实素材的独有细节与负空间组织封面，区别纪实照片和生成示意。",
+      "scope": "人物、设备、生活、产品与作者有原图时",
+      "limits": "不虚构拍摄经历；素材许可、身份与事实归属独立核对。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/cover-photo.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "cover-collage",
+      "title": "拼贴：统一材料，保留多层信息",
+      "skills": [
+        "topmind-cover"
+      ],
+      "tags": [
+        "拼贴",
+        "纸感",
+        "资讯",
+        "档案",
+        "collage"
+      ],
+      "summary": "用裁切边缘、材料和重叠关系建立层次，避免无目的堆素材。",
+      "scope": "资料综述、复盘、历史、文化与多对象选题",
+      "limits": "真实截图与生成纸张分清；纸张文字不填伪新闻或假数据。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/cover-collage.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "cover-abstract",
+      "title": "抽象图形：用秩序和异常表达概念",
+      "skills": [
+        "topmind-cover"
+      ],
+      "tags": [
+        "抽象",
+        "图形",
+        "几何",
+        "算法",
+        "abstract",
+        "geometry"
+      ],
+      "summary": "用重复、密度、尺度与一个偏差表达主题，避免科技封面都画芯片。",
+      "scope": "研究、算法、制度、方法论与概念性文章",
+      "limits": "装饰性图形不冒充真实统计图。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/cover-abstract.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "cover-material",
+      "title": "字效与材料：让触感参与表达",
+      "skills": [
+        "topmind-cover"
+      ],
+      "tags": [
+        "材料",
+        "字效",
+        "玻璃",
+        "金属",
+        "纸雕",
+        "压印",
+        "material"
+      ],
+      "summary": "从物理材料与光源关系设计花式，让效果与题意相连。",
+      "scope": "品牌、制造、创意工具、工艺与需要触觉的主题",
+      "limits": "材质效果不要求越多越好；文字仍应可辨。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/cover-material.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "cover-culture",
+      "title": "文化与书卷：不靠模板化国风",
+      "skills": [
+        "topmind-cover"
+      ],
+      "tags": [
+        "文化",
+        "书卷",
+        "宋体",
+        "书法",
+        "人文",
+        "culture",
+        "serif"
+      ],
+      "summary": "从文字气质、纸张、印刷和题材细节取意，避免套古建筑与墨点。",
+      "scope": "阅读、历史、诗歌、随笔与文化评论",
+      "limits": "不伪造古籍、引文、作者签名或文物图源。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/cover-culture.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "cover-playful",
+      "title": "趣味与角色：情境比卖萌更重要",
+      "skills": [
+        "topmind-cover"
+      ],
+      "tags": [
+        "趣味",
+        "角色",
+        "插画",
+        "动漫",
+        "playful",
+        "character"
+      ],
+      "summary": "以角色的处境、姿态与尺度组织笑点或亲近感。",
+      "scope": "轻教程、生活方法、亲子或作者已有角色时",
+      "limits": "不用角色也可以有趣；不强制占比、表情和动作。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/cover-playful.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "cover-color",
+      "title": "色彩：关系、面积与语境",
+      "skills": [
+        "topmind-cover"
+      ],
+      "tags": [
+        "色彩",
+        "优雅",
+        "配色",
+        "多彩",
+        "单色",
+        "color",
+        "palette"
+      ],
+      "summary": "用色温、明度、饱和度和面积的关系设计视觉语气。",
+      "scope": "颜色杂乱、过于模板化或需要系列识别时",
+      "limits": "没有通用三色上限或 60-30-10 义务。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/cover-color.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "cover-series",
+      "title": "系列感与变化：稳定语法，改变表达",
+      "skills": [
+        "topmind-cover"
+      ],
+      "tags": [
+        "系列",
+        "品牌",
+        "变化",
+        "版式",
+        "series",
+        "identity"
+      ],
+      "summary": "固定少量识别线索，按内容变化其他关系，避免每次换色也避免永不变版。",
+      "scope": "栏目、连续文章、同题不同平台",
+      "limits": "没有每周更换背景或连续两张必须换花式的规则。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/cover-series.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "cover-brief",
+      "title": "把形容词变成能执行的视觉简报",
+      "skills": [
+        "topmind-cover"
+      ],
+      "tags": [
+        "简报",
+        "prompt",
+        "提示词",
+        "优雅",
+        "丰富",
+        "brief",
+        "art-direction"
+      ],
+      "summary": "明确要传达的关系，再选择媒介和表现手法，让 AI 保留可探索空间。",
+      "scope": "用户只说高级、优雅、丰富、有吸引力时",
+      "limits": "不要求用户填表；可以自行推断合理方向直接完成。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/cover-brief.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "brief-news",
+      "title": "同一新闻：直给、场景、决策三条入口",
+      "skills": [
+        "topmind-briefs"
+      ],
+      "tags": [
+        "快讯",
+        "新品",
+        "新闻",
+        "入口",
+        "news",
+        "angle"
+      ],
+      "summary": "固定事实与限定，改变读者进入消息的方式。",
+      "scope": "发布消息、产品更新和短文选角度",
+      "limits": "不把厂商测试写成作者实测或把传闻当发布。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/brief-news.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "brief-paper",
+      "title": "论文短文：结果与条件一起交付",
+      "skills": [
+        "topmind-briefs"
+      ],
+      "tags": [
+        "论文",
+        "基准",
+        "口径",
+        "估读",
+        "研究",
+        "paper",
+        "benchmark"
+      ],
+      "summary": "让读者知道论文测到了什么、没证明什么；保留关键限定。",
+      "scope": "论文、数据榜单与基准结果",
+      "limits": "不能用问号代替证据状态，不藏掉估读与厂商归因。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/brief-paper.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "brief-tools",
+      "title": "工具推荐：说清适用与代价",
+      "skills": [
+        "topmind-briefs"
+      ],
+      "tags": [
+        "工具",
+        "推荐",
+        "优惠",
+        "实测",
+        "决策",
+        "tools",
+        "decision"
+      ],
+      "summary": "围绕读者任务、限制与迁移成本组织推荐，而非功能堆砌。",
+      "scope": "工具、新品、优惠和经验短文",
+      "limits": "不用未提供的作者经历、收益与价格。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/brief-tools.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "viral-mechanisms",
+      "title": "幽默：预期、错位与具体动作",
+      "skills": [
+        "topmind-viral-posts"
+      ],
+      "tags": [
+        "段子",
+        "幽默",
+        "反转",
+        "对话",
+        "humor",
+        "mechanism"
+      ],
+      "summary": "选择可感知的反差，让包袱落在对象关系或动作上。",
+      "scope": "观察、轻段子、拟人、产品趣味",
+      "limits": "虚构对话应能被识别，不伪造真实企业言论。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/viral-mechanisms.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "viral-observation",
+      "title": "从生活细节到轻判断",
+      "skills": [
+        "topmind-viral-posts"
+      ],
+      "tags": [
+        "观察",
+        "共鸣",
+        "生活",
+        "轻判断",
+        "observation"
+      ],
+      "summary": "用一个具体细节让读者认出自己，允许平静的声音。",
+      "scope": "日常观察、技术生活和作者小经历",
+      "limits": "第一人称细节要来自作者；频次与互动没有固定配额。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/viral-observation.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "viral-replies",
+      "title": "回复与转发：接话之后再贡献",
+      "skills": [
+        "topmind-viral-posts"
+      ],
+      "tags": [
+        "回复",
+        "转发",
+        "讨论",
+        "reply",
+        "quote"
+      ],
+      "summary": "先识别对方在分享、求助还是论证，再选择态度、补充或追问。",
+      "scope": "评论区、转发点评与关系互动",
+      "limits": "简短与长解释都可能成立，不设 25 字上限。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/viral-replies.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "wechat-story",
+      "title": "长文叙事：场景、变化与解释",
+      "skills": [
+        "topmind-wechat-post"
+      ],
+      "tags": [
+        "故事",
+        "随笔",
+        "开头",
+        "转场",
+        "叙事",
+        "narrative"
+      ],
+      "summary": "让真实场景承载问题，再选择何时解释；保留有用铺垫。",
+      "scope": "随笔、复盘、访谈与经验长文",
+      "limits": "场景需要材料，不能按模板虚构作者经历。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/wechat-story.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "wechat-explain",
+      "title": "解释型长文：从问题到机制",
+      "skills": [
+        "topmind-wechat-post"
+      ],
+      "tags": [
+        "解释",
+        "科普",
+        "机制",
+        "教程",
+        "explanation"
+      ],
+      "summary": "用具体问题打开机制，每节增加新的理解，不要求固定主张条数。",
+      "scope": "机制科普、工具原理、教程与长问答",
+      "limits": "类比有边界，不能代替实际机制和事实。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/wechat-explain.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "wechat-decide",
+      "title": "决策长文：给不同条件的人不同答案",
+      "skills": [
+        "topmind-wechat-post"
+      ],
+      "tags": [
+        "决策",
+        "比较",
+        "取舍",
+        "长文",
+        "decision"
+      ],
+      "summary": "围绕任务和代价比较，允许有条件结论。",
+      "scope": "选型、团队工具、工作方式与商业分析",
+      "limits": "不为立场鲜明制造二选一，表格口径需相同。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/wechat-decide.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "x-argument",
+      "title": "Article：让论点逐节推进",
+      "skills": [
+        "topmind-x-article"
+      ],
+      "tags": [
+        "论点",
+        "Article",
+        "观点",
+        "长文",
+        "argument"
+      ],
+      "summary": "用主张、依据、反问与适用范围组织推进，避免每节重复结论。",
+      "scope": "观点与研究型 X Article",
+      "limits": "不强制过去现在未来或每节固定段数。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/x-argument.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "x-adapt",
+      "title": "跨平台适配：保留事实，重做入口",
+      "skills": [
+        "topmind-x-article"
+      ],
+      "tags": [
+        "适配",
+        "公众号",
+        "短帖",
+        "平台",
+        "adaptation"
+      ],
+      "summary": "根据阅读场景重组入口、展开和交付，事实与限定保持一致。",
+      "scope": "同一素材多平台、长文派生短帖",
+      "limits": "不要求两平台逐字相同，也不把平台习惯当创作禁令。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/x-adapt.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "x-evidence",
+      "title": "长文中的证据、例子与作者判断",
+      "skills": [
+        "topmind-x-article"
+      ],
+      "tags": [
+        "证据",
+        "引用",
+        "作者声音",
+        "研究",
+        "evidence"
+      ],
+      "summary": "让读者辨认事实、说明性例子与作者推断，仍保留自然的声音。",
+      "scope": "多来源综述、评论与教程",
+      "limits": "无出处的数据不因进入图表就变可靠。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/x-evidence.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "revise-depth",
+      "title": "改稿深度：修局部、重组与重写",
+      "skills": [
+        "topmind-revise"
+      ],
+      "tags": [
+        "改稿",
+        "深度",
+        "局部",
+        "结构",
+        "revision",
+        "scope"
+      ],
+      "summary": "先找读者障碍，再选择最小有效改动或授权范围内重写。",
+      "scope": "已有稿件、作者反馈与全面润色",
+      "limits": "只审不改时给问题，不写入原稿。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/revise-depth.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "revise-preserve",
+      "title": "保留：铺垫、重复、术语与长句",
+      "skills": [
+        "topmind-revise"
+      ],
+      "tags": [
+        "保留",
+        "作者声音",
+        "铺垫",
+        "长句",
+        "voice",
+        "preservation"
+      ],
+      "summary": "从作用判断是否保留，避免把词表和压字数当质量标准。",
+      "scope": "作者风格明确、文学或专业稿件",
+      "limits": "保留不等于忽略事实错误；必要时补解释。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/revise-preserve.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "revise-feedback",
+      "title": "反馈：从“像 AI”定位真实问题",
+      "skills": [
+        "topmind-revise"
+      ],
+      "tags": [
+        "反馈",
+        "去AI味",
+        "诊断",
+        "比较",
+        "feedback",
+        "diagnosis"
+      ],
+      "summary": "把模糊感受落到声音、信息、节奏或论证，并用局部对照验证。",
+      "scope": "作者说太空、太端、太像 AI、没劲时",
+      "limits": "不假设所有作者都偏好口语、短句与省略号。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/revise-feedback.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "format-fidelity",
+      "title": "排版保真：空行变化不改变态度",
+      "skills": [
+        "topmind-format"
+      ],
+      "tags": [
+        "排版",
+        "保真",
+        "符号",
+        "格式",
+        "fidelity",
+        "format"
+      ],
+      "summary": "把可改的呈现与不能擅改的语义分开，保持既有排版协议。",
+      "scope": "现有文字只排版与纯文本转换",
+      "limits": "这是保真任务约束，不因减少创作规约而放宽。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/format-fidelity.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "format-layouts",
+      "title": "同一段文字的紧凑版与节拍版",
+      "skills": [
+        "topmind-format"
+      ],
+      "tags": [
+        "排版",
+        "空行",
+        "节奏",
+        "对话",
+        "layout",
+        "rhythm"
+      ],
+      "summary": "选择读序而非统一段长，不改变作者用词。",
+      "scope": "短帖、对话、列表、已有多个开头",
+      "limits": "作者只授权排版时不补钩子或改结尾。",
+      "kind": "example",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/format-layouts.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "poster-structure",
+      "title": "信息图：先选读者要比较的关系",
+      "skills": [
+        "topmind-poster"
+      ],
+      "tags": [
+        "信息图",
+        "榜单",
+        "图表",
+        "结构",
+        "infographic",
+        "structure"
+      ],
+      "summary": "从比较、顺序、变化和因果选择图形，而非一律画卡片。",
+      "scope": "数据、流程、时间线与多对象比较",
+      "limits": "量纲、时点、来源和图例属于准确性要求。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/poster-structure.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "poster-paging",
+      "title": "长图与组图：按语义而非像素切页",
+      "skills": [
+        "topmind-poster"
+      ],
+      "tags": [
+        "长图",
+        "分段图",
+        "分页",
+        "组图",
+        "paging",
+        "carousel"
+      ],
+      "summary": "把一页当成一个读者任务，保留跨页联系与局部可读性。",
+      "scope": "小红书 / 抖音组图、教程分段与长图过密时",
+      "limits": "封面与内容页目的不同，不把整篇长文塞进封面。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/poster-paging.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "poster-voices",
+      "title": "同一信息的三种视觉语气",
+      "skills": [
+        "topmind-poster"
+      ],
+      "tags": [
+        "海报",
+        "风格",
+        "密度",
+        "视觉",
+        "visual-voice"
+      ],
+      "summary": "在不改变数字与读序的前提下，用媒介和层级做风格变化。",
+      "scope": "知识海报、活动说明、比较图与报告配图",
+      "limits": "视觉气质不能修改事实或隐去必要注释。",
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "path": "cards/poster-voices.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace authored teaching example; not a measured performance claim"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "crop-independent",
+      "title": "宽图与方图分别从原图裁切",
+      "summary": "一份回归演示了先宽裁再方裁造成的信息损失。",
+      "skills": [
+        "topmind-cover"
+      ],
+      "tags": [
+        "裁切",
+        "方图",
+        "原图",
+        "技术经验",
+        "crop"
+      ],
+      "kind": "case",
+      "status": "active",
+      "evidence": "observed",
+      "scope": "同一原图需要多个比例输出",
+      "limits": "只证明几何与文件行为，不证明画面美观。",
+      "path": "cards/crop-independent.md",
+      "sources": [
+        {
+          "kind": "observation",
+          "ref": "Regression: topmind-cover/scripts/test_crop_cover.py, test_square_uses_original_not_a_wide_intermediate"
+        }
+      ],
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "atlas-local-fix",
+      "title": "图册复查：修具体关系，不升级统一禁令",
+      "summary": "纵版样张的辅助文字靠近图形，局部上移后再次检查。",
+      "skills": [
+        "topmind-cover"
+      ],
+      "tags": [
+        "图册",
+        "视觉检查",
+        "辅助字",
+        "例外",
+        "review"
+      ],
+      "kind": "case",
+      "status": "active",
+      "evidence": "observed",
+      "scope": "实际看图发现局部读序或对比问题时",
+      "limits": "来自本次 HTML 样张检查，不代表作者偏好或点击率实验。",
+      "path": "cards/atlas-local-fix.md",
+      "sources": [
+        {
+          "kind": "observation",
+          "ref": "Local visual review: topmind-cover/assets/examples/creative-atlas.html, 2026-10-27"
+        }
+      ],
+      "updated": "2026-10-27"
+    }
+  ]
+}

@@ -3,7 +3,7 @@ name: topmind-revise
 description: "审查、润色、精简或重写已有稿件，按用户目标选择修改深度，核对事实与作者声音。支持长文、短帖、回复、标题和只审不改；纯排版用 topmind-format，平台导出用对应长文技能。"
 license: MIT
 metadata:
-  version: "0.1.6"
+  version: "0.1.8"
   action_category: "write"
   triggers: "改稿, 帮我改改, 改回复, 看看这条回复, 改转发点评, 按我以前的帖子改, 改一下这篇, 精简, 润色, 去 AI 味, 去AI味, AI 味太重, 改得像人写的, 审稿, 质检, 质量检查, 三关, 事实核查这篇, 保真审计, 按我的意见改, 改标题, 起标题, 写摘要, 检查一下这篇, revise, edit this draft, proofread, de-AI, make it sound human, quality check"
   author: "TopMindSpace"
@@ -14,6 +14,10 @@ metadata:
 # topmind-revise · 改稿与质检
 
 让稿子更贴近作者想表达的内容。先理解修改目标，再决定动结构、补解释、压冗余还是只修局部；成效由读者是否理解、事实是否准确、作者是否认可来判断。
+
+## 按需借鉴与积累
+
+需要新方向、完整例子或相关经验时，用 [知识使用与增补](references/knowledge-library.md) 检索修改深度、有效保留与作者反馈；先读摘要，再选相关卡片。可以混合、改造或采用库外思路，简单任务直接完成。知识不替代当前用户要求；新反馈先作为有范围的候选，不自动改长期规则。
 
 ## 先绑定目标
 

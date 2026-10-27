@@ -96,6 +96,18 @@ class CreativeContracts(unittest.TestCase):
             self.assertEqual(result.returncode, 2)
             self.assertNotIn('Traceback', result.stderr)
 
+    def test_scanner_returns_advisory_metadata_without_blocking_the_draft(self):
+        import json
+        script = ROOT / 'topmind-wechat-post/scripts/scan_ai_flavor_builtin.py'
+        source = self.base / 'draft.md'
+        source.write_text('为什么？答案很简单：这不仅是升级，更是革命。未来可期。')
+        result = subprocess.run([sys.executable, str(script), '--json', str(source)], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertTrue(payload['advisory'])
+        self.assertIsInstance(payload['score'], int)
+        self.assertTrue(payload['hits'])
+
     def test_bad_metadata_still_fails_without_fixed_heading_requirements(self):
         target = self.base / 'skill'
         (target / 'scripts').mkdir(parents=True)

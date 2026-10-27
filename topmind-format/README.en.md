@@ -10,9 +10,11 @@ Format existing text for X without rewriting its facts, wording or order. Preser
 npx @topmindspace/topmind-writing-skills install topmind-format
 ```
 
+A scoped knowledge pack ships with this skill. See [retrieval and contribution](./references/knowledge-library.md) and the [card directory](./knowledge/README.md). Read relevant summaries before selected cards; capture new local notes as candidates, without rewriting global preferences.
+
 ## How it works
 
-Read actual references and relevant [specimens](./references/creative-practice.md). Explore distinct directions when that helps the task; deliver one complete result when the request is clear. Voice, length, emoji, structure and visual styles are choices rather than universal gates. Facts, attribution, privacy, authorization and usable output still matter.
+Use the [practice reference](./references/creative-practice.md) to understand rhythm and expressive symbols. Adjust line breaks, spacing and permitted presentation symbols while preserving wording, facts and order. Use topmind-revise for rewriting.
 
 ## Tools
 
@@ -22,8 +24,6 @@ Run from this skill directory, using actual input paths:
 python3 scripts/format_text.py 原文.txt --mode duanzi --out 排版稿.txt
 ```
 
-Style diagnostics are contextual suggestions, not a quality score. Platform conversion and directory requirements apply when using the corresponding tools. Check actual previews and disclose unverified steps.
-
-Formatting preserves links and emoji by default. In skills that include `format_text.py`, `--separate-links` and `--strip-emoji` are explicit optional conversions. X lint only enforces link separation when `--separate-links` is requested.
+Preserve links and expressive symbols. Use --separate-links or --strip-emoji only when requested. Check wording, facts and order after formatting.
 
 Deliver the requested text or artifacts; these skills do not publish externally. MIT License. See the [collection](https://github.com/topmindspace/topmind-writing-skills) for installation options and maintenance.

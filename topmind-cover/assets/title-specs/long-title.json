@@ -1,0 +1,38 @@
+{
+  "pattern": "完整意思的多行标题",
+  "layers": [
+    {
+      "type": "text",
+      "role": "main",
+      "text": "重新理解",
+      "font": "song",
+      "size": 0.16,
+      "fill": "#232A31",
+      "x": 0.08,
+      "y": 0.23,
+      "anchor": "lt"
+    },
+    {
+      "type": "text",
+      "role": "main",
+      "text": "我们与工具",
+      "font": "hei-black",
+      "size": 0.21,
+      "fill": "#232A31",
+      "x": 0.08,
+      "y": 0.43,
+      "anchor": "lt"
+    },
+    {
+      "type": "text",
+      "role": "main",
+      "text": "的关系",
+      "font": "song",
+      "size": 0.16,
+      "fill": "#232A31",
+      "x": 0.08,
+      "y": 0.71,
+      "anchor": "lt"
+    }
+  ]
+}

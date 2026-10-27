@@ -35,6 +35,8 @@ jobs:
         run: node scripts/sync_shared.js --check
 
       # Same skill gates as CI (audits + negative tests).
+      - name: Cover image and typography dependencies
+        run: python3 -m pip install 'Pillow>=10,<13' 'numpy>=1.26,<3'
       - name: Skill gates (all discovered skills)
         run: bash scripts/ci_skill_gates.sh
 
@@ -81,13 +83,33 @@ jobs:
           cp dist/topmind-writing-skills-*.zip dist/topmind-writing-skills-*.SHA256SUMS dist/latest.json release-assets/
 
       # dist/ 已生成：确认 npm 包不带 Release 打包产物与缓存，再建 Release、发 npm
+      - name: Verify standalone and host release artifacts
+        run: npm run check:release
       - name: npm package content check
         run: node scripts/check_npm_pack.js
+
+      - name: Prepare release notes from CHANGELOG
+        id: notes
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          version = json.loads(Path('package.json').read_text())['version']
+          changelog = Path('CHANGELOG.md').read_text()
+          match = re.search(r'^## \[' + re.escape(version) + r'\][^\n]*\n(.*?)(?=^## \[|\Z)', changelog, re.M | re.S)
+          if not match or not match[1].strip():
+              raise SystemExit('Missing CHANGELOG entry for ' + version)
+          notes = Path(os.environ['RUNNER_TEMP']) / 'writing-release-notes.md'
+          notes.write_text(match[1].strip() + '\n')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('path=' + str(notes) + '\n')
+          PY
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
           files: release-assets/*
+          body_path: ${{ steps.notes.outputs.path }}
           generate_release_notes: true
 
       # Publish installer package to npm (keeps npm in sync with the tag).

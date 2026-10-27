@@ -1,0 +1,28 @@
+{
+  "pattern": "编辑式小字与留白，参数可调",
+  "layers": [
+    {
+      "type": "text",
+      "role": "main",
+      "text": "读慢一点",
+      "font": "song",
+      "size": 0.19,
+      "fill": "#2C342B",
+      "x": 0.09,
+      "y": 0.45,
+      "anchor": "lm",
+      "tracking": 0.1
+    },
+    {
+      "type": "text",
+      "role": "label",
+      "text": "阅读与日常",
+      "font": "hei-medium",
+      "size": 0.055,
+      "fill": "#667261",
+      "x": 0.09,
+      "y": 0.8,
+      "anchor": "lm"
+    }
+  ]
+}

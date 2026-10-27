@@ -1,0 +1,29 @@
+{
+  "pattern": "套印与角度形成节奏，不要求 reason 字段",
+  "layers": [
+    {
+      "type": "text",
+      "role": "main",
+      "text": "允许不一样",
+      "font": "hei-black",
+      "size": 0.24,
+      "fill": "#CB5B43",
+      "rotate": -6,
+      "x": 0.1,
+      "y": 0.34,
+      "anchor": "lt"
+    },
+    {
+      "type": "text",
+      "role": "main",
+      "text": "允许不一样",
+      "font": "hei-black",
+      "size": 0.24,
+      "fill": "#273C2F",
+      "rotate": -6,
+      "x": 0.108,
+      "y": 0.328,
+      "anchor": "lt"
+    }
+  ]
+}

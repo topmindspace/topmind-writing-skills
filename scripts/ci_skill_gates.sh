@@ -32,6 +32,11 @@ echo "ci_skill_gates: discovered ${SKILLS[*]}"
 # 去 AI 味规则回归：「不应报」的写法被误报、或该报的没报，就失败
 "$PY" scripts/test_lint_rules.py
 "$PY" scripts/test_creative_contracts.py
+"$PY" scripts/test_skill_packaging.py
+"$PY" scripts/test_release_artifacts.py
+"$PY" scripts/test_knowledge.py
+"$PY" scripts/test_cover_freedom.py
+"$PY" shared/scripts/knowledge.py validate
 
 run_one() {
   local skill="$1"

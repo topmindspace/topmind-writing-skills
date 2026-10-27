@@ -50,8 +50,29 @@ See the [practice and specimens](./shared/references/creative-practice.md) and [
 | Long-form · WeChat | [`topmind-wechat-post`](./topmind-wechat-post/) | WeChat articles: three quality gates, inline-image layout, publish checklist | "写公众号", "公众号排版" |
 | Formatting | [`topmind-format`](./topmind-format/) | Re-layout without changing a word; stitch alternative openings into full posts | "转段子", "排一下版" |
 | Revision | [`topmind-revise`](./topmind-revise/) | Structure → facts → logic → de-AI → fidelity audit; quick review for replies | "改稿", "去 AI 味", "看看这条回复" |
-| Covers | [`topmind-cover`](./topmind-cover/) | X and WeChat covers: 22 styles, title checked character by character | "做个封面" |
+| Covers | [`topmind-cover`](./topmind-cover/) | Xiaohongshu, Douyin image posts, WeChat and X covers; sourced guidance and crop presets | "做个封面" |
 | Long images | [`topmind-poster`](./topmind-poster/) | HTML → hi-res long image / poster / infographic with exact text and numbers | "出张长图" |
+
+## Creative directions and on-demand knowledge
+
+See the [implementation and verification record](./docs/creative-system.md).
+
+All eight skills share scoped directions, complete examples and exceptions. Facts, formatting and tool contracts remain intact; typography, scenes, length and rhetoric are choices guided by the task.
+
+An initial 37-card pack (35 teaching examples and two recorded technical / visual cases) ships with every standalone skill. Search summaries, then read selected cards. Explicit local additions remain candidates until reviewed; a single preference does not rewrite global defaults. See [knowledge packs](./docs/knowledge-packs.md).
+
+```bash
+npm run knowledge:search -- "typography scene editorial" --skill topmind-cover --limit 3
+npm run knowledge:check
+```
+
+Cover resources include 22 adaptable style entries, 16 composition relationships, 24 combinations and 12 complete prompts. The [visual atlas](./topmind-cover/assets/examples/creative-atlas.html) offers eight actual layout studies with landscape / portrait switching. These resources support exploration without promising engagement or defining the full creative space.
+
+## Covers across platforms
+
+The [platform reference](./shared/references/platform-cover-specs.md) records public sources, verification dates and untested details. Start Xiaohongshu image notes at 3:4; check ordinary Douyin image posts separately from commerce content; distinguish WeChat article landscape / square covers from image messages. Dimensions are package export presets; current editors and user requirements take priority.
+
+`topmind-cover` provides `article`, `x-post`, `xiaohongshu`, `douyin` and `wechat` presets. The WeChat preset exports landscape and square versions, with adjustable crop alignment. Recompose portrait and landscape versions when needed. Dense content pages use `topmind-poster`; platform adaptation does not authorize publishing.
 
 ## Duanzi: 14 patterns
 
@@ -227,8 +248,20 @@ npx github:topmindspace/topmind-writing-skills install topmind-briefs     # late
 ```
 
 - Probes `./.agents` → `./.claude` → `./.cursor` → `./.codex` → `./.mimocode`, then user-level directories; the summary prints the target.
-- Older installs are overwritten; the same version reports up to date; downgrades need `--force`.
+- Older installs are staged before replacement; failures retain the previous copy. Equal versions report up to date; reinstalling the same version or downgrading needs `--force`. Back up local modifications first.
 - Skill ids are not npm packages; don't `npm install topmind-briefs`.
+
+### Upgrade from a local checkout
+
+Install local, unpublished changes from the checkout; `@latest` contains only the published npm snapshot. Verify the target first. If tools share skills through symlinks, update the resolved shared directory and preserve those links. For a standalone Codex installation, run from the repository root:
+
+```bash
+for skill in $(node scripts/discover_skills.js); do
+  node bin/topmind-writing-skills.js install "$skill" --to "$HOME/.codex/skills" || break
+done
+```
+
+Replace `--to` with the verified shared destination when appropriate and check every result. Reopen the session to refresh skill discovery; unpublished changes with the same version require an explicit `--force` reinstall.
 
 <details>
 <summary>Repository layout and releases</summary>

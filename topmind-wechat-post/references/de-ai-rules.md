@@ -36,29 +36,29 @@ AI 味是一堆默认选择叠在一起的结果。改的时候先找根因，�
 | 编号 | 模式 | 典型样子 | 改法 | 信号 | 脚本 |
 |---|---|---|---|---|---|
 | Z01 | 否定式对照 | 「不是 A，而是 B」「真正的 X 从来不是……」 | 对照帮助辨析时保留；空泛时补真实差异或直接说明 B（V09） | 强 | W9 |
-| Z02 | 递进套句 | 「不仅……更……」「不仅……还……」 | 拆成两句，或只留更重要的那件 | 强 | W9 |
+| Z02 | 递进套句 | 「不仅……更……」「不仅……还……」 | 并列关系清楚时保留；空泛递进可拆句或补真实差异 | 强 | W9 |
 | Z03 | 三连排比 | 「更快、更稳、更聪明」；排比 + 务虚 | 留有数据的那一项，配上数字 | 强 | W9 |
 | Z04 | 四字词堆叠 | 「高效便捷、安全可靠、灵活多变」 | 换成一个具体事实 | 弱 | 人工 |
 | Z05 | 公式化计数标签 / 总结腔 | 「三个词」「一句话说清」「五个分支」「三件事」；「理由就一条：」「原因只有一个，」「说到底就一句：」 | 计数有助于理解时保留；无信息时可直接列出内容，不机械换成另一计数套话（V08） | 强 | W9 |
-| Z06 | 设问自答 | 「为什么？答案很简单：……」「这意味着什么？」 | 直接给结论 | 强 | W15 |
-| Z07 | 揭晓式冒号 | 「答案是：……」「真相是：……」 | 去掉揭晓，直接说 | 强 | W15 |
+| Z06 | 设问自答 | 「为什么？答案很简单：……」「这意味着什么？」 | 设问有教学或叙事作用时保留；无作用时直接给结论 | 强 | W15 |
+| Z07 | 揭晓式冒号 | 「答案是：……」「真相是：……」 | 揭晓能形成真实悬念时保留；否则试直接陈述 | 强 | W15 |
 | Z08 | 升华收尾 | 「这才是 X 的意义」「这或许就是未来」「开启新篇章」 | 停在一个判断上；长文可用「总结来说 + 结论 + 口语收尾」（V10） | 强 | W15 / W9 |
-| Z09 | 抽象拔高 | 「本质上，」「某种程度上」「深层博弈」 | 删掉，后面那句通常能单独成立。「归根结底」是语境词，后面有实质内容就留（H1） | 强 | W15 |
-| Z10 | 铺垫过渡 | 「话不多说」「接下来让我们」「下面来看看」 | 删掉，直接进正文 | 强 | W15 |
+| Z09 | 抽象拔高 | 「本质上，」「某种程度上」「深层博弈」 | 判断概括是否帮助读者；没有增益时可删。「归根结底」是语境词，后面有实质内容就留（H1） | 强 | W15 |
+| Z10 | 铺垫过渡 | 「话不多说」「接下来让我们」「下面来看看」 | 过渡承担转场或节奏时保留；无作用时直接进入内容 | 强 | W15 |
 | Z11 | 「进行 + 动词」 | 「进行了深入分析」「进行优化」 | 「分析了」「优化了」 | 强 | W15 / W9 |
 | Z12 | 对冲叠加 | 「或许可能」「可能……也许」 | 只留一个，或给出依据 | 弱 | W15 |
 | Z13 | 无出处权威 | 「专家指出」「业内人士认为」 | 写清是谁、在哪说的；找不到就删 | 强 | W15（同行有数字 / 出处 / 引号不报） |
 | Z14 | 空洞期许 | 「未来可期」「让我们共同期待」 | 删掉，或换成一个可验证的时间点 | 强 | W15 |
-| Z15 | 客服腔 | 「希望对你有帮助」「欢迎留言交流讨论」 | 删掉。例外：被批评时的公开回复可以客气（V29） | 强 | W15 |
+| Z15 | 客服腔 | 「希望对你有帮助」「欢迎留言交流讨论」 | 按交流目的保留礼貌；空泛客套可改为具体回应（V29） | 强 | W15 |
 | Z16 | 机械连接 | 「首先 / 其次 / 最后」「综上所述」 | 用列表或序号承载顺序。「总结来说」收尾用一次可以（H1） | 强 | W9 |
 | Z17 | 假强调 | 「值得注意的是」「划重点」 | 删掉，把内容挪到段首 | 强 | W9 |
 | Z18 | 空泛形容 | 「颠覆性」「炸裂」「全方位」「无缝」 | 换成参数、价格、日期、对比。「重磅」「里程碑式」「一文读懂」「真正的」「毫无疑问」是语境词（V20） | 强 / 语境 | W9 / H1 |
 | Z19 | 过度对称 | 每段一样长、每条列表同字数、「一方面……另一方面……」 | 长短交错，按信息量写 | 弱 | 人工 |
-| Z20 | 段段小结 | 每节最后一句复述本节 | 删掉复述，读者刚读过 | 弱 | 人工 |
+| Z20 | 段段小结 | 每节最后一句复述本节 | 重复帮助理解、续读或情绪时可留；无增益时合并 | 弱 | 人工 |
 | Z21 | 同义轮换 | 同一个东西一会儿叫「模型」一会儿叫「系统」；同一说法一会儿「去AI味」一会儿「去 AI 味」 | 全文一个叫法、一种写法 | 弱 | 人工 / H14（中英混排空格不一致） |
 | Z22 | 处处平衡 | 每个观点后面都补「当然也有……」 | 只在确有反例时写，并给出反例 | 弱 | 人工 |
 | Z23 | 首段复述标题 | 开头把标题换个说法再讲一遍 | 首行给一句简单的话题陈述或最扎眼的事实（V05） | 强 | 人工（短文 W10 查首行长度） |
-| Z24 | 单句收尾、戏剧性碎片 | 段末单独一句「就这么简单。」「这很重要。」 | 并进上一句，或删掉 | 强 | 人工 |
+| Z24 | 单句收尾、戏剧性碎片 | 段末单独一句「就这么简单。」「这很重要。」 | 停顿有强调或叙事作用时保留；无作用时合并 | 强 | 人工 |
 | Z25 | 格言式伪深度 | 「慢就是快」「少即是多」式收句；对仗金句（「开发者在狂奔，平台在刹车」）；段末两个等长短分句（「它写稿，我挑刺。」） | 看对仗是否承载实际判断、节奏或笑点；空泛时尝试具体解释 | 强 | H5 |
 | Z26 | 和假想敌辩论 | 「很多人以为……其实……」，而没人这么说过 | 直接陈述 | 强 | 人工 |
 | Z27 | 句式开头复读 | 连续几句都以「它」「这」「我们」开头 | 换主语或合并 | 弱 | 人工 |
@@ -67,8 +67,8 @@ AI 味是一堆默认选择叠在一起的结果。改的时候先找根因，�
 | Z30 | 被字句堆叠 | 「被广泛认为被用户接受」 | 改主动句 | 弱 | 人工 |
 | Z31 | 句尾补充式拔高 | 「……，这无疑为行业带来新的可能」 | 删掉尾巴 | 强 | 人工 |
 | Z32 | 聊天与草稿残留 | 「以下是改写后的版本」「如前所述」「上一版提到」 | 删掉 | 强 | 人工 |
-| Z33 | 小节过渡句、不言自明的引导 | 「说完现在，再看看……」「先看时间线」 | 删掉，小标题本身就是过渡（V07） | 强 | W20 |
-| Z34 | 复述图片 | 「如图所示」「从图中可以看到」；来源行描述图内容 | 删掉，或只点出图里看不出的（V14、V15） | 强 | W21 / H6 |
+| Z33 | 小节过渡句、不言自明的引导 | 「说完现在，再看看……」「先看时间线」 | 转场解释因果时保留；标题已完成过渡时可省（V07） | 强 | W20 |
+| Z34 | 复述图片 | 「如图所示」「从图中可以看到」；来源行描述图内容 | 解释图中重点、照顾扫读与无障碍阅读时保留；删无意义重复（V14、V15） | 强 | W21 / H6 |
 | Z35 | 「人名说：」 | 引语、段子对话写成「某某说：」 | 可保留自然归因；引语、翻译和转述的性质准确（V13） | 强（短文 / 段子）/ 弱（长文） | W19 / H12 |
 | Z36 | 新闻式精确 | 「约 3 万」「3 万左右」「120,000」「较……高出」 | 对比给对象和条件，保留来源的精度与“约 / 左右”，千分位按读者习惯（V12） | 弱 | H4（「约」只在带万 / 亿 / 千或同句有对比时报） |
 | Z37 | 「我认为」式观点 | 「我认为」「我觉得」「我的判断是」 | 第一人称表达主观立场很正常，按依据保留确定性（V08） | 弱 | H3 |
@@ -78,17 +78,17 @@ AI 味是一堆默认选择叠在一起的结果。改的时候先找根因，�
 
 | 编号 | 模式 | 典型样子 | 改法 | 脚本 |
 |---|---|---|---|---|
-| E01 | Negation pivot | "It's not X, it's Y" / "This isn't just X" | State Y directly | W16 |
+| E01 | Negation pivot | "It's not X, it's Y" / "This isn't just X" | Keep meaningful contrast; otherwise try stating Y directly | W16 |
 | E02 | Not-just-but | "not just fast, but also cheap" | Two plain claims, or the one that matters | W16 |
 | E03 | Signpost opener | "Here's the thing", "Let's dive in", "Without further ado" | Start with the point | W16 |
-| E04 | Wrap-up filler | "In conclusion", "At the end of the day", "The bottom line is" | End on a claim | W16 |
-| E05 | Transition stack | Sentences opening with "Moreover," "Furthermore," "Additionally," | Drop the connector; order carries the logic | W16 |
+| E04 | Wrap-up filler | "In conclusion", "At the end of the day", "The bottom line is" | End with a claim, scene, action or question as the task needs | W16 |
+| E05 | Transition stack | Sentences opening with "Moreover," "Furthermore," "Additionally," | Keep transitions that explain logic; remove empty connectors | W16 |
 | E06 | Inflated vocabulary | delve, tapestry, testament to, pivotal, vibrant, seamless, game-changer | Plain verbs and concrete facts | W16 |
 | E07 | Role inflation | "plays a pivotal role", "serves as a", "stands as a" | "is", "does", or the actual effect | W16 |
-| E08 | Hedge stack | "It's worth noting that", "It is important to note" | Delete; say the thing | W16 |
+| E08 | Hedge stack | "It's worth noting that", "It is important to note" | Keep meaningful context or qualification; otherwise state the point | W16 |
 | E09 | Chatbot residue | "I hope this helps", "Great question", "Feel free to reach out" | Delete | W16 |
 | E10 | Era opener | "In today's fast-paced world" | Start with the fact | W16 |
-| E11 | Rule of three | Three adjectives or three clauses every time | Keep the one with evidence | 人工 |
+| E11 | Rule of three | Three adjectives or three clauses every time | Keep parallelism with real distinctions; ground claims in evidence | 人工 |
 | E12 | Uniform rhythm | Every sentence 15–20 words, every paragraph 3 sentences | Vary length; short sentences are fine | 人工 |
 
 ## 四、标点与版面
@@ -149,3 +149,7 @@ python3 scripts/lint_x_post.py 稿子.md --md              # 兼容旧用法，�
 - 段长（W14）的字数口径和 `count_words.py` 一致：去掉空白、Markdown 符号和链接地址后的字符数。
 - **长文 Markdown 还会附带 I 级信息设计提示**（`info_design_hints.py`，I1–I9：连续纯文字、图表列表少、可转列表 / 表格、重复、首段没交底、长节全是段落、超篇幅预算、素材罗列）。它们和 W / H 分开显示，只供判断，永远不进 `--strict`；`--no-design` 可以关掉。判断方法见 `information-design.md`。
 - 规则回归测试在仓库根目录的 scripts 下（`test_lint_rules.py`，会一起跑 `test_info_design.py`）：一组「不应报」的写法，任何一句被误报，CI 就失败。
+
+## 从诊断回到创作
+
+本表用于定位可能的问题，不是写作许可清单。需要替代方向和完整例子时按 [knowledge-library.md](knowledge-library.md) 查相关知识卡；修辞、客套、铺垫、情绪和重复均看作用。排版与引用保真按对应工具协议处理，不为“去味”改坏事实或作者声音。

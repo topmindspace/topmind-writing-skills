@@ -50,8 +50,17 @@ def main() -> None:
     print("[negative_tests] topmind-revise")
 
     # 1. 自包含
-    outside = [md.relative_to(ROOT).as_posix() for md in [ROOT / "SKILL.md", *sorted((ROOT / "references").glob("*.md"))]
-               if md.is_file() and "](../" in md.read_text(encoding="utf-8")]
+    outside = []
+    for md in [ROOT / "SKILL.md", *sorted((ROOT / "references").glob("*.md"))]:
+        if not md.is_file():
+            continue
+        for link in re.findall(r"\]\(([^)]+)\)", md.read_text(encoding="utf-8")):
+            if link.startswith(("https://", "http://", "mailto:", "#")):
+                continue
+            # ../knowledge is still inside a standalone skill; compare resolved paths.
+            target = (md.parent / link.split("#")[0]).resolve()
+            if not target.is_relative_to(ROOT.resolve()):
+                outside.append(f"{md.relative_to(ROOT).as_posix()}: {link}")
     check("不引用技能目录外的相对路径", not outside, "、".join(outside))
     for ref in ("core-voice.md", "de-ai-rules.md", "revision-workflow.md", "image-sourcing.md",
                 "fact-check.md", "report-template.md", "examples.md"):

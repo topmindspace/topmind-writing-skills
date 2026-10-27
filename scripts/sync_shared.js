@@ -6,7 +6,7 @@
  *   node scripts/sync_shared.js           # 把 shared/ 真源写进各技能副本
  *   node scripts/sync_shared.js --check   # 只校验，任一副本缺失或不一致 → exit 1（CI / prepack）
  *
- * 清单：shared/manifest.json（"*" = 全部已发现技能）。
+ * 清单：shared/manifest.json（"*" = 全部已发现技能；目录项递归展开）。
  * 规则：只改 shared/ 下的真源，再运行本脚本；不要直接改技能目录里的副本。
  */
 'use strict';
@@ -36,10 +36,21 @@ function plan() {
     }
     const src = path.join(SHARED, rel);
     if (!fs.existsSync(src)) throw new Error(`真源缺失：shared/${rel}`);
+    function expand(source, relative) {
+      const stat = fs.lstatSync(source);
+      if (stat.isSymbolicLink()) throw new Error(`共享目录不接受符号链接：${relative}`);
+      if (stat.isDirectory()) {
+        return fs.readdirSync(source).sort().flatMap(name => expand(path.join(source, name), path.join(relative, name)));
+      }
+      if (!stat.isFile()) throw new Error(`共享资源不是普通文件：${relative}`);
+      return [{ src: source, rel: relative }];
+    }
+    const sources = expand(src, rel);
+    if (!sources.length) throw new Error(`共享目录为空：${rel}`);
     const list = targets.includes('*') ? skills : targets;
     for (const skill of list) {
       if (!skills.includes(skill)) throw new Error(`manifest 引用了不存在的技能：${skill}（${rel}）`);
-      pairs.push({ rel, skill, src, dest: path.join(ROOT, skill, rel) });
+      for (const source of sources) pairs.push({ ...source, skill, dest: path.join(ROOT, skill, source.rel) });
     }
   }
   return pairs;

@@ -1,226 +1,127 @@
-# 组合玩法（范式 × 风格 × 标题字 × 场景层 × 配色）
+# 组合方向：媒介、文字与关系
 
-> 使用范围：本页是可拆用的配方与样例，参数描述某种具体效果，不是所有封面的通用要求。当前用户要求、真实素材、核字与实际裁切优先。可删槽位、改构图、用纯色或无人物；整张生成与后期叠字并列选择，只读当前方向需要的章节。
+组合不是一套固定乘法。选择当前任务有用的维度，也可只用字体或真实摄影。配色、留白、花式与场景数量不设配额；同一系列可以重复，不要求每次换背景。
 
-> 用法：先按主题选一个组合，把 `{title}`、`{subtitle}` 换成自己的内容，整段英文交给生图模型。组合是我们自己总结的配方，不对应任何具体作品。
+### C01 纸白细宋
 
-## 组合公式
+视觉方向：极简留白；文字：细宋低位；主体 / 场景：一截书页影子；色彩起点：纸白 / 炭黑。
+示例提示片段：“{title}”逐字准确，让细宋低位与一截书页影子形成有意义的读序；用纸白 / 炭黑作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-封面 = 范式（构图骨架，X1–X16）× 风格（`cover-styles.md` 的风格名）× 标题字处理（材质、立体方式）× 场景层（主角、道具、远近景）× 配色（60-30-10，单一强调色）。每次只在一两个维度上做变化，其余维度保持克制。
+### C02 酒红刊物
 
-## 优雅与克制的起步参数（按方案调整）
+视觉方向：杂志编辑；文字：宋黑对照；主体 / 场景：大裁切静物；色彩起点：酒红 / 暖白。
+示例提示片段：“{title}”逐字准确，让宋黑对照与大裁切静物形成有意义的读序；用酒红 / 暖白作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-1. 一个焦点：画面只有一个主角，标题和主角呼应，不抢。
-2. 主标题占画面高 25–45%，副标题约 10%，标签 6–8%；小字不得低于 6%。
-3. 强调色只落在 1–3 个字上；全图最多三种主色。
-4. 字与场景同一个世界：同一光源方向、同一透视、同一阴影软硬。
-5. 重特效（霓虹、金属、玻璃）只给主标题，副标题用干净的无衬线。
-6. 留白至少 30%；不要堆砌图标、贴纸和装饰线。
-7. 所有文字放在画面中部水平带内，裁成 5:2 时不被切掉。
-8. 主标题 ≤ 8 字，文案按作者原文；生成前跑 `scripts/check-title.py`，避开形近字（于/干/千、未/末、己/已/巳、拨/拔、即/既）。
-9. 出图逐字核对，错字按问题与成本决定局部修正或直接采用场景图加 `scripts/title-engine.py` 叠字。
+### C03 蓝灰工程
 
-## 组合速查
+视觉方向：抽象图形；文字：窄黑加等宽数字；主体 / 场景：线性结构；色彩起点：雾蓝 / 石墨。
+示例提示片段：“{title}”逐字准确，让窄黑加等宽数字与线性结构形成有意义的读序；用雾蓝 / 石墨作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-| 组合 | 范式 | 风格 | 标题字 | 场景层 | 配色 | 何时用 |
-|---|---|---|---|---|---|---|
-| C01 晨雾石刻 | X1 | hard-core-type | 粗黑体刻石，侧光 | 晨雾山谷、远景小人 | 石灰+苔绿+一点朱红 | 宣言、方法论、年度复盘 |
-| C02 黄铜铸字 | X1 | hard-core-type | 黑体铸黄铜，倒影 | 深色水泥展厅地面 | 炭灰+黄铜+冷白 | 架构、工程、硬核干货 |
-| C03 冰晶发布 | X2 | brand-launch | 玻璃挤出字，边缘霓虹 | 深蓝渐变舞台、产品悬浮 | 深海蓝+冰白+青色光 | 产品发布、版本更新 |
-| C04 日出铬金 | X2 | brand-launch | 铬金属倒角字 | 日出地平线、光晕 | 暖金+午夜紫+白 | 新品、里程碑、周年 |
-| C05 软糖萌趣 | X3 | ip-fun | 圆润软糖 3D 字 | IP 小动物抱着字 | 奶白+薄荷+一点橙 | 打卡、入门、亲子、轻科普 |
-| C06 黏土小镇 | X3 | chao-wan-3d | 黏土手捏字 | 微缩黏土场景 | 奶油+天蓝+番茄红 | 生活方式、兴趣教程 |
-| C07 巨数冲击 | X4 | white-clean | 超大 3D 数字+短标题 | 卡通主角站数字旁 | 白底+钴蓝+亮黄 | 榜单、盘点、实测 |
-| C08 卡片轻舟 | X5 | white-clean | 干净粗黑体 | 浮动玻璃卡片+人物 | 白→浅蓝+橙 | 工具教程、效率指南 |
-| C09 一色到底 | X6 | orange-warm | 超粗黑体占满 | 无场景，满版色块 | 满版橙+白+黑 | 观点、口号、短评 |
-| C10 墨色长镜 | X7 | cinematic-flow | 书法大字，墨晕 | 电影感远景、剪影 | 墨黑+宣纸灰+朱印 | 故事、变局、文化 |
-| C11 套色印刷 | X8 | news-flash | 粗体孔版印刷字 | 网点、错版、纸纹 | 米纸+荧光粉+深蓝 | 周报、清单、复盘 |
-| C12 剪纸拼贴 | X8 | paper-collage | 剪纸字，投影 | 彩纸层叠拼贴 | 牛皮纸+橄榄+珊瑚 | 手作、生活改造 |
-| C13 三步阶梯 | X9 | tutorial-steps | 标题在上，编号在下 | 三格步骤插画 | 暖白+焦糖+深棕 | N 步教程、流程 |
-| C14 侧光人像 | X10 | bg-blur | 标题竖排或侧排 | 人物半身，背景虚化 | 低饱和+单一暖色 | 个人 IP、访谈、运动 |
-| C15 暗夜玻璃 | X11 | dark-saas | 细描边+发光字 | 暗色玻璃面板、连线 | 墨蓝+电光青 | AI、自动化、开发者 |
-| C16 霓虹雨夜 | X11 | cyber-neon | 霓虹灯管字 | 雨夜街巷、倒影 | 黑紫+品红+青 | 科技观点、未来趋势 |
-| C17 书中山河 | X12 | diorama-book | 招牌字立于场景 | 打开的书里长出微缩世界 | 羊皮纸+青绿+金 | 学习路线、知识地图 |
-| C18 杂志留白 | X14 | magazine | 衬线大字+细副标 | 编辑感静物摄影 | 米白+墨黑+一点红 | 深度长文、人物 |
-| C19 举牌发声 | X15 | white-clean | 牌子上的手写粗字 | 卡通人物举牌 | 浅色+活力黄 | 口号、活动、出发 |
-| C20 手账小记 | X16 | sketch-cartoon | 马克笔手写字 | 手账便签+涂鸦 | 奶油纸+铅笔灰+一色 | 合集、漫步、轻教程 |
-| C21 对照两岸 | X13 | gan-huo | 中轴分隔，两侧对称 | 左右两种场景对比 | 冷/暖双色+白 | A vs B、新旧对比 |
-| C22 星图典藏 | X14 | academic-print | 古典衬线+金箔 | 星图、仪器版画 | 深蓝+金+象牙 | 科学史、学术科普 |
+### C04 日光档案
 
-## 组合模板
+视觉方向：摄影；文字：书籍感标题；主体 / 场景：晨光照在索引卡；色彩起点：奶油 / 苔绿。
+示例提示片段：“{title}”逐字准确，让书籍感标题与晨光照在索引卡形成有意义的读序；用奶油 / 苔绿作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-### C01 晨雾石刻
+### C05 黑色宣言
 
-- 范式 X1，风格 `hard-core-type`；适合：宣言、方法论、年度复盘。
+视觉方向：字体主导；文字：巨大轻字重；主体 / 场景：无场景；色彩起点：纯黑 / 银白。
+示例提示片段：“{title}”逐字准确，让巨大轻字重与无场景形成有意义的读序；用纯黑 / 银白作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-```text
-Monumental headline carved as weathered limestone blocks standing on a misty valley floor, low raking morning light, tiny hiker for scale, one character inlaid with vermilion stone. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
+### C06 彩纸错位
 
-### C02 黄铜铸字
+视觉方向：拼贴；文字：粗黑跨纸边；主体 / 场景：色纸切口；色彩起点：钴蓝 / 珊瑚。
+示例提示片段：“{title}”逐字准确，让粗黑跨纸边与色纸切口形成有意义的读序；用钴蓝 / 珊瑚作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-- 范式 X1，风格 `hard-core-type`；适合：架构、工程、硬核干货。
+### C07 温柔搪瓷
 
-```text
-Headline cast in brushed brass letters standing on a polished dark concrete floor, soft studio top light, crisp reflections, subtitle as small engraved plaque. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
+视觉方向：材料；文字：圆润小字；主体 / 场景：搪瓷物件局部；色彩起点：奶白 / 番茄红。
+示例提示片段：“{title}”逐字准确，让圆润小字与搪瓷物件局部形成有意义的读序；用奶白 / 番茄红作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-### C03 冰晶发布
+### C08 夜间入口
 
-- 范式 X2，风格 `brand-launch`；适合：产品发布、版本更新。
+视觉方向：电影叙事；文字：安静的小标题；主体 / 场景：门框与一束光；色彩起点：藏蓝 / 暖黄。
+示例提示片段：“{title}”逐字准确，让安静的小标题与门框与一束光形成有意义的读序；用藏蓝 / 暖黄作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-```text
-Thick frosted-glass extruded headline floating above a dark blue stage, thin cyan rim light, a sleek product object hovering beside it, gentle floor glow. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
+### C09 地图式知识
 
-### C04 日出铬金
+视觉方向：微缩；文字：平面编辑字；主体 / 场景：纸上路径与地形；色彩起点：纸色 / 草绿。
+示例提示片段：“{title}”逐字准确，让平面编辑字与纸上路径与地形形成有意义的读序；用纸色 / 草绿作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-- 范式 X2，风格 `brand-launch`；适合：新品、里程碑、周年。
+### C10 铅笔旁注
 
-```text
-Polished chrome bevelled headline in front of a sunrise horizon, warm lens glow on the edges, purple dusk sky above, clean subtitle in light sans. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
+视觉方向：手绘；文字：手写加黑体；主体 / 场景：操作局部；色彩起点：铅灰 / 一处蓝。
+示例提示片段：“{title}”逐字准确，让手写加黑体与操作局部形成有意义的读序；用铅灰 / 一处蓝作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-### C05 软糖萌趣
+### C11 双色套印
 
-- 范式 X3，风格 `ip-fun`；适合：打卡、入门、亲子、轻科普。
+视觉方向：学院版画；文字：窄宋；主体 / 场景：版画形体；色彩起点：靛蓝 / 朱红。
+示例提示片段：“{title}”逐字准确，让窄宋与版画形体形成有意义的读序；用靛蓝 / 朱红作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-```text
-Soft glossy gummy-candy 3D headline with rounded edges, a cute round mascot animal hugging the last character, pastel studio backdrop, soft contact shadows. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
+### C12 空镜动漫
 
-### C06 黏土小镇
+视觉方向：动漫叙事；文字：轻黑或宋体；主体 / 场景：无人房间与窗光；色彩起点：随时段光线。
+示例提示片段：“{title}”逐字准确，让轻黑或宋体与无人房间与窗光形成有意义的读序；用随时段光线作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-- 范式 X3，风格 `chao-wan-3d`；适合：生活方式、兴趣教程。
+### C13 字形蒙版
 
-```text
-Handmade clay headline with fingerprint texture standing in a tiny clay town, warm diffuse light, small clay character waving, tilt-shift depth of field. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
+视觉方向：字体主导；文字：图像穿过字面；主体 / 场景：真实摄影局部；色彩起点：从原图提色。
+示例提示片段：“{title}”逐字准确，让图像穿过字面与真实摄影局部形成有意义的读序；用从原图提色作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-### C07 巨数冲击
+### C14 复古排字
 
-- 范式 X4，风格 `white-clean`；适合：榜单、盘点、实测。
+视觉方向：印刷；文字：宽窄字形混排；主体 / 场景：留白和细线；色彩起点：米白 / 墨黑。
+示例提示片段：“{title}”逐字准确，让宽窄字形混排与留白和细线形成有意义的读序；用米白 / 墨黑作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-```text
-Huge glossy 3D numeral as the hero, a cheerful cartoon character leaning on it, short bold headline beside, plain light background with soft floor shadow. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
+### C15 软雕塑
 
-### C08 卡片轻舟
+视觉方向：潮玩；文字：平静标题与软物反差；主体 / 场景：几何形体；色彩起点：薄荷 / 粉色。
+示例提示片段：“{title}”逐字准确，让平静标题与软物反差与几何形体形成有意义的读序；用薄荷 / 粉色作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-- 范式 X5，风格 `white-clean`；适合：工具教程、效率指南。
+### C16 单束霓虹
 
-```text
-Light SaaS look: friendly person with laptop on the right, three floating rounded glass cards with icons only, headline in bold dark sans on the left, one word in orange. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
+视觉方向：夜色；文字：细字低位；主体 / 场景：一条反光路径；色彩起点：紫黑 / 青。
+示例提示片段：“{title}”逐字准确，让细字低位与一条反光路径形成有意义的读序；用紫黑 / 青作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-### C09 一色到底
+### C17 偏差阵列
 
-- 范式 X6，风格 `orange-warm`；适合：观点、口号、短评。
+视觉方向：抽象；文字：规则标题；主体 / 场景：规律中一次偏移；色彩起点：黑白 / 黄。
+示例提示片段：“{title}”逐字准确，让规则标题与规律中一次偏移形成有意义的读序；用黑白 / 黄作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-```text
-Full-bleed saturated color field, a massive ultra-bold headline filling most of the height, tiny subtitle underneath, one small graphic shape as accent, nothing else. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
+### C18 远景小字
 
-### C10 墨色长镜
+视觉方向：摄影；文字：大空白内小标题；主体 / 场景：远景人物或物件；色彩起点：自然色。
+示例提示片段：“{title}”逐字准确，让大空白内小标题与远景人物或物件形成有意义的读序；用自然色作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-- 范式 X7，风格 `cinematic-flow`；适合：故事、变局、文化。
+### C19 字与建筑
 
-```text
-Cinematic wide shot of a lone figure on a ridge in drifting ink mist, headline in expressive brush calligraphy across the sky, a small red seal stamp as the accent. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
+视觉方向：空间；文字：透视跟随结构；主体 / 场景：墙面、楼梯或展厅；色彩起点：水泥 / 暖光。
+示例提示片段：“{title}”逐字准确，让透视跟随结构与墙面、楼梯或展厅形成有意义的读序；用水泥 / 暖光作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-### C11 套色印刷
+### C20 暖色对比
 
-- 范式 X8，风格 `news-flash`；适合：周报、清单、复盘。
+视觉方向：生活；文字：普通黑体；主体 / 场景：大尺度物件局部；色彩起点：橙 / 冷蓝。
+示例提示片段：“{title}”逐字准确，让普通黑体与大尺度物件局部形成有意义的读序；用橙 / 冷蓝作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-```text
-Risograph print poster on off-white paper, giant headline in two overprinted ink layers slightly misregistered, halftone dot texture, small spot illustrations. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
+### C21 档案密排
 
-### C12 剪纸拼贴
+视觉方向：拼贴；文字：窄黑与手写注释；主体 / 场景：多纸层但读序明确；色彩起点：低饱和混色。
+示例提示片段：“{title}”逐字准确，让窄黑与手写注释与多纸层但读序明确形成有意义的读序；用低饱和混色作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-- 范式 X8，风格 `paper-collage`；适合：手作、生活改造。
+### C22 成果大图
 
-```text
-Layered cut-paper collage, headline cut from thick colored card with real drop shadows, torn paper edges, a few paper plants and objects arranged around. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
+视觉方向：作品矩阵；文字：小号编辑标题；主体 / 场景：一张主图加局部；色彩起点：尊重作品原色。
+示例提示片段：“{title}”逐字准确，让小号编辑标题与一张主图加局部形成有意义的读序；用尊重作品原色作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-### C13 三步阶梯
+### C23 书法与几何
 
-- 范式 X9，风格 `tutorial-steps`；适合：N 步教程、流程。
+视觉方向：文化；文字：书法主字与细黑；主体 / 场景：抽象几何留白；色彩起点：墨 / 米 / 绿。
+示例提示片段：“{title}”逐字准确，让书法主字与细黑与抽象几何留白形成有意义的读序；用墨 / 米 / 绿作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-```text
-Headline across the upper area, below it three illustrated step panels with big numerals 1 2 3 and objects only, consistent warm lighting, clean gutters. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
+### C24 纯字节奏
 
-### C14 侧光人像
+视觉方向：无图极简；文字：同字族变字重与行距；主体 / 场景：文字本身；色彩起点：任意协调色系。
+示例提示片段：“{title}”逐字准确，让同字族变字重与行距与文字本身形成有意义的读序；用任意协调色系作为起点，按目标画幅构图。需要时改变媒介、字重、色温或图文位置，而非照搬全部参数。
 
-- 范式 X10，风格 `bg-blur`；适合：个人 IP、访谈、运动。
+## 如何组合得更丰富
 
-```text
-Half-body portrait on the right with shallow depth of field, headline stacked on the left in heavy sans lit by the same warm side light, soft bokeh city. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
-
-### C15 暗夜玻璃
-
-- 范式 X11，风格 `dark-saas`；适合：AI、自动化、开发者。
-
-```text
-Dark interface-inspired scene with layered glass panels connected by glowing lines, headline in bright clean sans with subtle glow, icons only on panels. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
-
-### C16 霓虹雨夜
-
-- 范式 X11，风格 `cyber-neon`；适合：科技观点、未来趋势。
-
-```text
-Headline built from neon tubes mounted on a wet alley wall at night, magenta and cyan reflections in puddles, light rain, one character in a different color. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
-
-### C17 书中山河
-
-- 范式 X12，风格 `diorama-book`；适合：学习路线、知识地图。
-
-```text
-An open book with a miniature landscape growing out of its pages, paths and tiny travellers, headline as a carved wooden signboard standing on the pages. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
-
-### C18 杂志留白
-
-- 范式 X14，风格 `magazine`；适合：深度长文、人物。
-
-```text
-Editorial magazine cover feel: one refined still-life object in soft window light, generous negative space, headline in elegant high-contrast serif, thin rule lines. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
-
-### C19 举牌发声
-
-- 范式 X15，风格 `white-clean`；适合：口号、活动、出发。
-
-```text
-Cartoon character holding up a big cardboard sign with the headline written in thick marker, cheerful pose, bright simple background, subtitle below the sign. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
-
-### C20 手账小记
-
-- 范式 X16，风格 `sketch-cartoon`；适合：合集、漫步、轻教程。
-
-```text
-Hand-drawn notebook page with sticky notes, doodles and washi tape, headline in bold marker lettering, a small sketched character, restrained single accent color. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
-
-### C21 对照两岸
-
-- 范式 X13，风格 `gan-huo`；适合：A vs B、新旧对比。
-
-```text
-Split composition: cool muted scene on the left, warm vivid scene on the right, headline centered across the seam on a solid band, perfectly balanced. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
-
-### C22 星图典藏
-
-- 范式 X14，风格 `academic-print`；适合：科学史、学术科普。
-
-```text
-Antique engraving style star chart with brass instruments, headline in classical serif foil-stamped in gold, ivory subtitle, subtle paper grain. Typography rules: headline exactly "{title}", subtitle exactly "{subtitle}", Simplified Chinese characters exactly as given, no other text. Headline about 25-45% of image height, subtitle about 10%, one alignment line, 6% safe margin. One accent color on 1-3 key characters only. Letters share the scene lighting, shadows and perspective. Keep all text within the central horizontal band. One focal point, generous negative space, no watermark, no logo, no gibberish. Wide 16:9.
-```
+同主题可比较：图主导与字主导、近景与空镜、平面与材质、安静与热烈。先保持事实与受众一致，差异才可判断；不规定必须多稿。完成后实际看图，不能用组合编号或元素数量证明好看。

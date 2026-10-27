@@ -3,17 +3,21 @@ name: topmind-poster
 description: "用 HTML/CSS 创建和修改长图、海报、榜单、信息图与分段配图，渲染高清 PNG 并交付可编辑源文件。适用于精确文字和数据排版；单张文章封面用 topmind-cover，多页演示另用演示工具。"
 license: MIT
 metadata:
-  version: "0.1.10"
+  version: "0.1.12"
   action_category: "write"
   triggers: "长图, 竖版长图, 海报, 信息图, 分级榜, 榜单图, 月报长图, 分段图, HTML 转 PNG, 渲染成, 一张图讲清楚, 高清出图, poster, long image, 做一张长图, 重做这张图, 更新这张图, 把这张图优化一下, 出一张高清图, 把长图拆成几张, 给文章做信息图"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-10-26"
+  updated: "2026-10-27"
 ---
 
 # topmind-poster · 长图、海报与信息图
 
 用可编辑 HTML/CSS 排版，输出文字与数字准确的高清 PNG。适合榜单、月报、流程、对照、单页海报和文章分段配图。
+
+## 按需借鉴与积累
+
+需要新方向、完整例子或相关经验时，用 [知识使用与增补](references/knowledge-library.md) 检索信息结构、图文分页与视觉语气；先读摘要，再选相关卡片。可以混合、改造或采用库外思路，简单任务直接完成。知识不替代当前用户要求；新反馈先作为有范围的候选，不自动改长期规则。
 
 ## 内容先明确，形式可探索
 
@@ -31,7 +35,7 @@ metadata:
 
 ## 制作与渲染
 
-常用 CSS 画布宽为 1080 / 1180 / 1200 px，按平台和内容调整。确定宽度，给文字足够空间；字体从当前环境实际可用的中文字体选，离线颜色与资源在文件里可解析。
+常用 CSS 画布宽为 1080 / 1180 / 1200 px，按平台和内容调整。发布到小红书、抖音或公众号组图时，按 [平台封面与图文参考](references/platform-cover-specs.md) 核对用途，分别安排封面与内容页；长图过密可按语义拆页。确定宽度，给文字足够空间；字体从当前环境实际可用的中文字体选，离线颜色与资源在文件里可解析。
 
 ```bash
 python3 scripts/render_poster.py poster.html -o poster.png

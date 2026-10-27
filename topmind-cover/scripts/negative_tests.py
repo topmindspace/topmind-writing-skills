@@ -37,6 +37,9 @@ def check(name: str, cond: bool, detail: str = "") -> None:
 
 def main() -> None:
     print("[negative_tests] topmind-cover")
+    crops = subprocess.run([PY, str(ROOT / "scripts" / "test_crop_cover.py")],
+                           capture_output=True, text=True, timeout=60)
+    check("多平台裁切行为回归", crops.returncode == 0, crops.stdout + crops.stderr)
     with tempfile.TemporaryDirectory() as td:
         td = Path(td)
 
@@ -134,29 +137,19 @@ def main() -> None:
                 r = subprocess.run([sys.executable, str(ENGINE), "--check", str(sp)], capture_output=True, text=True)
                 check(f"引擎：示例 spec {sp.name} 达标", r.returncode == 0, r.stdout[-120:])
 
-    # 6. check-title：形近字 / 超长 / 繁体 / 生僻字被标出，常用短标题通过
+    # 6. 标题核对默认是建议；显式 strict 可沿用旧提示级别，缺输入仍失败。
     CT = ROOT / "scripts" / "check-title.py"
     def ct(*a):
         return subprocess.run([sys.executable, str(CT), *a], capture_output=True, text=True)
-    r = ct("大于一切"); check("标题检查：「于」被标为形近字", r.returncode == 1 and "干" in r.stdout, r.stdout[:120])
-    r = ct("一二三四五六七八九十一二三"); check("标题检查：超过 12 字为高风险", r.returncode == 2, r.stdout[:120])
-    r = ct("鍵盤"); check("标题检查：繁体为高风险", r.returncode == 2 and "繁体" in r.stdout, r.stdout[:120])
-    r = ct("硬核架构", "从单体到分布式"); check("标题检查：常用短标题低风险", r.returncode == 0, r.stdout[:120])
-    r = ct(); check("标题检查：缺参数干净报错", r.returncode == 1 and "Traceback" not in r.stderr, r.stderr[:80])
+    r = ct("大于一切"); check("标题：形近字提示不阻塞", r.returncode == 0 and "干" in r.stdout)
+    r = ct("一二三四五六七八九十一二三"); check("标题：长标题保留原文", r.returncode == 0 and "长度不代表" in r.stdout)
+    r = ct("鍵盤"); check("标题：作者语言不作为失败", r.returncode == 0 and "保留作者语言" in r.stdout)
+    r = ct("--strict", "一二三四五六七八九十一二三"); check("标题：主动选择 strict 仍有退出级别", r.returncode == 2)
+    r = ct(); check("标题：缺参数仍失败", r.returncode != 0 and "Traceback" not in r.stderr)
 
-    # 7. cover-patterns：范式 12–20 个，每个都有英文模板，通用尾句含简体原文约束
-    pat = (ROOT / "references" / "cover-patterns.md").read_text(encoding="utf-8")
-    import re as _re
-    n = len(_re.findall(r"^## X\d+ ", pat, _re.M))
-    check("范式库：12–20 个范式", 12 <= n <= 20, f"实 {n}")
-    check("范式库：模板含 {title} 与简体原文约束", "{title}" in pat and "Simplified Chinese characters exactly as given" in pat)
-
-    # 8. cover-combos：≥20 个命名组合，每个有模板；不得含第三方网址或来源站名
-    cb = (ROOT / "references" / "cover-combos.md").read_text(encoding="utf-8")
-    nc = len(_re.findall(r"^### C\d+ ", cb, _re.M))
-    check("组合库：至少 20 个命名组合", nc >= 20, f"实 {nc}")
-    check("组合库：每个组合都有英文模板", cb.count("```text") >= nc and "central horizontal band" in cb)
-    check("组合库：不含第三方网址", "http" not in cb)
+    # 知识目录、卡片与路径的真实完整性检查，替代固定配方数量 / 固定措辞测试。
+    r = subprocess.run([PY, str(ROOT / "scripts" / "knowledge.py"), "validate"], capture_output=True, text=True)
+    check("知识包：独立安装目录完整可读", r.returncode == 0, r.stdout + r.stderr)
 
     # 公开参考与署名可以保留；私人路径、密钥等由仓库 ci_privacy_scan.py 检查。
     # 不再把创作者账号、来源链接或致谢本身当作泄漏。

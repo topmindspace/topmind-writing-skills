@@ -50,10 +50,31 @@ npx @topmindspace/topmind-writing-skills list                          # 看全�
 | 长文 · 公众号 | [`topmind-wechat-post`](./topmind-wechat-post/) | 公众号长文：质量三关、图片内嵌排版、发布清单 | 「写公众号」「公众号排版」 |
 | 格式化 | [`topmind-format`](./topmind-format/) | 现成文字只改排版不改字：转段子、格式化成短文、几个开头拼成品 | 「转段子」「排一下版」 |
 | 改稿 | [`topmind-revise`](./topmind-revise/) | 结构 → 事实 → 逻辑 → 去 AI 味 → 保真审计；也能快审一条回复 | 「改稿」「去 AI 味」「看看这条回复」 |
-| 封面 | [`topmind-cover`](./topmind-cover/) | X 和公众号封面：22 种风格、标题逐字核对 | 「做个封面」「头图」 |
+| 封面 | [`topmind-cover`](./topmind-cover/) | 小红书、抖音图文、公众号与 X 封面：平台适配、核字与多比例裁切 | 「做个封面」「头图」 |
 | 长图 | [`topmind-poster`](./topmind-poster/) | HTML → 高清长图 / 海报 / 信息图，文字数字逐字正确 | 「出张长图」「做个榜单图」 |
 
 **短文** = X 纯文本帖，1000 字以内都行；**长文** = X Article 或公众号长文；**段子** = 以观察、反差或幽默推进的短帖，排版按节奏选择。
+
+## 创作方向与按需知识包
+
+实施与验证见 [整改执行记录](./docs/creative-system.md)。
+
+8 个技能共同使用“方向—具体例子—适用条件—反例 / 例外”的知识组织方式。事实、排版与工具协议继续核对；字体、场景、篇幅、修辞与风格由任务选择，不用统一审美门槛。
+
+首批 37 张知识卡（35 张原创教学示例、2 条本次有记录的技术 / 视觉经验）随每个技能独立分发；先查摘要，再读相关卡片。可以补充指定私有包，经验先存为候选，不自动改写长期规则或把一次选择当普遍规律。用法与维护见 [知识包说明](./docs/knowledge-packs.md)。
+
+```bash
+npm run knowledge:search -- "字体 场景 优雅" --skill topmind-cover --limit 3
+npm run knowledge:check
+```
+
+封面参考提供 22 个可变风格入口、16 类构图关系、24 个组合方向和 12 份完整提示词；[创作图册](./topmind-cover/assets/examples/creative-atlas.html) 有 8 组可见排版样张，可切换横竖布局。它们提供方法，不限定可创作范围，也不承诺流量效果。
+
+## 多平台封面与图文
+
+[平台参考](./shared/references/platform-cover-specs.md) 记录公开来源、核验日期和未实测项：小红书图文可从 3:4 起步，抖音普通图文与商城内容分别核对，公众号普通文章宽图 / 方图与图片消息分开处理。尺寸是本包导出预设，当前发布入口与用户要求优先。
+
+`topmind-cover` 支持 `article`、`x-post`、`xiaohongshu`、`douyin` 和 `wechat` 预设；`wechat` 另给宽图与方图，裁切方向可调整。横竖版需要时分别构图，不用固定安全区或缺少证据的点击率约束设计。密集内容页用 `topmind-poster`，跨平台不自动扩展发布权限。
 
 ## 段子：14 种写法
 
@@ -238,15 +259,27 @@ python3 scripts/de_ai_lint.py 文章.md --genre long      # 长文
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-briefs --to ./.claude/skills
-npx @topmindspace/topmind-writing-skills@latest install topmind-briefs   # 升级：旧版直接覆盖
+npx @topmindspace/topmind-writing-skills@latest install topmind-briefs   # 升级：暂存完成再替换，失败保留旧版
 npx @topmindspace/topmind-writing-skills install topmind-briefs --force   # 同版本重装 / 降级
 npx @topmindspace/topmind-writing-skills uninstall topmind-briefs --to ./.claude/skills
 npx github:topmindspace/topmind-writing-skills install topmind-briefs     # 跟仓库最新
 ```
 
 - 默认探测 `./.agents` → `./.claude` → `./.cursor` → `./.codex` → `./.mimocode`，再到用户级目录；安装摘要会打印实际目标目录。
-- 已装更旧的版本就覆盖；版本相同提示已是最新；要降级加 `--force`。
+- 更旧的安装先暂存再替换，失败保留旧版；版本相同提示已是最新；同版本重装或降级用 `--force`。有本地修改先备份。
 - 技能 id 不是独立 npm 包，不要 `npm install topmind-briefs`。
+
+### 从本地仓库升级
+
+本地未发布改动要从当前仓库安装，`@latest` 只包含 npm 已发布版本。先核实目标目录；已有跨工具软链接时更新其共享实际目录，保留链接关系。Codex 独立安装可在仓库根目录运行：
+
+```bash
+for skill in $(node scripts/discover_skills.js); do
+  node bin/topmind-writing-skills.js install "$skill" --to "$HOME/.codex/skills" || break
+done
+```
+
+若 Codex 技能链接到其他共享目录，将 `--to` 换为核实后的实际目录；检查每项安装输出。安装了新技能或更新入口后，重开会话让宿主重新发现；同版本未发布内容需要明确加 `--force` 才会重装。
 
 <details>
 <summary>仓库结构与发布</summary>

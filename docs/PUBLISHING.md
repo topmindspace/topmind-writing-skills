@@ -12,7 +12,7 @@
 - 包：<https://www.npmjs.com/package/@topmindspace/topmind-writing-skills>
 - 仓库：<https://github.com/topmindspace/topmind-writing-skills>
 
-当前线：安装器 **0.8.50** · 技能 topmind-cover **0.4.18** · topmind-wechat-post **0.3.21** · topmind-x-article **0.4.26** · topmind-briefs **0.2.29** · topmind-viral-posts **0.3.21** · topmind-format **0.1.13** · topmind-revise **0.1.5** · topmind-poster **0.1.10**（整仓同 tag 发版；见 CHANGELOG）。
+版本以根 `package.json`（安装器）和各技能的 `package.json` / `SKILL.md` 为准；变更与未发布状态见 [CHANGELOG](../CHANGELOG.md)，不在此重复维护易过时的版本表。
 公众号技能的唯一真源是本仓 `topmind-wechat-post`；topmind-skills 4.15.2 起删除了旧的 `topmind-wechat`。
 演示技能已独立为 `topmind-presentation`（仓库 `topmind-presentation`），不在本仓发布线内。
 
@@ -56,7 +56,7 @@ npm 上的旧包 `@topmindspace/tms-skills` **2.0.0–2.1.1 已弃用**（仓库
 | 动作 | GitHub | npm |
 |------|:------:|:---:|
 | `git push` | 更新 | **不变** |
-| `git tag vX.Y.Z && git push --tags` | Release + zip | **自动 publish** |
+| `git tag vX.Y.Z && git push origin refs/tags/vX.Y.Z` | Release + zip | **自动 publish** |
 
 **Release 保留策略：最多 2 个最近版本**（CI 只通过 API 删除更旧 **Release**；**git tags 保留**，便于历史追溯与 npm 对照）。npm 历史版本可钉。
 
@@ -65,18 +65,21 @@ CI/Release 细节见 [`docs/ci.md`](./ci.md)。
 ## 发布流程
 
 1. 更新 `CHANGELOG.md`。
-2. 按上表 bump 对应包的版本（各包内部多处同值：SKILL.md frontmatter / package.json / README / CHANGELOG）。
+2. 按上表 bump 对应包的版本（技能 SKILL.md 与 package.json 同值，根 CHANGELOG 统一记录，不维护重复的技能日志）。
 3. 门禁：
    ```bash
    npm run check && npm run audit && npm run privacy
    npm run check:shared && npm run check:evals && npm run validate:spec   # 共享真源一致 / 评测骨架 / 官方校验器
    ```
+   真实构建后再运行 `npm run check:release` 和 `npm run check:pack`，校验 ZIP / 宿主包内容、版本、清单和 SHA-256。
+
    改了 `shared/` 下的共享脚本或共享文档时先 `npm run sync:shared`，不要直接改技能目录里的副本。
 4. 新技能：`npm run sync:files`（把发现的技能目录写入 `package.json` `files`）。
 5. 提交并打 tag：
    ```bash
    git tag vX.Y.Z
-   git push origin main --tags
+   git push origin main
+   git push origin refs/tags/vX.Y.Z
    ```
 
    使用既有 GitHub 登录或 credential helper 推送；不要把令牌拼进命令、文档或日志。只推送本次版本标签。
@@ -124,8 +127,8 @@ npm run privacy
 
 | 类别 | 技能 zip | npm 包 | git |
 |------|:--------:|:------:|:---:|
-| `SKILL.md` / `README.md` / `package.json` | ✅ | ✅ | ✅ |
-| `assets/` `references/` `scripts/` `evals/` | ✅ | ✅ | ✅ |
+| `SKILL.md` / 双语 README / `package.json` | ✅ | ✅ | ✅ |
+| `assets/` `references/` `scripts/` `knowledge/` `evals/` | ✅ | ✅（PNG 样张仅总览，保留 HTML 图册） | ✅ |
 | `bin/` | ❌ | ✅ | ✅ |
 | 根 `docs/` | ❌ | ❌ | ✅ |
 | `dist/` `node_modules/` 缓存 | ❌ | ❌ | ❌ |
@@ -134,7 +137,7 @@ npm run privacy
 ## 新增技能
 
 1. 根目录建 `<new-id>/SKILL.md`，`name` 与目录一致。
-2. 附 `README.md`、`package.json`；有工具则 `package_skill.py --check`。
+2. 附双语 `README.md` / `README.en.md`、`package.json`；有工具则 `package_skill.py --check`。
 3. 登记 README 技能表、`npm run sync:files`、CHANGELOG（CI/Release 动态发现技能）。
 4. 隐私清单全绿。
 
@@ -146,3 +149,7 @@ npm run privacy
 | `403` cannot publish over version | 已存在 → bump |
 | Public 但 registry 404 | 索引延迟 / 指定官方 registry；publish 只用 `registry.npmjs.org` |
 | tag 后 npm 未发 | 查 Actions 与 `NPM_TOKEN` |
+
+## 知识包维护
+
+知识真源位于 shared/knowledge，元数据与独立正文一起维护。新增经验写明范围、例外与证据，个人偏好不直接纳入公开默认。发布前运行 `npm run knowledge:check`、共享同步与门禁；新增知识文件通过目录项分发，替代 / 移除时显式清理退役副本。版本策略与贡献流程见 [knowledge-packs.md](./knowledge-packs.md)。

@@ -17,7 +17,7 @@
     · scripts/*.py 全部可编译；references/*.md 非空
     · SKILL.md 引用的 references/<file> 全部存在
     · 无 scripts/_* / .env 等不应进包的文件
-    · 运行时缓存（__pycache__/、*.pyc、*.pyo、.DS_Store）不算违规：校验与打包都直接跳过
+    · 运行时缓存和技能根目录 dist/ 产物不算违规：校验与打包都直接跳过
 """
 from __future__ import annotations
 
@@ -40,9 +40,10 @@ OUT = ROOT / "dist" / f"{NAME}.zip"
 MANIFEST = ROOT / "dist" / f"{NAME}.manifest.json"
 DESC_LIMIT = 1024
 
-INCLUDE = ["SKILL.md", "README.md", "package.json", "assets/", "references/", "scripts/", "evals/", "agents/"]
+INCLUDE = ["SKILL.md", "README.md", "README.en.md", "package.json", "assets/", "references/", "scripts/", "evals/", "agents/", "knowledge/"]
 # 运行脚本时自动生成的缓存：既不进包，也不判为违规（CI 先跑负向测试会生成它们）
 IGNORE_RES = [
+    re.compile(r"^dist(/|$)"),
     re.compile(r"(^|/)__pycache__(/|$)"),
     re.compile(r"\.py[co]$"),
     re.compile(r"(^|/)\.DS_Store$"),
