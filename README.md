@@ -18,6 +18,8 @@ npx @topmindspace/topmind-writing-skills install topmind-viral-posts   # 装一�
 npx @topmindspace/topmind-writing-skills list                          # 看全部
 ```
 
+宿主默认绑定活跃笔记，允许显式换稿。当前稿件、少量全局记忆和所选技能分层加载；其余资源按需读取，压缩不重置已完成操作和预算。
+
 ## 在 Desktop 与 Obsidian 中使用
 
 默认内置 [topmind-writing-skills](https://github.com/topmindspace/topmind-writing-skills) 的版本化快照：改稿、只排版、短文、互动短帖、公众号、X 长文、封面与长图。写作仓独立迭代和发布，宿主内置经过验证的版本。

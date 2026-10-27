@@ -18,6 +18,8 @@ npx @topmindspace/topmind-writing-skills install topmind-viral-posts   # install
 npx @topmindspace/topmind-writing-skills list                          # see all
 ```
 
+Hosts start with the active note and allow explicit source changes. Drafts, a small read-only memory window and the selected skill are loaded in layers; other resources are retrieved as needed. Compaction does not reset completed work or budgets.
+
 ## Desktop and Obsidian integration
 
 A reviewed release snapshot of [topmind-writing-skills](https://github.com/topmindspace/topmind-writing-skills) is bundled by default: revision, formatting, briefs, social posts, WeChat, X Articles, covers and posters. The writing repository keeps its own release cadence and version.
