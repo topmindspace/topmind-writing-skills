@@ -22,7 +22,7 @@ npx @topmindspace/topmind-writing-skills list                          # see all
 
 A reviewed release snapshot of [topmind-writing-skills](https://github.com/topmindspace/topmind-writing-skills) is bundled by default: revision, formatting, briefs, social posts, WeChat, X Articles, covers and posters. The writing repository keeps its own release cadence and version.
 
-Open a Markdown document and choose **Writing & delivery** from Apps/status/commands in Desktop, or note menus/commands in Obsidian. Edit the source in the main editor, choose a delivery format and theme, then preview, copy or export beside it in `out/`. Existing article folders and WeChat drafts work in place.
+Open a Markdown document and choose **Writing & delivery** from the article toolbar or Apps/status/commands in Desktop, or the ribbon, workbench and note/editor menus in Obsidian. Selecting an action shows task setup; AI starts explicitly. Edit the source in the main editor, choose a delivery format and theme, then preview, copy or export beside it in `out/`. Existing article folders and WeChat drafts work in place.
 
 Built-in HTML/text typography requires no Python. Preview and copy use the same output; changed sources or images require regeneration. Diagnostics identify missing images, diagram source, extended containers and table paste limitations. AI images, PNG rendering and publishing require their respective tools. Copying does not publish; wording scores do not decide editorial quality.
 
