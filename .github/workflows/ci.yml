@@ -48,10 +48,17 @@ jobs:
           done
           # Same version again -> "Already up to date", exit 0
           node bin/topmind-writing-skills.js install "${SKILLS[0]}" --to "$OUT" | grep -q "Already up to date"
-          # Older installed version -> upgraded in place
+          # A local edit is protected even when its frontmatter claims an older version.
           sed -i 's/version: "[0-9.]*"/version: "0.0.1"/' "$OUT/${SKILLS[0]}/SKILL.md"
-          node bin/topmind-writing-skills.js install "${SKILLS[0]}" --to "$OUT" | grep -q "^Upgraded ${SKILLS[0]} 0.0.1 -> "
-          node bin/topmind-writing-skills.js install "${SKILLS[0]}" --to "$OUT" --force
+          if node bin/topmind-writing-skills.js install "${SKILLS[0]}" --to "$OUT" > "$RUNNER_TEMP/modified-install.log" 2>&1; then
+            echo "Unexpected overwrite of a locally changed skill" >&2
+            exit 1
+          fi
+          grep -q "Local changes found" "$RUNNER_TEMP/modified-install.log"
+          node bin/topmind-writing-skills.js install "${SKILLS[0]}" --to "$OUT" --force > "$RUNNER_TEMP/forced-install.log"
+          grep -q "^Upgraded ${SKILLS[0]} 0.0.1 -> " "$RUNNER_TEMP/forced-install.log"
+          grep -q "backup:" "$RUNNER_TEMP/forced-install.log"
+          find "$OUT" -maxdepth 1 -name ".${SKILLS[0]}-previous-*" -type d -print -quit | grep -q .
           test -f "$OUT/${SKILLS[0]}/SKILL.md"
       - name: Installer negative tests (path guards)
         run: node scripts/test_install_guards.js
