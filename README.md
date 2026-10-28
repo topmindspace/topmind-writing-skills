@@ -14,9 +14,11 @@
 </p>
 
 ```bash
-npx @topmindspace/topmind-writing-skills install topmind-viral-posts   # 装一个
-npx @topmindspace/topmind-writing-skills list                          # 看全部
+npx @topmindspace/topmind-writing-skills install all      # 首次安装整套
+npx @topmindspace/topmind-writing-skills@latest update    # 以后只更新已装技能
 ```
+
+装好后直接对 AI 说「改这篇」「写条快讯」「给这篇做封面」。只想装一个，用 `install topmind-revise` 等技能 ID；`list` 查看全部。Desktop 和 Obsidian 已内置经过验证的写作快照，应用内更新从各自“关于与更新”进入，不需要再运行上面的 npx 命令。
 
 宿主默认绑定活跃笔记，允许显式换稿。当前稿件、少量全局记忆和所选技能分层加载；其余资源按需读取，压缩不重置已完成操作和预算。
 
@@ -258,15 +260,19 @@ python3 scripts/de_ai_lint.py 文章.md --genre long      # 长文
 **npm = 钉版本快照；GitHub = 跟仓库最新。**
 
 ```bash
+npx @topmindspace/topmind-writing-skills install all --to ./.claude/skills
+npx @topmindspace/topmind-writing-skills status --to ./.claude/skills
+npx @topmindspace/topmind-writing-skills@latest update --to ./.claude/skills
 npx @topmindspace/topmind-writing-skills install topmind-briefs --to ./.claude/skills
-npx @topmindspace/topmind-writing-skills@latest install topmind-briefs   # 升级：暂存完成再替换，失败保留旧版
-npx @topmindspace/topmind-writing-skills install topmind-briefs --force   # 同版本重装 / 降级
+npx @topmindspace/topmind-writing-skills install topmind-briefs --force --to ./.claude/skills
 npx @topmindspace/topmind-writing-skills uninstall topmind-briefs --to ./.claude/skills
-npx github:topmindspace/topmind-writing-skills install topmind-briefs     # 跟仓库最新
+npx github:topmindspace/topmind-writing-skills update --to ./.claude/skills
 ```
 
-- 默认探测 `./.agents` → `./.claude` → `./.cursor` → `./.codex` → `./.mimocode`，再到用户级目录；安装摘要会打印实际目标目录。
-- 更旧的安装先暂存再替换，失败保留旧版；版本相同提示已是最新；同版本重装或降级用 `--force`。有本地修改先备份。
+- `install all` 首次安装整套；`update` 默认只更新已装的技能，不会擅自加装新技能；`status` 显示当前包快照与安装目录的差异。三者都支持 `--to` 指定实际目录。
+- 不写 `--to` 时先找唯一的 TopMind 安装，再找唯一的技能目录或宿主配置；若同时存在多个候选，会列出目录并要求明确选择。没有宿主配置时使用当前项目的 `./.agents/skills`。结果会打印实际目录。
+- 更新先复制到临时目录，完整后才替换；失败保留旧版。受管安装发现本地改动会停止，需明确 `--force`；强制替换时保留旧副本。升级早期未带安装记录的副本也会自动留备份。软链接或非同名技能目录不会被覆盖。
+- 同版本不重复复制；已装版本比包新时拒绝降级，除非显式 `--force`。升级后重新打开 AI 会话，让宿主重新发现技能。
 - 技能 id 不是独立 npm 包，不要 `npm install topmind-briefs`。
 
 ### 从本地仓库升级
@@ -274,10 +280,11 @@ npx github:topmindspace/topmind-writing-skills install topmind-briefs     # 跟�
 本地未发布改动要从当前仓库安装，`@latest` 只包含 npm 已发布版本。先核实目标目录；已有跨工具软链接时更新其共享实际目录，保留链接关系。Codex 独立安装可在仓库根目录运行：
 
 ```bash
-for skill in $(node scripts/discover_skills.js); do
-  node bin/topmind-writing-skills.js install "$skill" --to "$HOME/.codex/skills" || break
-done
+node bin/topmind-writing-skills.js status --to "$HOME/.codex/skills"
+node bin/topmind-writing-skills.js update --to "$HOME/.codex/skills"
 ```
+
+首次安装改用 `install all`；修改过技能内容而未改版本号时，用 `install <id> --force --to <实际目录>` 明确重装。CLI 只复制单个技能目录内的独立资源，不写入目标根目录的 `shared/`。
 
 若 Codex 技能链接到其他共享目录，将 `--to` 换为核实后的实际目录；检查每项安装输出。安装了新技能或更新入口后，重开会话让宿主重新发现；同版本未发布内容需要明确加 `--force` 才会重装。
 

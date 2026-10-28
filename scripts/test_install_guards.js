@@ -109,6 +109,7 @@ function main() {
       const destRoot = path.join(env.tmp, 'out');
       const destSkill = path.join(destRoot, 'testskill');
       fs.mkdirSync(destSkill, { recursive: true });
+      fs.writeFileSync(path.join(destSkill, 'SKILL.md'), '---\nname: testskill\nversion: 1.0.0\n---\n');
       fs.writeFileSync(path.join(destSkill, 'stale.txt'), 'stale');
       const r = runInstall(env, ['--to', destRoot, '--force']);
       ok(r.status === 0, 'case3: 正常 --force 安装 exit 0');

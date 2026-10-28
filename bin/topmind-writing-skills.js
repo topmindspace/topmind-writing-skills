@@ -17,11 +17,13 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const ROOT = path.resolve(__dirname, '..');
 // Skills live at repo root (one directory per skill with SKILL.md).
 const INFRA_DIRS = new Set(['bin', 'docs', 'scripts', 'shared', 'evals', 'node_modules', 'dist', 'release-assets']);
 const SKILL_ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const INSTALL_RECORD = '.topmind-install.json';
 
 function die(msg, code = 1) {
   console.error(msg);
@@ -113,7 +115,7 @@ function installerVersion() {
 
 function resolveDefaultTarget() {
   const home = process.env.HOME || process.env.USERPROFILE || '';
-  const candidates = [
+  const candidates = [...new Set([
     path.join(process.cwd(), '.agents', 'skills'),
     path.join(process.cwd(), '.claude', 'skills'),
     path.join(process.cwd(), '.cursor', 'skills'),
@@ -123,13 +125,77 @@ function resolveDefaultTarget() {
     path.join(home, '.agents', 'skills'),
     path.join(home, '.cursor', 'skills'),
     path.join(home, '.codex', 'skills'),
-  ];
-  for (const dir of candidates) {
-    if (dir && fs.existsSync(path.dirname(dir))) {
-      return dir;
-    }
+  ])];
+  const choose = (paths) => {
+    if (paths.length === 1) return paths[0];
+    if (paths.length > 1) die(`More than one skill directory matches:\n  ${paths.join('\n  ')}\nChoose one with --to <dir>.`);
+    return null;
+  };
+  // Prefer the user's existing TopMind installation, then an existing skills
+  // directory, then a single host configuration. A mere cwd is not a signal.
+  const ids = listSkillIds();
+  const withTopmind = candidates.filter((dir) => ids.some((id) => fs.existsSync(path.join(dir, id, 'SKILL.md'))));
+  const withSkills = candidates.filter((dir) => fs.existsSync(dir));
+  const withHost = candidates.filter((dir) => fs.existsSync(path.dirname(dir)) && path.dirname(dir) !== process.cwd() && path.dirname(dir) !== home);
+  for (const group of [withTopmind, withSkills, withHost]) {
+    const selected = choose(group);
+    if (selected) return selected;
   }
+  // No host exists yet: use the cross-agent project convention explicitly.
   return path.join(process.cwd(), '.agents', 'skills');
+}
+
+function readSkillName(skillPath) {
+  try {
+    const text = fs.readFileSync(path.join(skillPath, 'SKILL.md'), 'utf8');
+    const fm = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    return (fm && fm[1].match(/^name:\s*([a-z0-9-]+)\s*$/m) || [])[1] || '';
+  } catch { return ''; }
+}
+
+function skipGeneratedEntry(entry) {
+  return (entry.isDirectory() && ['node_modules', 'dist', '__pycache__'].includes(entry.name)) ||
+    (entry.isFile() && entry.name.endsWith('.pyc'));
+}
+
+function skillDigest(skillPath) {
+  const hash = crypto.createHash('sha256');
+  const walk = (dir, relative = '') => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+      if (!relative && entry.name === INSTALL_RECORD) continue;
+      if (skipGeneratedEntry(entry)) continue;
+      const rel = path.join(relative, entry.name);
+      const absolute = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(absolute, rel);
+      } else {
+        hash.update(rel.replace(/\\/g, '/') + '\0');
+        if (entry.isFile()) hash.update(fs.readFileSync(absolute));
+        else hash.update(`non-regular:${entry.name}`);
+        hash.update('\0');
+      }
+    }
+  };
+  walk(skillPath);
+  return hash.digest('hex');
+}
+
+function installedState(skillId, targetRoot) {
+  const dest = path.join(targetRoot, skillId);
+  let stat;
+  try { stat = fs.lstatSync(dest); } catch (error) {
+    if (error.code === 'ENOENT' || error.code === 'ENOTDIR') return { kind: 'missing', version: '' };
+    throw error;
+  }
+  if (!stat.isDirectory() || readSkillName(dest) !== skillId) return { kind: 'conflict', version: '' };
+  const version = readSkillVersion(dest);
+  const recordPath = path.join(dest, INSTALL_RECORD);
+  if (!fs.existsSync(recordPath)) return { kind: 'legacy', version };
+  try {
+    const record = JSON.parse(fs.readFileSync(recordPath, 'utf8'));
+    if (record.id === skillId && record.digest === skillDigest(dest)) return { kind: 'managed', version };
+  } catch { /* Treat unreadable records as local changes. */ }
+  return { kind: 'modified', version };
 }
 
 function copyDir(src, dest) {
@@ -138,10 +204,10 @@ function copyDir(src, dest) {
     const s = path.join(src, entry.name);
     const d = path.join(dest, entry.name);
     if (entry.isDirectory()) {
-      if (entry.name === 'node_modules' || entry.name === 'dist' || entry.name === '__pycache__') continue;
+      if (skipGeneratedEntry(entry)) continue;
       copyDir(s, d);
     } else if (entry.isFile()) {
-      if (entry.name.endsWith('.pyc')) continue;
+      if (skipGeneratedEntry(entry)) continue;
       fs.copyFileSync(s, d);
     } else {
       console.warn(`warning: skipping non-regular file: ${s}`);
@@ -207,7 +273,7 @@ function compareVersions(a, b) {
   return 0;
 }
 
-function install(skillId, targetRoot, { force = false, defaultTarget = false } = {}) {
+function planInstall(skillId, targetRoot, force) {
   assertSkillId(skillId);
   const src = skillDir(skillId);
   if (!fs.existsSync(path.join(src, 'SKILL.md'))) {
@@ -215,6 +281,26 @@ function install(skillId, targetRoot, { force = false, defaultTarget = false } =
   }
   const dest = path.join(targetRoot, skillId);
   assertDestOutsideSource(src, dest);
+  const state = installedState(skillId, targetRoot);
+  if (state.kind === 'conflict') die(`Refusing to replace ${dest}: it is not a ${skillId} skill directory.`);
+  if (state.kind === 'modified' && !force) {
+    die(`Local changes found in ${dest}. Keep them or pass --force to replace; the previous copy will be retained.`);
+  }
+  const packageVer = readSkillVersion(src) || 'unknown';
+  const cmp = compareVersions(packageVer, state.version);
+  if (state.kind !== 'missing' && !force && cmp < 0) {
+    die(`Installed ${skillId} ${state.version} is newer than packaged ${packageVer}; not downgrading. Pass --force (or -f) to downgrade.`);
+  }
+  return { src, dest, state, packageVer, cmp };
+}
+
+function install(skillId, targetRoot, { force = false, defaultTarget = false } = {}) {
+  const { src, dest, state, cmp } = planInstall(skillId, targetRoot, force);
+  if (state.kind !== 'missing' && !force && cmp === 0) {
+    console.log(`Already up to date: ${skillId} ${state.version} (use --force to reinstall)`);
+    console.log(`  at:      ${dest}`);
+    return;
+  }
   try {
     fs.mkdirSync(targetRoot, { recursive: true });
   } catch (e) {
@@ -224,37 +310,28 @@ function install(skillId, targetRoot, { force = false, defaultTarget = false } =
         'Choose a --to directory that can be created (not a file, not unwritable).'
     );
   }
-  let upgradedFrom = null;
-  if (fs.existsSync(dest)) {
-    // 已装过：默认升级。打包版本更新 → 直接覆盖（不备份）；相同 → 已是最新；已装版本更新 → 需 --force。
-    const installedVer = readSkillVersion(dest);
-    const packageVer = readSkillVersion(src) || 'unknown';
-    const cmp = compareVersions(packageVer, installedVer);
-    if (!force && cmp === 0) {
-      console.log(`Already up to date: ${skillId} ${installedVer} (use --force to reinstall)`);
-      console.log(`  at:      ${dest}`);
-      return;
-    }
-    if (!force && cmp < 0) {
-      die(
-        `Installed ${skillId} ${installedVer} is newer than packaged ${packageVer}; not downgrading. ` +
-          'Pass --force (or -f) to downgrade.'
-      );
-    }
-    upgradedFrom = cmp > 0 ? installedVer || 'unknown' : null;
-  }
+  const upgradedFrom = state.kind !== 'missing' && cmp > 0 ? state.version || 'unknown' : null;
+  const retainPrevious = state.kind === 'legacy' || state.kind === 'modified';
   const stage = fs.mkdtempSync(path.join(targetRoot, `.${skillId}-stage-`));
   let previous = null;
   try {
     copyDir(src, stage);
-    if (fs.existsSync(dest)) {
+    fs.writeFileSync(path.join(stage, INSTALL_RECORD), JSON.stringify({
+      id: skillId,
+      version: readSkillVersion(src),
+      digest: skillDigest(stage),
+    }, null, 2) + '\n');
+    if (state.kind !== 'missing') {
       previous = fs.mkdtempSync(path.join(targetRoot, `.${skillId}-previous-`));
       fs.rmdirSync(previous);
       fs.renameSync(dest, previous);
     }
     try { fs.renameSync(stage, dest); }
     catch (error) { if (previous) { fs.renameSync(previous, dest); previous = null; } throw error; }
-    if (previous) { try { fs.rmSync(previous, { recursive: true, force: true }); } catch { console.warn(`Previous copy retained at: ${previous}`); } }
+    if (previous && !retainPrevious) {
+      try { fs.rmSync(previous, { recursive: true, force: true }); }
+      catch { console.warn(`Previous copy retained at: ${previous}`); }
+    }
   } catch (error) {
     fs.rmSync(stage, { recursive: true, force: true });
     die(`Install failed; the previous installed skill was retained. ${error.message}`);
@@ -266,7 +343,23 @@ function install(skillId, targetRoot, { force = false, defaultTarget = false } =
   else console.log(`Installed ${skillId}`);
   console.log(`  to:      ${dest}${toNote}`);
   console.log(`  version: skill ${skillVer} (installer ${installerVersion()})`);
+  if (previous && retainPrevious) console.log(`  backup:  ${previous} (previous untracked or locally changed copy)`);
   console.log(`  next:    ${nextStep(skillId, dest)}`);
+}
+
+function status(targetRoot) {
+  console.log(`Skill directory: ${targetRoot}`);
+  console.log('Packaged version | Installed version | State | Skill');
+  for (const id of listSkillIds()) {
+    const packaged = readSkillVersion(skillDir(id)) || 'unknown';
+    const state = installedState(id, targetRoot);
+    let label = state.kind;
+    if (state.kind === 'managed' || state.kind === 'legacy') {
+      const cmp = compareVersions(packaged, state.version);
+      label = cmp > 0 ? 'update available' : cmp < 0 ? 'installed newer' : state.kind === 'legacy' ? 'untracked' : 'current';
+    }
+    console.log(`${packaged} | ${state.version || '—'} | ${label} | ${id}`);
+  }
 }
 
 function nextStep(skillId, dest) {
@@ -319,22 +412,25 @@ function usageText() {
 
 Usage:
   topmind-writing-skills list|ls
-  topmind-writing-skills install <skill-id> [--to|-t <dir>] [--force|-f]
+  topmind-writing-skills status [--to|-t <dir>]
+  topmind-writing-skills install <skill-id|all> [--to|-t <dir>] [--force|-f]
+  topmind-writing-skills update [skill-id|all] [--to|-t <dir>] [--force|-f]
   topmind-writing-skills uninstall <skill-id> [--to|-t <dir>]
   topmind-writing-skills help
 
 Behavior:
-  install    copies <skill-id>/ into <dir>/<skill-id>/. If the skill is already
-             installed: a newer packaged version upgrades it in place (no backup,
-             prints "Upgraded <id> <old> -> <new>"); the same version prints
-             "Already up to date" (--force reinstalls); an installed version newer
-             than the package is refused unless --force. A missing/unparseable
-             installed version counts as an upgrade. Prints where/what-version/
-             next-steps when done.
+  status     compares the local package with skills installed in <dir>.
+  install    installs one skill or all eight; newer packaged versions upgrade
+             existing copies. Equal versions are left alone. A newer installed
+             version requires --force. Locally changed managed copies are kept
+             unless --force is explicit. Untracked older copies are backed up
+             during upgrade. The replacement is staged before switching.
+  update     upgrades only installed skills (all by default); does not add new ones.
   uninstall  removes <dir>/<skill-id>/ (refuses: not installed, not a skill
              directory, or the package's own skill source).
-  No --to: the target directory is auto-detected (probe order below) and
-  printed explicitly in the install summary.
+  No --to: choose a single existing TopMind installation, skills directory or
+  host configuration. Ambiguous matches require --to. With no host configured,
+  use ./.agents/skills and print the chosen location.
 
 Target probe order (no --to): ./.agents/skills, ./.claude/skills,
   ./.cursor/skills, ./.codex/skills, ./.mimocode/skills, then
@@ -342,6 +438,9 @@ Target probe order (no --to): ./.agents/skills, ./.claude/skills,
 
 Examples (npm recommended when published):
   npx @topmindspace/topmind-writing-skills list
+  npx @topmindspace/topmind-writing-skills status
+  npx @topmindspace/topmind-writing-skills install all
+  npx @topmindspace/topmind-writing-skills@latest update
   npx @topmindspace/topmind-writing-skills install topmind-briefs
   npx @topmindspace/topmind-writing-skills install topmind-briefs --to ./.agents/skills
   npx @topmindspace/topmind-writing-skills install topmind-briefs --force
@@ -356,6 +455,22 @@ Privacy: the installer is fully local — it never collects or uploads anything.
 
 function usage() {
   console.log(usageText());
+}
+
+function parseOptions(args, start, { allowForce = false } = {}) {
+  let to = null;
+  let force = false;
+  for (let i = start; i < args.length; i++) {
+    if (args[i] === '--to' || args[i] === '-t') {
+      to = args[++i];
+      if (!to || to.startsWith('-')) die('Option --to requires a directory path.');
+    } else if (allowForce && (args[i] === '--force' || args[i] === '-f')) {
+      force = true;
+    } else {
+      die(`Unknown option: ${args[i]}\n\n` + usageText());
+    }
+  }
+  return { targetRoot: to ? path.resolve(to) : resolveDefaultTarget(), force, defaultTarget: !to };
 }
 
 function main(argv) {
@@ -381,25 +496,32 @@ function main(argv) {
     return;
   }
 
-  if (cmd === 'install') {
-    const skillId = args[1];
-    if (!skillId || skillId.startsWith('-')) {
+  if (cmd === 'status') {
+    const { targetRoot } = parseOptions(args, 1);
+    status(targetRoot);
+    return;
+  }
+
+  if (cmd === 'install' || cmd === 'update') {
+    const requested = cmd === 'update' && (!args[1] || args[1].startsWith('-')) ? 'all' : args[1];
+    if (!requested || requested.startsWith('-')) {
       die('Missing skill id.\n\n' + usageText());
     }
-    let to = null;
-    let force = false;
-    for (let i = 2; i < args.length; i++) {
-      if (args[i] === '--to' || args[i] === '-t') {
-        to = args[++i];
-        if (!to) die('Option --to requires a directory path.');
-      } else if (args[i] === '--force' || args[i] === '-f') {
-        force = true;
-      } else {
-        die(`Unknown option: ${args[i]}\n\n` + usageText());
-      }
+    const optionStart = cmd === 'update' && requested === 'all' && args[1] !== 'all' ? 1 : 2;
+    const options = parseOptions(args, optionStart, { allowForce: true });
+    const ids = requested === 'all' ? listSkillIds() : [requested];
+    const selected = cmd === 'update'
+      ? ids.filter(id => installedState(id, options.targetRoot).kind !== 'missing')
+      : ids;
+    if (!selected.length) {
+      console.log(`No TopMind writing skills installed in ${options.targetRoot}. Run install all to get started.`);
+      return;
     }
-    const targetRoot = to ? path.resolve(to) : resolveDefaultTarget();
-    install(skillId, targetRoot, { force, defaultTarget: !to });
+    // Check every target before the first write; a conflict should not leave
+    // an avoidably half-updated set.
+    for (const id of selected) planInstall(id, options.targetRoot, options.force);
+    for (const id of selected) install(id, options.targetRoot, options);
+    if (selected.length > 1) console.log(`${cmd === 'install' ? 'Installed' : 'Updated'} ${selected.length} writing skills in ${options.targetRoot}.`);
     return;
   }
 

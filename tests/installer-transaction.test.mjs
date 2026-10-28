@@ -9,12 +9,12 @@ test('CLI copy failure keeps the previous skill and removes its incomplete stagi
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const target = path.join(root, 'skills');
   fs.mkdirSync(path.join(target, 'topmind-briefs'), { recursive: true });
-  fs.writeFileSync(path.join(target, 'topmind-briefs/SKILL.md'), 'previous author customization');
+  fs.writeFileSync(path.join(target, 'topmind-briefs/SKILL.md'), '---\nname: topmind-briefs\nversion: 0.0.1\n---\nprevious author customization');
   const preload = path.join(root, 'fail-copy.cjs');
   fs.writeFileSync(preload, "const fs=require('node:fs');fs.copyFileSync=()=>{throw new Error('simulated disk full')};");
   const cli = new URL('../bin/topmind-writing-skills.js', import.meta.url).pathname;
   const result = spawnSync(process.execPath, ['--require', preload, cli, 'install', 'topmind-briefs', '--to', target, '--force'], { encoding: 'utf8' });
   assert.notEqual(result.status, 0);
-  assert.equal(fs.readFileSync(path.join(target, 'topmind-briefs/SKILL.md'), 'utf8'), 'previous author customization');
+  assert.match(fs.readFileSync(path.join(target, 'topmind-briefs/SKILL.md'), 'utf8'), /previous author customization/);
   assert.deepEqual(fs.readdirSync(target), ['topmind-briefs']);
 });

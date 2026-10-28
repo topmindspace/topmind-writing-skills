@@ -14,9 +14,11 @@ English | [中文](./README.md)
 </p>
 
 ```bash
-npx @topmindspace/topmind-writing-skills install topmind-viral-posts   # install one
-npx @topmindspace/topmind-writing-skills list                          # see all
+npx @topmindspace/topmind-writing-skills install all      # first-time setup
+npx @topmindspace/topmind-writing-skills@latest update    # later, update installed skills
 ```
+
+Then tell your AI assistant "revise this", "write a quick brief", or "make a cover for this article". To install just one skill, use `install topmind-revise` or another ID from `list`. Desktop and Obsidian already include a reviewed writing snapshot; update it through each app's About & Updates screen rather than these npx commands.
 
 Hosts start with the active note and allow explicit source changes. Drafts, a small read-only memory window and the selected skill are loaded in layers; other resources are retrieved as needed. Compaction does not reset completed work or budgets.
 
@@ -240,15 +242,19 @@ Every skill drafts only; you publish.
 **npm = pinned snapshot; GitHub = latest.**
 
 ```bash
+npx @topmindspace/topmind-writing-skills install all --to ./.claude/skills
+npx @topmindspace/topmind-writing-skills status --to ./.claude/skills
+npx @topmindspace/topmind-writing-skills@latest update --to ./.claude/skills
 npx @topmindspace/topmind-writing-skills install topmind-briefs --to ./.claude/skills
-npx @topmindspace/topmind-writing-skills@latest install topmind-briefs   # upgrade in place
-npx @topmindspace/topmind-writing-skills install topmind-briefs --force   # reinstall / downgrade
+npx @topmindspace/topmind-writing-skills install topmind-briefs --force --to ./.claude/skills
 npx @topmindspace/topmind-writing-skills uninstall topmind-briefs --to ./.claude/skills
-npx github:topmindspace/topmind-writing-skills install topmind-briefs     # latest from GitHub
+npx github:topmindspace/topmind-writing-skills update --to ./.claude/skills
 ```
 
-- Probes `./.agents` → `./.claude` → `./.cursor` → `./.codex` → `./.mimocode`, then user-level directories; the summary prints the target.
-- Older installs are staged before replacement; failures retain the previous copy. Equal versions report up to date; reinstalling the same version or downgrading needs `--force`. Back up local modifications first.
+- `install all` installs the full set once; `update` changes only already installed skills, and `status` compares the package snapshot with a destination. All accept `--to`.
+- Without `--to`, the CLI selects a single existing TopMind installation, skills directory, or host configuration. If several match, it lists them and asks for `--to`. With no host configured, it uses `./.agents/skills` in the current project. Output always names the destination.
+- Replacements are staged first; failures keep the old copy. Local edits to a managed skill stop automatic updates until `--force` is explicit, which retains the previous copy. Upgrading an older untracked installation also retains a backup. Symlinks and unrelated directories are never replaced.
+- Equal versions are left alone; downgrading a newer installed version needs `--force`. Reopen the AI session after updating so the host discovers new skills.
 - Skill ids are not npm packages; don't `npm install topmind-briefs`.
 
 ### Upgrade from a local checkout
@@ -256,12 +262,11 @@ npx github:topmindspace/topmind-writing-skills install topmind-briefs     # late
 Install local, unpublished changes from the checkout; `@latest` contains only the published npm snapshot. Verify the target first. If tools share skills through symlinks, update the resolved shared directory and preserve those links. For a standalone Codex installation, run from the repository root:
 
 ```bash
-for skill in $(node scripts/discover_skills.js); do
-  node bin/topmind-writing-skills.js install "$skill" --to "$HOME/.codex/skills" || break
-done
+node bin/topmind-writing-skills.js status --to "$HOME/.codex/skills"
+node bin/topmind-writing-skills.js update --to "$HOME/.codex/skills"
 ```
 
-Replace `--to` with the verified shared destination when appropriate and check every result. Reopen the session to refresh skill discovery; unpublished changes with the same version require an explicit `--force` reinstall.
+Use `install all` for the first install. Replace `--to` with the verified shared destination when appropriate. Unpublished changes with the same skill version require `install <id> --force --to <actual-dir>`. The CLI copies each skill's self-contained resources and never writes to a destination's root `shared/` directory.
 
 <details>
 <summary>Repository layout and releases</summary>

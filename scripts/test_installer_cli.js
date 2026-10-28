@@ -3,7 +3,7 @@
  * topmind-writing-skills 安装器 CLI 负向测试（零依赖：node 直接可跑）。
  *
  * 覆盖 install/uninstall 新行为的负向分支 + 成功路径回归：
- *   1. 已装：打包更新 → 升级（Upgraded a -> b，不备份）；同版本 → Already up to date；已装更新 → 拒绝需 --force；版本缺失/解析不了 → 升级
+ *   1. 已装：打包更新 → 升级并保留未受管旧版；同版本 → Already up to date；已装更新 → 拒绝需 --force；版本缺失/解析不了 → 升级
  *   2. install --force 到已存在目录 → 成功，摘要含 to:/version:/next: 三行
  *   3. uninstall 缺 skill id → 失败并打印用法
  *   4. uninstall 非法 skill id（路径穿越）→ 拒绝
@@ -95,7 +95,7 @@ function main() {
       ok(r.status === 0, `case1-${label}: 打包版本更新 → 默认升级 exit 0`);
       ok(new RegExp(`Upgraded testskill ${ver && ver !== 'abc' ? ver.replace(/\./g, '\\.') : ver === 'abc' ? 'abc' : 'unknown'} -> 9\\.9\\.9`).test(o), `case1-${label}: 输出 Upgraded … -> 9.9.9`);
       ok(!fs.existsSync(path.join(destSkill, 'stale.txt')), `case1-${label}: 直接覆盖（旧文件清空）`);
-      ok(!fs.readdirSync(destRoot).some((n) => /bak|backup/i.test(n)), `case1-${label}: 不留备份目录`);
+      ok(fs.readdirSync(destRoot).some((n) => n.startsWith('.testskill-previous-')), `case1-${label}: 未受管旧版保留备份`);
       ok(noTraceback(o), `case1-${label}: 无堆栈`);
     } finally {
       destroy(env);
@@ -139,6 +139,7 @@ function main() {
       const destRoot = path.join(env.tmp, 'out');
       const destSkill = path.join(destRoot, 'testskill');
       fs.mkdirSync(destSkill, { recursive: true });
+      fs.writeFileSync(path.join(destSkill, 'SKILL.md'), '---\nname: testskill\nversion: 1.0.0\n---\n');
       fs.writeFileSync(path.join(destSkill, 'stale.txt'), 'stale');
       const r = runCli(env, ['install', 'testskill', '--to', destRoot, '--force']);
       const o = out(r);
@@ -414,7 +415,7 @@ function main() {
         const o = out(r);
         ok(r.status !== 0, 'case18: --to=包内文件硬链接 install 被拒绝（exit 非 0）');
         ok(fs.existsSync(path.join(env.skill, 'SKILL.md')), 'case18: 源目录未被删除');
-        ok(/Cannot create install directory/.test(o) && noTraceback(o), 'case18: 报错友好无 Traceback');
+        ok(/Refusing to replace|Cannot create install directory/.test(o) && noTraceback(o), 'case18: 报错友好无 Traceback');
       }
     } finally {
       destroy(env);
@@ -470,7 +471,7 @@ function main() {
     }
   }
 
-  // 22. install --force 时 dest 是指向包外的符号链接 → 只删链接本身，不跟随删目标
+  // 22. install --force 时 dest 是指向包外的符号链接 → 不替换共享链接，也不跟随删目标
   {
     const env = makeEnv();
     try {
@@ -490,9 +491,9 @@ function main() {
         const r = runCli(env, ['install', 'testskill', '--to', to, '--force']);
         const o = out(r);
         const destStat = fs.lstatSync(path.join(to, 'testskill'));
-        ok(r.status === 0, 'case22: install --force 成功（exit 0）');
+        ok(r.status !== 0 && /Refusing to replace/.test(o), 'case22: install --force 拒绝覆盖共享链接');
         ok(fs.existsSync(path.join(outside, 'keep.txt')), 'case22: 链接目标目录完好（未被跟随删除）');
-        ok(destStat.isDirectory() && !destStat.isSymbolicLink(), 'case22: dest 已是真实目录（链接被替换）');
+        ok(destStat.isSymbolicLink(), 'case22: dest 保留原软链接');
         ok(noTraceback(o), 'case22: 无 Traceback');
       }
     } finally {
