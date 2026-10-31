@@ -30,6 +30,8 @@ Open a Markdown document and choose **Writing & delivery** from the article tool
 
 Built-in HTML/text typography requires no Python. Preview and copy use the same output; changed sources or images require regeneration. Diagnostics identify missing images, diagram source, extended containers and table paste limitations. AI images, PNG rendering and publishing require their respective tools. Copying does not publish; wording scores do not decide editorial quality.
 
+The host pack also renders from source bytes, extracts local text from clipboard HTML, and evaluates a length rule set. The length entry accepts only caller-supplied JSON. This package does not ship or enable production platform rules. Fields, dates and reports are in [the length rule-set contract](docs/length-ruleset-v1.md). A Unicode code-point ceiling is not X weighted length and is not the target editor's final check. JavaScript and Python renderer differences are in [the capability matrix](docs/renderer-capability-matrix.md).
+
 About & updates tracks the application, core skills, independent writing pack and integrations separately. Writing resources can update independently; compiled renderer code follows the host release. Managed packs are isolated, local modifications block replacement and failed installs preserve the previous version. Supported Desktop installs can download an update and explicitly restart; manual downloads remain available when signing or the installation channel prevents automatic updates.
 
 ## More choices, concrete references

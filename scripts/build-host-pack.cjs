@@ -2,20 +2,29 @@
 'use strict';
 const fs = require('node:fs');
 const path = require('node:path');
+const { execFileSync } = require('node:child_process');
 const { createZip } = require('../lib/zip.cjs');
 const { createHash } = require('node:crypto');
 const { buildHostPack } = require('../lib/host-pack.cjs');
 const root = path.resolve(__dirname, '..');
 const { manifest, snapshot } = buildHostPack(root);
 const output = path.join(root, 'dist');
+fs.mkdirSync(output, { recursive: true });
 const packageRoot = path.join(output, 'host-pack');
-fs.rmSync(packageRoot, { recursive: true, force: true });
-fs.mkdirSync(packageRoot, { recursive: true });
-for (const [relative, content] of Object.entries(snapshot.resources)) {
-  const target = path.join(packageRoot, relative); fs.mkdirSync(path.dirname(target), { recursive: true }); fs.writeFileSync(target, content);
+const stage = fs.mkdtempSync(path.join(output, '.host-pack-stage-'));
+try {
+  for (const [relative, content] of Object.entries(snapshot.resources)) {
+    const target = path.join(stage, relative); fs.mkdirSync(path.dirname(target), { recursive: true }); fs.writeFileSync(target, content);
+  }
+  fs.writeFileSync(path.join(stage, 'topmind-pack.json'), JSON.stringify(manifest, null, 2) + '\n');
+  fs.copyFileSync(path.join(root, 'LICENSE'), path.join(stage, 'LICENSE'));
+  execFileSync(process.execPath, [path.join(root, 'scripts', 'verify-host-pack-runtime.mjs'), stage],
+    { stdio: 'inherit' });
+  fs.rmSync(packageRoot, { recursive: true, force: true });
+  fs.renameSync(stage, packageRoot);
+} finally {
+  fs.rmSync(stage, { recursive: true, force: true });
 }
-fs.writeFileSync(path.join(packageRoot, 'topmind-pack.json'), JSON.stringify(manifest, null, 2) + '\n');
-fs.copyFileSync(path.join(root, 'LICENSE'), path.join(packageRoot, 'LICENSE'));
 const name = `topmind-writing-skills-${manifest.version}.zip`;
 const archive = path.join(output, name);
 fs.rmSync(archive, { force: true });
