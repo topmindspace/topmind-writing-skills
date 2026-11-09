@@ -54,7 +54,7 @@ npx @topmindspace/topmind-writing-skills@latest update    # 以后只更新已�
 | 长文 · 公众号 | [`topmind-wechat-post`](./topmind-wechat-post/) | 公众号长文：质量三关、图片内嵌排版、发布清单 | 「写公众号」「公众号排版」 |
 | 格式化 | [`topmind-format`](./topmind-format/) | 现成文字只改排版不改字：转段子、格式化成短文、几个开头拼成品 | 「转段子」「排一下版」 |
 | 改稿 | [`topmind-revise`](./topmind-revise/) | 结构 → 事实 → 逻辑 → 去 AI 味 → 保真审计；也能快审一条回复 | 「改稿」「去 AI 味」「看看这条回复」 |
-| 封面 | [`topmind-cover`](./topmind-cover/) | 小红书、抖音图文、公众号与 X 封面：平台适配、核字与多比例裁切 | 「做个封面」「头图」 |
+| 封面 | [`topmind-cover`](./topmind-cover/) | 小红书、抖音、公众号与 X 封面，含视频缩略图、叠字和多比例裁切 | 「做个封面」「头图」 |
 | 长图 | [`topmind-poster`](./topmind-poster/) | HTML → 高清长图 / 海报 / 信息图，文字数字逐字正确 | 「出张长图」「做个榜单图」 |
 
 **短文** = X 纯文本帖，1000 字以内都行；**长文** = X Article 或公众号长文；**段子** = 以观察、反差或幽默推进的短帖，排版按节奏选择。
@@ -78,7 +78,7 @@ npm run knowledge:check
 
 [平台参考](./shared/references/platform-cover-specs.md) 记录公开来源、核验日期和未实测项：小红书图文可从 3:4 起步，抖音普通图文与商城内容分别核对，公众号普通文章宽图 / 方图与图片消息分开处理。尺寸是本包导出预设，当前发布入口与用户要求优先。
 
-`topmind-cover` 支持 `article`、`x-post`、`xiaohongshu`、`douyin` 和 `wechat` 预设；`wechat` 另给宽图与方图，裁切方向可调整。横竖版需要时分别构图，不用固定安全区或缺少证据的点击率约束设计。密集内容页用 `topmind-poster`，跨平台不自动扩展发布权限。
+`topmind-cover` 的 `landscape-pair` 从同一张 16:9 母图导出中央 4:3 主版和完整 16:9 备版。先在 4:3 框内放主体和标题，两侧用场景延展。竖版以 3:4 构图为起点，按发布入口另取 9:16。成片画幅、封面选择和列表露出分别核对。文章、X 短帖、普通图文和微信宽图及方图继续使用各自预设。
 
 ## 段子：14 种写法
 

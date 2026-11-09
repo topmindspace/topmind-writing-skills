@@ -21,7 +21,7 @@ bash scripts/ci_skill_gates.sh
 
 1. 有运行时依赖才装：有锁文件 `npm ci --omit=dev`，没有则 `npm install --omit=dev --no-package-lock`；目前各技能都没有依赖，这一步跳过，不生成锁文件
 2. `package_skill.py --check` + `audit_{styles,docs,skill,css}.py`；仓库级 `test_skill_packaging.py` 验证重复打包、双语说明和产物排除，源目录禁用文件检查保持有效
-3. `negative_tests.py`（cover 含 `test_crop_cover.py`：多平台尺寸、独立裁切、位置、等比、EXIF 与原图保护；CI / Release 显式安装 Pillow，确保执行图片测试）
+3. `negative_tests.py`（cover 含 `test_crop_cover.py`：多平台尺寸、横版双尺寸中心裁切、位置、等比、EXIF 与原图保护，并执行中文字体解析与回退测试；CI / Release 显式安装 Pillow，确保执行图片测试）
 4. （若存在）`test_feedback_gates.py`
 
 ### 本地复现
@@ -74,4 +74,4 @@ Release 的 publish 步骤：
 
 ## 真实分发包完整性
 
-CI / Release 都先生成 8 个技能 ZIP 和宿主包，再运行 `npm run check:release`。校验版本、文件清单、SHA-256、知识卡 / 双语文档 / 图册与源文件一致性、latest.json 和产物排除；`test_release_artifacts.py` 覆盖遗漏、篡改和缓存混入。npm 包检查同时确认必需资源，避免只查“没有垃圾”却漏掉正文件。
+CI / Release 都先生成 8 个技能 ZIP 和宿主包，再运行 `npm run check:release`。校验版本、文件清单、SHA-256、知识卡、双语文档、图册和封面工具与源文件一致性、latest.json 和产物排除；`test_release_artifacts.py` 覆盖遗漏、篡改和缓存混入。npm 包检查同时确认必需资源，避免只查“没有垃圾”却漏掉正文件。

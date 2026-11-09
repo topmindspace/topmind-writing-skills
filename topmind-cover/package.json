@@ -1,8 +1,8 @@
 {
   "name": "topmind-cover",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
-  "description": "设计小红书、抖音图文、公众号与 X 封面；按平台场景核对来源、构图、文字和裁切。",
+  "description": "设计文章、图文与视频封面；支持小红书、抖音、公众号和 X 的构图、叠字与多比例导出。",
   "license": "MIT",
   "repository": {
     "type": "git",

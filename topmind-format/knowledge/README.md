@@ -8,7 +8,7 @@
 | * | [把参考转成自己的方法](cards/reference-reading.md) | 记录实际可见的组织关系，再用当前素材重新表达。 |
 | * | [把一次反馈变成有范围的经验](cards/experience-loop.md) | 保留场景、选择、结果、例外与证据性质，先候选后纳入。 |
 | topmind-cover | [编辑式封面：用版面关系建立气质](cards/cover-editorial.md) | 用对齐、尺度、负空间和图像裁切建立优雅，而非统一靠大字与装饰。 |
-| topmind-cover | [字体是图像：字形、字重与空间](cards/cover-typography.md) | 以字形气质、字面比例、断行和空间组织丰富标题；花式服务语义。 |
+| topmind-cover | [字体是图像：字形、字重与空间](cards/cover-typography.md) | 按真实字重、标题读序和目标缩略图组织字效；系列构图按主体调整。 |
 | topmind-cover | [场景：让关系承载故事](cards/cover-scene.md) | 从时间、地点、动作、材料和尺度关系中选择最能解释主题的场景。 |
 | topmind-cover | [摄影与真实素材：裁切、负空间和介质](cards/cover-photo.md) | 用真实素材的独有细节与负空间组织封面，区别纪实照片和生成示意。 |
 | topmind-cover | [拼贴：统一材料，保留多层信息](cards/cover-collage.md) | 用裁切边缘、材料和重叠关系建立层次，避免无目的堆素材。 |

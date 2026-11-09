@@ -4,7 +4,7 @@
 
 看实际参考与风格样张，选择摄影、字体、极简、场景等方向，核字与裁切。
 
-适配小红书图文、抖音普通图文、公众号文章和 X。先确定发布形态，平台依据与导出预设分开处理；[平台封面参考](./references/platform-cover-specs.md) 记录来源、核验日期与未实测项。公众号图片消息、抖音商城和商品主图需分别确认，不能照搬普通图文规则。
+适配小红书、抖音、公众号与 X 的图文和视频封面。先确定发布形态，平台依据与导出预设分开处理；[平台封面参考](./references/platform-cover-specs.md) 记录来源、核验日期与未实测项。公众号图片消息、抖音商城和商品主图需分别确认，不能照搬普通图文规则。
 
 ## 使用
 
@@ -29,10 +29,13 @@ npx @topmindspace/topmind-writing-skills install topmind-cover
 
 ```bash
 python3 scripts/crop-cover.py 主图.png --out-dir 输出目录
+python3 scripts/crop-cover.py 横版母图.png --preset landscape-pair --out-dir 输出目录
 python3 scripts/crop-cover.py 竖版主图.png --preset xiaohongshu --out-dir 输出目录
 python3 scripts/crop-cover.py 竖版主图.png --preset douyin --out-dir 输出目录
 python3 scripts/crop-cover.py 原图.png --preset wechat --anchor left --out-dir 输出目录
 ```
+
+`landscape-pair` 使用中央 4:3 已完成排版的 16:9 母图，导出 1080×810 与 1920×1080。检查约 300 px 宽的缩略图，并用 `python3 scripts/title-engine.py --list-fonts` 核对本机实际字族、字重和字体集合索引。
 
 默认 `article` 输出 1500×600 与 900×383 双横图；`x-post` 输出 1200×675；`xiaohongshu` / `douyin` 输出 1080×1440；`wechat` 输出 900×383 与 900×900。以上是本包预设，按当前发布入口与用户规格调整。`--anchor` 支持 center / left / right / top / bottom。每张直接从原图等比裁切，不能替代横竖版重新构图；标题或主体被切时重排，上传前逐版预览。脚本不会覆盖输入原图。
 

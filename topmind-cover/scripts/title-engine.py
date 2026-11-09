@@ -41,11 +41,31 @@ FONTS = {  # 别名: (候选文件, ttc 索引, 可变字重)
     "maobi": ([f"{HOME}/MaShanZheng-Regular.ttf"], 0, None),
     "wenkai": ([f"{HOME}/LXGWWenKai-Bold.ttf"], 0, None),
 }
+MAC_FONT_FALLBACKS = {
+    "hei": ("/System/Library/Fonts/Hiragino Sans GB.ttc", 2),
+    "hei-black": ("/System/Library/Fonts/Hiragino Sans GB.ttc", 2),
+    "hei-medium": ("/System/Library/Fonts/STHeiti Medium.ttc", 1),
+    "hei-light": ("/System/Library/Fonts/STHeiti Light.ttc", 1),
+    "song": ("/System/Library/Fonts/Supplemental/Songti.ttc", 1),
+    "song-black": ("/System/Library/Fonts/Supplemental/Songti.ttc", 0),
+    "song-regular": ("/System/Library/Fonts/Supplemental/Songti.ttc", 6),
+}
 _fc = {}
 
 
 def fail(m):
     print("错误：" + m, file=sys.stderr); sys.exit(1)
+
+
+def resolve_alias(name):
+    paths, index, weight = FONTS[name]
+    for path in paths:
+        if os.path.isfile(path):
+            return path, index if path.endswith(".ttc") else 0, weight if path.endswith("VF.ttf") else None
+    fallback = MAC_FONT_FALLBACKS.get(name)
+    if fallback and os.path.isfile(fallback[0]):
+        return fallback[0], fallback[1], None
+    return None
 
 
 def font(name, size):
@@ -55,12 +75,12 @@ def font(name, size):
         f = ImageFont.truetype(name, int(size), index=0)
     else:
         if name not in FONTS: fail(f"未知字体别名 {name}，可用：{', '.join(FONTS)}")
-        paths, idx, w = FONTS[name]
-        p = next((p for p in paths if os.path.isfile(p)), None)
-        if not p: fail(f"字体 {name} 未安装（见 references/typography-system.md 字体安装）")
-        f = ImageFont.truetype(p, int(size), index=idx if p.endswith(".ttc") else 0)
-        if w and p.endswith("VF.ttf"):
-            try: f.set_variation_by_name(w)
+        resolved = resolve_alias(name)
+        if not resolved: fail(f"字体 {name} 未安装。用 --list-fonts 核对可用别名，或传入实际字体路径")
+        path, index, weight = resolved
+        f = ImageFont.truetype(path, int(size), index=index)
+        if weight:
+            try: f.set_variation_by_name(weight)
             except Exception: pass
     _fc[key] = f
     return f
@@ -496,8 +516,14 @@ def main():
     ap.add_argument("--strict", action="store_true", help="主动启用模板门禁：--check 有建议时退出 1；出图有设计建议时退出 2")
     a = ap.parse_args()
     if a.list_fonts:
-        for k, (ps, _, w) in FONTS.items():
-            p = next((p for p in ps if os.path.isfile(p)), None); print(f"{k:14s} {'OK ' + os.path.basename(p) if p else '缺失'} {w or ''}")
+        for name in FONTS:
+            resolved = resolve_alias(name)
+            if not resolved:
+                print(f"{name:14s} 缺失")
+                continue
+            path, index, _ = resolved
+            family, style = font(name, 32).getname()
+            print(f"{name:14s} OK {family} {style} [{os.path.basename(path)}#{index}]")
         return
     if a.check:
         path = a.spec or a.background

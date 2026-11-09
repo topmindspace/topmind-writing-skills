@@ -10,6 +10,7 @@
 
 其他预设（各输出直接从原图裁切）：
     python3 crop-cover.py <16:9 主图> --preset x-post --out-dir <目录>
+    python3 crop-cover.py <中央 4:3 已构图的 16:9 母图> --preset landscape-pair --out-dir <目录>
     python3 crop-cover.py <竖版主图> --preset xiaohongshu --out-dir <目录>
     python3 crop-cover.py <竖版主图> --preset douyin --out-dir <目录>
     python3 crop-cover.py <原图> --preset wechat --anchor left --out-dir <目录>
@@ -32,6 +33,10 @@ PRESETS = {
     },
     "x-post": {
         "00-封面-X短文.png": (1200, 675),
+    },
+    "landscape-pair": {
+        "00-封面-横版-4x3.png": (1080, 810),
+        "00-封面-横版-16x9.png": (1920, 1080),
     },
     "xiaohongshu": {"00-封面-小红书.png": (1080, 1440)},
     "douyin": {"00-封面-抖音图文.png": (1080, 1440)},
@@ -56,6 +61,7 @@ def main() -> None:
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--preset", choices=sorted(PRESETS), default="article",
                     help="本包导出预设：article 双横图（默认）；x-post 16:9；"
+                         "landscape-pair 中央 4:3 与完整 16:9；"
                          "xiaohongshu / douyin 3:4；wechat 宽图与方图。不是平台硬性要求")
     ap.add_argument("--anchor", choices=sorted(ANCHORS), default="center",
                     help="裁切保留方向，默认 center；请实际检查每张输出")
@@ -78,6 +84,11 @@ def main() -> None:
             img = ImageOps.exif_transpose(opened).convert("RGB")
     except Exception as e:
         sys.exit(f"错误：无法读取图片 {src}（{e}）")
+    if args.preset == "landscape-pair":
+        if args.anchor != "center":
+            sys.exit("错误：横版双尺寸预设只使用中央 4:3，请用 --anchor center")
+        if img.width * 9 != img.height * 16:
+            sys.exit("错误：横版双尺寸预设需要已完成构图的 16:9 母图，请保留完整背景再叠字")
     try:
         out_dir.mkdir(parents=True, exist_ok=True)
     except OSError as e:
@@ -85,8 +96,13 @@ def main() -> None:
 
     try:
         for name, (tw, th) in targets.items():
-            out = ImageOps.fit(img, (tw, th), method=Image.Resampling.LANCZOS,
-                               centering=ANCHORS[args.anchor])
+            if args.preset == "landscape-pair" and tw * 3 == th * 4:
+                width = img.height * 4 // 3
+                left = (img.width - width) // 2
+                out = img.crop((left, 0, left + width, img.height)).resize((tw, th), Image.Resampling.LANCZOS)
+            else:
+                out = ImageOps.fit(img, (tw, th), method=Image.Resampling.LANCZOS,
+                                   centering=ANCHORS[args.anchor])
             dest = out_dir / name
             out.save(dest)
             print(f"OK {dest} ({tw}x{th})")

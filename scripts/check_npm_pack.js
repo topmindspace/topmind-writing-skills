@@ -37,7 +37,9 @@ for (const id of discoverSkills()) {
   const catalog = JSON.parse(fs.readFileSync(path.join(ROOT, id, 'knowledge/index.json'), 'utf8'));
   required.push(...catalog.entries.map(entry => `knowledge/${entry.path}`));
   if (id === 'topmind-cover') {
-    required.push('assets/examples/overview.png', 'assets/examples/creative-atlas.html');
+    required.push('assets/examples/overview.png', 'assets/examples/creative-atlas.html',
+      'scripts/crop-cover.py', 'scripts/title-engine.py',
+      'references/platform-cover-specs.md', 'references/typography-system.md');
     required.push(...fs.readdirSync(path.join(ROOT, id, 'assets/title-specs'))
       .filter(name => name.endsWith('.json')).map(name => `assets/title-specs/${name}`));
   }

@@ -137,7 +137,7 @@
         "typography",
         "type"
       ],
-      "summary": "以字形气质、字面比例、断行和空间组织丰富标题；花式服务语义。",
+      "summary": "按真实字重、标题读序和目标缩略图组织字效；系列构图按主体调整。",
       "scope": "标题承担主要视觉、精确中文和多行文案",
       "limits": "字体名称不代表已安装；最终出字需要核字与许可核对。",
       "kind": "direction",
@@ -150,7 +150,7 @@
           "ref": "TopMindSpace authored teaching example; not a measured performance claim"
         }
       ],
-      "updated": "2026-10-27"
+      "updated": "2026-11-09"
     },
     {
       "id": "cover-scene",

@@ -7,6 +7,10 @@ import sys
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
+COVER_RESOURCES = {
+    'scripts/crop-cover.py', 'scripts/title-engine.py',
+    'references/platform-cover-specs.md', 'references/typography-system.md',
+}
 
 
 def require(condition, message):
@@ -48,6 +52,8 @@ def check_skill(root, ident):
         expected = {f'{ident}/{rel}' for rel in manifest['entries']}
         require(names == expected and len(names) == manifest['files'], f'{ident}: ZIP entries differ from manifest')
         required = {'SKILL.md', 'README.md', 'README.en.md', 'package.json', 'knowledge/index.json', 'scripts/knowledge.py'}
+        if ident == 'topmind-cover':
+            required.update(COVER_RESOURCES)
         for rel in required:
             require(f'{ident}/{rel}' in names, f'{ident}: missing required resource {rel}')
         catalog = json.loads(archive.read(f'{ident}/knowledge/index.json'))
@@ -79,6 +85,9 @@ def check_host(root):
         require(manifest['version'] == version and manifest['schema_version'] == 1, 'Host manifest version mismatch')
         files = manifest['files']
         require(names == set(files) | {'topmind-pack.json', 'LICENSE'}, 'Host resources differ from manifest')
+        if (root / 'topmind-cover/SKILL.md').is_file():
+            for rel in COVER_RESOURCES:
+                require(f'topmind-cover/{rel}' in names, f'Host: missing cover resource {rel}')
         base = {key: value for key, value in manifest.items() if key != 'digest'}
         encoded = json.dumps(base, ensure_ascii=False, separators=(',', ':')).encode()
         require(manifest['digest'] == digest(encoded), 'Host manifest digest mismatch')

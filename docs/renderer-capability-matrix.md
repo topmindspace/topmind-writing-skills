@@ -15,3 +15,7 @@
 | 运行环境 | 可在宿主 JavaScript 运行时调用，读图由宿主提供 | 需要 Python；预览截图与 Mermaid 取决于本机可用工具 |
 
 **实施决定：**一篇平台变体选定一个 renderer provider 与版本后，预览、复制、导出都使用该 provider 同一次输入快照的产物。宿主以选中稿原始 UTF-8 字节调用 `prepareArticleResultFromSource`，再以 Kernel `compareCreationArticleResult` 核对稿件路径/字节摘要、提供者、平台、主题与标题参数摘要、正文内嵌图片实际字节与快照资源、五份产物哈希；快照 `parameters` 应为 `{theme, title}`，未传标题用空串。源稿或资源变化须重算快照。不支持的 HTML/Obsidian 图片写法、非内嵌读图结果会保持不匹配。`articleLocalTextDocument` 从本地剪贴板 HTML 产物得到可送长度规则预检的文本：先无快照渲染并取得文本，再建立包含此文本摘要的快照，最后带快照指纹重渲染、校验长度并用 Kernel `compareCreationLocalLengthChain` 核对。此比较不证明封面和图片进入目标编辑器，也不证明粘贴后的真实文字。`source-markdown` 只用于保留原稿和人工交接，不能直接用作长度规则要求的 `platform_text`。首期以 JavaScript renderer 打通宿主内的本地预览/复制；已有 Python 公众号高保真导出继续保留。要把 Python 输出接入统一产物链，先做文件产物、依赖与诊断的适配和对照测试，再决定是否收敛两个实现。远程图片和目标编辑器的粘贴表现始终需要单独检查。
+
+## 封面本地工具
+
+`topmind-cover` 随技能包提供 Python 裁切和叠字脚本。`landscape-pair` 导出同一横版构图的 4:3 和 16:9；`title-engine.py --list-fonts` 列出实际字体信息。宿主可从技能资源取用这些脚本；当前宿主 JavaScript 能力清单仍以文章产物和长度预检为范围。封面本地渲染和裁切结果需要在目标发布入口核对。

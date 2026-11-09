@@ -54,7 +54,7 @@ See the [practice and specimens](./shared/references/creative-practice.md) and [
 | Long-form · WeChat | [`topmind-wechat-post`](./topmind-wechat-post/) | WeChat articles: three quality gates, inline-image layout, publish checklist | "写公众号", "公众号排版" |
 | Formatting | [`topmind-format`](./topmind-format/) | Re-layout without changing a word; stitch alternative openings into full posts | "转段子", "排一下版" |
 | Revision | [`topmind-revise`](./topmind-revise/) | Structure → facts → logic → de-AI → fidelity audit; quick review for replies | "改稿", "去 AI 味", "看看这条回复" |
-| Covers | [`topmind-cover`](./topmind-cover/) | Xiaohongshu, Douyin image posts, WeChat and X covers; sourced guidance and crop presets | "做个封面" |
+| Covers | [`topmind-cover`](./topmind-cover/) | Xiaohongshu, Douyin, WeChat and X covers, including video thumbnails and paired crops | "做个封面" |
 | Long images | [`topmind-poster`](./topmind-poster/) | HTML → hi-res long image / poster / infographic with exact text and numbers | "出张长图" |
 
 ## Creative directions and on-demand knowledge
@@ -76,7 +76,7 @@ Cover resources include 22 adaptable style entries, 16 composition relationships
 
 The [platform reference](./shared/references/platform-cover-specs.md) records public sources, verification dates and untested details. Start Xiaohongshu image notes at 3:4; check ordinary Douyin image posts separately from commerce content; distinguish WeChat article landscape / square covers from image messages. Dimensions are package export presets; current editors and user requirements take priority.
 
-`topmind-cover` provides `article`, `x-post`, `xiaohongshu`, `douyin` and `wechat` presets. The WeChat preset exports landscape and square versions, with adjustable crop alignment. Recompose portrait and landscape versions when needed. Dense content pages use `topmind-poster`; platform adaptation does not authorize publishing.
+The `landscape-pair` preset in `topmind-cover` exports a centered 4:3 cover and the full 16:9 master. Compose the subject and title in the 4:3 window and extend the scene at both sides. Start portrait covers at 3:4 and export 9:16 separately when the publishing surface calls for it. Check the video frame, cover picker, and feed preview separately. Article, image-post, X, and WeChat presets continue to serve their own surfaces.
 
 ## Duanzi: 14 patterns
 

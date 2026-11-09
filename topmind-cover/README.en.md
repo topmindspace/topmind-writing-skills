@@ -4,7 +4,7 @@ English | [中文](./README.md)
 
 Design article covers and thumbnails using typography, photography, minimal layouts, scenes or original combinations. Inspect actual specimens, proofread text and verify the requested crops. Chinese is the default language; current user instructions and author samples take priority. See [SKILL.md](./SKILL.md) for the capability, workflow and tools.
 
-Supports Xiaohongshu image notes, ordinary Douyin image posts, WeChat articles and X. Identify the publishing surface first. The [platform reference](./references/platform-cover-specs.md) records sources, verification dates and untested details; export presets are not universal upload requirements. WeChat image messages, Douyin commerce content and product images need their own checks.
+Supports article, image-post and video covers for Xiaohongshu, Douyin, WeChat and X. Identify the publishing surface first. The [platform reference](./references/platform-cover-specs.md) records sources, verification dates and untested details; export presets are not universal upload requirements. WeChat image messages, Douyin commerce content and product images need their own checks.
 
 ## Install
 
@@ -26,11 +26,14 @@ The [layout atlas](./assets/examples/creative-atlas.html) contains eight HTML/CS
 Run from this skill directory, using actual input paths:
 
 ```bash
-python3 scripts/crop-cover.py 主图.png --out-dir 输出目录
+python3 scripts/crop-cover.py original.png --out-dir output
+python3 scripts/crop-cover.py landscape-master.png --preset landscape-pair --out-dir output
 python3 scripts/crop-cover.py portrait.png --preset xiaohongshu --out-dir output
 python3 scripts/crop-cover.py portrait.png --preset douyin --out-dir output
 python3 scripts/crop-cover.py original.png --preset wechat --anchor left --out-dir output
 ```
+
+`landscape-pair` takes a 16:9 master composed for its center 4:3 window and exports 1080×810 and 1920×1080. Review both near 300 px wide. Use `python3 scripts/title-engine.py --list-fonts` to check the actual local family, weight, and collection index.
 
 The default `article` preset keeps both landscape outputs (1500×600 and 900×383); `x-post` exports 1200×675; `xiaohongshu` / `douyin` export 1080×1440; `wechat` exports 900×383 and 900×900. These are package presets. Check the current editor and user specifications. Use `--anchor center|left|right|top|bottom` to adjust crop alignment. Every output is cropped proportionally from the original. Recompose when titles or subjects are cut; inspect every version. The script refuses to overwrite its source image.
 

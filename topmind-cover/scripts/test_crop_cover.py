@@ -7,7 +7,7 @@ import sys
 import tempfile
 import unittest
 
-from PIL import Image
+from PIL import Image, ImageChops
 
 CROP = Path(__file__).with_name("crop-cover.py")
 
@@ -44,6 +44,34 @@ class CoverCropTests(unittest.TestCase):
                     with Image.open(self.out / name) as image:
                         self.assertEqual(image.size, size)
                         self.assertEqual(image.format, "PNG")
+
+    def test_landscape_pair_shares_the_central_composition(self):
+        image = Image.new("RGB", (1920, 1080), "green")
+        image.paste("red", (0, 0, 240, 1080))
+        image.paste("blue", (1680, 0, 1920, 1080))
+        image.paste("gold", (830, 220, 1120, 450))
+        image.save(self.src)
+        r = self.run_crop("--preset", "landscape-pair")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(len(list(self.out.iterdir())), 2)
+        with Image.open(self.out / "00-封面-横版-16x9.png") as wide:
+            self.assertEqual(wide.size, (1920, 1080))
+            self.assertIsNone(ImageChops.difference(image, wide).getbbox())
+        with Image.open(self.out / "00-封面-横版-4x3.png") as compact:
+            self.assertEqual(compact.size, (1080, 810))
+            expect = image.crop((240, 0, 1680, 1080)).resize((1080, 810), Image.Resampling.LANCZOS)
+            self.assertIsNone(ImageChops.difference(expect, compact).getbbox())
+
+    def test_landscape_pair_rejects_nonwide_source_or_offcenter_anchor(self):
+        r = self.run_crop("--preset", "landscape-pair")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("16:9 母图", r.stderr)
+        self.assertFalse(self.out.exists())
+        Image.new("RGB", (160, 90), "green").save(self.src)
+        r = self.run_crop("--preset", "landscape-pair", "--anchor", "left")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("--anchor center", r.stderr)
+        self.assertFalse(self.out.exists())
 
     def test_default_keeps_legacy_article_outputs(self):
         r = self.run_crop()

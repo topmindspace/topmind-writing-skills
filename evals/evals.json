@@ -143,6 +143,13 @@
       "expected_behavior": "封面流程，关键信息不编造。"
     },
     {
+      "id": "cover-landscape-pair",
+      "target_skill": "topmind-cover",
+      "prompt": "同一条横版视频要发小红书和抖音，给我两张同构图的视频封面，角色名和脸别被裁掉。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "在宽底图中央 4:3 排标题与主体，导出中央 4:3 和完整 16:9；检查缩略图和裁切，将制作预设与发布入口实际要求分开。"
+    },
+    {
       "id": "cover-neg-1",
       "target_skill": "topmind-cover",
       "prompt": "把这份榜单做成一张竖版长图。",

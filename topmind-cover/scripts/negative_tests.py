@@ -40,6 +40,9 @@ def main() -> None:
     crops = subprocess.run([PY, str(ROOT / "scripts" / "test_crop_cover.py")],
                            capture_output=True, text=True, timeout=60)
     check("多平台裁切行为回归", crops.returncode == 0, crops.stdout + crops.stderr)
+    faces = subprocess.run([PY, str(ROOT / "scripts" / "test_title_font_resolution.py")],
+                           capture_output=True, text=True, timeout=60)
+    check("中文字体解析与系统回退", faces.returncode == 0, faces.stdout + faces.stderr)
     with tempfile.TemporaryDirectory() as td:
         td = Path(td)
 
