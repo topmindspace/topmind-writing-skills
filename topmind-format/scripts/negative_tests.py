@@ -125,10 +125,10 @@ def main() -> None:
         with tempfile.TemporaryDirectory() as td:
             t = Path(td)
             src = t / "in.txt"
-            src.write_text("说个冷知识：\n收益看互动权重。哪怕10万浏览，收益也可能很低。\n蓝V互关，评论区报到！！\n", encoding="utf-8")
+            src.write_text("说个冷知识：\n深度推理模式是按轮单独计费的。哪怕闲聊两句，额度也掉得飞快。\n刚才看了一眼账单，直接见底！！\n", encoding="utf-8")
             r = run_quiet([str(fmt), str(src), "--mode", "duanzi", "--split", "--open", "🐱", "--close", "🌱"], t)
             check("段子体：接受作者指定首尾点缀", r.returncode == 0 and "🐱" in r.stdout and "🌱" in r.stdout)
-            src.write_text("说个冷知识 🐱：\n收益看互动权重。哪怕10万浏览，收益也可能很低。\n蓝V互关，评论区报到！！😂\n", encoding="utf-8")
+            src.write_text("说个冷知识 🐱：\n深度推理模式是按轮单独计费的。哪怕闲聊两句，额度也掉得飞快。\n刚才看了一眼账单，直接见底！！😂\n", encoding="utf-8")
             r = run_quiet([str(fmt), str(src), "--mode", "duanzi", "--split", "--strip-emoji"], t)
             out = r.stdout
             lines = out.rstrip("\n").split("\n")
@@ -196,8 +196,8 @@ def main() -> None:
             pu = t / "punct.txt"
             pu.write_text("太快了！！\n\n真的吗？？\n\n一——二——三——四\n\n好！好！好！\n", encoding="utf-8")
             r = run_quiet([str(lint), str(pu)], t)
-            check("lint：标点连用、破折号过多报 W17", r.stdout.count("W17") >= 2, r.stdout[-300:])
-            check("lint：短文「！！」和感叹号偏多只给 H2 提示", r.stdout.count("[H2]") == 2, r.stdout[-300:])
+            check("lint：破折号过多报 W17", r.stdout.count("W17") >= 1, r.stdout[-300:])
+            check("lint：短文「！！」「？？」和感叹号偏多只给 H2 提示", r.stdout.count("[H2]") >= 2, r.stdout[-300:])
             okx = t / "legit.txt"
             okx.write_text("测试还在进行中，结果下周出。\n\n这就是我用的配置。\n\n据 IDC 报告，分析人士认为出货量 6 月回升 12%。\n\n可能是 A，也可能是 B。\n\n是不是该换了？我也说不准。\n\n这个 API 很稳，文档写得清楚。\n\nThe launch is not ready yet. We delayed it by two weeks.\n", encoding="utf-8")
             r = run_quiet([str(lint), str(okx), "--strict"], t)

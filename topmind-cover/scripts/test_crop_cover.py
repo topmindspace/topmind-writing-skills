@@ -62,6 +62,23 @@ class CoverCropTests(unittest.TestCase):
             expect = image.crop((240, 0, 1680, 1080)).resize((1080, 810), Image.Resampling.LANCZOS)
             self.assertIsNone(ImageChops.difference(expect, compact).getbbox())
 
+    def test_vertical_pair_shares_the_central_composition(self):
+        image = Image.new("RGB", (1080, 1920), "green")
+        image.paste("red", (0, 0, 1080, 240))
+        image.paste("blue", (0, 1680, 1080, 1920))
+        image.paste("gold", (220, 800, 860, 1120))
+        image.save(self.src)
+        r = self.run_crop("--preset", "vertical-pair")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(len(list(self.out.iterdir())), 2)
+        with Image.open(self.out / "00-封面-竖版-9x16.png") as tall:
+            self.assertEqual(tall.size, (1080, 1920))
+            self.assertIsNone(ImageChops.difference(image, tall).getbbox())
+        with Image.open(self.out / "00-封面-竖版-3x4.png") as compact:
+            self.assertEqual(compact.size, (1080, 1440))
+            expect = image.crop((0, 240, 1080, 1680)).resize((1080, 1440), Image.Resampling.LANCZOS)
+            self.assertIsNone(ImageChops.difference(expect, compact).getbbox())
+
     def test_landscape_pair_rejects_nonwide_source_or_offcenter_anchor(self):
         r = self.run_crop("--preset", "landscape-pair")
         self.assertNotEqual(r.returncode, 0)
@@ -69,6 +86,17 @@ class CoverCropTests(unittest.TestCase):
         self.assertFalse(self.out.exists())
         Image.new("RGB", (160, 90), "green").save(self.src)
         r = self.run_crop("--preset", "landscape-pair", "--anchor", "left")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("--anchor center", r.stderr)
+        self.assertFalse(self.out.exists())
+
+    def test_vertical_pair_rejects_nontall_source_or_offcenter_anchor(self):
+        r = self.run_crop("--preset", "vertical-pair")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("9:16 母图", r.stderr)
+        self.assertFalse(self.out.exists())
+        Image.new("RGB", (90, 160), "green").save(self.src)
+        r = self.run_crop("--preset", "vertical-pair", "--anchor", "top")
         self.assertNotEqual(r.returncode, 0)
         self.assertIn("--anchor center", r.stderr)
         self.assertFalse(self.out.exists())

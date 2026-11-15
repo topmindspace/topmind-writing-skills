@@ -1,35 +1,32 @@
-# topmind-revise · 改稿与质检
+# topmind-revise · 改稿、去 AI 味与经验沉淀
 
 [English](./README.en.md) | 中文
 
-按用户目标选择局部、结构或全面改写，核对事实与作者声音。
+用**「这句话是在完成一项写作任务，还是在跟朋友说话？」**诊断原稿，砍掉通稿负担与 AI 任务腔，核对事实边界，保留作者真实口吻与个人褒贬。支持长文、短帖、评论回复、标题打磨及改稿复盘沉淀。
 
-## 使用
+## 核心特点
+
+- **去 AI 味八大机制诊断**：精准清除「替读者把话讲完、自我解释元话语、新闻通报腔、说教收尾与金句包圆、凑排比与套类比、强制情绪妆、堆参数显专业、讲师命令腔」。
+- **保留真人温度与真实褒贬**：减弱缺乏实证的绝对因果，但**绝不把作者有温度的主观判断（「仔细聊了一轮，我倒觉得……」或鲜明优缺点实测）洗成冰冷和稀泥的官方综述**。
+- **向作者改稿学习（Scope Tagging）**：支持对比作者修改前后的定稿，拆解「删了什么负担、补了什么支点」，按体裁标注适用范围并写入知识包（见 `revise-learn-from-edits` 与 `de-ai-mechanisms`）。
+- **事实与引语保真**：配合 `revise_check.py` 与 `audit-provenance.py` 核对数字、引语、专有名词与段落溯源，严禁为凑人味代编第一人称「我」。
+
+## 安装与使用
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-revise
 ```
 
-安装后直接告诉 agent 你要的结果、读者和已有材料；明确要一稿就直接给成品，探索任务再比较方向。完整能力、流程与脚本说明见 [SKILL.md](./SKILL.md)。
-
-按需知识包随技能独立安装。需要方向、完整示例或经验时，见 [知识使用与增补](./references/knowledge-library.md) 与 [知识导航](./knowledge/README.md)；先读摘要再选卡片。可向指定私有包新增候选，不自动改长期规则。
-
-## 方法与样张
-
-[创作方法与样张](./references/creative-practice.md) 给同素材不同写法和看参考的方法。模板、口吻、篇幅、emoji 与视觉风格是选项；事实准确、授权、隐私与输出完整性继续核对。当前用户要求和作者样本优先。
+完整原则、4 种模式（`audit` / `revise` / `quick` / `learn`）见 [SKILL.md](./SKILL.md)，长短文改前改后实战对照见 [examples/README.md](./examples/README.md)，按需知识包见 [knowledge/README.md](./knowledge/README.md)。
 
 ## 常用脚本
 
-在本技能目录运行；示例文件名替换为实际路径：
-
 ```bash
+python3 scripts/de_ai_lint.py 稿子.md
 python3 scripts/revise_check.py 改前.md 改后.md --report 改稿报告.md
+python3 scripts/audit-provenance.py --draft 改后.md --source 源稿.md
 ```
 
-对照原稿与改稿核对数字、实体、引用和确定性。句式提示用于定位问题，不能判断作者身份或替代编辑判断。
+脚本提示仅用于辅助定位问题，不要求警告清零，也不替代编辑判断。只负责改稿与审校，由用户完成对外发布。
 
-## 交付
-
-交付修订稿；按需附修改理由或审查意见，不强制长报告。 由用户完成对外发布。
-
-MIT License。仓库维护、安装选项与版本说明见 [合集说明](https://github.com/topmindspace/topmind-writing-skills)。
+MIT License。仓库维护与合集说明见 [topmind-writing-skills](https://github.com/topmindspace/topmind-writing-skills)。

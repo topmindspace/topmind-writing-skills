@@ -1,8 +1,8 @@
-# topmind-viral-posts · X 段子与互动短帖
+# topmind-viral-posts · X 段子、观察反差与互动短帖
 
 [English](./README.en.md) | 中文
 
-从观察、反差、真问题和关系互动中找角度，作者风格优先。
+从内行观察、算账反差、装傻真问题、产品反转和自然接话中找角度，写出有内容、有特色、有人味的社交短帖与神回复。作者风格优先。
 
 ## 使用
 
@@ -10,13 +10,13 @@
 npx @topmindspace/topmind-writing-skills install topmind-viral-posts
 ```
 
-安装后直接告诉 agent 你要的结果、读者和已有材料；明确要一稿就直接给成品，探索任务再比较方向。完整能力、流程与脚本说明见 [SKILL.md](./SKILL.md)。
+安装后直接告诉 agent 你要表达的核心观察、目标受众和已有素材；明确要一稿就直接给成品，探索任务再提供不同切口的候选。完整策略、12 类切口与脚本说明见 [SKILL.md](./SKILL.md) 与 [patterns.md](./references/patterns.md)。
 
-按需知识包随技能独立安装。需要方向、完整示例或经验时，见 [知识使用与增补](./references/knowledge-library.md) 与 [知识导航](./knowledge/README.md)；先读摘要再选卡片。可向指定私有包新增候选，不自动改长期规则。
+按需知识包随技能独立安装。需要去 AI 味机制、邻座身位、装傻提问正反例或回复心法时，见 [知识使用与增补](./references/knowledge-library.md) 与 [知识导航](./knowledge/README.md)；也可随时向知识包扩展新的创作思考与策略。
 
 ## 方法与样张
 
-[创作方法与样张](./references/creative-practice.md) 给同素材不同写法和看参考的方法。模板、口吻、篇幅、emoji 与视觉风格是选项；事实准确、授权、隐私与输出完整性继续核对。当前用户要求和作者样本优先。
+[创作方法与样张](./references/creative-practice.md) 给同素材不同写法和阅读参考的方法。句式、口吻、标点力气活（`？？？` / `！！！` / `！！？`）、篇幅与 emoji 均为服务表达的灵活工具；不代编第一人称经历、守住事实边界与不擅自外发是底线。
 
 ## 常用脚本
 
@@ -26,10 +26,10 @@ npx @topmindspace/topmind-writing-skills install topmind-viral-posts
 python3 scripts/lint_x_post.py 稿子.txt --duanzi
 ```
 
-lint 检查文字和格式风险；互动方式、emoji 与结尾依当前内容和作者选择，不要求清空所有风格提示。
+`lint_x_post.py` 检查 Markdown 格式残留并提供语境提示；提示不作为阻断交付的硬门禁。
 
 ## 交付
 
-交付可直接使用的短帖、回复或点评；按需附不同方向，避免把预测互动效果当成事实。 由用户完成对外发布。
+交付可直接复制使用的短帖、段子、引用转发或评论回复纯文本；由用户确认后完成对外发布。
 
 MIT License。仓库维护、安装选项与版本说明见 [合集说明](https://github.com/topmindspace/topmind-writing-skills)。

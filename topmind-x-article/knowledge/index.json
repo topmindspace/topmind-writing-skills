@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "id": "topmind-writing",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "entries": [
     {
       "id": "creative-choice",
@@ -1075,6 +1075,273 @@
         }
       ],
       "updated": "2026-10-27"
+    },
+    {
+      "id": "de-ai-mechanisms",
+      "title": "去 AI 味八大机制：跟朋友说话，还是在完成任务？",
+      "summary": "用“跟朋友说话 vs 完成写作任务”总开关诊断八类 AI 味根因，减弱无据绝对因果但保留作者个人口吻。",
+      "skills": [
+        "*"
+      ],
+      "tags": [
+        "去AI味",
+        "机制",
+        "删尾测试",
+        "元话语",
+        "人味",
+        "口吻",
+        "de-ai",
+        "voice"
+      ],
+      "kind": "technique",
+      "status": "active",
+      "evidence": "illustrative",
+      "scope": "所有体裁成稿自查、改稿去 AI 味与作者口吻保留",
+      "limits": "词表只是信号，不作机械替换；绝不代编第一人称经历。",
+      "path": "cards/de-ai-mechanisms.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace generalized writing and revision synthesis (2026-11-15)"
+        }
+      ],
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "voice-peer-stance",
+      "title": "邻座身位、体感换算与标点力气活",
+      "summary": "用邻座商量代替讲师命令，把技术参数译成身体尺度与日常场景，按内容张力使用情绪标点。",
+      "skills": [
+        "topmind-briefs",
+        "topmind-viral-posts",
+        "topmind-revise",
+        "topmind-wechat-post",
+        "topmind-x-article"
+      ],
+      "tags": [
+        "身位",
+        "邻座",
+        "体感换算",
+        "算账",
+        "标点",
+        "口吻",
+        "peer-stance",
+        "sensory"
+      ],
+      "kind": "technique",
+      "status": "active",
+      "evidence": "illustrative",
+      "scope": "短帖、产品快讯、技术科普与日常观察",
+      "limits": "情绪标点需匹配内容反差，不给平淡稿强行化妆。",
+      "path": "cards/voice-peer-stance.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace generalized writing and revision synthesis (2026-11-15)"
+        }
+      ],
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "brief-value-first",
+      "title": "价值前置与可复用原件：让读者拿走就能用",
+      "summary": "第一句直给反差结果或核心结论，正文交付可直接复制的原件，并在结尾画清“什么时候别用”的负面边界。",
+      "skills": [
+        "topmind-briefs",
+        "topmind-revise",
+        "topmind-wechat-post",
+        "topmind-x-article"
+      ],
+      "tags": [
+        "价值前置",
+        "干货",
+        "提示词",
+        "经验",
+        "边界",
+        "收藏",
+        "value-first",
+        "takeaway"
+      ],
+      "kind": "case",
+      "status": "active",
+      "evidence": "illustrative",
+      "scope": "提示词技巧、实测发现、效率方法与经验观察帖",
+      "limits": "不代编作者亲历，不凭空补未核实的申诉方法或结果保证。",
+      "path": "cards/brief-value-first.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace generalized writing and revision synthesis (2026-11-15)"
+        }
+      ],
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "brief-news-to-post",
+      "title": "把新闻通稿改成有人看的帖：四类典型改法",
+      "summary": "砍掉购买门槛、公关致谢与公文头衔，用真疑问澄清、体感换算、动作反差或态度定性重写新闻。",
+      "skills": [
+        "topmind-briefs",
+        "topmind-viral-posts",
+        "topmind-revise"
+      ],
+      "tags": [
+        "新闻",
+        "发版",
+        "安全事件",
+        "硬件",
+        "改稿",
+        "通稿",
+        "news-to-post"
+      ],
+      "kind": "case",
+      "status": "active",
+      "evidence": "illustrative",
+      "scope": "安全传闻、硬件新品、高管变动与模型平台更新",
+      "limits": "惊叹带问号（！！？）后必须紧接事实范围澄清，不做标题党。",
+      "path": "cards/brief-news-to-post.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace generalized writing and revision synthesis (2026-11-15)"
+        }
+      ],
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "viral-play-dumb",
+      "title": "装傻提问与互动机制：为什么有的问号有效，有的无人问津？",
+      "summary": "问号本身不涨流量；有效提问靠切身痛点、一句话能接的空位与七分留白，避开四类假互动反例。",
+      "skills": [
+        "topmind-viral-posts",
+        "topmind-briefs",
+        "topmind-revise"
+      ],
+      "tags": [
+        "装傻提问",
+        "真疑问",
+        "互动",
+        "反例",
+        "留白",
+        "段子",
+        "question",
+        "engagement"
+      ],
+      "kind": "lesson",
+      "status": "active",
+      "evidence": "illustrative",
+      "scope": "互动短帖、档位选型讨论、痛点共鸣与引用转发",
+      "limits": "忌空壳伸手党提问、讲师自问自答、零增量薄引用与文末客套假互动。",
+      "path": "cards/viral-play-dumb.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace generalized writing and revision synthesis (2026-11-15)"
+        }
+      ],
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "revise-learn-from-edits",
+      "title": "向作者改稿学习：删加对照、保留人味与范围隔离",
+      "summary": "从作者改稿中拆解删掉的负担与补上的支点，严守不代写“我”、不洗平个人口吻、不把单篇意见外推为全库禁令。",
+      "skills": [
+        "topmind-revise",
+        "topmind-briefs",
+        "topmind-viral-posts",
+        "topmind-wechat-post",
+        "topmind-x-article"
+      ],
+      "tags": [
+        "改稿学习",
+        "删加对照",
+        "第一人称",
+        "范围隔离",
+        "复盘",
+        "learn-from-edits"
+      ],
+      "kind": "lesson",
+      "status": "active",
+      "evidence": "illustrative",
+      "scope": "改稿复盘、对齐作者风格、沉淀新写作经验卡片",
+      "limits": "作者定稿补上的第一人称“我”不构成下一篇代编亲历的许可。",
+      "path": "cards/revise-learn-from-edits.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace generalized writing and revision synthesis (2026-11-15)"
+        }
+      ],
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "wechat-plugin-and-review",
+      "title": "公众号与长文专项：工具/插件推荐结构与实测评测保真",
+      "summary": "工具推荐文可选“标题点名+安装与痛点前置+功能列表+短例截图”；评测文按具体维度保留作者真实褒贬。",
+      "skills": [
+        "topmind-wechat-post",
+        "topmind-x-article",
+        "topmind-briefs",
+        "topmind-revise"
+      ],
+      "tags": [
+        "公众号",
+        "插件推荐",
+        "工具介绍",
+        "实测",
+        "评测",
+        "长文结构",
+        "plugin",
+        "review"
+      ],
+      "kind": "technique",
+      "status": "active",
+      "evidence": "illustrative",
+      "scope": "开源工具/插件介绍文章、模型与硬件实测评测文",
+      "limits": "工具介绍五步结构仅适用于工具/插件推荐，不套用于随笔或评论长文。",
+      "path": "cards/wechat-plugin-and-review.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace generalized writing and revision synthesis (2026-11-15)"
+        }
+      ],
+      "updated": "2026-11-15"
+    },
+    {
+      "id": "visual-density-and-evidence",
+      "title": "视觉密度与图文证据设计：一图讲清、证据分区与诚实标注",
+      "summary": "一图讲清主要变化、边界与建议；将客观证据与作者建议视觉分区；原文截图高亮保留上下文，概念封面标“功能示意，不是实拍”。",
+      "skills": [
+        "topmind-cover",
+        "topmind-poster",
+        "topmind-wechat-post",
+        "topmind-x-article",
+        "topmind-briefs"
+      ],
+      "tags": [
+        "视觉密度",
+        "信息图",
+        "证据分区",
+        "功能示意",
+        "原文高亮",
+        "学术图表",
+        "visual-density",
+        "evidence"
+      ],
+      "kind": "direction",
+      "status": "active",
+      "evidence": "illustrative",
+      "scope": "文章配图、一图流总结卡、概念封面与论文/代码证据截图",
+      "limits": "绝不排版伪造假论文页或假官方截图；学术技术图不加卡通吉祥物 logo。",
+      "path": "cards/visual-density-and-evidence.md",
+      "sources": [
+        {
+          "kind": "original",
+          "ref": "TopMindSpace generalized writing and revision synthesis (2026-11-15)"
+        }
+      ],
+      "updated": "2026-11-15"
     }
   ]
 }

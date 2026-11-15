@@ -2,9 +2,16 @@
 
 English | [中文](./README.md)
 
-Write or prepare WeChat articles from a topic or existing draft. Export inline HTML, previews and image-upload lists when requested; formatting-only tasks preserve the draft. Chinese is the default language; current user instructions and author samples take priority. See [SKILL.md](./SKILL.md) for the capability, workflow and tools.
+Write, structure, and format WeChat Official Account articles from a topic or draft. Supports tool/plugin recommendation structures, hands-on product reviews, technical deep dives, and narrative essays, exporting WeChat-compatible inline HTML, mobile previews, and image upload lists. Chinese is the default language; see [SKILL.md](./SKILL.md) for the full workflow.
 
-For covers, image-post formats and cross-platform crops, read the [platform reference](./references/platform-cover-specs.md) as needed. Export presets are not mandatory upload specifications; verify actual platform previews.
+## Key Capabilities
+
+- **Genre-Fit Article Structures**:
+  - **Tool / Plugin Recommendations**: Name the tool in the title, front-load the pain point and install command, list core capabilities, and pair subheadings with concise examples and real screenshots.
+  - **Hands-on Product & Model Reviews**: Preserve the author's specific evaluation dimensions and honest pros/cons without flattening into generic neutrality.
+  - **Technical & Mechanism Deep Dives**: Separate source-code/experimental parameters from live production behavior while keeping a warm peer voice.
+- **Evidence-First Visuals**: Visually separate objective evidence from author recommendations; highlight real source screenshots with surrounding context rather than fabricating fake pages; label conceptual covers honestly (`功能示意，不是实拍`).
+- **WeChat Inline HTML Engine**: Ships with 6 curated themes (`md3-business-blue`, `minimal-ink`, `tech-blue`, `amber-review`, `graphite`, `newsprint`), base64 image embedding, and ProseMirror compatibility checks.
 
 ## Install
 
@@ -12,20 +19,13 @@ For covers, image-post formats and cross-platform crops, read the [platform refe
 npx @topmindspace/topmind-writing-skills install topmind-wechat-post
 ```
 
-A scoped knowledge pack ships with this skill. See [retrieval and contribution](./references/knowledge-library.md) and the [card directory](./knowledge/README.md). Read relevant summaries before selected cards; capture new local notes as candidates, without rewriting global preferences.
-
-## How it works
-
-Read actual references and relevant [specimens](./references/creative-practice.md). Explore distinct directions when that helps the task; deliver one complete result when the request is clear. Voice, length, emoji, structure and visual styles are choices rather than universal gates. Facts, attribution, privacy, authorization and usable output still matter.
+See [examples/README.md](./examples/README.md) for sample articles and [platform-cover-specs.md](./references/platform-cover-specs.md) for WeChat cover dimensions (`900×383` and `900×900`).
 
 ## Tools
 
-Run from this skill directory, using actual input paths:
-
 ```bash
 python3 scripts/md2wechat.py --input 文章.md --embed-images --preview
+python3 scripts/check_article.py <文章目录>
 ```
 
-For HTML export, check inline styles, image lists and image order. Previews need a browser and its dependencies; inspect the editor again after upload.
-
-Deliver the requested text or artifacts; these skills do not publish externally. MIT License. See the [collection](https://github.com/topmindspace/topmind-writing-skills) for installation options and maintenance.
+This skill generates drafts and publishing packages only and does not publish externally. MIT License. See the [collection](https://github.com/topmindspace/topmind-writing-skills).

@@ -2,7 +2,16 @@
 
 English | [中文](./README.md)
 
-Format existing text for X without rewriting its facts, wording or order. Preserve links and expressive symbols by default; separate links or strip emoji only when explicitly requested. Chinese is the default language; current user instructions and author samples take priority. See [SKILL.md](./SKILL.md) for the capability, workflow and tools.
+Format existing text into clean, readable X plain text with **100% wording, fact, link, and expressive punctuation fidelity**. Adjust paragraph spacing, list symbols, and conversational pacing while stripping unintended Markdown syntax residue. Chinese is the default language; see [SKILL.md](./SKILL.md) for details.
+
+## Key Capabilities
+
+- **Zero-Rewrite Fidelity**: Never alter the author's wording, facts, order, or links. For rewriting or de-AI polishing, use `topmind-revise`.
+- **Three Formatting Modes**:
+  - **Short Post (`short`)**: Group sentences by semantic paragraph with clean `1）2）` or `·` lists.
+  - **Punchy / Humor (`duanzi`)**: Break lines by spoken rhythm so the setup and punchline land cleanly.
+  - **Lead Variants (`--variants`)**: Combine multiple author-written opening hooks with the body into complete copyable drafts.
+- **Expressive Punctuation Preserved**: Keep `？？？`, `！！！`, `！！？`, `……`, `✅ / ❌`, and emoji intact by default.
 
 ## Install
 
@@ -10,20 +19,13 @@ Format existing text for X without rewriting its facts, wording or order. Preser
 npx @topmindspace/topmind-writing-skills install topmind-format
 ```
 
-A scoped knowledge pack ships with this skill. See [retrieval and contribution](./references/knowledge-library.md) and the [card directory](./knowledge/README.md). Read relevant summaries before selected cards; capture new local notes as candidates, without rewriting global preferences.
-
-## How it works
-
-Use the [practice reference](./references/creative-practice.md) to understand rhythm and expressive symbols. Adjust line breaks, spacing and permitted presentation symbols while preserving wording, facts and order. Use topmind-revise for rewriting.
+See [examples/README.md](./examples/README.md) for side-by-side formatting examples and [knowledge/README.md](./knowledge/README.md) for formatting cards (`format-fidelity`, `format-layouts`).
 
 ## Tools
 
-Run from this skill directory, using actual input paths:
-
 ```bash
-python3 scripts/format_text.py 原文.txt --mode duanzi --out 排版稿.txt
+python3 scripts/format_text.py 原文.txt --mode short --out 短文.txt
+python3 scripts/format_text.py 原文.txt --mode duanzi --split --out 段子.txt
 ```
 
-Preserve links and expressive symbols. Use --separate-links or --strip-emoji only when requested. Check wording, facts and order after formatting.
-
-Deliver the requested text or artifacts; these skills do not publish externally. MIT License. See the [collection](https://github.com/topmindspace/topmind-writing-skills) for installation options and maintenance.
+Use `--separate-links` or `--strip-emoji` only when explicitly requested. This skill does not publish externally. MIT License. See the [collection](https://github.com/topmindspace/topmind-writing-skills).

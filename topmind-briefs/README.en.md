@@ -2,9 +2,16 @@
 
 English | [中文](./README.md)
 
-Write information-focused short posts for X and WeChat: releases, previews, tools, rankings, papers, hands-on results and opinions. Deliver copy for the requested platforms, keeping necessary attribution and uncertainty in the text. Chinese is the default language; current user instructions and author samples take priority. See [SKILL.md](./SKILL.md) for the capability, workflow and tools.
+Write high-signal short posts for X and WeChat (typically 300–800 Chinese characters): actionable tips, prompt deliveries, release briefs, benchmarks, paper takeaways, and hands-on opinions. Chinese is the default language; current user instructions and author samples take priority. See [SKILL.md](./SKILL.md) for the full workflow.
 
-For covers, image-post formats and cross-platform crops, read the [platform reference](./references/platform-cover-specs.md) as needed. Export presets are not mandatory upload specifications; verify actual platform previews.
+## Key Capabilities
+
+- **Angle by Post Type**:
+  - **Tips & Prompt Delivery**: Lead with the concrete result or contrast number, include the copyable command/prompt, and state clear negative boundaries ("when NOT to use").
+  - **Product & Industry News**: Strip PR filler and purchase disclaimers; translate technical specs into everyday sensory scale.
+  - **Security & Breaking Events**: Open with the reader's immediate question, clarify the exact blast radius in one sentence, and list actionable steps with compact `1）2）` numbering.
+- **Peer Stance & Honest Attribution**: Write like a knowledgeable colleague rather than a lecturer. Never fabricate first-person experience; keep verification logs outside the copyable text block.
+- **Extensible Knowledge Pack**: Includes cards like `brief-value-first`, `brief-news-to-post`, `voice-peer-stance`, and `de-ai-mechanisms` (see [knowledge/README.md](./knowledge/README.md) and [references/knowledge-library.md](./references/knowledge-library.md)).
 
 ## Install
 
@@ -12,20 +19,13 @@ For covers, image-post formats and cross-platform crops, read the [platform refe
 npx @topmindspace/topmind-writing-skills install topmind-briefs
 ```
 
-A scoped knowledge pack ships with this skill. See [retrieval and contribution](./references/knowledge-library.md) and the [card directory](./knowledge/README.md). Read relevant summaries before selected cards; capture new local notes as candidates, without rewriting global preferences.
-
-## How it works
-
-Read actual references and relevant [specimens](./references/creative-practice.md). Explore distinct directions when that helps the task; deliver one complete result when the request is clear. Voice, length, emoji, structure and visual styles are choices rather than universal gates. Facts, attribution, privacy, authorization and usable output still matter.
+See [examples/README.md](./examples/README.md) and [references/examples.md](./references/examples.md) for before/after examples, and [platform-cover-specs.md](./references/platform-cover-specs.md) for cross-platform cover dimensions.
 
 ## Tools
 
-Run from this skill directory, using actual input paths:
-
 ```bash
-python3 scripts/lint_x_post.py X短文.txt
+python3 scripts/lint_x_post.py X短文.txt --kind news
+python3 scripts/de_ai_lint.py 公众号短文.md
 ```
 
-Lint checks textual and formatting risks; style suggestions need context and do not have to be cleared. Preserve links and emoji by default.
-
-Deliver the requested text or artifacts; these skills do not publish externally. MIT License. See the [collection](https://github.com/topmindspace/topmind-writing-skills) for installation options and maintenance.
+Lint checks formatting residue and offers non-blocking contextual hints. This skill drafts content only and does not publish externally. MIT License. See the [collection](https://github.com/topmindspace/topmind-writing-skills).

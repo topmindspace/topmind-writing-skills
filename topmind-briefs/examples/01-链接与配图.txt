@@ -1,8 +1,8 @@
-链接（另发）：
-晨光 3.0 更新日志｜2026-10-16（页面标注）｜https://example.com/changelog
+链接（可选另放评论区或随文）：
+晨光 3.0 更新日志｜2026-10-16｜https://example.com/changelog
 
-配图（另发）：
-[图1] https://example.com/images/release-3.png — 官方发布图
+配图说明：
+[图1] https://example.com/images/release-3.png — 3.0 本地引擎开关与内存占用实测截图
 
-口径提醒（另发）：
-冷启动时间缩短一半是官方数字，没有第三方实测。
+口径备注：
+冷启动 1.1 秒为官方测试数据（M2 Air 16G 环境），老机型首次加载本地权重约需 3–4 秒。

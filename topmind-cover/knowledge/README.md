@@ -41,3 +41,18 @@
 | topmind-poster | [同一信息的三种视觉语气](cards/poster-voices.md) | 在不改变数字与读序的前提下，用媒介和层级做风格变化。 |
 | topmind-cover | [宽图与方图分别从原图裁切](cards/crop-independent.md) | 一份回归演示了先宽裁再方裁造成的信息损失。 |
 | topmind-cover | [图册复查：修具体关系，不升级统一禁令](cards/atlas-local-fix.md) | 纵版样张的辅助文字靠近图形，局部上移后再次检查。 |
+| * | [去 AI 味八大机制：跟朋友说话，还是在完成任务？](cards/de-ai-mechanisms.md) | 用“跟朋友说话 vs 完成写作任务”总开关诊断八类 AI 味根因，减弱无据绝对因果但保留作者个人口吻。 |
+| topmind-briefs, topmind-viral-posts, topmind-revise | [邻座身位、体感换算与标点力气活](cards/voice-peer-stance.md) | 用邻座商量代替讲师命令，把技术参数译成身体尺度与日常场景，按内容张力使用情绪标点。 |
+| topmind-briefs, topmind-revise | [价值前置与可复用原件：让读者拿走就能用](cards/brief-value-first.md) | 第一句直给反差结果或核心结论，正文交付可直接复制的原件，并在结尾画清“什么时候别用”的负面边界。 |
+| topmind-briefs, topmind-viral-posts, topmind-revise | [把新闻通稿改成有人看的帖：四类典型改法](cards/brief-news-to-post.md) | 砍掉购买门槛、公关致谢与公文头衔，用真疑问澄清、体感换算、动作反差或态度定性重写新闻。 |
+| topmind-viral-posts, topmind-briefs | [装傻提问与互动机制：为什么有的问号有效，有的无人问津？](cards/viral-play-dumb.md) | 问号本身不涨流量；有效提问靠切身痛点、一句话能接的空位与七分留白，避开四类假互动反例。 |
+| topmind-revise, topmind-briefs, topmind-wechat-post | [向作者改稿学习：删加对照、保留人味与范围隔离](cards/revise-learn-from-edits.md) | 从作者改稿中拆解删掉的负担与补上的支点，严守不代写“我”、不洗平个人口吻、不把单篇意见外推为全库禁令。 |
+| topmind-wechat-post, topmind-x-article | [公众号与长文专项：工具/插件推荐结构与实测评测保真](cards/wechat-plugin-and-review.md) | 工具推荐文可选“标题点名+安装与痛点前置+功能列表+短例截图”；评测文按具体维度保留作者真实褒贬。 |
+| topmind-cover, topmind-poster, topmind-wechat-post | [视觉密度与图文证据设计：一图讲清、证据分区与诚实标注](cards/visual-density-and-evidence.md) | 一图讲清主要变化、边界与建议；将客观证据与作者建议视觉分区；原文截图高亮保留上下文，概念封面标“功能示意，不是实拍”。 |
+
+## 如何方便扩展新经验、思考或策略
+
+1. **写下卡片正文**：围绕「适用场景（Scope）— 核心机制 — 改前/改后或正反例 — 负面边界（何时别用）」编写 Markdown。
+2. **本地候选或入库**：
+   - 写入本地私有扩展包：`python3 scripts/knowledge.py add --pack <私有包路径> --id <卡片id> ...`
+   - 升级本仓库内置知识包：在 `shared/knowledge/cards/` 新增 `.md` 文件，在 `shared/knowledge/index.json` 注册条目，运行 `python3 shared/scripts/knowledge.py validate --pack shared/knowledge` 校验后，执行 `npm run sync:shared` 即可一键分发至全部 8 个技能。

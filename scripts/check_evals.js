@@ -6,7 +6,7 @@
  *   - id 唯一、prompt / expected_behavior 非空
  *   - description 的 Do NOT 分流只指向存在的技能（本仓库技能或 external_skills）
  *   - 路由词覆盖：expected_skill 为本仓库技能时，prompt 至少命中它的一个触发词
- *     （SKILL.md 的 metadata.triggers + description 里 Use when 到分号前的词），防止新增用例与触发词脱节
+ *     （SKILL.md 的 metadata.triggers + description 里 Use when 到分号前的词）。semantic 用例反向验证，要求不命中目标触发词。
  * Usage: node scripts/check_evals.js
  */
 'use strict';
@@ -52,9 +52,14 @@ function main() {
     if (e.expected_skill !== null && !known.has(e.expected_skill)) errs.push(`${e.id}: expected_skill 未知：${e.expected_skill}`);
     if (!String(e.prompt || '').trim()) errs.push(`${e.id}: prompt 为空`);
     if (!String(e.expected_behavior || '').trim()) errs.push(`${e.id}: expected_behavior 为空`);
+    if (e.routing !== undefined && e.routing !== 'semantic') errs.push(`${e.id}: 未知 routing ${e.routing}`);
+    if (e.routing === 'semantic' && !skills.includes(e.expected_skill)) errs.push(`${e.id}: semantic 用例必须指定本仓库技能`);
     if (skills.includes(e.expected_skill)) {
       const prompt = String(e.prompt || '').toLowerCase();
-      if (!terms[e.expected_skill].some((t) => prompt.includes(t))) {
+      const matchesTrigger = terms[e.expected_skill].some((t) => prompt.includes(t));
+      if (e.routing === 'semantic' && matchesTrigger) {
+        errs.push(`${e.id}: semantic 用例仍命中 ${e.expected_skill} 的触发词`);
+      } else if (e.routing !== 'semantic' && !matchesTrigger) {
         errs.push(`${e.id}: prompt 没有命中 ${e.expected_skill} 的任何触发词，请补触发词或改写用例`);
       }
     }
@@ -72,7 +77,8 @@ function main() {
     for (const e of errs) console.error(`  ✗ ${e}`);
     return 1;
   }
-  console.log(`check_evals: ${ids.size} 条用例，覆盖 ${skills.length} 个技能，每个技能 ≥3 条且含负例，路由词覆盖通过`);
+  const semanticCases = data.evals.filter(e => e.routing === 'semantic').length;
+  console.log(`check_evals: ${ids.size} 条用例，覆盖 ${skills.length} 个技能，含 ${semanticCases} 条无目标触发词的用例。仅校验用例结构。`);
   return 0;
 }
 

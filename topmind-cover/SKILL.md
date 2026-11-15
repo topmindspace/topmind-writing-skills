@@ -1,78 +1,72 @@
 ---
 name: topmind-cover
-description: "设计文章、图文与视频封面、头图和缩略图，适配小红书、抖音、公众号、X Article 与短帖；按发布形态、真实参考和主题完成构图、成图、核字与裁切。密集信息图用 topmind-poster。"
+description: "设计高辨识度的文章、图文与视频封面、头图和缩略图，适配小红书、抖音、公众号、X Article 与短帖；追求清晰信息密度与真实层次，概念功能图诚实标注“功能示意，不是实拍”。密集信息长图用 topmind-poster。"
 license: MIT
 metadata:
-  version: "0.5.1"
+  version: "0.5.2"
   action_category: "write"
   triggers: "封面, 封面图, 小红书封面, 抖音封面, 图文封面, 视频封面, X 短文封面, 短帖封面, 头图, 题图, 首图, 封面配图, 缩略图, banner, cover, thumbnail, 公众号封面, 公众号题图, 公众号头图, X 封面, X 首图, X 长文头图, 文章封面, 封面风格"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-11-09"
+  updated: "2026-11-15"
 ---
 
-# topmind-cover · 文章封面
+# topmind-cover · 高辨识度文章与多平台封面设计
 
-让封面传达文章主题，在实际展示尺寸下有辨识度、文字可读、裁切完整。默认中文；用户已有品牌、参考和风格要求优先。
+让封面在手机信息流缩略图（约 300px 宽）下 **0.5 秒抓住眼球、一眼看清核心价值**，同时适配各平台真实裁切比例。默认中文；用户已有品牌、参考和风格要求优先。
 
-## 按需借鉴与积累
+## 一、核心设计心法：视觉吸引力、适度密度与诚实标注
 
-需要新方向、完整例子或相关经验时，用 [知识使用与增补](references/knowledge-library.md) 检索字体、场景、摄影、编辑、材料与系列设计；先读摘要，再选相关卡片。可以混合、改造或采用库外思路，简单任务直接完成。知识不替代当前用户要求；新反馈先作为有范围的候选，不自动改长期规则。
+1. **拒绝「假极简」与「廉价霓虹」，立住第一眼视觉重心**：
+   - 「简约清晰」不是大片苍白背景配三个空洞大字，更不是满屏蓝紫发光粒子。
+   - 用 **强字重结论 + 关键数字反差（Swiss Editorial）**、**Bento 模块化信息卡**、**真实原图荧光笔高亮拼贴**、**微距工业材质** 或 **手绘白板拆解** 建立视觉张力。
+2. **诚实标注性质（防止视觉误导）**：
+   - **概念封面与生成图**：凡涉及软件界面、产品功能表现的生成/概念封面，在边角或图注标明 **`功能示意，不是实拍`**，绝不冒充真实截图。
+   - **原文证据封面**：使用论文、代码或官方文档原图做拼贴/裁切时，高亮关键行并保留真实上下文，**绝不自己排版伪造假论文页或假官方截图**。
+   - **硬核技术与学术主题**：采用干净、克制的几何、图表或编辑排版风格，**不强贴卡通吉祥物或卖萌 logo**。
 
-## 先看参考，再决定画法
+需要检索视觉方向或沉淀新经验时，见 [knowledge-library.md](references/knowledge-library.md)（含 `visual-density-and-evidence`、`cover-typography`、`cover-editorial` 等卡片）与 [creative-practice.md](references/creative-practice.md)。
 
-读文章或摘要，抓住这次想传达的重点。用户给了参考就实际查看图片；没给时，从 `assets/examples/overview.png`、可打开的 `assets/examples/creative-atlas.html` 或本地单风格样张开始看。样张未安装可用总览和文字配方继续，说明实际看过哪些材料。
+## 二、五大视觉流派与双路径出图
 
-[cover-styles.md](references/cover-styles.md) 的 22 种风格是素材库；MD3、浅色、角色互动只是其中一些选项。可以用摄影、纯文字、极简、深色、线稿、拼贴或原创组合。原图承载事实时可以用原图，封面需要独立表达时也可以另设计。
+用户给了参考就先实际看图；没给时可看 `assets/examples/overview.png` 或 [creative-atlas.html](assets/examples/creative-atlas.html)。[cover-styles.md](references/cover-styles.md) 的 5 大趋势与 22 种风格是灵感工具箱，而非呆板模板：
 
-风格明确直接做；需要探索时，给少量差别明显的缩略图或完成稿，比较构图、信息重心、字与图的关系，而不是只报风格名字。用户要一张就推荐并完成一张，不因存在多种可能反复追问。生成调用次数按任务规模与用户预算安排。
-
-## 可用方向
-
-| 方向 | 主体与标题关系 | 常见适用 |
+| 视觉流派 | 核心抓手 | 典型适用题材 |
 |---|---|---|
-| 字体主导 | 文字本身构成画面，纯色底也成立 | 评论、宣言、人文 |
-| 摄影 / 原图 | 裁切、负空间与文字呼应 | 人物、产品、生活 |
-| 编辑拼贴 | 多种真实素材形成清楚层级 | 资讯、复盘、合集 |
-| 场景叙事 | 动作、隐喻或角色与标题互动 | 趣味教程、品牌故事 |
-| 抽象 / 图形 | 形状、尺度、颜色表达主题 | 科技、研究、概念 |
+| **字体与数字反差** (`big-type` / `news-flash` / `gan-huo`) | 超粗字重标题 + 巨大核心指标（如 `$0.25`、`10×`）或 Bento 信息卡 | 深度观点、测评榜单、工具合集、快讯 |
+| **原图证据与拼贴** (`paper-collage` / `bg-blur` / `academic-print`) | 真实论文/代码/硬件原图裁切 + 荧光笔高亮关键行 | 论文精读、源码扒料、产品实测 |
+| **微距材质与现代科技** (`dark-saas` / `hard-core-type` / `brand-launch`) | 阳极氧化铝、磨砂亚克力、纸雕压印等真实物理光影 | 开发者工具、本地部署、架构发布 |
+| **场景叙事与空间隐喻** (`diorama-book` / `cinematic-flow` / `anime-desk`) | 等轴测系统沙盘、电影感追光空镜或生活光影细节 | 全局架构拆解、行业幕后、创作者故事 |
+| **手绘拆解与反差幽默** (`sketch-cartoon` / `ip-fun` / `chao-wan-3d`) | 马克笔白板批注箭头，或小角色面对巨型物体的尺度反差 | 机制讲解、踩坑吐槽、入门科普 |
 
-选型与样张方法见 [creative-practice.md](references/creative-practice.md)。需要场景时读 [scene-builder.md](references/scene-builder.md)，字效看 [typography-system.md](references/typography-system.md)，构图与配方看 [cover-patterns.md](references/cover-patterns.md) / [cover-combos.md](references/cover-combos.md)。只加载所选方向需要的章节，不把每份配方累加到一张图。
+**释放 AI 原生表现力的两条出图路径**（详见 [cover-prompts.md](references/cover-prompts.md)）：
+- **路径 A（字图一体直出）**：使用原生强文字模型（如 GPT-4o / GPT-Image、Gemini Imagen、Ideogram），用精炼导演级提示词直接给出「主体张力 + 材质色调 + 准确引号标题与字重位置」，不堆砌元指令废话。
+- **路径 B（留白底图 + 脚本/HTML 精确叠字）**：让生图模型专注画好主体与干净负空间（`no text`），再用 `scripts/title-engine.py`、`scripts/overlay-title.py` 或 HTML 零误差排字。
 
-## 平台、尺寸与出字
+构图动线看 [cover-patterns.md](references/cover-patterns.md)，跨媒介配色配方看 [cover-combos.md](references/cover-combos.md)，场景与字效看 [scene-builder.md](references/scene-builder.md) / [typography-system.md](references/typography-system.md)。
 
-先确定发布形态：图文笔记、普通图文、商城内容、公众号普通文章与图片消息分别处理。相关场景的依据、来源、核验日期和待实测项见 [平台封面参考](references/platform-cover-specs.md)，按当前用途读取。以下为本包导出预设，平台要求或用户规格不同时按实际调整：
+## 三、全平台尺寸匹配与独立裁切
 
-| 用途 | 常用尺寸 |
-|---|---|
-| X Article | 1500×600，5:2 |
-| 公众号 | 900×383 |
-| X 短帖 | 1200×675，16:9 |
-| 小红书图文 | 1080×1440，3:4；比例有场景化官方建议，像素为本包选择 |
-| 抖音普通图文 | 1080×1440，3:4；本包起点，需核对实际发布入口 |
-| 公众号方图 | 900×900，1:1；本包高清预设，分别检查小图展示 |
+先确定发布平台与形态，完整规格与安全区见 [platform-cover-specs.md](references/platform-cover-specs.md) 与 [image-sourcing.md](references/image-sourcing.md)：
 
-系列多版可复用素材、字体与色彩；横竖版分别布局，需要时才裁切。抖音和小红书共用横版时，先在中央 4:3 排主体与标题，再用原场景补足 16:9 两侧，按发布入口导出。视频比例、封面选择框和列表露出分开判断。制作 3:4 和 9:16 竖版时使用同一竖向核心，按入口重新裁取或排版。宽图、方图直接从原图分别裁切并检查；裁切会损伤标题或主体时重新布局。标题长短、安全边距和字号由画幅、字体、缩略图可读性决定，不为字数阈值改坏意思；不把未经验证的占屏比例、遮挡区域或点击率写成平台规则。
-
-可整张生成，也可生成场景后用 `scripts/title-engine.py` 或 `scripts/overlay-title.py` 叠字；纯文字封面可直接排版。文字多、生僻字或需要反复改字时，叠字可以从一开始采用。使用当前环境实际提供的生图工具，不假定某个固定 API 存在。完整 prompt 见 [cover-prompts.md](references/cover-prompts.md)，按当前方案删改槽位。
-
-## 核对与交付
-
-出图后实际看图，核对每个字、数字、归属、主题、缩略图可读性和各尺寸裁切。系列封面先核对观众第一眼要读的词与看到的主体，再决定哪些说明可以移到正文。按 [字效与排版](references/typography-system.md) 核对实际字重；多比例交付逐张看目标缩略图和模拟裁切。设计维度用于诊断，不用自评分数证明质量，不因纯色底、没有人物或道具少而重做。发现问题先局部修正；多次尝试无改善时换路径或说明具体限制，迭代次数与成本相称。
-
-事实图、logo、产品截图来自真实素材；生成示意与摄影原图分清。参考可借构图原理、配色关系与叙事方法，独特标识和素材按许可使用，表达服务当前文章。
+| 目标平台与用途 | 推荐像素尺寸与比例 | 裁切脚本预设 (`--preset`) |
+|---|---|---|
+| **X Article 长文头图 + 公众号宽图** | `1500×600` (5:2) + `900×383` (2.35:1) | `article`（默认） |
+| **公众号宽封面 + 转发/列表方图** | `900×383` (2.35:1) + `900×900` (1:1) | `wechat`（从原图分别独立裁切） |
+| **X 普通短帖单图** | `1200×675` (16:9) | `x-post` |
+| **小红书笔记 / 公众号小绿书 / 抖音图文** | `1080×1440` (3:4) | `xiaohongshu` / `douyin` |
+| **横版视频双封面（16:9 母图含中央 4:3）** | `1920×1080` (16:9) + `1080×810` (4:3) | `landscape-pair` |
+| **竖版视频双封面（9:16 母图含中央 3:4）** | `1080×1920` (9:16) + `1080×1440` (3:4) | `vertical-pair` |
 
 ```bash
-python3 scripts/crop-cover.py <主图> --out-dir <交付目录>
-python3 scripts/crop-cover.py <中央4:3已构图的16:9母图> --preset landscape-pair --out-dir <交付目录>
+python3 scripts/crop-cover.py <横版主图> --out-dir <交付目录>
+python3 scripts/crop-cover.py <原图> --preset wechat --anchor center --out-dir <交付目录>
 python3 scripts/crop-cover.py <主图> --preset x-post --out-dir <交付目录>
 python3 scripts/crop-cover.py <竖版主图> --preset xiaohongshu --out-dir <交付目录>
-python3 scripts/crop-cover.py <竖版主图> --preset douyin --out-dir <交付目录>
-python3 scripts/crop-cover.py <原图> --preset wechat --anchor left --out-dir <交付目录>
+python3 scripts/crop-cover.py <16比9母图> --preset landscape-pair --out-dir <交付目录>
+python3 scripts/crop-cover.py <9比16母图> --preset vertical-pair --out-dir <交付目录>
 ```
 
-默认 `article` 保持原有 X / 公众号双横图输出；`wechat` 单独输出公众号宽图与方图。`--anchor` 可选 center / left / right / top / bottom，只调整裁切位置；输出后逐版看图。无后台访问时说明尚未验证平台实际展示，文件格式与大小上限以当前入口为准。
+## 四、核对与交付
 
-交付实际成图和所需尺寸，必要时附一句方案差异。文件名沿用现有发布包；封面缺稿名时用可辨认名称，不猜个人路径。若标题工具的固定模板检查不适合设计，可调整 spec 或换直接排版路径，最终以实际可读性和裁切验证。
-
-信息密集、逐字逐数准确的图交 `topmind-poster`；文字写作分别用 `topmind-briefs` / `topmind-viral-posts` / 长文技能。本技能完成封面，不执行发布。
+出图后实际打开检查每个文字、数字、300px 缩略图可读性、各尺寸裁切完整性，以及概念功能图是否已标注 `功能示意，不是实拍`。密集数据长图交 `topmind-poster`。本技能只交付图像文件，不执行对外发布。

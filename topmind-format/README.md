@@ -1,35 +1,33 @@
-# topmind-format · X 文本排版
+# topmind-format · X 纯文本零改字保真排版
 
 [English](./README.en.md) | 中文
 
-已有文字保留措辞与事实，只调整呈现；默认保留表情、链接与来源。
+将已有文字排成适合 X 阅读的纯文本：**100% 保留原文措辞、事实、语序、链接与表达性标点**，只调整段落空行、列表呈现与说话节拍，清理 Markdown 格式残留。
 
-## 使用
+## 核心特点
+
+- **零改字铁律**：不删改原文一字一句、不丢弃原有链接与来源归因；需要润色或去 AI 味时交由 `topmind-revise`。
+- **三种排版模式**：
+  - **短文 `short`**：按**语义段落空行**（一个完整意思一段，不搞句句空行），并列项转为紧凑 `1）2）` 或 `·`。
+  - **段子 `duanzi`**：按口语呼吸与叙事节拍分行，让包袱与反转独立成行。
+  - **多开头拼接 `--variants`**：当作者写了多个备选开头时，自动与正文拼成多份完整可复制成品。
+- **保留情绪标点与符号语义**：原文中的 `？？？`、`！！！`、`！！？`、`……` 以及 `✅ / ❌`、emoji 默认完整保留。
+
+## 安装与使用
 
 ```bash
 npx @topmindspace/topmind-writing-skills install topmind-format
 ```
 
-安装后直接告诉 agent 你要的结果、读者和已有材料；明确要一稿就直接给成品，探索任务再比较方向。完整能力、流程与脚本说明见 [SKILL.md](./SKILL.md)。
-
-按需知识包随技能独立安装。需要方向、完整示例或经验时，见 [知识使用与增补](./references/knowledge-library.md) 与 [知识导航](./knowledge/README.md)；先读摘要再选卡片。可向指定私有包新增候选，不自动改长期规则。
-
-## 方法与样张
-
-[方法参考](./references/creative-practice.md) 用于判断节奏与表达作用。只调整断行、空行和允许的呈现符号，保留原文措辞、事实与顺序；改写另用 topmind-revise。
+完整规则见 [SKILL.md](./SKILL.md)，零改字保真排版前后对照见 [examples/README.md](./examples/README.md)，按需知识包见 [knowledge/README.md](./knowledge/README.md)。
 
 ## 常用脚本
 
-在本技能目录运行；示例文件名替换为实际路径：
-
 ```bash
-python3 scripts/format_text.py 原文.txt --mode duanzi --out 排版稿.txt
+python3 scripts/format_text.py 原文.txt --mode short --out 短文.txt
+python3 scripts/format_text.py 原文.txt --mode duanzi --split --out 段子.txt
 ```
 
-保留链接和有表达作用的符号；仅在明确要求时使用 --separate-links 或 --strip-emoji。排版后核对措辞、事实与顺序。
+仅在用户明确要求时才使用 `--separate-links` 或 `--strip-emoji`。只负责文本排版，由用户完成对外发布。
 
-## 交付
-
-交付可直接复制的排版文本；需要改写时转交改稿技能。 由用户完成对外发布。
-
-MIT License。仓库维护、安装选项与版本说明见 [合集说明](https://github.com/topmindspace/topmind-writing-skills)。
+MIT License。仓库维护与合集说明见 [topmind-writing-skills](https://github.com/topmindspace/topmind-writing-skills)。

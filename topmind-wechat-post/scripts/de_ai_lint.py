@@ -178,10 +178,10 @@ LIST_EMOJI_RE = re.compile(r"^\s*(?:[0-9]\uFE0F?\u20E3|[\U0001F300-\U0001FAFF\u2
 # --- 社交短帖模式（de-ai-rules 第五节 S01–S10；core-voice V34–V40） -------------------------
 # H9 白名单：真疑问（懂行的人能给出具体答案），开头用不算说教（V34）
 GENUINE_Q_RE = re.compile(r"难道(?:就)?没(?:有)?人|难道只有我|有没有人|是不是(?:就|只有)我|一直没(?:想明白|搞懂|弄懂)|我就纳闷|到底(?:是|靠|怎么|为什么|为啥|哪)")
-# W22 套路互动钩子结尾（S06）
+# W22 套路互动钩子结尾（S06：只报空洞客服式假互动，不误伤有具体对象的真问题如“你会买吗”）
 HOOK_END_RE = re.compile(
-    r"(?:你|你们|大家)(?:会|还会)?(?:换|选|用)(?:吗|哪个|哪家)|(?:你|你们|大家)(?:怎么|如何)看|(?:你|你们|大家)觉得呢"
-    r"|评论区(?:聊聊|说说|见|告诉我|留言|扣\d)|欢迎(?:留言|讨论|评论)|你(?:们)?站哪(?:边|队)|你(?:们)?还知道哪些|你(?:们)?(?:遇到过|有过)吗"
+    r"(?:你|你们|大家)(?:怎么|如何)看|(?:你|你们|大家)觉得呢"
+    r"|评论区(?:聊聊|说说|见|告诉我|留言|扣\d)|欢迎(?:留言|讨论|评论)|你(?:们)?站哪(?:边|队)|你(?:们)?还知道哪些"
 )
 # W24 类比腔（S02）
 ANALOGY_RE = re.compile(r"跟[^，。！？\n]{1,16}(?:一个|是一个|同一个|一样的)道理|说白了|就好比|好比说|同理[，,]|^[^=\n]{1,16}\s=\s[^=\n]{1,16}$")
@@ -392,8 +392,8 @@ def punct_split(lines: list[str], start: int, long_mode: bool, genre: str | None
             if QE_RE.match(run) and off in (first, last) and off not in qe_used:
                 qe_used.add(off)
                 continue
-            if soft and re.fullmatch(r"[！!]{2,3}", run):
-                hints.append((start + off, "H2", f"「{run}」：转发点评、惊讶语气可以用一处，别处换成句号或「...」"))
+            if soft and re.fullmatch(r"[！!？?]{2,4}", run):
+                hints.append((start + off, "H2", f"「{run}」：短帖/段子/回复中表达真吃惊或怀疑可用，平淡句勿强加（core-voice V35）"))
                 continue
             warns.append((start + off, "W17", f"标点连用「{run}」：一个就够"))
             break

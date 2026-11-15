@@ -1,6 +1,6 @@
 {
   "name": "topmind-cover",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "private": true,
   "description": "设计文章、图文与视频封面；支持小红书、抖音、公众号和 X 的构图、叠字与多比例导出。",
   "license": "MIT",

@@ -2,9 +2,16 @@
 
 English | [中文](./README.md)
 
-Write or prepare X Articles and export copyable HTML, plain text and publishing materials when needed. Preserve document image order; text copy uses image placeholders that must be filled in the editor. Chinese is the default language; current user instructions and author samples take priority. See [SKILL.md](./SKILL.md) for the capability, workflow and tools.
+Write, structure, and export X Articles (long-form posts on X). Supports thesis-driven deep dives, tool/plugin walkthroughs, hands-on benchmarks, and cross-platform adaptation, exporting single-file copyable HTML, plain-text fallback, and publishing checklists. Chinese is the default language; see [SKILL.md](./SKILL.md) for the full workflow.
 
-For covers, image-post formats and cross-platform crops, read the [platform reference](./references/platform-cover-specs.md) as needed. Export presets are not mandatory upload specifications; verify actual platform previews.
+## Key Capabilities
+
+- **Clear Long-Form Progression**:
+  - **Argument & Mechanism Deep Dives (`x-argument`, `x-evidence`)**: Lead with the core thesis or contrast and advance section by section with concrete evidence.
+  - **Tool Walkthroughs & Reviews (`wechat-plugin-and-review`)**: Keep full commands, links, and honest pros/cons inside the Article while adapting companion promo posts to short-post norms (`x-adapt`).
+- **Single-Source Image Order & Dual-Channel Code Copy**:
+  - `md2x-html.py` reads `![]()` in exact document order and generates `[图N]` placeholders so images never shift.
+  - Provides one-click rich-text copy plus per-block prompt copy buttons for inserting native X Code blocks.
 
 ## Install
 
@@ -12,20 +19,14 @@ For covers, image-post formats and cross-platform crops, read the [platform refe
 npx @topmindspace/topmind-writing-skills install topmind-x-article
 ```
 
-A scoped knowledge pack ships with this skill. See [retrieval and contribution](./references/knowledge-library.md) and the [card directory](./knowledge/README.md). Read relevant summaries before selected cards; capture new local notes as candidates, without rewriting global preferences.
-
-## How it works
-
-Read actual references and relevant [specimens](./references/creative-practice.md). Explore distinct directions when that helps the task; deliver one complete result when the request is clear. Voice, length, emoji, structure and visual styles are choices rather than universal gates. Facts, attribution, privacy, authorization and usable output still matter.
+See [examples/README.md](./examples/README.md) for a complete sample X Article and [platform-cover-specs.md](./references/platform-cover-specs.md) for the `1500×600` (`5:2`) X Article banner spec.
 
 ## Tools
 
-Run from this skill directory, using actual input paths:
-
 ```bash
 python3 scripts/md2x-html.py 文章.md --preview
+python3 scripts/md2x.py 文章.md
+python3 scripts/check_article.py <文章目录>
 ```
 
-For HTML export, preserve source image order and check image placeholders. Previews need a browser and its dependencies; inspect the editor after inserting each image.
-
-Deliver the requested text or artifacts; these skills do not publish externally. MIT License. See the [collection](https://github.com/topmindspace/topmind-writing-skills) for installation options and maintenance.
+This skill generates drafts and export packages only and does not publish externally. MIT License. See the [collection](https://github.com/topmindspace/topmind-writing-skills).

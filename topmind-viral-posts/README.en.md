@@ -2,7 +2,7 @@
 
 English | [中文](./README.md)
 
-Write conversational X posts, humor, replies, commentary and relationship updates. Use observations, questions, reversals or dialogue; author-requested emoji and rhythm are supported. Chinese is the default language; current user instructions and author samples take priority. See [SKILL.md](./SKILL.md) for the capability, workflow and tools.
+Write substantive, witty X posts, tech humor, contrast observations, genuine "play-dumb" questions, quote posts, and sharp replies. Built around peer stance, sensory translation, and 70% whitespace rather than shallow engagement bait. Chinese is the default language; current user instructions and author samples take priority. See [SKILL.md](./SKILL.md) for capabilities, creative strategies, and tools.
 
 ## Install
 
@@ -10,11 +10,11 @@ Write conversational X posts, humor, replies, commentary and relationship update
 npx @topmindspace/topmind-writing-skills install topmind-viral-posts
 ```
 
-A scoped knowledge pack ships with this skill. See [retrieval and contribution](./references/knowledge-library.md) and the [card directory](./knowledge/README.md). Read relevant summaries before selected cards; capture new local notes as candidates, without rewriting global preferences.
+A scoped knowledge pack ships with this skill. See [retrieval and contribution](./references/knowledge-library.md) and the [card directory](./knowledge/README.md) for cards such as `viral-play-dumb`, `voice-peer-stance`, and `de-ai-mechanisms`. You can easily extend new strategies and revision lessons into the pack.
 
 ## How it works
 
-Read actual references and relevant [specimens](./references/creative-practice.md). Explore distinct directions when that helps the task; deliver one complete result when the request is clear. Voice, length, emoji, structure and visual styles are choices rather than universal gates. Facts, attribution, privacy, authorization and usable output still matter.
+Read actual references and relevant [specimens](./references/creative-practice.md). Explore distinct angles when helpful, or deliver one polished draft directly when the intent is clear. Voice, rhythm, expressive punctuation (`？？？`, `！！！`, `！！？`), and length are flexible creative choices rather than rigid gates, while factual accuracy, no fabricated first-person experience, and no unauthorized publishing remain firm boundaries.
 
 ## Tools
 
@@ -24,6 +24,6 @@ Run from this skill directory, using actual input paths:
 python3 scripts/lint_x_post.py 稿子.txt --duanzi
 ```
 
-Lint checks textual and formatting risks. Choose interaction, emoji and endings for the content and author; style suggestions are contextual.
+Lint checks formatting residue and offers non-blocking contextual hints.
 
 Deliver the requested text or artifacts; these skills do not publish externally. MIT License. See the [collection](https://github.com/topmindspace/topmind-writing-skills) for installation options and maintenance.

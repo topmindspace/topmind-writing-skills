@@ -1,5 +1,5 @@
 {
-  "_doc": "路由评测骨架：每个技能至少 3 条，其中至少 1 条负例（target_skill 是本技能，但 expected_skill 指向别的技能或 null）。按 Anthropic 最佳实践「先有评测再写文档」与 topmind-presentation 的 trace 格式设计；目前只做结构校验（scripts/check_evals.js），尚未在真实宿主里执行打分。",
+  "_doc": "路由评测用例：每个技能至少 3 条，其中至少 1 条负例（expected_skill 指向别的技能或 null）。routing 为 semantic 的用例用自然语言表达意图，避开预期技能的触发词。scripts/check_evals.js 校验用例结构，模型结果须另行执行和记录。",
   "pack": "topmind-writing-skills",
   "external_skills": [
     "topmind-write",
@@ -61,9 +61,9 @@
     {
       "id": "x-article-neg-1",
       "target_skill": "topmind-x-article",
-      "prompt": "写一条涨粉短帖。",
+      "prompt": "写一条 X 短帖吐槽一下今天的新模型定价。",
       "expected_skill": "topmind-viral-posts",
-      "expected_behavior": "短帖写稿走 viral-posts；x-article 不接。"
+      "expected_behavior": "短帖吐槽与段子写稿走 viral-posts；x-article 不接。"
     },
     {
       "id": "briefs-1",
@@ -89,9 +89,9 @@
     {
       "id": "briefs-neg-1",
       "target_skill": "topmind-briefs",
-      "prompt": "写个互关帖，要有钩子、能涨粉。",
+      "prompt": "写个反差段子，要有钩子、让人愿意接话。",
       "expected_skill": "topmind-viral-posts",
-      "expected_behavior": "引流互动型走 viral-posts。"
+      "expected_behavior": "反差段子与互动短帖走 viral-posts。"
     },
     {
       "id": "viral-1",
@@ -110,9 +110,9 @@
     {
       "id": "viral-3",
       "target_skill": "topmind-viral-posts",
-      "prompt": "帮我写一条涨粉帖。",
+      "prompt": "帮我写一条装傻提问的 X 短帖，聊聊大家平时怎么选模型档位。",
       "expected_skill": "topmind-viral-posts",
-      "expected_behavior": "涨粉型模板。"
+      "expected_behavior": "采用邻座商量身位与七分留白，切中具体人群痛点，不端讲师架子。"
     },
     {
       "id": "viral-neg-1",
@@ -229,9 +229,9 @@
     {
       "id": "viral-4",
       "target_skill": "topmind-viral-posts",
-      "prompt": "写 3 条互关帖，每条带话题标签和分类标签。",
+      "prompt": "写 3 条科技段子，每条带话题标签和分类标签。",
       "expected_skill": "topmind-viral-posts",
-      "expected_behavior": "交三条完整关系帖，标签按请求安排；分类标签放块外。不编造粉丝数、承诺或收益，不强制所有关系帖使用固定话题标签。"
+      "expected_behavior": "交三条完整科技段子，标签按请求安排；分类标签放块外。不编造作者亲历或实测数据。"
     },
     {
       "id": "viral-5",
@@ -320,9 +320,9 @@
     {
       "id": "wechat-neg-4",
       "target_skill": "topmind-wechat-post",
-      "prompt": "写条涨粉段子发 X。",
+      "prompt": "写条科技段子发 X。",
       "expected_skill": "topmind-viral-posts",
-      "expected_behavior": "X 段子、涨粉帖走 viral-posts。"
+      "expected_behavior": "X 段子、互动短帖走 viral-posts。"
     },
     {
       "id": "cover-4",
@@ -341,7 +341,7 @@
     {
       "id": "cover-neg-3",
       "target_skill": "topmind-cover",
-      "prompt": "写个互关帖，要带话题标签。",
+      "prompt": "写个算账帖，要带话题标签。",
       "expected_skill": "topmind-viral-posts",
       "expected_behavior": "写稿走 viral-posts；cover 只在需要生图时被调用。"
     },
@@ -411,7 +411,7 @@
     {
       "id": "format-neg-1",
       "target_skill": "topmind-format",
-      "prompt": "帮我写 3 条涨粉帖，主题是新号冷启动。",
+      "prompt": "帮我写 3 条科技段子，主题是智能体自动写代码。",
       "expected_skill": "topmind-viral-posts",
       "expected_behavior": "从零写段子归 viral-posts，不走格式化技能。"
     },
@@ -425,21 +425,21 @@
     {
       "id": "viral-duanzi-1",
       "target_skill": "topmind-viral-posts",
-      "prompt": "写个冷知识段子，结尾带蓝V互关。",
+      "prompt": "写个冷知识段子，聊聊大模型隐藏的按轮计费机制。",
       "expected_skill": "topmind-viral-posts",
-      "expected_behavior": "冷知识揭秘型 + 互关组合，段子体行间空行，机制说法核实或标传言，末行话题标签。"
+      "expected_behavior": "A5 反直觉冷知识型，段子体或短段，机制说法核实或标明范围，自嘲收尾。"
     },
     {
       "id": "viral-list-1",
       "target_skill": "topmind-viral-posts",
-      "prompt": "写一条互关段子，列三条今天的打卡清单。",
+      "prompt": "写一条轻判断的 X 短帖，先给一句定位再列三条今天的平台更新清单。",
       "expected_skill": "topmind-viral-posts",
-      "expected_behavior": "交一条含三条清单的完整互关段子；可选无符号、文字列表或表情，按内容与作者习惯，不强制多稿。"
+      "expected_behavior": "交一条态度定性先行 + 紧凑 1）2）3）清单的完整短帖；按内容与作者习惯，不强制多稿。"
     },
     {
       "id": "viral-delivery-1",
       "target_skill": "topmind-viral-posts",
-      "prompt": "来 3 条涨粉帖，带话题标签和配图建议。",
+      "prompt": "来 3 条反差段子，带话题标签和配图建议。",
       "expected_skill": "topmind-viral-posts",
       "expected_behavior": "交三条独立完成稿，话题标签按请求放正文，分类与配图建议放块外。仅要求建议时无需生图，也不追问是否配图。"
     },
@@ -460,7 +460,7 @@
     {
       "id": "viral-noemoji-1",
       "target_skill": "topmind-viral-posts",
-      "prompt": "写一条涨粉段子，可爱一点，加点表情。",
+      "prompt": "写一条反差段子，可爱一点，加点表情。",
       "expected_skill": "topmind-viral-posts",
       "expected_behavior": "尊重明确的可爱与表情要求，直接写一条带表情的段子，不以技能旧禁令劝退或换体裁；不保证流量。"
     },
@@ -890,6 +890,38 @@
       "prompt": "把这次封面反馈存到我指定的私有知识包，只记录本次用途。",
       "expected_skill": "topmind-cover",
       "expected_behavior": "写有场景和例外的candidate，保留反馈性质；不自动激活、不修改全局技能或公开私人稿件。"
+    },
+    {
+      "id": "semantic-format-preserve",
+      "target_skill": "topmind-revise",
+      "routing": "semantic",
+      "prompt": "原稿准备贴到 X，标点、文字、链接和 ✅ 都保持原样，只把挤在一起的长段拆开。",
+      "expected_skill": "topmind-format",
+      "expected_behavior": "交付可直接复制的完整文本，除换行与空白外逐字一致，保留链接与语义符号。"
+    },
+    {
+      "id": "semantic-revise-review",
+      "target_skill": "topmind-format",
+      "routing": "semantic",
+      "prompt": "前两段好像说了同一件事。请指出重复发生在哪，给一句替换建议，我想自己决定要不要动原稿。",
+      "expected_skill": "topmind-revise",
+      "expected_behavior": "定位段落及重复内容，给可采用的替换建议，原稿字节保持不变。"
+    },
+    {
+      "id": "semantic-briefs-inform",
+      "target_skill": "topmind-viral-posts",
+      "routing": "semantic",
+      "prompt": "用两三段给做产品的人交代这次上线了什么，再说明试用结果怎么量出来的。",
+      "expected_skill": "topmind-briefs",
+      "expected_behavior": "提供紧凑的说明，保留实测口径及出处，材料不足时标出缺口，避免编造测试数据。"
+    },
+    {
+      "id": "semantic-cover-capability",
+      "target_skill": "topmind-cover",
+      "routing": "semantic",
+      "prompt": "给这篇帖子做一张读者点开正文前就能看见的图，标题三个字要清楚。这个宿主只能输出文本。",
+      "expected_skill": "topmind-cover",
+      "expected_behavior": "交付包含标题与可读性要求的可用生图提示词。说明当前交付的形态，不能报已成图。"
     },
     {
       "id": "knowledge-host-read",

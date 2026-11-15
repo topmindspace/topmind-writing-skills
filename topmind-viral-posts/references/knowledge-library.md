@@ -21,14 +21,14 @@ python3 scripts/knowledge.py validate
 
 | 任务 | 可用检索词 / 卡片 |
 |---|---|
-| 封面 | 字体 / 材料 / 场景 / 编辑 / 摄影 / 拼贴 / 抽象 / 系列 / 简报；cover-typography、cover-scene 等 |
-| 短文 | 新闻入口 / 工具决策 / 论文限定；brief-news、brief-paper、brief-tools |
-| 互动短帖 | 幽默 / 观察 / 回复；viral-mechanisms、viral-observation、viral-replies |
-| 公众号 | 叙事 / 解释 / 决策；wechat-story、wechat-explain、wechat-decide |
-| X Article | 论点 / 证据 / 平台适配；x-argument、x-evidence、x-adapt |
-| 改稿 | 深度 / 保留 / 模糊反馈；revise-depth、revise-preserve、revise-feedback |
+| 通用去 AI 味与作者声音 | 去 AI 味 / 邻座身位 / 体感换算 / 标点；de-ai-mechanisms、voice-peer-stance |
+| 短文与资讯改写 | 价值前置 / 提示词干货 / 发版改写 / 新闻入口 / 工具决策 / 论文限定；brief-value-first、brief-news-to-post、brief-news、brief-paper、brief-tools |
+| 互动短帖与段子 | 装傻提问 / 真疑问 / 幽默 / 观察 / 回复；viral-play-dumb、viral-mechanisms、viral-observation、viral-replies |
+| 公众号与深读长文 | 插件推荐 / 评测保真 / 叙事 / 解释 / 决策；wechat-plugin-and-review、wechat-story、wechat-explain、wechat-decide |
+| X Article | 论点 / 证据 / 平台适配 / 插件与评测；x-argument、x-evidence、x-adapt、wechat-plugin-and-review |
+| 改稿与向改稿学习 | 改稿学习 / 删加对照 / 深度 / 保留 / 模糊反馈；revise-learn-from-edits、revise-depth、revise-preserve、revise-feedback |
 | 只排版 | 保真 / 节奏；format-fidelity、format-layouts |
-| 长图 | 结构 / 分页 / 视觉语气；poster-structure、poster-paging、poster-voices |
+| 封面与信息长图 | 信息密度 / 证据分区 / 功能示意 / 字体 / 场景 / 分页；visual-density-and-evidence、cover-typography、cover-scene、poster-structure 等 |
 
 读卡后说明或直接应用其中与本次任务有关的方法，不把原例的事实、经历、数字和配方全部复制。可以混合、重组或提出库外方向；不要求引用卡片数量。
 

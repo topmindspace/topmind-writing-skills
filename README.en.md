@@ -48,8 +48,8 @@ See the [practice and specimens](./shared/references/creative-practice.md) and [
 
 | Category | Skill | What it does | Say |
 |---|---|---|---|
-| Duanzi | [`topmind-viral-posts`](./topmind-viral-posts/) | X humor and conversational posts; 14 optional patterns | "来条段子", "不懂就问", "写个群聊体" |
-| Briefs | [`topmind-briefs`](./topmind-briefs/) | One thing, then stop: news, previews, launches, deals, rankings, papers, hands-on | "发个快讯", "来篇短的", "写条预告" |
+| Duanzi | [`topmind-viral-posts`](./topmind-viral-posts/) | X tech humor, contrast observations, genuine questions & sharp replies; 12 creative angles | "来条段子", "不懂就问", "写个群聊体" |
+| Briefs | [`topmind-briefs`](./topmind-briefs/) | High-signal briefs: prompt tips, news rewrites, launches, deals, rankings, papers, hands-on | "发个快讯", "来篇短的", "写条技巧帖" |
 | Long-form · X | [`topmind-x-article`](./topmind-x-article/) | X Article: single-source Markdown → one-click copy HTML + preview image | "写 X 长文", "出一键复制版" |
 | Long-form · WeChat | [`topmind-wechat-post`](./topmind-wechat-post/) | WeChat articles: three quality gates, inline-image layout, publish checklist | "写公众号", "公众号排版" |
 | Formatting | [`topmind-format`](./topmind-format/) | Re-layout without changing a word; stitch alternative openings into full posts | "转段子", "排一下版" |
@@ -63,7 +63,7 @@ See the [implementation and verification record](./docs/creative-system.md).
 
 All eight skills share scoped directions, complete examples and exceptions. Facts, formatting and tool contracts remain intact; typography, scenes, length and rhetoric are choices guided by the task.
 
-An initial 37-card pack (35 teaching examples and two recorded technical / visual cases) ships with every standalone skill. Search summaries, then read selected cards. Explicit local additions remain candidates until reviewed; a single preference does not rewrite global defaults. See [knowledge packs](./docs/knowledge-packs.md).
+A 45-card knowledge pack (covering the 8 de-AI mechanisms, peer stance & sensory translation, value-first takeaways & negative boundaries, news-to-post rewrites, play-dumb question patterns, learning from author edits, plugin/review structures, and visual evidence partitioning) ships with every standalone skill. Search summaries, then read selected cards, or easily add new strategy cards via `scripts/knowledge.py add`. See [knowledge packs](./docs/knowledge-packs.md).
 
 ```bash
 npm run knowledge:search -- "typography scene editorial" --skill topmind-cover --limit 3
@@ -74,32 +74,30 @@ Cover resources include 22 adaptable style entries, 16 composition relationships
 
 ## Covers across platforms
 
-The [platform reference](./shared/references/platform-cover-specs.md) records public sources, verification dates and untested details. Start Xiaohongshu image notes at 3:4; check ordinary Douyin image posts separately from commerce content; distinguish WeChat article landscape / square covers from image messages. Dimensions are package export presets; current editors and user requirements take priority.
+The [platform cover reference](./shared/references/platform-cover-specs.md) provides a practical size and safe-zone lookup across platforms: WeChat article wide covers (`900×383`, 2.35:1) and square share cards (`900×900`, 1:1) cropped independently from the source, Xiaohongshu & WeChat image-notes at `1080×1440` (3:4), X Article headers at `1500×600` (5:2), and X single-image posts at `1200×675` (16:9).
 
-The `landscape-pair` preset in `topmind-cover` exports a centered 4:3 cover and the full 16:9 master. Compose the subject and title in the 4:3 window and extend the scene at both sides. Start portrait covers at 3:4 and export 9:16 separately when the publishing surface calls for it. Check the video frame, cover picker, and feed preview separately. Article, image-post, X, and WeChat presets continue to serve their own surfaces.
+In `topmind-cover`, `landscape-pair` exports a centered 4:3 cover (`1080×810`) and full 16:9 master (`1920×1080`), while `vertical-pair` exports a centered 3:4 cover (`1080×1440`) and full 9:16 vertical master (`1080×1920`). Cover prompts support both native text-rendering models and negative-space + deterministic script overlay (`title-engine.py`), with honest `功能示意，不是实拍` labeling for conceptual UI illustrations.
 
-## Duanzi: 14 patterns
+## Duanzi & Conversational Posts: 12 Creative Angles
 
-Decide **who you want in the replies**, then pick a pattern:
+Decide **what makes readers pause and reply**, then pick an angle:
 
-| Pattern | What it is | Typical opening | Replies you want |
+| Angle | What it is | Typical opening | Replies you want |
 |---|---|---|---|
-| A1 Genuine question | Play dumb, ask what you really don't know | "Doesn't anyone use…?" | Experts explaining |
+| A1 Genuine question | Peer stance + real pain point + 70% whitespace | "Folks using XX, do you all…?" | Peers sharing their setup |
 | A2 Leak check | Clue + last time + a guess | "XX is about to ship?!" | More clues, guesses |
 | A3 Outage check | Ask "is it down?" right away | "Is XX down?" | "Me too" + jokes |
-| A4 Whoa | Real reaction + a converted number | "Whoa, I did the math" | Shock, reposts |
-| A5 TIL | "I only just learned…" | "TIL…" | "Me neither" |
-| A6 Group chat | One line per company, "xx:" | "Today in the XX group:" | Riffs, one more company |
+| A4 Shock math | Pause at an anomaly + daily-life scale conversion | "Wait, is this per day???" | Shock, reposts |
+| A5 TIL | "Just realized / wasted my quota" | "Just realized XX charges per…" | "Me neither" |
+| A6 Group chat / Scene | One line per company or sharp action contrast | "Today in the XX group:" | Riffs, one more company |
 | A7 Series | Same protagonist, Day N | Column name + Day N | Bets, advice |
-| A8 Do the math | Your own numbers in money and time | "One XX ate N% of my quota" | Their own bills |
-| A9 Light take | Grant one side, add an insider take | "True, but…" | Taking sides |
-| A10 Absurd self-roast | A shared pain as an absurd scene | "I thought … was the limit" | Relating, stories |
-| A11 Product twist | Real product + scene + action twist | A daily-life scene | Riffs |
-| A12 Trend remix | A familiar meme on new news | "The X edition of…" | Riffs, sides |
-| B1 Relationship | Follow-backs, newcomers, check-ins | Real progress | Follows, hellos |
-| B2 Mutual help | Asking for or giving invite codes | A real need | Codes |
+| A8 Quota detective | Real numbers converted into cost and time | "Ran 30M tokens this morning…" | Their own bills |
+| A9 Light take | Attitude-first framing + concrete updates | "Its real positioning is basically…" | Taking sides |
+| A10 Absurd self-roast | Shared friction as an absurd action scene | "I thought … was the limit" | Relating, stories |
+| A11 Product twist | Specific tool + task + literal-obedience twist | "Asked the coding agent to…" | Riffs |
+| A12 Trend remix | A familiar meme on new news | "The Double-11 of models is here" | Riffs, sides |
 
-Each pattern has topics, hook, structure, ending, counter-examples and original samples in [patterns.md](./topmind-viral-posts/references/patterns.md).
+Each angle has topics, mechanism, failure counter-examples, and samples in [patterns.md](./topmind-viral-posts/references/patterns.md).
 
 ## Briefs: 9 content types
 
