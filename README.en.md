@@ -28,6 +28,8 @@ A reviewed release snapshot of [topmind-writing-skills](https://github.com/topmi
 
 Open a Markdown document and choose **Writing & delivery** from the article toolbar or Apps/status/commands in Desktop, or the ribbon, workbench and note/editor menus in Obsidian. Selecting an action shows task setup; AI starts explicitly. Edit the source in the main editor, choose a delivery format and theme, then preview, copy or export beside it in `out/`. Existing article folders and WeChat drafts work in place.
 
+Formatting preserves the draft’s wording, order and expressive marks. Review gives actionable feedback, and edits follow the author’s requested scope. When the user wants a copy-ready draft, deliver it separately from checks and publishing steps. Hosts load only the references they need for the task.
+
 Built-in HTML/text typography requires no Python. Preview and copy use the same output; changed sources or images require regeneration. Diagnostics identify missing images, diagram source, extended containers and table paste limitations. AI images, PNG rendering and publishing require their respective tools. Copying does not publish; wording scores do not decide editorial quality.
 
 The host pack also renders from source bytes, extracts local text from clipboard HTML, and evaluates a length rule set. The length entry accepts only caller-supplied JSON. This package does not ship or enable production platform rules. Fields, dates and reports are in [the length rule-set contract](docs/length-ruleset-v1.md). A Unicode code-point ceiling is not X weighted length and is not the target editor's final check. JavaScript and Python renderer differences are in [the capability matrix](docs/renderer-capability-matrix.md).

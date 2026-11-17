@@ -65,6 +65,21 @@ test('host runtime imports in isolation and rejects an unbundled package or miss
     fs.rmSync(temp, { recursive: true, force: true });
   }
 });
+test('host pack rejects a symlink used as a skill root', t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'topmind-host-link-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  fs.writeFileSync(path.join(root, 'package.json'), '{}');
+  const skill = path.join(root, '.fixture');
+  fs.mkdirSync(skill);
+  fs.writeFileSync(path.join(skill, 'SKILL.md'), '---\nname: demo\n---\n');
+  try {
+    fs.symlinkSync(skill, path.join(root, 'demo'), 'junction');
+  } catch (error) {
+    if (error.code === 'EPERM') return t.skip('symlink privilege unavailable');
+    throw error;
+  }
+  assert.throws(() => buildHostPack(root), /Symlink in host pack: demo/);
+});
 test('a failed isolated runtime check preserves the last built host pack', () => {
   const sourceRoot = fileURLToPath(new URL('..', import.meta.url));
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'topmind-host-build-test-'));

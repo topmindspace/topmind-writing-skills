@@ -71,7 +71,7 @@ CI/Release 细节见 [`docs/ci.md`](./ci.md)。
    npm run check && npm run audit && npm run privacy
    npm run check:shared && npm run check:evals && npm run validate:spec   # 共享真源一致 / 评测骨架 / 官方校验器
    ```
-   真实构建后再运行 `npm run check:release` 和 `npm run check:pack`，校验 ZIP / 宿主包内容、版本、清单和 SHA-256。
+   运行 `npm run host:pack`，并按 [CI 说明](./ci.md) 构建独立技能 ZIP。再运行 `npm run check:release` 和 `npm run check:pack` 核对资产、版本、清单和 SHA-256。宿主包要求技能与 runtime 目录实际位于源码树中。
 
    改了 `shared/` 下的共享脚本或共享文档时先 `npm run sync:shared`，不要直接改技能目录里的副本。
 4. 新技能：`npm run sync:files`（把发现的技能目录写入 `package.json` `files`）。

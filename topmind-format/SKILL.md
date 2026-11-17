@@ -3,12 +3,12 @@ name: topmind-format
 description: "把已有文字排成适合 X 的纯文本，按语义段落空行或紧凑列表呈现，严格保留原文措辞、事实、语序与表达性标点符号。支持短文、段子和多个已有开头的完整稿拼接。改写润色用 topmind-revise，从零写作用 topmind-briefs 或 topmind-viral-posts。"
 license: MIT
 metadata:
-  version: "0.1.16"
+  version: "0.1.17"
   action_category: "write"
   triggers: "转段子, 改成段子, 段子格式, 格式化, 格式化一下, 格式化成短文, 排一下版, 整理格式, 加空行, 分行, 加 emoji, X 排版, 几个开头, 备选开头, 拼成成品, format"
   author: "TopMindSpace"
   homepage: "https://github.com/topmindspace/topmind-writing-skills#readme"
-  updated: "2026-11-15"
+  updated: "2026-11-17"
 ---
 
 # topmind-format · X 纯文本保真排版
