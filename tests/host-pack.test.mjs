@@ -6,7 +6,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
-import { renderArticle, WRITING_ACTIONS } from '../runtime/article-renderer.mjs';
+import { prepareArticle, renderArticle, WRITING_ACTIONS } from '../runtime/article-renderer.mjs';
 const { buildHostPack } = createRequire(import.meta.url)('../lib/host-pack.cjs');
 test('independent host pack has stable identity, exact skill versions and isolated resources', () => {
   const root = new URL('..', import.meta.url).pathname;
@@ -79,6 +79,23 @@ test('host pack rejects a symlink used as a skill root', t => {
     throw error;
   }
   assert.throws(() => buildHostPack(root), /Symlink in host pack: demo/);
+});
+test('article preparation only requests visible images and reads path aliases once', async () => {
+  const reads = [];
+  const markdown = [
+    '---', 'sample: "![frontmatter](metadata.png)"', '---', '',
+    '```markdown', '![sample](example.png)', '```', '',
+    'Use `![inline](syntax.png)` in Markdown.', '',
+    '![Diagram](diagram.png) ![Same diagram](./diagram.png)',
+  ].join('\n');
+  const delivery = await prepareArticle({ sourcePath: 'drafts/note.md', markdown }, async relative => {
+    reads.push(relative);
+    return 'data:image/png;base64,YQ==';
+  });
+  assert.deepEqual(reads, ['drafts/diagram.png']);
+  assert.deepEqual(delivery.images.map(image => image.status), ['embedded', 'embedded']);
+  assert.match(delivery.html, /example\.png/);
+  assert.match(delivery.html, /syntax\.png/);
 });
 test('a failed isolated runtime check preserves the last built host pack', () => {
   const sourceRoot = fileURLToPath(new URL('..', import.meta.url));
